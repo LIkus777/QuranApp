@@ -61,5 +61,5 @@ interface QuranApi {
     suspend fun getTranslationForChapter(@Path("translation_id") translationId: Int): SingleTranslations
 
     @GET("/resources/translations")
-    suspend fun getAvailableTranslations(@Query("language") language: String): Translation
+    suspend fun getAvailableTranslations(@Query("language") language: String): List<Translation>
 }

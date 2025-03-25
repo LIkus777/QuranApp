@@ -13,7 +13,7 @@ class QuranTranslationRepositoryImpl(
         return quranApi.getTranslationForChapter(translationId)
     }
 
-    override suspend fun getAvailableTranslations(language: String): Translation {
+    override suspend fun getAvailableTranslations(language: String): List<Translation> {
         return quranApi.getAvailableTranslations(language)
     }
 }

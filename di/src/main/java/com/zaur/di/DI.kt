@@ -37,27 +37,3 @@ interface DI : ProvideQuranApi, ProvideQuranAudioRepository, ProvideQuranTafsirR
 
 }
 
-interface ProvideQuranApi {
-    fun provideQuranApi(): QuranApi
-}
-
-interface ProvideQuranAudioRepository {
-    fun provideQuranAudioRepository(): QuranAudioRepository
-}
-
-interface ProvideQuranTafsirRepository {
-    fun provideQuranTafsirRepository(): QuranTafsirRepository
-}
-
-interface ProvideQuranTajweedRepository {
-    fun provideQuranTajweedRepository(): QuranTajweedRepository
-}
-
-interface ProvideQuranTranslationRepository {
-    fun provideQuranTranslationRepository(): QuranTranslationRepository
-}
-
-interface ProvideQuranTextRepository {
-    fun provideQuranTextRepository(): QuranTextRepository
-}
-

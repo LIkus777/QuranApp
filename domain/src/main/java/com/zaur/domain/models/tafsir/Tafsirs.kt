@@ -3,10 +3,6 @@ package com.zaur.domain.models.tafsir
 import com.google.gson.annotations.SerializedName
 import com.zaur.domain.models.TranslatedName
 
-data class Tafsirs(
-    val tafsirs: List<Tafsir>
-)
-
 data class Tafsir(
     val id: Long,
     val name: String,

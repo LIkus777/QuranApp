@@ -6,8 +6,10 @@ import com.zaur.domain.models.chapter.Chapter
 import com.zaur.domain.models.juz.Juz
 import com.zaur.domain.models.recitations.Recitations
 import com.zaur.domain.models.tafsir.SingleTafsirs
+import com.zaur.domain.models.tafsir.Tafsir
 import com.zaur.domain.models.tajweed.VerseUthmanTajweed
-import com.zaur.domain.models.translate.SingleTranslation
+import com.zaur.domain.models.translate.SingleTranslations
+import com.zaur.domain.models.translate.Translation
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -15,7 +17,6 @@ import retrofit2.http.Query
 interface QuranApi {
 
     /* Recitation */
-
     @GET("/resources/recitations")
     suspend fun getRecitations(@Query("language") language: String): List<Recitations>
 
@@ -30,8 +31,14 @@ interface QuranApi {
     ): VerseAudioFile
 
     /* Tafsir */
-    @GET("") //todo
-    suspend fun getTafsirForChapter(@Path("tafsir_id") chapterNumber: Int): SingleTafsirs
+    @GET("/tafsirs/{tafsir_id}/by_chapter/{chapter_number}?words=true&fields=text_uthmani")
+    suspend fun getTafsirForChapter(
+        @Path("tafsir_id") tafsirId: Int,
+        @Path("chapter_number") chapterNumber: Int
+    ): SingleTafsirs
+
+    @GET("/resources/tafsirs")
+    suspend fun getAvailableTafsirs(@Query("language") language: String): List<Tafsir>
 
     /* Tajweed */
     @GET("/quran/verses/uthmani_tajweed")
@@ -50,5 +57,9 @@ interface QuranApi {
     suspend fun getAllJuzs(): List<Juz>
 
     /* Translation */
-    fun getTranslationForChapter(translationId: Int): SingleTranslation
+    @GET("/quran/translations/{translation_id}")
+    suspend fun getTranslationForChapter(@Path("translation_id") translationId: Int): SingleTranslations
+
+    @GET("/resources/translations")
+    suspend fun getAvailableTranslations(@Query("language") language: String): Translation
 }

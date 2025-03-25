@@ -2,8 +2,8 @@ package com.zaur.domain.models.translate
 
 import com.google.gson.annotations.SerializedName
 
-data class SingleTranslation(
-    val translations: List<Translation>, val metaTranslation: MetaTranslation
+data class SingleTranslations(
+    val singleTranslations: List<SingleTranslation>, val metaTranslation: MetaTranslation
 )
 
 data class MetaTranslation(
@@ -11,7 +11,7 @@ data class MetaTranslation(
     @SerializedName("author_name") val authorName: String
 )
 
-data class Translation(
+data class SingleTranslation(
     @SerializedName("resource_id") val resourceID: Long,
     @SerializedName("resource_name") val resourceName: String,
     val id: Long,

@@ -10,20 +10,20 @@ class QuranAudioRepositoryImpl(
     private val quranApi: QuranApi
 ) : QuranAudioRepository {
     override suspend fun getRecitations(language: String): List<Recitations> {
-        TODO("Not yet implemented")
+        return quranApi.getRecitations(language)
     }
 
     override suspend fun getChaptersAudioOfReciter(
         reciterId: Int,
         chapterNumber: Int
     ): ChaptersAudioFile {
-        TODO("Not yet implemented")
+        return quranApi.getChaptersAudioOfReciter(reciterId, chapterNumber)
     }
 
     override suspend fun getVerseAudioFile(
         reciterId: Int,
         verseKey: String
     ): VerseAudioFile {
-        TODO("Not yet implemented")
+        return quranApi.getVerseAudioFile(reciterId, verseKey)
     }
 }

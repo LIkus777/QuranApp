@@ -9,14 +9,14 @@ class QuranTextRepositoryImpl(
     private val quranApi: QuranApi
 ) : QuranTextRepository {
     override suspend fun getAllChapters(language: String): List<Chapter> {
-        TODO("Not yet implemented")
+        return quranApi.getAllChapters(language)
     }
 
     override suspend fun getChapter(chapterNumber: Int, language: String): Chapter {
-        TODO("Not yet implemented")
+        return quranApi.getChapter(chapterNumber, language)
     }
 
     override suspend fun getAllJuzs(): List<Juz> {
-        TODO("Not yet implemented")
+        return quranApi.getAllJuzs()
     }
 }

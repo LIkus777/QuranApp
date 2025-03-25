@@ -1,7 +1,9 @@
 package com.zaur.domain.repository
 
-import com.zaur.domain.models.translate.SingleTranslation
+import com.zaur.domain.models.translate.SingleTranslations
+import com.zaur.domain.models.translate.Translation
 
 interface QuranTranslationRepository {
-    fun getTranslationForChapter(translationId: Int): SingleTranslation
+    suspend fun getTranslationForChapter(translationId: Int): SingleTranslations
+    suspend fun getAvailableTranslations(language: String): Translation
 }

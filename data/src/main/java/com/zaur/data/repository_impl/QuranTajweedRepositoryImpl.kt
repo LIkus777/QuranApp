@@ -8,6 +8,6 @@ class QuranTajweedRepositoryImpl(
     private val quranApi: QuranApi
 ) : QuranTajweedRepository {
     override suspend fun getUthmanTajweedsForChapter(chapterNumber: Int): List<VerseUthmanTajweed> {
-        TODO("Not yet implemented")
+        return quranApi.getUthmanTajweedsForChapter(chapterNumber)
     }
 }

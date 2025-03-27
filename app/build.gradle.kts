@@ -39,6 +39,9 @@ android {
     buildFeatures {
         compose = true
     }
+    composeOptions {
+        kotlinCompilerExtensionVersion = libs.versions.activityCompose.toString()
+    }
 }
 
 dependencies {
@@ -47,6 +50,17 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
+
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.ui)
+    implementation(libs.androidx.ui.graphics)
+    implementation(libs.androidx.ui.tooling.preview)
+    implementation(libs.androidx.material3)
+    implementation(libs.androidx.compose.lifecycle.runtime)
+    implementation(libs.material)
+    implementation("androidx.compose.material3:material3:1.2.0")
+    implementation("androidx.compose.ui:ui:1.6.0")
+    implementation("androidx.compose.runtime:runtime:1.6.0")
 
     // Debugging tools
     debugImplementation(libs.androidx.ui.tooling)
@@ -60,6 +74,7 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
 
     implementation(project(":di"))
+    implementation(project(":domain"))
     implementation(project(":features"))
     implementation(project(":navigation"))
     implementation(project(":presentation"))

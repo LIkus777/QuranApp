@@ -1,4 +1,4 @@
-package com.zaur.presentation.ui
+package com.zaur.quranapp.theme
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -7,7 +7,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.zaur.presentation.ui.theme.QuranAppTheme
 
 @Composable
 fun QuranApp() {

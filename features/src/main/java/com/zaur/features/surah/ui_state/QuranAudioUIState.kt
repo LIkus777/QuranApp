@@ -6,7 +6,7 @@ import com.zaur.domain.models.recitations.Recitations
 
 data class QuranAudioUIState(
     val isLoading: Boolean = false,
-    val recitations: Recitations? = null,
+    val recitations: List<Recitations> = emptyList(),
     val chaptersAudioFile: ChaptersAudioFile? = null,
     val verseAudioFile: VerseAudioFile? = null,
     val errorMessage: String? = null,

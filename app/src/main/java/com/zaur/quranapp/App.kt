@@ -5,10 +5,12 @@ import androidx.lifecycle.SavedStateHandle
 import com.zaur.di.DI
 
 class App() : Application() {
+
+    lateinit var diModule: DI
+
     override fun onCreate() {
         super.onCreate()
-        val diModule = DI.Base(this)
-        val savedStateHandleText = SavedStateHandle()
+        diModule = DI.Base(this)
     }
 
 }

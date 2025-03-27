@@ -1,4 +1,4 @@
-package com.zaur.presentation.ui.theme
+package com.zaur.quranapp.theme
 
 import androidx.compose.ui.graphics.Color
 

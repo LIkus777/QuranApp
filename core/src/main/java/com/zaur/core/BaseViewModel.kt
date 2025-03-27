@@ -3,14 +3,9 @@ package com.zaur.core
 import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 abstract class BaseViewModel(
     private val savedStateHandle: SavedStateHandle
@@ -30,20 +25,12 @@ abstract class BaseViewModel(
     }
 
     // Запуск корутины с обработкой ошибок
-    protected fun launchSafely(
-        onSuccess: () -> Unit = {},
-        onError: (Throwable) -> Unit = { handleError(it) },
-        block: suspend CoroutineScope.() -> Unit
-    ) {
-        viewModelScope.launch(exceptionHandler) {
-            //_isLoading.value = true //todo
+    protected suspend fun <T> launchSafely(block: suspend () -> T): Result<T> {
+        return withContext(Dispatchers.IO) {
             try {
-                block()
-                onSuccess()
-            } catch (e: Throwable) {
-                onError(e)
-            } finally {
-                //_isLoading.value = false //todo
+                Result.Success(block()) // Вызываем функцию и получаем результат
+            } catch (e: Exception) {
+                Result.Error(e)
             }
         }
     }

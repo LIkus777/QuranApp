@@ -13,9 +13,16 @@ import com.zaur.domain.repository.QuranTafsirRepository
 import com.zaur.domain.repository.QuranTajweedRepository
 import com.zaur.domain.repository.QuranTextRepository
 import com.zaur.domain.repository.QuranTranslationRepository
+import com.zaur.domain.use_case.QuranAudioUseCase
+import com.zaur.domain.use_case.QuranTafsirUseCase
+import com.zaur.domain.use_case.QuranTajweedUseCase
+import com.zaur.domain.use_case.QuranTextUseCase
+import com.zaur.domain.use_case.QuranTranslationUseCase
 
-interface DI : ProvideQuranApi, ProvideQuranAudioRepository, ProvideQuranTafsirRepository,
-    ProvideQuranTajweedRepository, ProvideQuranTranslationRepository, ProvideQuranTextRepository {
+interface DI : ProvideQuranAudioUseCase, ProvideQuranTextUseCase, ProvideQuranTajweedUseCase,
+    ProvideQuranTafsirUseCase, ProvideQuranTranslationUseCase, ProvideQuranApi,
+    ProvideQuranAudioRepository, ProvideQuranTafsirRepository, ProvideQuranTajweedRepository,
+    ProvideQuranTranslationRepository, ProvideQuranTextRepository {
 
     class Base(private val context: Context) : DI {
         override fun provideQuranApi(): QuranApi = ApiFactory.retrofit.create(QuranApi::class.java)
@@ -33,6 +40,21 @@ interface DI : ProvideQuranApi, ProvideQuranAudioRepository, ProvideQuranTafsirR
 
         override fun provideQuranTextRepository(): QuranTextRepository =
             QuranTextRepositoryImpl(provideQuranApi())
+
+        override fun provideQuranAudioUseCase(): QuranAudioUseCase =
+            QuranAudioUseCase(provideQuranAudioRepository())
+
+        override fun provideQuranTextUseCase(): QuranTextUseCase =
+            QuranTextUseCase(provideQuranTextRepository())
+
+        override fun provideQuranTajweedUseCase(): QuranTajweedUseCase =
+            QuranTajweedUseCase(provideQuranTajweedRepository())
+
+        override fun provideQuranTafsirUseCase(): QuranTafsirUseCase =
+            QuranTafsirUseCase(provideQuranTafsirRepository())
+
+        override fun provideQuranTranslationUseCase(): QuranTranslationUseCase =
+            QuranTranslationUseCase(provideQuranTranslationRepository())
     }
 
 }

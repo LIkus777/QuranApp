@@ -1,16 +1,54 @@
 package com.zaur.features.surah.viewmodel
 
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.viewModelScope
 import com.zaur.core.BaseViewModel
+import com.zaur.core.HandleResult
+import com.zaur.domain.models.tafsir.SingleTafsirs
+import com.zaur.domain.models.tafsir.Tafsir
+import com.zaur.domain.use_case.QuranTafsirUseCase
 import com.zaur.features.surah.ui_state.QuranTafsirUIState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 
 class QuranTafsirViewModel(
-    private val savedStateHandle: SavedStateHandle
+    private val savedStateHandle: SavedStateHandle,
+    private val quranTafsirUseCase: QuranTafsirUseCase
 ) : BaseViewModel(savedStateHandle) {
 
     private val _uiState = MutableStateFlow(QuranTafsirUIState())
     val tafsirUiState: StateFlow<QuranTafsirUIState> = _uiState
+
+    suspend fun getTafsirForChapter(tafsirId: Int, chapterNumber: Int) {
+        val result =
+            launchSafely { quranTafsirUseCase.getTafsirForChapter(tafsirId, chapterNumber) }
+        result.handle(object : HandleResult<SingleTafsirs> {
+            override fun handleSuccess(data: SingleTafsirs) {
+                viewModelScope.launch {
+                    _uiState.emit(_uiState.value.copy(singleTafsirs = data))
+                }
+            }
+
+            override fun handleError(e: Exception) {
+                super.handleError(e)
+            }
+        })
+    }
+
+    suspend fun getAvailableTafsirs(language: String) {
+        val result = launchSafely { quranTafsirUseCase.getAvailableTafsirs(language) }
+        result.handle(object : HandleResult<List<Tafsir>> {
+            override fun handleSuccess(data: List<Tafsir>) {
+                viewModelScope.launch {
+                    _uiState.emit(_uiState.value.copy(tafsir = data))
+                }
+            }
+
+            override fun handleError(e: Exception) {
+                super.handleError(e)
+            }
+        })
+    }
 
 }

@@ -1,57 +1,62 @@
 package com.zaur.di
 
-import com.zaur.data.api.QuranApi
-import com.zaur.domain.repository.QuranAudioRepository
-import com.zaur.domain.repository.QuranTafsirRepository
-import com.zaur.domain.repository.QuranTajweedRepository
-import com.zaur.domain.repository.QuranTextRepository
-import com.zaur.domain.repository.QuranTranslationRepository
-import com.zaur.domain.use_case.QuranAudioUseCase
-import com.zaur.domain.use_case.QuranTafsirUseCase
-import com.zaur.domain.use_case.QuranTajweedUseCase
-import com.zaur.domain.use_case.QuranTextUseCase
-import com.zaur.domain.use_case.QuranTranslationUseCase
+import com.zaur.data.apiV4.api.QuranApiV4
+import com.zaur.domain.apiV4.repository.QuranAudioRepositoryV4
+import com.zaur.domain.apiV4.repository.QuranTafsirRepositoryV4
+import com.zaur.domain.apiV4.repository.QuranTajweedRepositoryV4
+import com.zaur.domain.apiV4.repository.QuranTextRepositoryV4
+import com.zaur.domain.apiV4.repository.QuranTranslationRepositoryV4
+import com.zaur.domain.storage.QuranStorage
+import com.zaur.domain.apiV4.use_case.QuranAudioUseCaseV4
+import com.zaur.domain.apiV4.use_case.QuranTafsirUseCaseV4
+import com.zaur.domain.apiV4.use_case.QuranTajweedUseCaseV4
+import com.zaur.domain.apiV4.use_case.QuranTextUseCaseV4
+import com.zaur.domain.apiV4.use_case.QuranTranslationUseCaseV4
+
+interface ProvideQuranStorage {
+    fun provideQuranStorage(): QuranStorage
+}
 
 interface ProvideQuranAudioUseCase {
-    fun provideQuranAudioUseCase(): QuranAudioUseCase
+    fun provideQuranAudioUseCase(): QuranAudioUseCaseV4
 }
 
 interface ProvideQuranTafsirUseCase {
-    fun provideQuranTafsirUseCase(): QuranTafsirUseCase
+    fun provideQuranTafsirUseCase(): QuranTafsirUseCaseV4
 }
 
 interface ProvideQuranTajweedUseCase {
-    fun provideQuranTajweedUseCase(): QuranTajweedUseCase
+    fun provideQuranTajweedUseCase(): QuranTajweedUseCaseV4
 }
 
 interface ProvideQuranTextUseCase {
-    fun provideQuranTextUseCase(): QuranTextUseCase
+    fun provideQuranTextUseCase(): QuranTextUseCaseV4
 }
 
 interface ProvideQuranTranslationUseCase {
-    fun provideQuranTranslationUseCase(): QuranTranslationUseCase
+    fun provideQuranTranslationUseCase(): QuranTranslationUseCaseV4
 }
 
 interface ProvideQuranApi {
-    fun provideQuranApi(): QuranApi
+    fun provideQuranApi(): QuranApiV4
 }
 
 interface ProvideQuranAudioRepository {
-    fun provideQuranAudioRepository(): QuranAudioRepository
+    fun provideQuranAudioRepository(): QuranAudioRepositoryV4
 }
 
 interface ProvideQuranTafsirRepository {
-    fun provideQuranTafsirRepository(): QuranTafsirRepository
+    fun provideQuranTafsirRepository(): QuranTafsirRepositoryV4
 }
 
 interface ProvideQuranTajweedRepository {
-    fun provideQuranTajweedRepository(): QuranTajweedRepository
+    fun provideQuranTajweedRepository(): QuranTajweedRepositoryV4
 }
 
 interface ProvideQuranTranslationRepository {
-    fun provideQuranTranslationRepository(): QuranTranslationRepository
+    fun provideQuranTranslationRepository(): QuranTranslationRepositoryV4
 }
 
 interface ProvideQuranTextRepository {
-    fun provideQuranTextRepository(): QuranTextRepository
+    fun provideQuranTextRepository(): QuranTextRepositoryV4
 }

@@ -6,7 +6,7 @@ import com.zaur.core.BaseViewModel
 import com.zaur.core.HandleResult
 import com.zaur.domain.models.tafsir.SingleTafsirs
 import com.zaur.domain.models.tafsir.Tafsir
-import com.zaur.domain.use_case.QuranTafsirUseCase
+import com.zaur.domain.apiV4.use_case.QuranTafsirUseCaseV4
 import com.zaur.features.surah.ui_state.QuranTafsirUIState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 
 class QuranTafsirViewModel(
     private val savedStateHandle: SavedStateHandle,
-    private val quranTafsirUseCase: QuranTafsirUseCase
+    private val quranTafsirUseCaseV4: QuranTafsirUseCaseV4
 ) : BaseViewModel(savedStateHandle) {
 
     private val _uiState = MutableStateFlow(QuranTafsirUIState())
@@ -22,7 +22,7 @@ class QuranTafsirViewModel(
 
     suspend fun getTafsirForChapter(tafsirId: Int, chapterNumber: Int) {
         val result =
-            launchSafely { quranTafsirUseCase.getTafsirForChapter(tafsirId, chapterNumber) }
+            launchSafely { quranTafsirUseCaseV4.getTafsirForChapter(tafsirId, chapterNumber) }
         result.handle(object : HandleResult<SingleTafsirs> {
             override fun handleSuccess(data: SingleTafsirs) {
                 viewModelScope.launch {
@@ -37,7 +37,7 @@ class QuranTafsirViewModel(
     }
 
     suspend fun getAvailableTafsirs(language: String) {
-        val result = launchSafely { quranTafsirUseCase.getAvailableTafsirs(language) }
+        val result = launchSafely { quranTafsirUseCaseV4.getAvailableTafsirs(language) }
         result.handle(object : HandleResult<List<Tafsir>> {
             override fun handleSuccess(data: List<Tafsir>) {
                 viewModelScope.launch {

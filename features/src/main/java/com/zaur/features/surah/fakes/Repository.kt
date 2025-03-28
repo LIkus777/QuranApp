@@ -15,6 +15,25 @@ import com.zaur.domain.repository.QuranTafsirRepository
 import com.zaur.domain.repository.QuranTajweedRepository
 import com.zaur.domain.repository.QuranTextRepository
 import com.zaur.domain.repository.QuranTranslationRepository
+import com.zaur.domain.storage.QuranStorage
+
+class FakeQuranStorage() : QuranStorage {
+    override fun saveLastRead(chapterNumber: Int, ayahNumber: Int) {
+        TODO("Not yet implemented")
+    }
+
+    override fun getLastRead(): Pair<Int, Int> {
+        TODO("Not yet implemented")
+    }
+
+    override fun setSurahScreenOpened() {
+        TODO("Not yet implemented")
+    }
+
+    override fun isSurahScreenOpened(): Boolean {
+        TODO("Not yet implemented")
+    }
+}
 
 class FakeQTextR : QuranTextRepository {
     override suspend fun getAllChapters(language: String): List<Chapter> {

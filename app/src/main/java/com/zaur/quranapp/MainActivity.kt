@@ -5,8 +5,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.SavedStateHandle
 import com.zaur.features.surah.screen.SurahScreen
@@ -15,6 +15,7 @@ import com.zaur.features.surah.viewmodel.QuranTafsirViewModel
 import com.zaur.features.surah.viewmodel.QuranTajweedViewModel
 import com.zaur.features.surah.viewmodel.QuranTextViewModel
 import com.zaur.features.surah.viewmodel.QuranTranslationViewModel
+import com.zaur.quranapp.theme.QuranAppTheme
 
 class MainActivity : ComponentActivity() {
 
@@ -30,16 +31,17 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            Surface(
-                modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
-            ) {
-                SurahScreen(
-                    quranTextViewModel,
-                    quranAudioViewModel,
-                    quranTafsirViewModel,
-                    quranTajweedViewModel,
-                    quranTranslationViewModel
-                )
+            QuranAppTheme {
+                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                    SurahScreen(
+                        quranTextViewModel,
+                        quranAudioViewModel,
+                        quranTafsirViewModel,
+                        quranTajweedViewModel,
+                        quranTranslationViewModel,
+                        modifier = Modifier.padding(innerPadding)
+                    )
+                }
             }
         }
     }

@@ -1,8 +1,12 @@
 package com.zaur.features.surah.screen
 
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.SavedStateHandle
 import com.zaur.domain.use_case.QuranAudioUseCase
@@ -20,6 +24,7 @@ import com.zaur.features.surah.viewmodel.QuranTafsirViewModel
 import com.zaur.features.surah.viewmodel.QuranTajweedViewModel
 import com.zaur.features.surah.viewmodel.QuranTextViewModel
 import com.zaur.features.surah.viewmodel.QuranTranslationViewModel
+import com.zaur.presentation.ui.QuranAppTheme
 
 
 @Composable
@@ -28,14 +33,16 @@ fun SurahScreen(
     quranAudioViewModel: QuranAudioViewModel,
     quranTafsirViewModel: QuranTafsirViewModel,
     quranTajweedViewModel: QuranTajweedViewModel,
-    quranTranslationViewModel: QuranTranslationViewModel
+    quranTranslationViewModel: QuranTranslationViewModel,
+    modifier: Modifier
 ) {
 
-    quranTextViewModel.textUiState.collectAsState().value
-    quranAudioViewModel.audioUiState.collectAsState().value
-    quranTafsirViewModel.tafsirUiState.collectAsState().value
-    quranTajweedViewModel.tajweedUiState.collectAsState().value
-    quranTranslationViewModel.translationUiState.collectAsState().value
+    val textState = quranTextViewModel.textUiState.collectAsState().value
+    val audioState = quranAudioViewModel.audioUiState.collectAsState().value
+    val tafsirState = quranTafsirViewModel.tafsirUiState.collectAsState().value
+    val tajweedState = quranTajweedViewModel.tajweedUiState.collectAsState().value
+    val translationState = quranTranslationViewModel.translationUiState.collectAsState().value
+
 
 
 }
@@ -43,23 +50,31 @@ fun SurahScreen(
 @Preview(showBackground = true)
 @Composable
 fun SurahScreenPreview() {
-    SurahScreen(
-        quranTextViewModel = QuranTextViewModel(SavedStateHandle(), QuranTextUseCase(FakeQTextR())),
-        quranAudioViewModel = QuranAudioViewModel(
-            SavedStateHandle(), QuranAudioUseCase(FakeQAudioR())
-        ),
-        quranTafsirViewModel = QuranTafsirViewModel(
-            SavedStateHandle(), QuranTafsirUseCase(
-                FakeQTafsirR()
+    QuranAppTheme {
+        Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+            SurahScreen(
+                quranTextViewModel = QuranTextViewModel(
+                    SavedStateHandle(),
+                    QuranTextUseCase(FakeQTextR())
+                ),
+                quranAudioViewModel = QuranAudioViewModel(
+                    SavedStateHandle(), QuranAudioUseCase(FakeQAudioR())
+                ),
+                quranTafsirViewModel = QuranTafsirViewModel(
+                    SavedStateHandle(), QuranTafsirUseCase(
+                        FakeQTafsirR()
+                    )
+                ),
+                quranTajweedViewModel = QuranTajweedViewModel(
+                    SavedStateHandle(), QuranTajweedUseCase(
+                        FakeQTajweedR()
+                    )
+                ),
+                quranTranslationViewModel = QuranTranslationViewModel(
+                    SavedStateHandle(), QuranTranslationUseCase(FakeQTranslationR())
+                ),
+                modifier = Modifier.padding(innerPadding)
             )
-        ),
-        quranTajweedViewModel = QuranTajweedViewModel(
-            SavedStateHandle(), QuranTajweedUseCase(
-                FakeQTajweedR()
-            )
-        ),
-        quranTranslationViewModel = QuranTranslationViewModel(
-            SavedStateHandle(), QuranTranslationUseCase(FakeQTranslationR())
-        )
-    )
+        }
+    }
 }

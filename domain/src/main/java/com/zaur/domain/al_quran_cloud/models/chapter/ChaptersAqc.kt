@@ -1,10 +1,12 @@
 package com.zaur.domain.al_quran_cloud.models.chapter
 
-data class ChapterAqc(
-    val code: Long, val status: String, val data: List<Datum>
+import com.google.gson.annotations.SerializedName
+
+data class ChaptersAqc(
+    val code: Long, val status: String, @SerializedName("data") val chapters: List<ChapterAqc>
 )
 
-data class Datum(
+data class ChapterAqc(
     val number: Long,
     val name: String,
     val englishName: String,

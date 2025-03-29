@@ -5,37 +5,38 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.zaur.core.BaseViewModel
 import com.zaur.core.HandleResult
-import com.zaur.domain.models.chapter.Chapter
-import com.zaur.domain.models.juz.Juz
-import com.zaur.domain.apiV4.use_case.QuranTextUseCaseV4
-import com.zaur.features.surah.ui_state.QuranTextUIState
+import com.zaur.domain.al_quran_cloud.models.arabic.ArabicChaptersAqc
+import com.zaur.domain.al_quran_cloud.models.chapter.ChaptersAqc
+import com.zaur.domain.al_quran_cloud.use_case.QuranTextUseCaseAqc
+import com.zaur.features.surah.ui_state.aqc.QuranTextAqcUIState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class QuranTextViewModel(
-    private val savedStateHandle: SavedStateHandle, private val quranTextUseCaseV4: QuranTextUseCaseV4
+    private val savedStateHandle: SavedStateHandle,
+    private val quranTextUseCaseAqc: QuranTextUseCaseAqc
 ) : BaseViewModel(savedStateHandle) {
 
-    private val _uiState = MutableStateFlow(QuranTextUIState())
-    val textUiState: StateFlow<QuranTextUIState> = _uiState
+    private val _uiState = MutableStateFlow(QuranTextAqcUIState())
+    val textUiState: StateFlow<QuranTextAqcUIState> = _uiState
 
     init {
-        viewModelScope.launch {
-            if (quranTextUseCaseV4.isSurahScreenOpened()) {
-                val (lastChapter, lastAyah) = quranTextUseCaseV4.getLastRead()
-                getChapter(lastChapter, "ru") //todo СДЕЛАТЬ ДРУГУЮ ЛОГИКУ (ДОБАВИТЬ ДРУГОЙ МЕТОД ДЛЯ ПОЛУЧЕНИЯ ПОСЛЕДНЕЙ СУРЫ И АЯТА)
+        /*viewModelScope.launch {
+            if (quranTextUseCaseAqc.isSurahScreenOpened()) {
+                val (lastChapter, lastAyah) = quranTextUseCaseAqc.getLastRead()
+                getArabicChapter(lastChapter) //todo СДЕЛАТЬ ДРУГУЮ ЛОГИКУ (ДОБАВИТЬ ДРУГОЙ МЕТОД ДЛЯ ПОЛУЧЕНИЯ ПОСЛЕДНЕЙ СУРЫ И АЯТА)
             } else {
                 getAllChapters("ru")
-                quranTextUseCaseV4.setSurahScreenOpened()
+                quranTextUseCaseAqc.setSurahScreenOpened()
             }
-        }
+        }*/
     }
 
-    suspend fun getAllChapters(language: String) {
-        val result = launchSafely<List<Chapter>> { quranTextUseCaseV4.getAllChapters(language) }
-        result.handle(object : HandleResult<List<Chapter>> {
-            override fun handleSuccess(data: List<Chapter>) {
+    suspend fun getAllChapters() {
+        val result = launchSafely<ChaptersAqc> { quranTextUseCaseAqc.getAllChapters() }
+        result.handle(object : HandleResult<ChaptersAqc> {
+            override fun handleSuccess(data: ChaptersAqc) {
                 viewModelScope.launch {
                     Log.i("TAG", "handleSuccess: getAllChapters data $data")
                     _uiState.emit(_uiState.value.copy(chapters = data))
@@ -48,28 +49,13 @@ class QuranTextViewModel(
         })
     }
 
-    suspend fun getChapter(chapterNumber: Int, language: String) {
-        val result = launchSafely { quranTextUseCaseV4.getChapter(chapterNumber, language) }
-        result.handle(object : HandleResult<Chapter> {
-            override fun handleSuccess(data: Chapter) {
+    suspend fun getArabicChapter(chapterNumber: Int) {
+        val result = launchSafely { quranTextUseCaseAqc.getArabicChapter(chapterNumber) }
+        result.handle(object : HandleResult<ArabicChaptersAqc> {
+            override fun handleSuccess(data: ArabicChaptersAqc) {
                 viewModelScope.launch {
                     Log.i("TAG", "handleSuccess: getChapter data $data")
-                    _uiState.emit(_uiState.value.copy(currentChapter = data))
-                }
-            }
-
-            override fun handleError(e: Exception) {
-                Log.e("TAG", "handleError: $e")
-            }
-        })
-    }
-
-    suspend fun getAllJuzs() {
-        val result = launchSafely { quranTextUseCaseV4.getAllJuzs() }
-        result.handle(object : HandleResult<List<Juz>> {
-            override fun handleSuccess(data: List<Juz>) {
-                viewModelScope.launch {
-                    _uiState.emit(_uiState.value.copy(juz = data))
+                    _uiState.emit(_uiState.value.copy(currentArabicText = data))
                 }
             }
 

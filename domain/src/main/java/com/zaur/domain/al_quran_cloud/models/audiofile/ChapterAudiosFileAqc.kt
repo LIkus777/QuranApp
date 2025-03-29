@@ -1,10 +1,12 @@
-package com.zaur.domain.al_quran_cloud.models.translate
+package com.zaur.domain.al_quran_cloud.models.audiofile
 
-data class TranslationChapterAqc(
-    val code: Long, val status: String, val data: Data
+import com.google.gson.annotations.SerializedName
+
+data class ChapterAudiosFileAqc(
+    val code: Long, val status: String, @SerializedName("data") val chapterAudios: ChapterAudioFile
 )
 
-data class Data(
+data class ChapterAudioFile(
     val number: Long,
     val name: String,
     val englishName: String,
@@ -12,11 +14,13 @@ data class Data(
     val revelationType: String,
     val numberOfAyahs: Long,
     val ayahs: List<Ayah>,
-    val edition: EditionTranslation
+    val edition: EditionAudio
 )
 
 data class Ayah(
     val number: Long,
+    val audio: String,
+    val audioSecondary: List<String>,
     val text: String,
     val numberInSurah: Long,
     val juz: Long,
@@ -27,12 +31,12 @@ data class Ayah(
     val sajda: Boolean
 )
 
-data class EditionTranslation(
+data class EditionAudio(
     val identifier: String,
     val language: String,
     val name: String,
     val englishName: String,
     val format: String,
     val type: String,
-    val direction: String
+    val direction: Any? = null
 )

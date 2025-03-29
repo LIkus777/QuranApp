@@ -21,11 +21,9 @@ class MainActivity : ComponentActivity() {
 
     private val di by lazy { (application as App).diModule }
 
-    private val quranTextViewModel by lazy { QuranTextViewModel(SavedStateHandle(), di.provideQuranTextUseCase()) }
-    private val quranAudioViewModel by lazy { QuranAudioViewModel(SavedStateHandle(), di.provideQuranAudioUseCase()) }
-    private val quranTafsirViewModel by lazy { QuranTafsirViewModel(SavedStateHandle(), di.provideQuranTafsirUseCase()) }
-    private val quranTajweedViewModel by lazy { QuranTajweedViewModel(SavedStateHandle(), di.provideQuranTajweedUseCase()) }
-    private val quranTranslationViewModel by lazy { QuranTranslationViewModel(SavedStateHandle(), di.provideQuranTranslationUseCase()) }
+    private val quranTextViewModel by lazy { QuranTextViewModel(SavedStateHandle(), di.provideQuranTextUseCaseAqc()) }
+    private val quranAudioViewModel by lazy { QuranAudioViewModel(SavedStateHandle(), di.provideQuranAudioUseCaseAqc()) }
+    private val quranTranslationViewModel by lazy { QuranTranslationViewModel(SavedStateHandle(), di.provideQuranTranslationUseCaseAqc()) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,8 +34,6 @@ class MainActivity : ComponentActivity() {
                     SurahScreen(
                         quranTextViewModel,
                         quranAudioViewModel,
-                        quranTafsirViewModel,
-                        quranTajweedViewModel,
                         quranTranslationViewModel,
                         modifier = Modifier.padding(innerPadding)
                     )

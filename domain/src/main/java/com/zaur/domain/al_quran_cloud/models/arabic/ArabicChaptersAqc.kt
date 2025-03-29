@@ -1,10 +1,12 @@
 package com.zaur.domain.al_quran_cloud.models.arabic
 
-data class ArabicChapterAqc(
-    val code: Long, val status: String, val data: Data
+import com.google.gson.annotations.SerializedName
+
+data class ArabicChaptersAqc(
+    val code: Long, val status: String, @SerializedName("data") val arabicChapters: ArabicChapter
 )
 
-data class Data(
+data class ArabicChapter(
     val number: Long,
     val name: String,
     val englishName: String,

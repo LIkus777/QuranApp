@@ -9,12 +9,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.SavedStateHandle
-import com.zaur.features.surah.screen.SurahScreen
+import androidx.navigation.compose.rememberNavController
+import com.zaur.features.surah.screen.SurahChooseScreen
+import com.zaur.features.surah.screen.SurahDetailScreen
 import com.zaur.features.surah.viewmodel.QuranAudioViewModel
-import com.zaur.features.surah.viewmodel.QuranTafsirViewModel
-import com.zaur.features.surah.viewmodel.QuranTajweedViewModel
 import com.zaur.features.surah.viewmodel.QuranTextViewModel
 import com.zaur.features.surah.viewmodel.QuranTranslationViewModel
+import com.zaur.navigation.QuranNavGraph
 import com.zaur.quranapp.theme.QuranAppTheme
 
 class MainActivity : ComponentActivity() {
@@ -29,14 +30,20 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
+            val navController = rememberNavController()
             QuranAppTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    SurahScreen(
-                        quranTextViewModel,
-                        quranAudioViewModel,
-                        quranTranslationViewModel,
-                        modifier = Modifier.padding(innerPadding)
-                    )
+                    QuranNavGraph(navController = navController, surahChooseScreen = {
+                        SurahChooseScreen(
+                            quranTextViewModel,
+                            quranAudioViewModel,
+                            quranTranslationViewModel,
+                            navController,
+                            modifier = Modifier.padding(innerPadding)
+                        )
+                    }, surahDetailScreen = { surahNumber, controller ->
+                        SurahDetailScreen(surahNumber, controller)
+                    })
                 }
             }
         }

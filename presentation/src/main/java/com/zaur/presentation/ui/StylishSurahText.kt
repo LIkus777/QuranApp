@@ -32,8 +32,9 @@ import com.zaur.presentation.R
 
 @Composable
 fun ModernSurahText(
-    number: Int /*long*/,
+    number: Long,
     englishName: String,
+    arabicName: String,
     numberOfAyats: Int,
     revelationType: RevelationType,
     modifier: Modifier = Modifier
@@ -58,14 +59,15 @@ fun ModernSurahText(
             // Чёрный прямоугольник с номером суры
             Box(
                 modifier = Modifier
-                    .size(40.dp)
+                    .size(width = 50.dp, height = 50.dp)
+                    .padding(end = 4.dp)
                     .border(2.dp, Color.White, RoundedCornerShape(8.dp)) // Белая обводка
                     .background(color = Color(0xFFCFAF5D), shape = RoundedCornerShape(8.dp)),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
                     text = "$number", style = TextStyle(
-                        fontSize = 20.sp,
+                        fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color.White,
                     ), modifier = Modifier.padding(4.dp)
@@ -76,7 +78,7 @@ fun ModernSurahText(
 
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = "Al-Fatiha", style = TextStyle(
+                    text = englishName, style = TextStyle(
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Thin,
                         fontFamily = QuranFontRubik,
@@ -96,7 +98,7 @@ fun ModernSurahText(
             }
 
             Text(
-                text = englishName,
+                text = arabicName,
                 style = TextStyle(
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,

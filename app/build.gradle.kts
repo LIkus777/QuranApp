@@ -73,6 +73,8 @@ dependencies {
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
 
+    implementation(libs.navigation)
+
     implementation(project(":di"))
     implementation(project(":domain"))
     implementation(project(":features"))

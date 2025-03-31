@@ -4,9 +4,12 @@ import com.zaur.domain.apiV4.models.chapter.ChapterV4
 import com.zaur.domain.apiV4.models.juz.JuzV4
 import com.zaur.domain.apiV4.repository.QuranTextRepositoryV4
 import com.zaur.domain.storage.QuranStorage
+import com.zaur.domain.storage.ReciterStorage
 
 class QuranTextUseCaseV4(
-    private val quranTextRepositoryV4: QuranTextRepositoryV4, private val quranStorage: QuranStorage
+    private val quranTextRepositoryV4: QuranTextRepositoryV4,
+    private val quranStorage: QuranStorage,
+    private val reciterStorage: ReciterStorage
 ) {
     suspend fun getAllChapters(language: String): List<ChapterV4> =
         quranTextRepositoryV4.getAllChapters(language)

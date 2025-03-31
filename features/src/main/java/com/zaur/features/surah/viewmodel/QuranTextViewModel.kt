@@ -5,6 +5,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.zaur.core.BaseViewModel
 import com.zaur.core.HandleResult
+import com.zaur.data.al_quran_aqc.constans.ReciterList
 import com.zaur.domain.al_quran_cloud.models.arabic.ArabicChaptersAqc
 import com.zaur.domain.al_quran_cloud.models.chapter.ChaptersAqc
 import com.zaur.domain.al_quran_cloud.use_case.QuranTextUseCaseAqc
@@ -21,20 +22,19 @@ class QuranTextViewModel(
     private val _uiState = MutableStateFlow(QuranTextAqcUIState())
     val textUiState: StateFlow<QuranTextAqcUIState> = _uiState
 
-    init {
-        /*viewModelScope.launch {
-            if (quranTextUseCaseAqc.isSurahScreenOpened()) {
-                val (lastChapter, lastAyah) = quranTextUseCaseAqc.getLastRead()
-                getArabicChapter(lastChapter) //todo СДЕЛАТЬ ДРУГУЮ ЛОГИКУ (ДОБАВИТЬ ДРУГОЙ МЕТОД ДЛЯ ПОЛУЧЕНИЯ ПОСЛЕДНЕЙ СУРЫ И АЯТА)
-            } else {
-                getAllChapters("ru")
-                quranTextUseCaseAqc.setSurahScreenOpened()
-            }
-        }*/
+    fun saveReciter(identifier: String) {
+        quranTextUseCaseAqc.saveReciter(identifier)
+    }
+
+    fun getReciter(): String? = quranTextUseCaseAqc.getReciter()
+
+    fun getReciterName(): String? {
+        val identifier = getReciter()
+        return ReciterList.reciters[identifier] // Берем имя чтеца из списка
     }
 
     suspend fun getAllChapters() {
-        val result = launchSafely<ChaptersAqc> { quranTextUseCaseAqc.getAllChapters() }
+        val result = launchSafely<ChaptersAqc> { quranTextUseCaseAqc.fetchAllChapters() }
         result.handle(object : HandleResult<ChaptersAqc> {
             override fun handleSuccess(data: ChaptersAqc) {
                 viewModelScope.launch {
@@ -50,7 +50,7 @@ class QuranTextViewModel(
     }
 
     suspend fun getArabicChapter(chapterNumber: Int) {
-        val result = launchSafely { quranTextUseCaseAqc.getArabicChapter(chapterNumber) }
+        val result = launchSafely { quranTextUseCaseAqc.fetchArabicChapter(chapterNumber) }
         result.handle(object : HandleResult<ArabicChaptersAqc> {
             override fun handleSuccess(data: ArabicChaptersAqc) {
                 viewModelScope.launch {

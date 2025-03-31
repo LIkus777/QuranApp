@@ -36,13 +36,17 @@ class MainActivity : ComponentActivity() {
                     QuranNavGraph(navController = navController, surahChooseScreen = {
                         SurahChooseScreen(
                             quranTextViewModel,
-                            quranAudioViewModel,
-                            quranTranslationViewModel,
                             navController,
                             modifier = Modifier.padding(innerPadding)
                         )
                     }, surahDetailScreen = { surahNumber, controller ->
-                        SurahDetailScreen(surahNumber, controller)
+                        SurahDetailScreen(
+                            surahNumber,
+                            quranTextViewModel,
+                            quranAudioViewModel,
+                            quranTranslationViewModel,
+                            controller
+                        )
                     })
                 }
             }

@@ -62,7 +62,7 @@ fun ModernSurahText(
                     .size(width = 50.dp, height = 50.dp)
                     .padding(end = 4.dp)
                     .border(2.dp, Color.White, RoundedCornerShape(8.dp)) // Белая обводка
-                    .background(color = Color(0xFFCFAF5D), shape = RoundedCornerShape(8.dp)),
+                    .background(color = colors.backgroundForBoxes, shape = RoundedCornerShape(8.dp)),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
@@ -82,7 +82,7 @@ fun ModernSurahText(
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Thin,
                         fontFamily = QuranFontRubik,
-                        color = Color(0xFF1A237E), // Синий цвет ссылки
+                        color = colors.textPrimary, // Синий цвет ссылки
                     ), modifier = Modifier.padding(start = 6.dp)
                 )
 
@@ -103,7 +103,7 @@ fun ModernSurahText(
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
                     fontFamily = FontFamily.Default, // Подбери арабский шрифт, если нужно
-                    color = Color(0xFF1A237E),
+                    color = colors.textPrimary,
                     textAlign = TextAlign.End
                 ),
                 modifier = Modifier.padding(end = 8.dp)

@@ -24,6 +24,17 @@ import com.zaur.domain.apiV4.repository.QuranTajweedRepositoryV4
 import com.zaur.domain.apiV4.repository.QuranTextRepositoryV4
 import com.zaur.domain.apiV4.repository.QuranTranslationRepositoryV4
 import com.zaur.domain.storage.QuranStorage
+import com.zaur.domain.storage.ReciterStorage
+
+class FakeReciterStorage() : ReciterStorage {
+    override fun saveSelectedReciter(identifier: String) {
+        TODO("Not yet implemented")
+    }
+
+    override fun getSelectedReciter(): String? {
+        TODO("Not yet implemented")
+    }
+}
 
 class FakeQuranStorage() : QuranStorage {
     override fun saveLastRead(chapterNumber: Int, ayahNumber: Int) {

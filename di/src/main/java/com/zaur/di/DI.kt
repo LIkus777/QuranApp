@@ -13,6 +13,7 @@ import com.zaur.data.apiV4.repository_impl.QuranTextRepositoryV4Impl
 import com.zaur.data.apiV4.repository_impl.QuranTranslationRepositoryV4Impl
 import com.zaur.data.network.ApiFactory
 import com.zaur.data.preferences.QuranPreferences
+import com.zaur.data.preferences.ReciterPreferences
 import com.zaur.domain.al_quran_cloud.repository.QuranAudioRepositoryAqc
 import com.zaur.domain.al_quran_cloud.repository.QuranTextRepositoryAqc
 import com.zaur.domain.al_quran_cloud.repository.QuranTranslationRepositoryAqc
@@ -30,13 +31,15 @@ import com.zaur.domain.apiV4.use_case.QuranTajweedUseCaseV4
 import com.zaur.domain.apiV4.use_case.QuranTextUseCaseV4
 import com.zaur.domain.apiV4.use_case.QuranTranslationUseCaseV4
 import com.zaur.domain.storage.QuranStorage
+import com.zaur.domain.storage.ReciterStorage
 
-interface DI : ProvideQuranStorage, ProvideQuranAudioUseCaseAqc, ProvideQuranTextUseCaseAqc,
-    ProvideQuranTranslationUseCaseAqc, ProvideQuranAudioUseCaseV4, ProvideQuranTextUseCase,
-    ProvideQuranTajweedUseCase, ProvideQuranTafsirUseCase, ProvideQuranTranslationUseCase,
-    ProvideQuranApiAqc, ProvideQuranApiV4, ProvideQuranAudioRepositoryAqc,
-    ProvideQuranTextRepositoryAqc, ProvideQuranTranslationRepositoryAqc,
-    ProvideQuranAudioRepositoryV4, ProvideQuranTafsirRepositoryV4, ProvideQuranTajweedRepositoryV4,
+interface DI : ProvideReciterStorage, ProvideQuranStorage, ProvideQuranAudioUseCaseAqc,
+    ProvideQuranTextUseCaseAqc, ProvideQuranTranslationUseCaseAqc, ProvideQuranAudioUseCaseV4,
+    ProvideQuranTextUseCase, ProvideQuranTajweedUseCase, ProvideQuranTafsirUseCase,
+    ProvideQuranTranslationUseCase, ProvideQuranApiAqc, ProvideQuranApiV4,
+    ProvideQuranAudioRepositoryAqc, ProvideQuranTextRepositoryAqc,
+    ProvideQuranTranslationRepositoryAqc, ProvideQuranAudioRepositoryV4,
+    ProvideQuranTafsirRepositoryV4, ProvideQuranTajweedRepositoryV4,
     ProvideQuranTranslationRepositoryV4, ProvideQuranTextRepositoryV4 {
 
     class Base(private val context: Context) : DI {
@@ -64,8 +67,11 @@ interface DI : ProvideQuranStorage, ProvideQuranAudioUseCaseAqc, ProvideQuranTex
         override fun provideQuranAudioUseCaseV4(): QuranAudioUseCaseV4 =
             QuranAudioUseCaseV4(provideQuranAudioRepositoryV4())
 
-        override fun provideQuranTextUseCaseV4(): QuranTextUseCaseV4 =
-            QuranTextUseCaseV4(provideQuranTextRepositoryV4(), provideQuranStorage())
+        override fun provideQuranTextUseCaseV4(): QuranTextUseCaseV4 = QuranTextUseCaseV4(
+            provideQuranTextRepositoryV4(),
+            provideQuranStorage(),
+            provideReciterStorage()
+        )
 
         override fun provideQuranTajweedUseCaseV4(): QuranTajweedUseCaseV4 =
             QuranTajweedUseCaseV4(provideQuranTajweedRepositoryV4())
@@ -78,11 +84,16 @@ interface DI : ProvideQuranStorage, ProvideQuranAudioUseCaseAqc, ProvideQuranTex
 
         override fun provideQuranStorage(): QuranStorage = QuranPreferences(context)
 
+        override fun provideReciterStorage(): ReciterStorage = ReciterPreferences(context)
+
         override fun provideQuranAudioUseCaseAqc(): QuranAudioUseCaseAqc =
             QuranAudioUseCaseAqc(provideQuranAudioRepositoryAqc())
 
-        override fun provideQuranTextUseCaseAqc(): QuranTextUseCaseAqc =
-            QuranTextUseCaseAqc(provideQuranTextRepositoryAqc(), provideQuranStorage())
+        override fun provideQuranTextUseCaseAqc(): QuranTextUseCaseAqc = QuranTextUseCaseAqc(
+            provideQuranTextRepositoryAqc(),
+            provideQuranStorage(),
+            provideReciterStorage()
+        )
 
         override fun provideQuranTranslationUseCaseAqc(): QuranTranslationUseCaseAqc =
             QuranTranslationUseCaseAqc(provideQuranTranslationRepositoryAqc())

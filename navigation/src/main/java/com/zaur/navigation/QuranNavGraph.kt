@@ -13,9 +13,9 @@ fun QuranNavGraph(
 ) {
     NavHost(
         navController = navController,
-        startDestination = Screen.SurahChoose.route // ✅ Используем sealed class
+        startDestination = Screen.SurahChoose.route // Используем sealed class
     ) {
-        composable(Screen.SurahChoose.route) { // ✅ Вместо строки используем sealed class
+        composable(Screen.SurahChoose.route) {
             surahChooseScreen(navController)
         }
         composable(Screen.SurahDetail.route) { backStackEntry ->

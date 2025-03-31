@@ -19,9 +19,13 @@ import com.zaur.domain.apiV4.use_case.QuranTafsirUseCaseV4
 import com.zaur.domain.apiV4.use_case.QuranTajweedUseCaseV4
 import com.zaur.domain.apiV4.use_case.QuranTextUseCaseV4
 import com.zaur.domain.apiV4.use_case.QuranTranslationUseCaseV4
+import com.zaur.domain.storage.ReciterStorage
 
 interface ProvideQuranStorage {
     fun provideQuranStorage(): QuranStorage
+}
+interface ProvideReciterStorage {
+    fun provideReciterStorage(): ReciterStorage
 }
 
 interface ProvideQuranAudioUseCaseAqc {

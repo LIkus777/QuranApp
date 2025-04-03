@@ -4,6 +4,9 @@ QuranApp is a modern and feature-rich Android application designed to provide an
 
 ## Features
 
+- 📜 **Hadith Encyclopedia** – Access a comprehensive collection of hadiths. (in progress)
+- 🕋 **Prayer Time Tracking** – Stay updated with accurate prayer times. (in progress)
+- 🤲 **Azkar & Duas** – Recite daily supplications and remembrance. (in progress)
 - 📖 **Enhanced Search** – Find verses by meaning, keywords, and context. (in progress)
 - 📚 **Interactive Tafsir** – Access detailed explanations of Quranic verses. (in progress)
 - 🔊 **Audio Recitation** – Listen to high-quality recitations with translations. 
@@ -46,3 +49,7 @@ The application is modularized into the following 8 modules:
    
    ```sh
    git clone https://github.com/yourusername/QuranApp.git
+
+## Contact
+
+For any inquiries or feedback, feel free to reach out via **zm0963@gmail.com**

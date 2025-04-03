@@ -43,5 +43,6 @@ The application is modularized into the following 8 modules:
 ## Installation
 
 1. Clone the repository:
+   
    ```sh
    git clone https://github.com/yourusername/QuranApp.git

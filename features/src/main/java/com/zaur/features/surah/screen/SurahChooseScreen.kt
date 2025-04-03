@@ -11,6 +11,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -20,24 +21,32 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.zaur.domain.al_quran_cloud.use_case.QuranTextUseCaseAqc
+import com.zaur.domain.storage.theme.ThemeUseCase
 import com.zaur.features.surah.fakes.FakeQTextRAqc
 import com.zaur.features.surah.fakes.FakeQuranStorage
 import com.zaur.features.surah.fakes.FakeReciterStorage
-import com.zaur.features.surah.viewmodel.QuranTextViewModel
+import com.zaur.features.surah.fakes.FakeThemeStorage
+import com.zaur.features.surah.viewmodel.ThemeViewModel
+import com.zaur.features.surah.viewmodel.factory.SurahChooseViewModelFactory
 import com.zaur.navigation.Screen
 import com.zaur.presentation.ui.ModernSurahText
 import com.zaur.presentation.ui.QuranAppTheme
 
 @Composable
 fun SurahChooseScreen(
-    quranTextViewModel: QuranTextViewModel, navController: NavController, modifier: Modifier
+    themeViewModel: ThemeViewModel,
+    surahChooseViewModelFactory: SurahChooseViewModelFactory,
+    navController: NavController,
+    modifier: Modifier
 ) {
 
+    val surahChooseViewModelFactory = remember { surahChooseViewModelFactory.create() }
+
     LaunchedEffect(Unit) {
-        quranTextViewModel.getAllChapters()
+        surahChooseViewModelFactory.getAllChapters()
     }
 
-    val textState = quranTextViewModel.textUiState.collectAsState().value
+    val textState = surahChooseViewModelFactory.textUiState.collectAsState().value
 
     LazyColumn(
         modifier = Modifier
@@ -54,6 +63,7 @@ fun SurahChooseScreen(
                 englishName = chapter.englishName,
                 arabicName = chapter.name,
                 numberOfAyats = chapter.numberOfAyahs.toInt(),
+
                 revelationType = chapter.revelationType,
                 modifier = Modifier.clickable {
                     navController.navigate(Screen.SurahDetail.createRoute(chapter.number.toInt()))
@@ -69,11 +79,13 @@ fun SurahChoosePreview() {
     QuranAppTheme {
         Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
             SurahChooseScreen(
-                quranTextViewModel = QuranTextViewModel(
-                    SavedStateHandle(), QuranTextUseCaseAqc(
+                themeViewModel = ThemeViewModel(
+                    SavedStateHandle(), ThemeUseCase(FakeThemeStorage())
+                ), surahChooseViewModelFactory = SurahChooseViewModelFactory(
+                    QuranTextUseCaseAqc(
                         FakeQTextRAqc(), FakeQuranStorage(), FakeReciterStorage()
                     )
-                ), modifier = Modifier.padding(innerPadding), navController = fakeNavController
+                ), navController = fakeNavController, modifier = Modifier.padding(innerPadding)
             )
         }
     }

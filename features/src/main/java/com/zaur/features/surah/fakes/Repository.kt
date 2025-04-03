@@ -25,6 +25,18 @@ import com.zaur.domain.apiV4.repository.QuranTextRepositoryV4
 import com.zaur.domain.apiV4.repository.QuranTranslationRepositoryV4
 import com.zaur.domain.storage.QuranStorage
 import com.zaur.domain.storage.ReciterStorage
+import com.zaur.domain.storage.theme.ThemeStorage
+import kotlinx.coroutines.flow.Flow
+
+class FakeThemeStorage(): ThemeStorage {
+    override fun getIsDarkTheme(): Flow<Boolean> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun saveTheme(isDark: Boolean) {
+        TODO("Not yet implemented")
+    }
+}
 
 class FakeReciterStorage() : ReciterStorage {
     override fun saveSelectedReciter(identifier: String) {

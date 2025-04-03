@@ -28,16 +28,24 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.zaur.data.al_quran_aqc.constans.ReciterList
-import com.zaur.presentation.ui.LightThemeColors
+import com.zaur.presentation.ui.QuranColors
 
 //@Preview(showBackground = true)
 @Composable
-fun ChooseReciterDialog(showDialog: Boolean, onDismiss: (String?) -> Unit) {
+fun ChooseReciterDialog(
+    showDialog: Boolean,
+    isFirstSelection: Boolean,
+    colors: QuranColors,
+    onDismiss: (String?) -> Unit
+) {
     if (showDialog) {
-        val colors = LightThemeColors
-        var selectedItem by remember { mutableStateOf<String?>(null) } // Храним выбор
+        var selectedItem by remember { mutableStateOf<String?>(null) }
 
-        Dialog(onDismissRequest = { /* Блокируем закрытие, если не выбран элемент */ }) {
+        Dialog(onDismissRequest = {
+            if (!isFirstSelection) {
+                onDismiss(null) // Разрешаем закрытие, если чтец уже был выбран
+            }
+        }) {
             Box(
                 modifier = Modifier
                     .wrapContentSize()
@@ -52,18 +60,21 @@ fun ChooseReciterDialog(showDialog: Boolean, onDismiss: (String?) -> Unit) {
 
                     Spacer(modifier = Modifier.height(10.dp))
 
-                    ReciterList.reciters.toList().forEachIndexed { index, (name, identifier) ->
+                    ReciterList.reciters.toList().forEachIndexed { index, (identifier, name) ->
                         val isSelected = selectedItem == identifier
-                        Box(
-                            contentAlignment = Alignment.Center,
-                            modifier = Modifier
-                                .clickable { selectedItem = identifier }
-                                .padding(9.dp)
-                                .background(
-                                    if (isSelected) colors.buttonSecondary else colors.buttonDisabled,
-                                    shape = RoundedCornerShape(16.dp)
-                                )
-                                .fillMaxWidth()) {
+                        Box(contentAlignment = Alignment.Center, modifier = Modifier
+                            .clickable {
+                                selectedItem = identifier
+                                if (!isFirstSelection) {
+                                    onDismiss(identifier)
+                                }
+                            }
+                            .padding(9.dp)
+                            .background(
+                                if (isSelected) colors.buttonSecondary else colors.buttonDisabled,
+                                shape = RoundedCornerShape(16.dp)
+                            )
+                            .fillMaxWidth()) {
                             Text(
                                 name,
                                 modifier = Modifier.padding(16.dp),
@@ -72,7 +83,6 @@ fun ChooseReciterDialog(showDialog: Boolean, onDismiss: (String?) -> Unit) {
                             )
                         }
 
-                        // Показываем разделитель, если это не последний элемент
                         if (index != ReciterList.reciters.toList().lastIndex) {
                             Box(
                                 modifier = Modifier
@@ -83,22 +93,22 @@ fun ChooseReciterDialog(showDialog: Boolean, onDismiss: (String?) -> Unit) {
                         }
                     }
 
-                    Spacer(
-                        modifier = Modifier
-                            .height(10.dp)
-                            .background(Color.Black)
-                    )
-
-                    Button(
-                        onClick = {
-                            // При закрытии передаем выбранный identifier
-                            onDismiss(selectedItem)
-                        }, enabled = selectedItem != null, colors = ButtonDefaults.buttonColors(
-                            containerColor = colors.buttonPrimary, // Зелёный фон кнопки
-                            contentColor = Color.White // Белый цвет текста
+                    if (isFirstSelection) {
+                        Spacer(
+                            modifier = Modifier
+                                .height(10.dp)
+                                .background(Color.Black)
                         )
-                    ) {
-                        Text("ГОТОВО")
+
+                        Button(
+                            onClick = {
+                                onDismiss(selectedItem) // Передаем выбранный identifier
+                            }, enabled = selectedItem != null, colors = ButtonDefaults.buttonColors(
+                                containerColor = colors.buttonPrimary, contentColor = Color.White
+                            )
+                        ) {
+                            Text("ГОТОВО")
+                        }
                     }
                 }
             }

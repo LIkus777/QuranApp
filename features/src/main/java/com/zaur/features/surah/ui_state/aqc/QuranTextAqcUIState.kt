@@ -10,7 +10,6 @@ data class QuranTextAqcUIState(
     val chapters: ChaptersAqc? = null,
     val currentChapter: ChapterAqc? = null,
     val currentArabicText: ArabicChaptersAqc? = null,
-    val juz: List<JuzV4> = emptyList(),
     val errorMessage: String? = null,
     val isRefreshing: Boolean = false
 )

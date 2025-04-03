@@ -20,7 +20,6 @@ class QuranTranslationViewModel(
     private val _uiState = MutableStateFlow(QuranTranslationAqcUIState())
     val translationUiState: StateFlow<QuranTranslationAqcUIState> = _uiState
 
-
     suspend fun getTranslationForChapter(chapterNumber: Int, translator: String) {
         val result =
             launchSafely { quranTranslationUseCaseAqc.getTranslationForChapter(chapterNumber, translator) }

@@ -20,12 +20,23 @@ import com.zaur.domain.apiV4.use_case.QuranTajweedUseCaseV4
 import com.zaur.domain.apiV4.use_case.QuranTextUseCaseV4
 import com.zaur.domain.apiV4.use_case.QuranTranslationUseCaseV4
 import com.zaur.domain.storage.ReciterStorage
+import com.zaur.domain.storage.theme.ThemeStorage
+import com.zaur.domain.storage.theme.ThemeUseCase
+
+interface ProvideThemeStorage {
+    fun provideThemeStorage(): ThemeStorage
+}
 
 interface ProvideQuranStorage {
     fun provideQuranStorage(): QuranStorage
 }
+
 interface ProvideReciterStorage {
     fun provideReciterStorage(): ReciterStorage
+}
+
+interface ProvideThemeUseCase {
+    fun provideThemeUseCase(): ThemeUseCase
 }
 
 interface ProvideQuranAudioUseCaseAqc {

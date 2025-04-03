@@ -14,6 +14,7 @@ import com.zaur.data.apiV4.repository_impl.QuranTranslationRepositoryV4Impl
 import com.zaur.data.network.ApiFactory
 import com.zaur.data.preferences.QuranPreferences
 import com.zaur.data.preferences.ReciterPreferences
+import com.zaur.data.preferences.ThemePreferences
 import com.zaur.domain.al_quran_cloud.repository.QuranAudioRepositoryAqc
 import com.zaur.domain.al_quran_cloud.repository.QuranTextRepositoryAqc
 import com.zaur.domain.al_quran_cloud.repository.QuranTranslationRepositoryAqc
@@ -32,8 +33,10 @@ import com.zaur.domain.apiV4.use_case.QuranTextUseCaseV4
 import com.zaur.domain.apiV4.use_case.QuranTranslationUseCaseV4
 import com.zaur.domain.storage.QuranStorage
 import com.zaur.domain.storage.ReciterStorage
+import com.zaur.domain.storage.theme.ThemeStorage
+import com.zaur.domain.storage.theme.ThemeUseCase
 
-interface DI : ProvideReciterStorage, ProvideQuranStorage, ProvideQuranAudioUseCaseAqc,
+interface DI : ProvideThemeStorage, ProvideReciterStorage, ProvideQuranStorage, ProvideThemeUseCase, ProvideQuranAudioUseCaseAqc,
     ProvideQuranTextUseCaseAqc, ProvideQuranTranslationUseCaseAqc, ProvideQuranAudioUseCaseV4,
     ProvideQuranTextUseCase, ProvideQuranTajweedUseCase, ProvideQuranTafsirUseCase,
     ProvideQuranTranslationUseCase, ProvideQuranApiAqc, ProvideQuranApiV4,
@@ -86,6 +89,8 @@ interface DI : ProvideReciterStorage, ProvideQuranStorage, ProvideQuranAudioUseC
 
         override fun provideReciterStorage(): ReciterStorage = ReciterPreferences(context)
 
+        override fun provideThemeStorage(): ThemeStorage = ThemePreferences(context)
+
         override fun provideQuranAudioUseCaseAqc(): QuranAudioUseCaseAqc =
             QuranAudioUseCaseAqc(provideQuranAudioRepositoryAqc())
 
@@ -107,6 +112,7 @@ interface DI : ProvideReciterStorage, ProvideQuranStorage, ProvideQuranAudioUseC
         override fun provideQuranAudioRepositoryAqc(): QuranAudioRepositoryAqc =
             QuranAudioRepositoryAqcImpl(provideQuranApiAqc())
 
+        override fun provideThemeUseCase(): ThemeUseCase = ThemeUseCase(provideThemeStorage())
     }
 
 }

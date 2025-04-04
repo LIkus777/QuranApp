@@ -157,7 +157,7 @@ fun CustomBottomSheet(
                     modifier = Modifier
                         .align(Alignment.BottomStart)
                         .offset(y = (23).dp)
-                        .padding(start = 18.5.dp)
+                        .padding(start = 17.9.dp)
                         .size(24.dp)
                         .background(
                             color = MaterialTheme.colorScheme.background,

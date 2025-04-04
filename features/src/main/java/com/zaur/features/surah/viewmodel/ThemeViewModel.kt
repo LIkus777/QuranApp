@@ -1,9 +1,12 @@
 package com.zaur.features.surah.viewmodel
 
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.viewModelScope
 import com.zaur.core.BaseViewModel
 import com.zaur.domain.storage.theme.ThemeUseCase
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
 
 class ThemeViewModel(
     private val savedStateHandle: SavedStateHandle,
@@ -13,7 +16,9 @@ class ThemeViewModel(
         return themeUseCase.getIsDarkTheme()
     }
 
-    suspend fun saveTheme(isDark: Boolean) {
-        themeUseCase.saveTheme(isDark)
+    fun saveTheme(isDark: Boolean) {
+        viewModelScope.launch(Dispatchers.IO) {
+            themeUseCase.saveTheme(isDark)
+        }
     }
 }

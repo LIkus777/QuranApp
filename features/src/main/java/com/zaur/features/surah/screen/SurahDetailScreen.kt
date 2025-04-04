@@ -48,9 +48,9 @@ fun SurahDetailScreen(
     val quranAudioViewModel = remember { quranAudioViewModelFactory.create() }
     val quranTranslationViewModel = remember { quranTranslationViewModelFactory.create() }
 
-    val textState = quranTextViewModel.textUiState.collectAsState().value
-    quranAudioViewModel.audioUiState.collectAsState().value
-    val translateState = quranTranslationViewModel.translationUiState.collectAsState().value
+    val textState by quranTextViewModel.textUiState.collectAsState()
+    val audioState by quranAudioViewModel.audioUiState.collectAsState()
+    val translateState by quranTranslationViewModel.translationUiState.collectAsState()
 
     var showReciterDialog by remember { mutableStateOf(false) }
     var showTextBottomSheet by remember { mutableStateOf(false) }
@@ -66,6 +66,16 @@ fun SurahDetailScreen(
     val isDarkTheme = themeViewModel.getIsDarkTheme().collectAsState(initial = false).value
     val colors = if (isDarkTheme) DarkThemeColors else LightThemeColors
 
+    var runAudio by remember { mutableStateOf(false) }
+    var currentAyah by remember { mutableStateOf(0) }
+
+    // Показываем progress bar, когда загружается новый аудиофайл
+    LaunchedEffect(audioState) {
+        if (audioState.verseAudioFile != null) {
+            runAudio = true
+        }
+    }
+
     // Загружаем чтеца при первом рендере экрана
     LaunchedEffect(Unit) {
         val reciter = quranTextViewModel.getReciterName()
@@ -77,12 +87,20 @@ fun SurahDetailScreen(
         quranTranslationViewModel.getTranslationForChapter(chapterNumber, "ru.kuliev")
     }
 
+
     Scaffold(bottomBar = {
         ChapterBottomBar(colors, { show ->
-            //showReciterDialog = show
             showTextBottomSheet = show
         }) {
             showSettingsBottomSheet = true
+        }
+    }, snackbarHost = {
+        if (runAudio) {
+            CustomAudioProgressBarWidget(
+                audioState.verseAudioFile?.versesAudio?.audio.toString()
+            ) {
+                runAudio = false
+            }
         }
     }) { paddingValues ->
         AyaColumn(
@@ -94,7 +112,15 @@ fun SurahDetailScreen(
             fontSizeArabic,
             fontSizeRussian,
             paddingValues
-        )
+        ) { ayahNumber ->
+            if (currentAyah == ayahNumber) runAudio = true
+            else {
+                quranAudioViewModel.getVerseAudioFile(
+                    "$chapterNumber:$ayahNumber", quranTextViewModel.getReciter().toString()
+                )
+                currentAyah = ayahNumber
+            }
+        }
     }
 
     if (showSettingsBottomSheet) {

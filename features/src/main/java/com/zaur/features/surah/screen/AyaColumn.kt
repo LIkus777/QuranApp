@@ -25,7 +25,8 @@ fun AyaColumn(
     colors: QuranColors,
     fontSizeArabic: Float,
     fontSizeRussian: Float,
-    paddingValues: PaddingValues
+    paddingValues: PaddingValues,
+    onClickSound: (Int) -> Unit = {}
 ) {
     Column(
         modifier = Modifier
@@ -50,7 +51,9 @@ fun AyaColumn(
                 itemsIndexed(ayats) { index, aya ->
                     val translationText =
                         if (index < translations.size) translations[index].text else "Перевод отсутствует"
-                    AyahItem(aya.numberInSurah.toInt(), aya.text, translationText, colors, fontSizeArabic, fontSizeRussian)
+                    AyahItem(aya.numberInSurah.toInt(), aya.text, translationText, colors, fontSizeArabic, fontSizeRussian) {
+                        onClickSound(aya.numberInSurah.toInt())
+                    }
                 }
             }
         }

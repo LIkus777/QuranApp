@@ -68,10 +68,10 @@ fun ChapterBottomBar(
         contentColor = colors.iconColor,
         modifier = Modifier.height(56.dp + navBarHeightInDp.dp)
     ) {
-        IconButton(onClick = { showReciterDialog(true) }) {
+        IconButton(onClick = { showReciterDialog(true) }, modifier = Modifier.padding(start = 10.dp)) {
             Icon(
                 painter = painterResource(R.drawable.letter_case),
-                contentDescription = "Размер шрифтов"
+                contentDescription = "Размер шрифтов",
             )
         }
         Spacer(modifier = Modifier.weight(1f))
@@ -79,7 +79,7 @@ fun ChapterBottomBar(
             Icon(Icons.Default.Settings, contentDescription = "Настройки")
         }
         Spacer(modifier = Modifier.weight(1f))
-        IconButton(onClick = {/* TODO: Избранное */ }) {
+        IconButton(onClick = {/* TODO: Избранное */ }, modifier = Modifier.padding(end = 10.dp)) {
             Icon(Icons.Default.Favorite, contentDescription = "Избранное")
         }
     }
@@ -120,7 +120,7 @@ fun SettingsBottomSheet(
                     fontSize = 16.sp,
                     modifier = Modifier
                         .clickable { showReciterDialog(true) }
-                        .padding(8.dp))
+                        .padding(top = 8.dp, bottom = 8.dp))
 
                 Spacer(modifier = Modifier.height(16.dp))
 
@@ -159,7 +159,7 @@ fun CustomBottomSheetDefaultPreview() {
             Text(
                 "Чтец: ", fontSize = 16.sp, modifier = Modifier
                     //.clickable { showReciterDialog(true) }
-                    .padding(8.dp)
+                    .padding(top = 8.dp, bottom = 8.dp)
             )
 
             Spacer(modifier = Modifier.height(16.dp))

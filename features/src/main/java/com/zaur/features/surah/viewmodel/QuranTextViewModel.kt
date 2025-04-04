@@ -10,6 +10,7 @@ import com.zaur.domain.al_quran_cloud.models.arabic.ArabicChaptersAqc
 import com.zaur.domain.al_quran_cloud.models.chapter.ChaptersAqc
 import com.zaur.domain.al_quran_cloud.use_case.QuranTextUseCaseAqc
 import com.zaur.features.surah.ui_state.aqc.QuranTextAqcUIState
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -33,36 +34,40 @@ class QuranTextViewModel(
         return ReciterList.reciters[identifier] // Берем имя чтеца из списка
     }
 
-    suspend fun getAllChapters() {
-        val result = launchSafely<ChaptersAqc> { quranTextUseCaseAqc.fetchAllChapters() }
-        result.handle(object : HandleResult<ChaptersAqc> {
-            override fun handleSuccess(data: ChaptersAqc) {
-                viewModelScope.launch {
-                    Log.i("TAG", "handleSuccess: getAllChapters data $data")
-                    _uiState.emit(_uiState.value.copy(chapters = data))
+    fun getAllChapters() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val result = launchSafely<ChaptersAqc> { quranTextUseCaseAqc.fetchAllChapters() }
+            result.handle(object : HandleResult<ChaptersAqc> {
+                override fun handleSuccess(data: ChaptersAqc) {
+                    viewModelScope.launch {
+                        Log.i("TAG", "handleSuccess: getAllChapters data $data")
+                        _uiState.emit(_uiState.value.copy(chapters = data))
+                    }
                 }
-            }
 
-            override fun handleError(e: Exception) {
-                super.handleError(e)
-            }
-        })
+                override fun handleError(e: Exception) {
+                    super.handleError(e)
+                }
+            })
+        }
     }
 
-    suspend fun getArabicChapter(chapterNumber: Int) {
-        val result = launchSafely { quranTextUseCaseAqc.fetchArabicChapter(chapterNumber) }
-        result.handle(object : HandleResult<ArabicChaptersAqc> {
-            override fun handleSuccess(data: ArabicChaptersAqc) {
-                viewModelScope.launch {
-                    Log.i("TAG", "handleSuccess: getChapter data $data")
-                    _uiState.emit(_uiState.value.copy(currentArabicText = data))
+    fun getArabicChapter(chapterNumber: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val result = launchSafely { quranTextUseCaseAqc.fetchArabicChapter(chapterNumber) }
+            result.handle(object : HandleResult<ArabicChaptersAqc> {
+                override fun handleSuccess(data: ArabicChaptersAqc) {
+                    viewModelScope.launch {
+                        Log.i("TAG", "handleSuccess: getChapter data $data")
+                        _uiState.emit(_uiState.value.copy(currentArabicText = data))
+                    }
                 }
-            }
 
-            override fun handleError(e: Exception) {
-                Log.e("TAG", "handleError: $e")
-            }
-        })
+                override fun handleError(e: Exception) {
+                    Log.e("TAG", "handleError: $e")
+                }
+            })
+        }
     }
 
 }

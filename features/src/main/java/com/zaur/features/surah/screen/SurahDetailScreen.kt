@@ -67,6 +67,7 @@ fun SurahDetailScreen(
     val colors = if (isDarkTheme) DarkThemeColors else LightThemeColors
 
     var runAudio by remember { mutableStateOf(false) }
+    var restartAudio by remember { mutableStateOf(false) }
     var currentAyah by remember { mutableStateOf(0) }
 
     // Показываем progress bar, когда загружается новый аудиофайл
@@ -87,7 +88,6 @@ fun SurahDetailScreen(
         quranTranslationViewModel.getTranslationForChapter(chapterNumber, "ru.kuliev")
     }
 
-
     Scaffold(bottomBar = {
         ChapterBottomBar(colors, { show ->
             showTextBottomSheet = show
@@ -97,10 +97,12 @@ fun SurahDetailScreen(
     }, snackbarHost = {
         if (runAudio) {
             CustomAudioProgressBarWidget(
-                audioState.verseAudioFile?.versesAudio?.audio.toString()
-            ) {
-                runAudio = false
-            }
+                audioUrl = audioState.verseAudioFile?.versesAudio?.audio.toString(),
+                restartAudio = restartAudio,
+                onComplete = {
+                    runAudio = false
+                }
+            )
         }
     }) { paddingValues ->
         AyaColumn(
@@ -113,13 +115,17 @@ fun SurahDetailScreen(
             fontSizeRussian,
             paddingValues
         ) { ayahNumber ->
-            if (currentAyah == ayahNumber) runAudio = true
-            else {
+            if (currentAyah == ayahNumber) {
+                // Перезапуск если та же аята
+                restartAudio = !restartAudio // триггерим новый ключ
+            } else {
                 quranAudioViewModel.getVerseAudioFile(
-                    "$chapterNumber:$ayahNumber", quranTextViewModel.getReciter().toString()
+                    "$chapterNumber:$ayahNumber",
+                    quranTextViewModel.getReciter().toString()
                 )
                 currentAyah = ayahNumber
             }
+            runAudio = true
         }
     }
 

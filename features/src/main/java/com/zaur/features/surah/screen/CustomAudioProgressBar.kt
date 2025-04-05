@@ -1,6 +1,7 @@
 package com.zaur.features.surah.screen
 
 import android.media.MediaPlayer
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -27,15 +28,16 @@ import kotlinx.coroutines.withContext
 
 @Composable
 fun CustomAudioProgressBarWidget(
-    audioUrl: String, onComplete: () -> Unit
+    audioUrl: String,
+    restartAudio: Boolean,
+    onComplete: () -> Unit
 ) {
     var mediaPlayer by remember { mutableStateOf<MediaPlayer?>(null) }
     var isPlaying by remember { mutableStateOf(false) }
 
-    // Пересоздаём MediaPlayer при изменении аудиофайла
-    LaunchedEffect(audioUrl) {
+    // Перезапускаем при изменении url или флага перезапуска
+    LaunchedEffect(audioUrl to restartAudio) {
         withContext(Dispatchers.IO) {
-            // Проверяем и освобождаем старый mediaPlayer, если он ещё существует
             mediaPlayer?.let { player ->
                 if (player.isPlaying) {
                     player.stop()
@@ -58,7 +60,7 @@ fun CustomAudioProgressBarWidget(
                 }
                 mediaPlayer = player
             } catch (e: Exception) {
-                e.printStackTrace()
+                Log.e("TAG", "CustomAudioProgressBarWidget: $e")
             }
         }
     }

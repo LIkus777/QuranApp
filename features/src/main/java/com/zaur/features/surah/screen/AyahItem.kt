@@ -1,10 +1,8 @@
 package com.zaur.features.surah.screen
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -20,7 +18,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -43,19 +41,26 @@ fun AyahItem(
     colors: QuranColors = LightThemeColors,
     fontSizeArabic: Float = 24f,
     fontSizeRussian: Float = 16f,
+    soundIsActive: Boolean = false,
+    currentAyah: Int = 72,
     onClickSound: (Int) -> Unit = {}
 ) {
     val arabicTextFormatted = BidiFormatter.getInstance().unicodeWrap(arabicText)
+    val backgroundColor =
+        if (currentAyah == ayahNumber && soundIsActive) colors.currentCard else Color.Unspecified
 
-    Column (
+    Column(
         modifier = Modifier
             .fillMaxWidth()
+            .background(backgroundColor)
             .padding(16.dp),
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth().padding(bottom = 4.dp, top = 4.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 4.dp, top = 4.dp)
         ) {
-            Row (
+            Row(
                 modifier = Modifier
                     .height(24.dp)
                     .fillMaxWidth()
@@ -65,15 +70,23 @@ fun AyahItem(
                     fontSize = 10.sp,
                     color = colors.textSecondary,
                     fontWeight = FontWeight.Light,
-                    modifier = Modifier.border(4.dp, colors.border, shape = RoundedCornerShape(8.dp))
-                        .background(color = colors.boxBackground, shape = RoundedCornerShape(8.dp))
+                    modifier = Modifier
+                        .border(
+                            4.dp, colors.border, shape = RoundedCornerShape(8.dp)
+                        )
+                        .background(color = Color.Unspecified, shape = RoundedCornerShape(8.dp))
                         .padding(horizontal = 8.dp, vertical = 4.dp)
                 )
                 Spacer(modifier = Modifier.weight(1f))
                 Icon(
                     painter = painterResource(R.drawable.volume),
                     contentDescription = "Звук",
-                    modifier = Modifier.size(24.dp).clickable(onClick = { onClickSound(ayahNumber) })
+                    tint = if (currentAyah == ayahNumber && soundIsActive) colors.border else Color.Unspecified,
+                    modifier = Modifier
+                        .size(24.dp)
+                        .clickable(onClick = {
+                            onClickSound(ayahNumber)
+                        })
                 )
             }
         }

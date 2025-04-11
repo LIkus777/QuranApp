@@ -8,6 +8,7 @@ import androidx.navigation.compose.composable
 @Composable
 fun QuranNavGraph(
     navController: NavHostController,
+    mainScreen: @Composable () -> Unit,
     surahChooseScreen: @Composable (NavHostController) -> Unit,
     surahDetailScreen: @Composable (Int, NavHostController) -> Unit
 ) {

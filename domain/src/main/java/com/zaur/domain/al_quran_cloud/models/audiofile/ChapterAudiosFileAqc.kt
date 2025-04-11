@@ -3,7 +3,7 @@ package com.zaur.domain.al_quran_cloud.models.audiofile
 import com.google.gson.annotations.SerializedName
 
 data class ChapterAudiosFileAqc(
-    val code: Long, val status: String, @SerializedName("data") val chapterAudios: ChapterAudioFile
+    val code: Long, val status: String, @SerializedName("data") val chapterAudio: ChapterAudioFile
 )
 
 data class ChapterAudioFile(

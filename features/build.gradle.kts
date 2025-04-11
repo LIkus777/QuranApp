@@ -75,6 +75,9 @@ dependencies {
 
     implementation(libs.navigation)
 
+    implementation (libs.androidx.media3.exoplayer)
+    implementation (libs.androidx.media3.ui)
+
     implementation(project(":core"))
     implementation(project(":data"))
     implementation(project(":domain"))

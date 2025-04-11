@@ -1,0 +1,15 @@
+<network-security-config>
+    <!-- HTTPS для cdn.islamic.network с кастомным сертификатом -->
+    <domain-config cleartextTrafficPermitted="false">
+        <domain includeSubdomains="true">cdn.islamic.network</domain>
+        <trust-anchors>
+            <certificates src="system" />
+            <certificates src="@raw/isrgrootx1" />
+        </trust-anchors>
+    </domain-config>
+
+    <!-- HTTP для api.alquran.cloud -->
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">api.alquran.cloud</domain>
+    </domain-config>
+</network-security-config>

@@ -21,6 +21,7 @@ val DarkGold = Color(0xFFB8860B) // Тёмный золотой
 val TransparentBlack = Color(0x66000000) // Чёрный с прозрачностью (тени)
 val TransparentWhite = Color(0x66FFFFFF) // Белый с прозрачностью (подсветка)
 val DisabledGray = Color(0xFFE1E1E3) // Серый для отключённых элементов
+val CurrentGray = Color(0xCBE8E8E8) // Серый для отключённых элементов
 
 // Цвета для AppBar и StatusBar
 val AppBarColor = PrimaryGreen // Основной цвет AppBar
@@ -29,7 +30,6 @@ val IconColor = White // Цвет иконок
 
 // Светлая тема
 val LightThemeColors = QuranColors(
-    backgroundForBoxes = Gold,
     background = White,
     cardBackground = LightGray,
     boxBackground = Color(0xFFEAEAEA),
@@ -45,6 +45,7 @@ val LightThemeColors = QuranColors(
     border = Gold,
     highlight = LightBlue,
     divider = Color(0xFFBDBDBD),
+    backgroundForBoxes = Gold,
     success = SoftGreen,
     warning = Orange,
     error = Red,
@@ -52,6 +53,7 @@ val LightThemeColors = QuranColors(
     appBarColor = AppBarColor,
     statusBarColor = StatusBarColor,
     iconColor = IconColor,
+    currentCard = CurrentGray,
 )
 
 // Тёмная тема
@@ -68,6 +70,7 @@ val DarkThemeColors = QuranColors(
     buttonTertiary = LightGold,
     buttonDanger = Red,
     buttonDisabled = DisabledGray,
+    currentCard = CurrentGray,
     border = Gold,
     highlight = LightGold,
     divider = Color(0xFF616161),
@@ -105,5 +108,6 @@ data class QuranColors(
     val shadow: Color,
     val appBarColor: Color, // Цвет для AppBar
     val statusBarColor: Color, // Цвет для StatusBar
-    val iconColor: Color
+    val iconColor: Color,
+    val currentCard: Color
 )

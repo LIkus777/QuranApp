@@ -14,6 +14,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavHostController
@@ -29,6 +30,8 @@ import com.zaur.features.surah.fakes.FakeQuranStorage
 import com.zaur.features.surah.fakes.FakeReciterStorage
 import com.zaur.features.surah.fakes.FakeThemeStorage
 import com.zaur.features.surah.ui_state.aqc.SurahDetailState
+import com.zaur.features.surah.ui_state.aqc.SurahDetailStateCallback
+import com.zaur.features.surah.viewmodel.QuranAudioVmCallback
 import com.zaur.features.surah.viewmodel.ThemeViewModel
 import com.zaur.features.surah.viewmodel.factory.QuranAudioViewModelFactory
 import com.zaur.features.surah.viewmodel.factory.QuranTextViewModelFactory
@@ -48,6 +51,7 @@ fun SurahDetailScreen(
     quranAudioViewModelFactory: QuranAudioViewModelFactory,
     controller: NavHostController
 ) {
+    val context = LocalContext.current
 
     val quranTextViewModel = remember { quranTextViewModelFactory.create() }
     val quranAudioViewModel = remember { quranAudioViewModelFactory.create() }
@@ -68,22 +72,24 @@ fun SurahDetailScreen(
 
     val scope = rememberCoroutineScope()
 
-    val onPlayClick = {
-        if (!surahDetailStateData.isAudioPlaying) {
-            surahDetailStateData = surahDetailStateData.copy(playWholeChapter = true)
-            val ayahs = audioState.chaptersAudioFile!!.chapterAudio.ayahs
-            if (ayahs.isNotEmpty()) {
-                val firstAyah = ayahs.first()
-                quranAudioViewModel.getVerseAudioFile(
-                    "$chapterNumber:${firstAyah.numberInSurah}",
-                    quranTextViewModel.getReciter().toString()
-                )
-                surahDetailStateData = surahDetailStateData.copy(
-                    currentAyah = firstAyah.numberInSurah.toInt(), runAudio = true
-                )
-            }
+    val player = Player.Base(context, surahDetailStateData, audioState)
+    val playerScreen = PlayerScreen.Base(surahDetailStateData)
+
+    player.setSurahDetailStateCallback(object : SurahDetailStateCallback {
+        override fun update(state: SurahDetailState) {
+            Log.i("TAGG", "update state $state}")
+            surahDetailStateData = state
         }
-    }
+    })
+    player.setQuranAudioVmCallback(object : QuranAudioVmCallback {
+        override fun callVerseAudioFile() {
+            Log.i("TAGG", "callVerseAudioFile CALLED}")
+            quranAudioViewModel.getVerseAudioFile(
+                "$chapterNumber:${surahDetailStateData.currentAyah}",
+                quranTextViewModel.getReciter().toString()
+            )
+        }
+    })
 
     // Показываем progress bar, когда загружается новый аудиофайл
     LaunchedEffect(audioState.verseAudioFile, surahDetailStateData.restartAudio) {
@@ -107,63 +113,32 @@ fun SurahDetailScreen(
         )
     }
 
-    fun onAudioEnded() {
-        if (!surahDetailStateData.playWholeChapter) {
-            // Если не воспроизводится вся сура, то останавливаем воспроизведение.
-            surahDetailStateData = surahDetailStateData.copy(
-                runAudio = false,
-                isAudioPlaying = false,
-                playWholeChapter = true
-            )
-            return
-        }
-
-        val current = surahDetailStateData.currentAyah
-        val ayahs = audioState.chaptersAudioFile?.chapterAudio?.ayahs ?: return
-        val currentIndex = ayahs.indexOfFirst { it.numberInSurah.toInt() == current }
-
-        if (currentIndex != -1 && currentIndex + 1 < ayahs.size) {
-            // Переходим к следующему аяту
-            val nextAyah = ayahs[currentIndex + 1]
-            surahDetailStateData =
-                surahDetailStateData.copy(currentAyah = nextAyah.numberInSurah.toInt())
-            quranAudioViewModel.getVerseAudioFile(
-                "$chapterNumber:${nextAyah.numberInSurah}",
-                quranTextViewModel.getReciter().toString()
-            )
-            surahDetailStateData = surahDetailStateData.copy(runAudio = true)
-        } else {
-            // Если дошли до конца суры, переходим на начало или завершаем
-            surahDetailStateData =
-                surahDetailStateData.copy(runAudio = false, isAudioPlaying = false)
-            if (surahDetailStateData.playWholeChapter) {
-                onPlayClick() // Возобновляем воспроизведение всей суры
+    playerScreen.Screen(
+        audioUrl = audioState.verseAudioFile?.versesAudio?.audio.toString(),
+        setIsPlaying = {
+            surahDetailStateData = surahDetailStateData.copy(isAudioPlaying = it)
+        },
+        scrollToAudioElement = {
+            scope.launch(Dispatchers.Main) {
+                // Прокрутка к нужному элементу
+                listState.animateScrollToItem(surahDetailStateData.currentAyah - 1)  // Индекс Ayah может начинаться с 0
             }
-        }
-    }
+        },
+        player = player
+    )
 
     Scaffold(bottomBar = {
         ChapterBottomBar(
             colors,
-            surahDetailStateData.runAudio,
-            surahDetailStateData.playWholeChapter,
-            audioUrl = audioState.verseAudioFile?.versesAudio?.audio.toString(),
-            restartAudio = surahDetailStateData.restartAudio,
+            isPlaying = surahDetailStateData.isAudioPlaying,
             showReciterDialog = { show ->
                 surahDetailStateData = surahDetailStateData.copy(showTextBottomSheet = show)
             },
             showSettings = {
                 surahDetailStateData = surahDetailStateData.copy(showSettingsBottomSheet = true)
             },
-            onAudioEnded = {
-                onAudioEnded()
-            },
-            onPlayClick = onPlayClick,
-            scrollToAudioElement = {
-                scope.launch(Dispatchers.Main) {
-                    // Прокрутка к нужному элементу
-                    listState.animateScrollToItem(surahDetailStateData.currentAyah - 1)  // Индекс Ayah может начинаться с 0
-                }
+            onClickPlayer = {
+                player.onPlayClicked()
             })
     }) { paddingValues ->
         AyaColumn(

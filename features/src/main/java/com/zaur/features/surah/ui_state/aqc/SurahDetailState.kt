@@ -1,5 +1,9 @@
 package com.zaur.features.surah.ui_state.aqc
 
+interface SurahDetailStateCallback {
+    fun update(state: SurahDetailState)
+}
+
 data class SurahDetailState(
     val isScrollToAyah: Boolean = false,
     val runAudio: Boolean = false,

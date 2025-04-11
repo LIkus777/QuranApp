@@ -13,6 +13,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
+interface QuranAudioVmCallback {
+    fun callVerseAudioFile()
+}
+
 class QuranAudioViewModel(
     private val savedStateHandle: SavedStateHandle,
     private val quranAudioUseCaseAqc: QuranAudioUseCaseAqc
@@ -59,5 +63,4 @@ class QuranAudioViewModel(
             })
         }
     }
-
 }

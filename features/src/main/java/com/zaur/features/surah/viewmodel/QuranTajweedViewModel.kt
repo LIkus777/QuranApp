@@ -6,15 +6,16 @@ import com.zaur.features.surah.ui_state.v4.QuranUthmanTajweedUIState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
-class QuranTajweedViewModel(
-    private val savedStateHandle: SavedStateHandle,
-    //private val quranTajweedUseCaseAqc: QuranTajweedUseCaseAqc todo
-) : BaseViewModel(savedStateHandle) {
+interface QuranTajweedViewModel {
+    class Base(
+        private val savedStateHandle: SavedStateHandle,
+        //private val quranTajweedUseCaseAqc: QuranTajweedUseCaseAqc todo
+    ) : BaseViewModel(savedStateHandle), QuranTajweedViewModel {
 
-    private val _uiState = MutableStateFlow(QuranUthmanTajweedUIState())
-    val tajweedUiState: StateFlow<QuranUthmanTajweedUIState> = _uiState
+        private val _uiState = MutableStateFlow(QuranUthmanTajweedUIState())
+        val tajweedUiState: StateFlow<QuranUthmanTajweedUIState> = _uiState
 
-    suspend fun getUthmanTajweedsForChapter(chapterNumber: Int) {/*val result = launchSafely { quranTextUseCaseAqc.getUthmanTajweedsForChapter(chapterNumber) }
+        suspend fun getUthmanTajweedsForChapter(chapterNumber: Int) {/*val result = launchSafely { quranTextUseCaseAqc.getUthmanTajweedsForChapter(chapterNumber) }
         result.handle(object : HandleResult<List<VerseUthmanTajweed>> {
             override fun handleSuccess(data: List<VerseUthmanTajweed>) {
                 viewModelScope.launch {
@@ -26,6 +27,7 @@ class QuranTajweedViewModel(
                 super.handleError(e)
             }
         })*/
-    }
+        }
 
+    }
 }

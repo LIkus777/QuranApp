@@ -36,11 +36,11 @@ import com.zaur.domain.storage.ReciterStorage
 import com.zaur.domain.storage.theme.ThemeStorage
 import com.zaur.domain.storage.theme.ThemeUseCase
 
-interface DI : ProvideThemeStorage, ProvideReciterStorage, ProvideQuranStorage, ProvideThemeUseCase, ProvideQuranAudioUseCaseAqc,
-    ProvideQuranTextUseCaseAqc, ProvideQuranTranslationUseCaseAqc, ProvideQuranAudioUseCaseV4,
-    ProvideQuranTextUseCase, ProvideQuranTajweedUseCase, ProvideQuranTafsirUseCase,
-    ProvideQuranTranslationUseCase, ProvideQuranApiAqc, ProvideQuranApiV4,
-    ProvideQuranAudioRepositoryAqc, ProvideQuranTextRepositoryAqc,
+interface DI : ProvideThemeStorage, ProvideReciterStorage, ProvideQuranStorage, ProvideThemeUseCase,
+    ProvideQuranAudioUseCaseAqc, ProvideQuranTextUseCaseAqc, ProvideQuranTranslationUseCaseAqc,
+    ProvideQuranAudioUseCaseV4, ProvideQuranTextUseCase, ProvideQuranTajweedUseCase,
+    ProvideQuranTafsirUseCase, ProvideQuranTranslationUseCase, ProvideQuranApiAqc,
+    ProvideQuranApiV4, ProvideQuranAudioRepositoryAqc, ProvideQuranTextRepositoryAqc,
     ProvideQuranTranslationRepositoryAqc, ProvideQuranAudioRepositoryV4,
     ProvideQuranTafsirRepositoryV4, ProvideQuranTajweedRepositoryV4,
     ProvideQuranTranslationRepositoryV4, ProvideQuranTextRepositoryV4 {
@@ -71,9 +71,7 @@ interface DI : ProvideThemeStorage, ProvideReciterStorage, ProvideQuranStorage, 
             QuranAudioUseCaseV4(provideQuranAudioRepositoryV4())
 
         override fun provideQuranTextUseCaseV4(): QuranTextUseCaseV4 = QuranTextUseCaseV4(
-            provideQuranTextRepositoryV4(),
-            provideQuranStorage(),
-            provideReciterStorage()
+            provideQuranTextRepositoryV4(), provideQuranStorage(), provideReciterStorage()
         )
 
         override fun provideQuranTajweedUseCaseV4(): QuranTajweedUseCaseV4 =
@@ -92,16 +90,15 @@ interface DI : ProvideThemeStorage, ProvideReciterStorage, ProvideQuranStorage, 
         override fun provideThemeStorage(): ThemeStorage = ThemePreferences(context)
 
         override fun provideQuranAudioUseCaseAqc(): QuranAudioUseCaseAqc =
-            QuranAudioUseCaseAqc(provideQuranAudioRepositoryAqc())
+            QuranAudioUseCaseAqc.Base(provideQuranAudioRepositoryAqc(), provideReciterStorage())
 
-        override fun provideQuranTextUseCaseAqc(): QuranTextUseCaseAqc = QuranTextUseCaseAqc(
+        override fun provideQuranTextUseCaseAqc(): QuranTextUseCaseAqc = QuranTextUseCaseAqc.Base(
             provideQuranTextRepositoryAqc(),
             provideQuranStorage(),
-            provideReciterStorage()
         )
 
         override fun provideQuranTranslationUseCaseAqc(): QuranTranslationUseCaseAqc =
-            QuranTranslationUseCaseAqc(provideQuranTranslationRepositoryAqc())
+            QuranTranslationUseCaseAqc.Base(provideQuranTranslationRepositoryAqc())
 
         override fun provideQuranTextRepositoryAqc(): QuranTextRepositoryAqc =
             QuranTextRepositoryAqcImpl(provideQuranApiAqc())

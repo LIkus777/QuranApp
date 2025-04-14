@@ -11,9 +11,10 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.compose.rememberNavController
 import com.zaur.features.surah.screen.MainScreen
+import com.zaur.features.surah.screen.SurahDetailStateManager
 import com.zaur.features.surah.screen.SurahChooseScreen
 import com.zaur.features.surah.screen.SurahDetailScreen
-import com.zaur.features.surah.viewmodel.SurahChooseViewModel
+import com.zaur.features.surah.viewmodel.SurahDetailViewModel
 import com.zaur.features.surah.viewmodel.ThemeViewModel
 import com.zaur.features.surah.viewmodel.factory.QuranAudioViewModelFactory
 import com.zaur.features.surah.viewmodel.factory.QuranTextViewModelFactory
@@ -26,7 +27,7 @@ class MainActivity : ComponentActivity() {
     private val di by lazy { (application as App).diModule }
 
     private val themeViewModel by lazy {
-        ThemeViewModel(
+        ThemeViewModel.Base(
             SavedStateHandle(),
             di.provideThemeUseCase()
         )
@@ -45,17 +46,19 @@ class MainActivity : ComponentActivity() {
                 }, surahChooseScreen = {
                     SurahChooseScreen(
                         themeViewModel,
-                        surahChooseViewModelFactory = SurahChooseViewModelFactory(di.provideQuranTextUseCaseAqc()),
+                        surahChooseViewModelFactory = SurahChooseViewModelFactory.Base(quranTextUseCaseAqc = di.provideQuranTextUseCaseAqc()),
                         navController,
                         modifier = Modifier.padding(innerPadding)
                     )
                 }, surahDetailScreen = { surahNumber, controller ->
+                    val stateManager = SurahDetailStateManager.Base()
                     SurahDetailScreen(
                         surahNumber,
-                        themeViewModel,
-                        quranTextViewModelFactory = QuranTextViewModelFactory(di.provideQuranTextUseCaseAqc()),
-                        quranTranslationViewModelFactory = QuranTranslationViewModelFactory(di.provideQuranTranslationUseCaseAqc()),
-                        quranAudioViewModelFactory = QuranAudioViewModelFactory(di.provideQuranAudioUseCaseAqc()),
+                        surahDetailViewModel = SurahDetailViewModel.Base(stateManager),
+                        themeViewModel = themeViewModel,
+                        quranTextViewModelFactory = QuranTextViewModelFactory.Base(quranTextUseCaseAqc = di.provideQuranTextUseCaseAqc()),
+                        quranTranslationViewModelFactory = QuranTranslationViewModelFactory.Base(quranTranslationUseCaseAqc = di.provideQuranTranslationUseCaseAqc()),
+                        quranAudioViewModelFactory = QuranAudioViewModelFactory.Base(context = this, stateManager = stateManager, quranAudioUseCaseAqc = di.provideQuranAudioUseCaseAqc()),
                         controller
                     )
                 })

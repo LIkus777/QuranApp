@@ -1,160 +1,159 @@
 package com.zaur.features.surah.screen
 
-import android.content.Context
-import android.util.Log
-import androidx.compose.runtime.mutableStateOf
-import androidx.core.net.toUri
-import androidx.media3.common.AudioAttributes
-import androidx.media3.common.C
-import androidx.media3.common.MediaItem
-import androidx.media3.exoplayer.ExoPlayer
-import com.zaur.features.surah.ui_state.aqc.QuranAudioAqcUIState
-import com.zaur.features.surah.ui_state.aqc.SurahDetailState
-import com.zaur.features.surah.ui_state.aqc.SurahDetailStateCallback
-import com.zaur.features.surah.viewmodel.QuranAudioVmCallback
+import com.zaur.domain.al_quran_cloud.models.arabic.ArabicChaptersAqc
+import com.zaur.features.surah.base.AudioPlayer
+import com.zaur.features.surah.viewmodel.QuranAudioViewModel.QuranAudioVmCallback
 
+// Интерфейс для управления плеером
 interface Player {
-
-    fun player(audioUrl: String): ExoPlayer
-    fun setIsPlaying(boolean: Boolean)
+    fun onPlayWholeClicked()
+    fun onPlaySingleClicked(ayahNumber: Int, surahNumber: Int, url: String)
+    fun onAudioEnded()
     fun onPlayClicked()
-    fun onAudioEnded(surahDetailStateData: SurahDetailState, audioState: QuranAudioAqcUIState)
+    fun onPauseClicked()
+    fun onStopClicked()
 
-    fun setSurahDetailStateCallback(callback: SurahDetailStateCallback)
+    fun clear()
+
     fun setQuranAudioVmCallback(callback: QuranAudioVmCallback)
 
+    fun setAyahs(ayahs: ArabicChaptersAqc)
+
+    // Реализация плеера с разделением на управление состоянием и воспроизведением
     class Base(
-        private val context: Context,
-        private val surahDetailStateData: SurahDetailState,
-        private val audioState: QuranAudioAqcUIState,
+        private val audioPlayer: AudioPlayer,  // Интерфейс для работы с плеером
+        private val surahDetailStateManager: SurahDetailStateManager, // Менеджер состояния плеера
     ) : Player {
 
-        private var currentExoPlayer: ExoPlayer? = null
-
-        private var surahDetailStateCallback: SurahDetailStateCallback? = null
         private var quranAudioVmCallback: QuranAudioVmCallback? = null
+        private var ayahs: ArabicChaptersAqc? = null
 
-        private var isPlaying = mutableStateOf(false)
+        private val state = surahDetailStateManager.getState()
 
-        private val onPlayClick = {
-            if (!surahDetailStateData.isAudioPlaying) {
-                val chaptersAudio = audioState.chaptersAudioFile
-                if (chaptersAudio != null) {
-                    val ayahs = chaptersAudio.chapterAudio.ayahs
-                    if (ayahs.isNotEmpty()) {
-                        Log.i("TAGG", "onPlayClick: ayahs $ayahs")
-                        val firstAyah = ayahs.first()
-                        surahDetailStateCallback?.update(
-                            surahDetailStateData.copy(
-                                playWholeChapter = true,
-                                currentAyah = firstAyah.numberInSurah.toInt(),
-                                runAudio = true
-                            )
+        override fun setAyahs(ayahs: ArabicChaptersAqc) {
+            this.ayahs = ayahs
+        }
+
+        override fun onPlayWholeClicked() {
+            // если ничего не воспроизводится — начинаем сначала
+            if (!audioPlayer.isPlaying()) {
+                val newState = state.value.copy(
+                    audioPlayerState = state.value.audioPlayerState.copy(
+                        currentAyah = 1, isAudioPlaying = true, playWholeChapter = true
+                    )
+                )
+                surahDetailStateManager.updateState(newState)
+                quranAudioVmCallback?.callVerseAudioFile(1)
+            } else {
+                // Пауза / Продолжение
+                if (audioPlayer.isPlaying()) {
+                    audioPlayer.pauseAudio()
+                    val paused = state.value.copy(
+                        audioPlayerState = state.value.audioPlayerState.copy(
+                            isAudioPlaying = false
                         )
-                        quranAudioVmCallback?.callVerseAudioFile()
-                    }
+                    )
+                    surahDetailStateManager.updateState(paused)
                 } else {
-                    Log.e("TAGG", "chaptersAudioFile is null!")
+                    audioPlayer.playAudio("") // текущий url должен где-то храниться
+                    val resumed = state.value.copy(
+                        audioPlayerState = state.value.audioPlayerState.copy(
+                            isAudioPlaying = false
+                        )
+                    )
+                    surahDetailStateManager.updateState(resumed)
                 }
+            }
+        }
+
+        override fun onPlaySingleClicked(ayahNumber: Int, surahNumber: Int, url: String) {
+            val updated = state.value.copy(
+                audioPlayerState = state.value.audioPlayerState.copy(
+                    currentAyah = ayahNumber,
+                    currentSurahNumber = surahNumber,
+                    isAudioPlaying = true,
+                    playWholeChapter = false,
+                    restartAudio = !state.value.audioPlayerState.restartAudio
+                )
+            )
+
+            surahDetailStateManager.updateState(updated)
+            quranAudioVmCallback?.callVerseAudioFile(ayahNumber)
+            audioPlayer.playAudio(url)
+        }
+
+
+        override fun onAudioEnded() {
+            if (!state.value.audioPlayerState.playWholeChapter) {
+                val stopped = state.value.copy(
+                    audioPlayerState = state.value.audioPlayerState.copy(
+                        isAudioPlaying = false
+                    )
+                )
+                surahDetailStateManager.updateState(stopped)
+                return
+            }
+
+            // Если воспроизведение главы — переходим к следующему аяту
+            val ayahs =
+                ayahs!!.arabicChapters.ayahs // реализуй сам или передавай список через колбэк
+            val currentIndex =
+                ayahs.indexOfFirst { it.numberInSurah.toInt() == state.value.audioPlayerState.currentAyah }
+
+            if (currentIndex + 1 < ayahs.size) {
+                val nextAyah = ayahs[currentIndex + 1]
+                val newState = state.value.copy(
+                    audioPlayerState = state.value.audioPlayerState.copy(
+                        currentAyah = nextAyah.numberInSurah.toInt(), isAudioPlaying = true
+                    )
+                )
+                surahDetailStateManager.updateState(newState)
+                quranAudioVmCallback?.callVerseAudioFile(nextAyah.numberInSurah.toInt())
+            } else {
+                val finished = state.value.copy(
+                    audioPlayerState = state.value.audioPlayerState.copy(
+                        playWholeChapter = true, isAudioPlaying = false
+                    )
+                )
+                surahDetailStateManager.updateState(finished)
             }
         }
 
         override fun onPlayClicked() {
-            if (surahDetailStateData.playWholeChapter) {
-                if (currentExoPlayer == null || surahDetailStateData.runAudio == false) {
-                    // Воспроизведение всей суры
-                    onPlayClick()
-                } else {
-                    if (isPlaying.value) {
-                        currentExoPlayer?.pause()
-                        isPlaying.value = false //todo пофиксить баг с несменой иконки
-                        //surahDetailStateCallback?.update(surahDetailStateData.copy(isAudioPlaying = false))
-                    } else {
-                        currentExoPlayer?.play()
-                        isPlaying.value = true
-                        //surahDetailStateCallback?.update(surahDetailStateData.copy(isAudioPlaying = true))
-                    }
-                }
-            } else {
-                handlePlayPauseForChapter(isPlaying.value, currentExoPlayer)  // Воспроизведение одного файла
-                isPlaying.value = !isPlaying.value
-            }
-        }
-
-        override fun player(audioUrl: String): ExoPlayer {
-            return (if (currentExoPlayer != null) {
-                currentExoPlayer!!
-            } else {
-                try {
-                    ExoPlayer.Builder(context).build().apply {
-                        currentExoPlayer = this
-                        val mediaItem = MediaItem.fromUri(audioUrl.toUri())
-                        setMediaItem(mediaItem)
-                        setAudioAttributes(
-                            AudioAttributes.Builder().setUsage(C.USAGE_MEDIA)
-                                .setContentType(C.AUDIO_CONTENT_TYPE_MUSIC).build(), true
-                        )
-                        setHandleAudioBecomingNoisy(true)
-                        addListener(object : androidx.media3.common.Player.Listener {
-                            override fun onPlaybackStateChanged(state: Int) {
-                                if (state == ExoPlayer.STATE_ENDED) {
-                                    onAudioEnded(surahDetailStateData, audioState)
-                                    setIsPlaying(false)
-                                }
-                            }
-                        })
-                        prepare()
-                        playWhenReady = true
-                        setIsPlaying(true)
-                    }
-                } catch (e: Exception) {
-                    Log.e("TAGG", "player: $e")
-                }
-            }) as ExoPlayer
-        }
-
-        override fun onAudioEnded(
-            surahDetailStateData: SurahDetailState,
-            audioState: QuranAudioAqcUIState,
-        ) {
-            if (!surahDetailStateData.playWholeChapter) {
-                surahDetailStateCallback?.update(
-                    surahDetailStateData.copy(
-                        runAudio = false, isAudioPlaying = false, playWholeChapter = true
-                    )
+            // ты можешь тут воспроизвести текущий url
+            audioPlayer.playAudio("") // заменить на актуальный URL
+            val updated = state.value.copy(
+                audioPlayerState = state.value.audioPlayerState.copy(
+                    isAudioPlaying = true
                 )
-                return
-            }
+            )
+            surahDetailStateManager.updateState(updated)
+        }
 
-            val current = surahDetailStateData.currentAyah
-            val ayahs = audioState.chaptersAudioFile?.chapterAudio?.ayahs ?: return
-            val currentIndex = ayahs.indexOfFirst { it.numberInSurah.toInt() == current }
-
-            if (currentIndex != -1 && currentIndex + 1 < ayahs.size) {
-                val nextAyah = ayahs[currentIndex + 1]
-                val newState = surahDetailStateData.copy(
-                    currentAyah = nextAyah.numberInSurah.toInt(), runAudio = true
+        override fun onPauseClicked() {
+            audioPlayer.pauseAudio()
+            val updated = state.value.copy(
+                audioPlayerState = state.value.audioPlayerState.copy(
+                    isAudioPlaying = false
                 )
-                surahDetailStateCallback?.update(newState)
-                quranAudioVmCallback?.callVerseAudioFile()
-            } else {
-                // Конец суры
-                surahDetailStateCallback?.update(
-                    surahDetailStateData.copy(
-                        runAudio = false, isAudioPlaying = false
-                    )
+            )
+            surahDetailStateManager.updateState(updated)
+        }
+
+        override fun onStopClicked() {
+            audioPlayer.stopAudio()
+            val updated = state.value.copy(
+                audioPlayerState = state.value.audioPlayerState.copy(
+                    isAudioPlaying = false
                 )
-            }
+            )
+            surahDetailStateManager.updateState(updated)
         }
 
-        override fun setIsPlaying(boolean: Boolean) {
-            isPlaying.value = boolean
+        override fun clear() {
+            audioPlayer.release()
+            quranAudioVmCallback = null
         }
-
-        override fun setSurahDetailStateCallback(callback: SurahDetailStateCallback) {
-            this.surahDetailStateCallback = callback
-        }
-
 
         override fun setQuranAudioVmCallback(callback: QuranAudioVmCallback) {
             this.quranAudioVmCallback = callback

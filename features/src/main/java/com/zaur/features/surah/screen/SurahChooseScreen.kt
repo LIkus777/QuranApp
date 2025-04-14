@@ -10,7 +10,6 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,7 +23,6 @@ import com.zaur.domain.al_quran_cloud.use_case.QuranTextUseCaseAqc
 import com.zaur.domain.storage.theme.ThemeUseCase
 import com.zaur.features.surah.fakes.FakeQTextRAqc
 import com.zaur.features.surah.fakes.FakeQuranStorage
-import com.zaur.features.surah.fakes.FakeReciterStorage
 import com.zaur.features.surah.fakes.FakeThemeStorage
 import com.zaur.features.surah.viewmodel.ThemeViewModel
 import com.zaur.features.surah.viewmodel.factory.SurahChooseViewModelFactory
@@ -46,7 +44,7 @@ fun SurahChooseScreen(
         surahChooseViewModelFactory.getAllChapters()
     }
 
-    val textState = surahChooseViewModelFactory.textUiState.collectAsState().value
+    val textState = surahChooseViewModelFactory.textState()
 
     LazyColumn(
         modifier = Modifier
@@ -56,7 +54,8 @@ fun SurahChooseScreen(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        val chapers = textState.chapters?.chapters ?: emptyList() // Избегаем повторного ?. вызова
+        val chapers =
+            textState.value.chapters?.chapters ?: emptyList() // Избегаем повторного ?. вызова
         itemsIndexed(chapers) { index, chapter ->
             ModernSurahText(
                 number = chapter.number,
@@ -79,11 +78,11 @@ fun SurahChoosePreview() {
     QuranAppTheme {
         Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
             SurahChooseScreen(
-                themeViewModel = ThemeViewModel(
+                themeViewModel = ThemeViewModel.Base(
                     SavedStateHandle(), ThemeUseCase(FakeThemeStorage())
-                ), surahChooseViewModelFactory = SurahChooseViewModelFactory(
-                    QuranTextUseCaseAqc(
-                        FakeQTextRAqc(), FakeQuranStorage(), FakeReciterStorage()
+                ), surahChooseViewModelFactory = SurahChooseViewModelFactory.Base(
+                    quranTextUseCaseAqc = QuranTextUseCaseAqc.Base(
+                        FakeQTextRAqc(), FakeQuranStorage()
                     )
                 ), navController = fakeNavController, modifier = Modifier.padding(innerPadding)
             )

@@ -9,10 +9,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
@@ -29,9 +27,7 @@ import com.zaur.features.surah.fakes.FakeQTranslationRAqc
 import com.zaur.features.surah.fakes.FakeQuranStorage
 import com.zaur.features.surah.fakes.FakeReciterStorage
 import com.zaur.features.surah.fakes.FakeThemeStorage
-import com.zaur.features.surah.ui_state.aqc.SurahDetailState
-import com.zaur.features.surah.ui_state.aqc.SurahDetailStateCallback
-import com.zaur.features.surah.viewmodel.QuranAudioVmCallback
+import com.zaur.features.surah.viewmodel.SurahDetailViewModel
 import com.zaur.features.surah.viewmodel.ThemeViewModel
 import com.zaur.features.surah.viewmodel.factory.QuranAudioViewModelFactory
 import com.zaur.features.surah.viewmodel.factory.QuranTextViewModelFactory
@@ -45,178 +41,176 @@ import kotlinx.coroutines.launch
 @Composable
 fun SurahDetailScreen(
     chapterNumber: Int,
+    surahDetailViewModel: SurahDetailViewModel,
     themeViewModel: ThemeViewModel,
     quranTextViewModelFactory: QuranTextViewModelFactory,
     quranTranslationViewModelFactory: QuranTranslationViewModelFactory,
     quranAudioViewModelFactory: QuranAudioViewModelFactory,
     controller: NavHostController
 ) {
-    val context = LocalContext.current
+    LocalContext.current
 
     val quranTextViewModel = remember { quranTextViewModelFactory.create() }
     val quranAudioViewModel = remember { quranAudioViewModelFactory.create() }
     val quranTranslationViewModel = remember { quranTranslationViewModelFactory.create() }
 
-    val textState by quranTextViewModel.textUiState.collectAsState()
-    val audioState by quranAudioViewModel.audioUiState.collectAsState()
-    val translateState by quranTranslationViewModel.translationUiState.collectAsState()
+    val surahDetailState by surahDetailViewModel.surahDetailUiState().collectAsState()
+    val textState by quranTextViewModel.textState()
+    val audioState by quranAudioViewModel.audioState()
+    val translateState by quranTranslationViewModel.translationState()
 
     val isLoading = textState.currentArabicText == null || translateState.translations == null
     val isDarkTheme = themeViewModel.getIsDarkTheme().collectAsState(initial = false).value
     val colors = if (isDarkTheme) DarkThemeColors else LightThemeColors
 
-    var surahDetailStateData by remember { mutableStateOf(SurahDetailState()) }
+    val scope = rememberCoroutineScope()
 
     // Создаем LazyListState для управления прокруткой
     val listState = rememberLazyListState()
 
-    val scope = rememberCoroutineScope()
+    val playerScreen = PlayerScreen.Base(surahDetailState)
 
-    val player = Player.Base(context, surahDetailStateData, audioState)
-    val playerScreen = PlayerScreen.Base(surahDetailStateData)
-
-    player.setSurahDetailStateCallback(object : SurahDetailStateCallback {
-        override fun update(state: SurahDetailState) {
-            Log.i("TAGG", "update state $state}")
-            surahDetailStateData = state
-        }
-    })
-    player.setQuranAudioVmCallback(object : QuranAudioVmCallback {
-        override fun callVerseAudioFile() {
-            Log.i("TAGG", "callVerseAudioFile CALLED}")
-            quranAudioViewModel.getVerseAudioFile(
-                "$chapterNumber:${surahDetailStateData.currentAyah}",
-                quranTextViewModel.getReciter().toString()
-            )
-        }
-    })
-
-    // Показываем progress bar, когда загружается новый аудиофайл
-    LaunchedEffect(audioState.verseAudioFile, surahDetailStateData.restartAudio) {
-        if (audioState.verseAudioFile != null) {
-            surahDetailStateData = surahDetailStateData.copy(runAudio = true)
+    LaunchedEffect(textState.currentArabicText) {
+        if (textState.currentArabicText != null) {
+            val verses = textState.currentArabicText!!
+            quranAudioViewModel.setAyahs(verses)
         }
     }
 
+    // Показываем progress bar, когда загружается новый аудиофайл
+    /*LaunchedEffect(audioState.verseAudioFile, surahDetailState.audioPlayerState.restartAudio) {
+        if (audioState.verseAudioFile != null) {
+            Log.i("TAGG", "SurahDetailScreen: IF isAudioPlaying = TRUE")
+            surahDetailViewModel.updateState {
+                copy(
+                    audioPlayerState = audioPlayerState.copy(
+                        isAudioPlaying = true,
+                        restartAudio = !audioPlayerState.restartAudio
+                    )
+                )
+            }
+        }
+    }*/
+
+    /*LaunchedEffect(surahDetailState.audioPlayerState.restartAudio) {
+        Log.i("TAGG", "SurahDetailScreen: IF restartAudio = TRUE")
+        surahDetailViewModel.updateState {
+            surahDetailState.copy(
+                audioPlayerState.copy(
+                    restartAudio = !surahDetailState.audioPlayerState.restartAudio
+                )
+            )
+        }
+    }*/
+
     // Загружаем чтеца при первом рендере экрана
     LaunchedEffect(Unit) {
-        val reciter = quranTextViewModel.getReciterName()
-        surahDetailStateData = surahDetailStateData.copy(selectedReciter = reciter)
+        val reciter = quranAudioViewModel.getReciterName()
+        surahDetailViewModel.selectedReciter(reciter.toString())
         if (reciter.isNullOrEmpty()) {
-            surahDetailStateData =
-                surahDetailStateData.copy(showReciterDialog = true) // Показываем диалог, если чтец не выбран
+            surahDetailViewModel.showReciterDialog(true) // Показываем диалог, если чтец не выбран
         }
         quranTextViewModel.getArabicChapter(chapterNumber)
         quranTranslationViewModel.getTranslationForChapter(chapterNumber, "ru.kuliev")
         quranAudioViewModel.getChaptersAudioOfReciter(
-            chapterNumber, quranTextViewModel.getReciter().toString()
+            chapterNumber, quranAudioViewModel.getReciter().toString()
         )
     }
 
-    playerScreen.Screen(
-        audioUrl = audioState.verseAudioFile?.versesAudio?.audio.toString(),
-        setIsPlaying = {
-            surahDetailStateData = surahDetailStateData.copy(isAudioPlaying = it)
-        },
-        scrollToAudioElement = {
-            scope.launch(Dispatchers.Main) {
-                // Прокрутка к нужному элементу
-                listState.animateScrollToItem(surahDetailStateData.currentAyah - 1)  // Индекс Ayah может начинаться с 0
+    playerScreen.Screen(onPlayWholeClicked = {
+        quranAudioViewModel.onPlayWholeClicked()
+    }, clear = {
+        quranAudioViewModel.clear()
+    }, scrollToAudioElement = {
+        scope.launch(Dispatchers.Main) {
+            // Прокрутка к нужному элементу
+            if (surahDetailState.audioPlayerState.currentAyah > 0) {
+                listState.animateScrollToItem(surahDetailState.audioPlayerState.currentAyah - 1)
             }
-        },
-        player = player
-    )
+        }
+    })
 
     Scaffold(bottomBar = {
         ChapterBottomBar(
             colors,
-            isPlaying = surahDetailStateData.isAudioPlaying,
+            isPlaying = surahDetailState.audioPlayerState.isAudioPlaying,
             showReciterDialog = { show ->
-                surahDetailStateData = surahDetailStateData.copy(showTextBottomSheet = show)
+                surahDetailViewModel.showTextBottomSheet(show)
             },
             showSettings = {
-                surahDetailStateData = surahDetailStateData.copy(showSettingsBottomSheet = true)
+                surahDetailViewModel.showSettingsBottomSheet(true)
             },
             onClickPlayer = {
-                player.onPlayClicked()
+                quranAudioViewModel.onPlayWholeClicked()
             })
     }) { paddingValues ->
         AyaColumn(
             chapterNumber,
-            surahDetailStateData.currentAyah,
+            surahDetailState.audioPlayerState.currentAyah,
             isLoading,
             textState,
             translateState,
             colors,
-            surahDetailStateData.fontSizeArabic,
-            surahDetailStateData.fontSizeRussian,
-            surahDetailStateData.runAudio,
-            surahDetailStateData.isScrollToAyah,
+            surahDetailState.uiPreferences.fontSizeArabic,
+            surahDetailState.uiPreferences.fontSizeRussian,
+            surahDetailState.audioPlayerState.isAudioPlaying,
+            surahDetailState.audioPlayerState.isScrollToAyah,
             listState,
             paddingValues,
         ) { ayahNumber ->
-            surahDetailStateData = surahDetailStateData.copy(playWholeChapter = false)
-            if (surahDetailStateData.currentAyah == ayahNumber) {
-                surahDetailStateData =
-                    surahDetailStateData.copy(restartAudio = !surahDetailStateData.restartAudio)
-            }
-            quranAudioViewModel.getVerseAudioFile(
-                "$chapterNumber:$ayahNumber", quranTextViewModel.getReciter().toString()
-            )
-            surahDetailStateData = surahDetailStateData.copy(currentAyah = ayahNumber)
+            quranAudioViewModel.onPlaySingleClicked(ayahNumber, chapterNumber)
         }
     }
 
     // Остальная логика для BottomSheet и выбора шрифта/рецитатора
-    if (surahDetailStateData.showSettingsBottomSheet) {
+    if (surahDetailState.bottomSheetState.showSettingsBottomSheet) {
         SettingsBottomSheet(
-            showSheet = surahDetailStateData.showSettingsBottomSheet,
+            showSheet = surahDetailState.bottomSheetState.showSettingsBottomSheet,
             colors = colors,
-            selectedReciter = surahDetailStateData.selectedReciter,
+            selectedReciter = surahDetailState.reciterState.currentReciter,
             showReciterDialog = { showReciterDialog ->
-                surahDetailStateData =
-                    surahDetailStateData.copy(showReciterDialog = showReciterDialog)
+                surahDetailViewModel.showReciterDialog(showReciterDialog)
             },
-            showArabic = surahDetailStateData.showArabic,
+            showArabic = surahDetailState.uiPreferences.showArabic,
             onShowArabicChange = { showArabic ->
-                surahDetailStateData = surahDetailStateData.copy(showArabic = showArabic)
+                surahDetailViewModel.showArabic(showArabic)
             },
-            showRussian = surahDetailStateData.showRussian,
+            showRussian = surahDetailState.uiPreferences.showRussian,
             onShowRussianChange = { showRussian ->
-                surahDetailStateData = surahDetailStateData.copy(showRussian = showRussian)
+                surahDetailViewModel.showRussian(showRussian)
             },
             onDismiss = {
-                surahDetailStateData = surahDetailStateData.copy(showSettingsBottomSheet = false)
+                surahDetailViewModel.showSettingsBottomSheet(false)
             })
     }
 
     ChooseTextDialog(
-        surahDetailStateData.showTextBottomSheet, isDarkTheme = isDarkTheme,
-        fontSizeArabic = surahDetailStateData.fontSizeArabic,
+        showTextDialog = surahDetailState.bottomSheetState.showTextBottomSheet,
+        isDarkTheme = isDarkTheme,
+        fontSizeArabic = surahDetailState.uiPreferences.fontSizeArabic,
         onFontSizeArabicChange = { fontSizeArabic ->
-            surahDetailStateData = surahDetailStateData.copy(fontSizeArabic = fontSizeArabic)
+            surahDetailViewModel.fontSizeArabic(fontSizeArabic)
         },
-        fontSizeRussian = surahDetailStateData.fontSizeRussian,
+        fontSizeRussian = surahDetailState.uiPreferences.fontSizeRussian,
         onFontSizeRussianChange = { fontSizeRussian ->
-            surahDetailStateData = surahDetailStateData.copy(fontSizeRussian = fontSizeRussian)
+            surahDetailViewModel.fontSizeRussian(fontSizeRussian)
         },
         onThemeChange = {
 
         },
     ) {
-        surahDetailStateData = surahDetailStateData.copy(showTextBottomSheet = false)
+        surahDetailViewModel.showTextBottomSheet(false)
     }
 
     ChooseReciterDialog(
-        surahDetailStateData.showReciterDialog, surahDetailStateData.isFirstSelection, colors
+        surahDetailState.reciterState.showReciterDialog,
+        surahDetailState.reciterState.isFirstSelection,
+        colors
     ) { identifier ->
-        surahDetailStateData = surahDetailStateData.copy(showReciterDialog = false)
-        if (identifier != null) {
-            quranTextViewModel.saveReciter(identifier)
-            surahDetailStateData = surahDetailStateData.copy(isFirstSelection = false)
-        }
-        surahDetailStateData =
-            surahDetailStateData.copy(selectedReciter = quranTextViewModel.getReciterName())
+        surahDetailViewModel.showReciterDialog(false)
+        quranAudioViewModel.saveReciter(identifier)
+        surahDetailViewModel.showReciterDialog(false)
+        surahDetailViewModel.selectedReciter(quranAudioViewModel.getReciterName().toString())
     }
 }
 
@@ -228,16 +222,23 @@ fun SurahDetailScreenPreview() {
     QuranAppTheme {
         Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
             SurahDetailScreen(
-                1, themeViewModel = ThemeViewModel(
+                1, surahDetailViewModel = SurahDetailViewModel.Base(
+                    SurahDetailStateManager.Base()
+                ), themeViewModel = ThemeViewModel.Base(
                     SavedStateHandle(), ThemeUseCase(FakeThemeStorage())
-                ), quranTextViewModelFactory = QuranTextViewModelFactory(
-                    QuranTextUseCaseAqc(
-                        FakeQTextRAqc(), FakeQuranStorage(), FakeReciterStorage()
+                ), quranTextViewModelFactory = QuranTextViewModelFactory.Base(
+                    quranTextUseCaseAqc = QuranTextUseCaseAqc.Base(
+                        FakeQTextRAqc(), FakeQuranStorage()
                     )
-                ), quranTranslationViewModelFactory = QuranTranslationViewModelFactory(
-                    QuranTranslationUseCaseAqc(FakeQTranslationRAqc())
-                ), quranAudioViewModelFactory = QuranAudioViewModelFactory(
-                    QuranAudioUseCaseAqc(FakeQAudioRAqc())
+                ), quranTranslationViewModelFactory = QuranTranslationViewModelFactory.Base(
+                    quranTranslationUseCaseAqc = QuranTranslationUseCaseAqc.Base(
+                        FakeQTranslationRAqc()
+                    )
+                ), quranAudioViewModelFactory = QuranAudioViewModelFactory.Base(
+                    stateManager = SurahDetailStateManager.Base(),
+                    quranAudioUseCaseAqc = QuranAudioUseCaseAqc.Base(
+                        FakeQAudioRAqc(), FakeReciterStorage()
+                    )
                 ), fakeNavController
             )
         }

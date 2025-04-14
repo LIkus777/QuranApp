@@ -36,14 +36,14 @@ fun ChooseReciterDialog(
     showDialog: Boolean,
     isFirstSelection: Boolean,
     colors: QuranColors,
-    onDismiss: (String?) -> Unit
+    onDismiss: (String) -> Unit
 ) {
     if (showDialog) {
-        var selectedItem by remember { mutableStateOf<String?>(null) }
+        var selectedItem by remember { mutableStateOf<String>("") }
 
         Dialog(onDismissRequest = {
             if (!isFirstSelection) {
-                onDismiss(null) // Разрешаем закрытие, если чтец уже был выбран
+                onDismiss("") // Разрешаем закрытие, если чтец уже был выбран
             }
         }) {
             Box(
@@ -103,7 +103,7 @@ fun ChooseReciterDialog(
                         Button(
                             onClick = {
                                 onDismiss(selectedItem) // Передаем выбранный identifier
-                            }, enabled = selectedItem != null, colors = ButtonDefaults.buttonColors(
+                            }, enabled = selectedItem.isNotEmpty(), colors = ButtonDefaults.buttonColors(
                                 containerColor = colors.buttonPrimary, contentColor = Color.White
                             )
                         ) {

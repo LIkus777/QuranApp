@@ -16,6 +16,7 @@ data class UiPreferencesState(
 
 data class ReciterState(
     val currentReciter: String? = null,
+    val currentReciterSimple: String? = null,
     val showReciterDialog: Boolean = false,
     val isFirstSelection: Boolean = true
 )

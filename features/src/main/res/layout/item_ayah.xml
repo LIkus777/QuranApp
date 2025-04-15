@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card_ayah"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    android:elevation="4dp"
+    android:padding="12dp"
+    android:background="?android:selectableItemBackground">
+
+    <LinearLayout
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/ayah_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_ayah_number"
+                android:padding="6dp"
+                android:text="72"
+                android:textSize="10sp"
+                android:textColor="@color/gray" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" />
+
+            <ImageView
+                android:id="@+id/sound_icon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/volume"
+                app:tint="@color/gray"
+                android:contentDescription="sound" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/ayah_arabic"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ"
+            android:textAlignment="viewEnd"
+            android:textSize="24sp"
+            android:fontFamily="@font/noto_kufi_arabic"
+            android:lineSpacingExtra="8dp"
+            android:textColor="@color/black"
+            android:layout_marginTop="8dp" />
+
+        <TextView
+            android:id="@+id/ayah_translation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Хвала Аллаху, Господу миров."
+            android:textSize="16sp"
+            android:fontFamily="@font/open_sans"
+            android:lineSpacingExtra="6dp"
+            android:textColor="@color/gray"
+            android:layout_marginTop="8dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="12dp"
+            android:background="@color/light_gray" />
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

@@ -78,6 +78,10 @@ dependencies {
     implementation (libs.androidx.media3.exoplayer)
     implementation (libs.androidx.media3.ui)
 
+    implementation (libs.androidx.recyclerview)
+    implementation (libs.androidx.cardview)
+    implementation (libs.androidx.constraintlayout)
+
     implementation(project(":core"))
     implementation(project(":data"))
     implementation(project(":domain"))

@@ -1,7 +1,6 @@
 package com.zaur.features.surah.viewmodel
 
 import android.util.Log
-import androidx.compose.runtime.State
 import androidx.lifecycle.viewModelScope
 import com.zaur.core.BaseViewModel
 import com.zaur.core.HandleResult
@@ -11,6 +10,7 @@ import com.zaur.domain.al_quran_cloud.use_case.QuranTextUseCaseAqc
 import com.zaur.features.surah.observables.QuranTextObservable
 import com.zaur.features.surah.ui_state.aqc.QuranTextAqcUIState
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 interface QuranTextViewModel : QuranTextObservable.Read {
@@ -23,7 +23,7 @@ interface QuranTextViewModel : QuranTextObservable.Read {
         private val quranTextUseCaseAqc: QuranTextUseCaseAqc
     ) : BaseViewModel(), QuranTextViewModel {
 
-        override fun textState(): State<QuranTextAqcUIState> = observable.textState()
+        override fun textState(): StateFlow<QuranTextAqcUIState> = observable.textState()
 
         override fun getAllChapters() {
             viewModelScope.launch(Dispatchers.IO) {

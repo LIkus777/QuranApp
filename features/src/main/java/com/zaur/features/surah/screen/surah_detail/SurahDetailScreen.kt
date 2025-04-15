@@ -64,6 +64,7 @@ fun SurahDetailScreen(
     val audioState by quranAudioViewModel.audioState().collectAsState()
     val translateState by quranTranslationViewModel.translationState().collectAsState()
     val surahDetailState by surahDetailViewModel.getState().collectAsState()
+    surahDetailViewModel.setSurahNumber(chapterNumber)
     val isDarkTheme = themeViewModel.getIsDarkTheme().collectAsState(initial = false).value
 
     val colors = if (isDarkTheme) DarkThemeColors else LightThemeColors

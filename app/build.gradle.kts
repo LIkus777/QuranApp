@@ -77,7 +77,7 @@ dependencies {
 
     //LeakCanary
     debugImplementation (libs.leakcanary.android)
-    releaseImplementation (libs.leakcanary.android.no.op)
+    //releaseImplementation (libs.leakcanary.android.no.op)
 
     implementation(project(":di"))
     implementation(project(":domain"))

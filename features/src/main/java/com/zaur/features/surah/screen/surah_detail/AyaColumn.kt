@@ -1,4 +1,4 @@
-package com.zaur.features.surah.screen
+package com.zaur.features.surah.screen.surah_detail
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -13,8 +13,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.zaur.features.surah.ui_state.aqc.QuranTextAqcUIState
 import com.zaur.features.surah.ui_state.aqc.QuranTranslationAqcUIState
+import com.zaur.presentation.ui.AyahItem
+import com.zaur.presentation.ui.BasmalaItem
 import com.zaur.presentation.ui.QuranColors
-
 
 @Composable
 fun AyaColumn(

@@ -10,7 +10,7 @@ fun QuranNavGraph(
     navController: NavHostController,
     mainScreen: @Composable () -> Unit,
     surahChooseScreen: @Composable (NavHostController) -> Unit,
-    surahDetailScreen: @Composable (Int, NavHostController) -> Unit
+    surahDetailScreen: @Composable (Int, String, NavHostController) -> Unit
 ) {
     NavHost(
         navController = navController,
@@ -21,7 +21,8 @@ fun QuranNavGraph(
         }
         composable(Screen.SurahDetail.route) { backStackEntry ->
             val surahNumber = backStackEntry.arguments?.getString("surahNumber")?.toIntOrNull() ?: 0
-            surahDetailScreen(surahNumber, navController)
+            val surahName = backStackEntry.arguments?.getString("surahName")?.toString() ?: ""
+            surahDetailScreen(surahNumber, surahName, navController)
         }
     }
 }

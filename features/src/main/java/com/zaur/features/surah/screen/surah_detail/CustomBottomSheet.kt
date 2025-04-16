@@ -1,4 +1,4 @@
-package com.zaur.features.surah.screen
+package com.zaur.features.surah.screen.surah_detail
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
@@ -18,7 +18,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
@@ -41,6 +40,10 @@ import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import com.zaur.presentation.ui.CustomBottomSheetDefaultPreview
+import com.zaur.presentation.ui.LightThemeColors
+import com.zaur.presentation.ui.QuranColors
+import com.zaur.presentation.ui.getNavBarHeightInPx
 import kotlinx.coroutines.launch
 
 @Preview(showBackground = true)
@@ -48,6 +51,7 @@ import kotlinx.coroutines.launch
 fun CustomBottomSheet(
     isVisible: Boolean = true,
     alignment: Alignment = Alignment.BottomStart,
+    colors: QuranColors = LightThemeColors,
     onDismiss: () -> Unit = {},
     content: @Composable ColumnScope.() -> Unit = { CustomBottomSheetDefaultPreview() }
 ) {
@@ -92,7 +96,7 @@ fun CustomBottomSheet(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Black.copy(alpha = if (isVisible) 0.5f else 0f)) // Фон при открытом BottomSheet
+            .background(if (isVisible) colors.shadowForActiveBars else Color.Transparent) // Фон при открытом BottomSheet
             .clickable(
                 enabled = isVisible && !isAnimating.value,
                 interactionSource = interactionSource,
@@ -127,7 +131,7 @@ fun CustomBottomSheet(
                 modifier = Modifier
                     .fillMaxWidth(0.9f) // Ограничение ширины
                     .align(Alignment.Center)
-                    .background(MaterialTheme.colorScheme.background, shape = cornerShape)
+                    .background(colors.boxBackground, shape = cornerShape)
             ) {
                 Column(
                     modifier = Modifier
@@ -148,7 +152,7 @@ fun CustomBottomSheet(
                         .offset(y = (22).dp)
                         .size(24.dp)
                         .background(
-                            color = MaterialTheme.colorScheme.background,
+                            color = colors.boxBackground,
                             shape = roundedConcaveTriangle()
                         )
                 )
@@ -160,7 +164,7 @@ fun CustomBottomSheet(
                         .padding(start = 18.7.dp)
                         .size(24.dp)
                         .background(
-                            color = MaterialTheme.colorScheme.background,
+                            color = colors.boxBackground,
                             shape = roundedConcaveTriangle()
                         )
                 )

@@ -13,7 +13,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.compose.rememberNavController
 import com.zaur.features.surah.screen.MainScreen
 import com.zaur.features.surah.screen.SurahDetailStateManager
-import com.zaur.features.surah.screen.SurahChooseScreen
+import com.zaur.features.surah.screen.surah_choose.SurahChooseScreen
 import com.zaur.features.surah.screen.surah_detail.SurahDetailScreen
 import com.zaur.features.surah.viewmodel.SurahDetailViewModel
 import com.zaur.features.surah.viewmodel.ThemeViewModel
@@ -39,6 +39,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             val navController = rememberNavController()
+            val chooseViewModelFactory = SurahChooseViewModelFactory.Base(quranTextUseCaseAqc = di.provideQuranTextUseCaseAqc())
             //QuranAppTheme {
             Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                 QuranNavGraph(navController = navController,
@@ -47,14 +48,16 @@ class MainActivity : ComponentActivity() {
                 }, surahChooseScreen = {
                     SurahChooseScreen(
                         themeViewModel,
-                        surahChooseViewModelFactory = SurahChooseViewModelFactory.Base(quranTextUseCaseAqc = di.provideQuranTextUseCaseAqc()),
+                        surahChooseViewModelFactory = chooseViewModelFactory,
                         navController,
                         modifier = Modifier.padding(innerPadding)
                     )
-                }, surahDetailScreen = { surahNumber, controller ->
+                }, surahDetailScreen = { surahNumber, surahName, controller ->
                     val stateManager = remember { SurahDetailStateManager.Base() }
                     SurahDetailScreen(
+                        surahName,
                         surahNumber,
+                        chooseViewModelFactory,
                         surahDetailViewModel = SurahDetailViewModel.Base(stateManager),
                         themeViewModel = themeViewModel,
                         quranTextViewModelFactory = QuranTextViewModelFactory.Base(quranTextUseCaseAqc = di.provideQuranTextUseCaseAqc()),

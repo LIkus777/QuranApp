@@ -21,21 +21,25 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.zaur.domain.al_quran_cloud.models.chapter.RevelationType
+import com.zaur.presentation.R
 import com.zaur.presentation.ui.fonts.NotoFontMedium
 
+@Preview(showBackground = true)
 @Composable
 fun ModernSurahText(
-    number: Long,
-    englishName: String,
-    arabicName: String,
-    numberOfAyats: Int,
-    revelationType: RevelationType,
+    number: Long = 1L,
+    englishName: String = "Al-Bakara",
+    arabicName: String = "بِسۡمِ ٱللَّهِ",
+    numberOfAyats: Int = 100,
+    revelationType: RevelationType = RevelationType.Meccan,
     modifier: Modifier = Modifier
 ) {
     val colors = LightThemeColors
@@ -80,7 +84,9 @@ fun ModernSurahText(
                     text = englishName, style = TextStyle(
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Thin,
-                        fontFamily = NotoFontMedium,
+                        fontFamily = FontFamily(
+                            Font(R.font.noto_medium)
+                        ),
                         color = colors.textPrimary, // Синий цвет ссылки
                     ), modifier = Modifier.padding(start = 6.dp)
                 )

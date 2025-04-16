@@ -1,4 +1,4 @@
-package com.zaur.features.surah.screen
+package com.zaur.presentation.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -26,9 +26,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.text.BidiFormatter
-import com.zaur.features.R
-import com.zaur.presentation.ui.LightThemeColors
-import com.zaur.presentation.ui.QuranColors
+import com.zaur.presentation.R
 import com.zaur.presentation.ui.fonts.NotoFontMedium
 import com.zaur.presentation.ui.fonts.OpenSansFontLight
 

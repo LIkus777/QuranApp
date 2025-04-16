@@ -1,4 +1,4 @@
-package com.zaur.features.surah.screen
+package com.zaur.features.surah.screen.surah_choose
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -55,18 +55,21 @@ fun SurahChooseScreen(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        val chapers =
+        val chapters =
             textState.value.chapters?.chapters ?: emptyList() // Избегаем повторного ?. вызова
-        itemsIndexed(chapers) { index, chapter ->
+        itemsIndexed(chapters) { index, chapter ->
             ModernSurahText(
                 number = chapter.number,
                 englishName = chapter.englishName,
                 arabicName = chapter.name,
                 numberOfAyats = chapter.numberOfAyahs.toInt(),
-
                 revelationType = chapter.revelationType,
                 modifier = Modifier.clickable {
-                    navController.navigate(Screen.SurahDetail.createRoute(chapter.number.toInt()))
+                    navController.navigate(
+                        Screen.SurahDetail.createRoute(
+                            chapter.number.toInt(), chapter.englishName
+                        )
+                    )
                 })
         }
     }

@@ -1,4 +1,4 @@
-package com.zaur.features.surah.screen
+package com.zaur.features.surah.screen.surah_detail
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -36,6 +35,7 @@ fun SettingsBottomSheet(
 ) {
 
     CustomBottomSheet(
+        colors = colors,
         isVisible = showSheet,
         onDismiss = { onDismiss() },
         alignment = Alignment.BottomCenter
@@ -44,7 +44,7 @@ fun SettingsBottomSheet(
             modifier = Modifier
                 .wrapContentHeight()
                 .clip(RoundedCornerShape(16.dp))
-                .background(MaterialTheme.colorScheme.background)
+                .background(colors.boxBackground)
                 .padding(16.dp)
         ) {
             Column(

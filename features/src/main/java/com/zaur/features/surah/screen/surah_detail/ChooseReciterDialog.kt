@@ -1,4 +1,4 @@
-package com.zaur.features.surah.screen
+package com.zaur.features.surah.screen.surah_detail
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

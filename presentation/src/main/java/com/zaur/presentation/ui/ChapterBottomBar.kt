@@ -1,4 +1,4 @@
-package com.zaur.features.surah.screen
+package com.zaur.presentation.ui
 
 import android.content.Context
 import androidx.compose.foundation.background
@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -26,15 +28,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.media3.exoplayer.ExoPlayer
-import com.zaur.features.R
-import com.zaur.presentation.ui.LightThemeColors
-import com.zaur.presentation.ui.QuranColors
+import com.zaur.presentation.R
 
 fun getNavBarHeightInPx(context: Context): Int {
     // Получение высоты навигационной панели через ресурсы
@@ -50,6 +51,7 @@ fun getNavBarHeightInPx(context: Context): Int {
 @Preview(showBackground = true)
 @Composable
 fun ChapterBottomBar(
+    modifier: Modifier = Modifier,
     colors: QuranColors = LightThemeColors,
     isPlaying: Boolean = false,
     showReciterDialog: (Boolean) -> Unit = {},
@@ -57,49 +59,48 @@ fun ChapterBottomBar(
     onClickPlayer: () -> Unit = {}
 ) {
 
-    // Навигация и настройка кнопок
-    BottomAppBar(
-        containerColor = colors.appBarColor,
-        contentColor = colors.iconColor,
-        modifier = Modifier.height(56.dp)
+    val context = LocalContext.current
+    val density = LocalDensity.current.density
+    val navBarHeightInDp = getNavBarHeightInPx(context) / density
+
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .height(navBarHeightInDp.dp + 50.dp),
     ) {
-        IconButton(onClick = { showSettings() }) {
-            Icon(Icons.Default.Settings, contentDescription = "Настройки")
-        }
+        BottomAppBar(
+            containerColor = colors.appBarColor,
+            contentColor = colors.iconColor,
+            modifier = Modifier.fillMaxSize() // заполнит родительский Box
+        ) {
+            IconButton(onClick = { showSettings() }) {
+                Icon(Icons.Default.Settings, contentDescription = "Настройки")
+            }
 
-        Spacer(modifier = Modifier.weight(1f))
+            Spacer(modifier = Modifier.weight(1f))
 
-        IconButton(onClick = { showReciterDialog(true) }) {
-            Icon(
-                painter = painterResource(R.drawable.letter_case),
-                contentDescription = "Размер шрифтов",
-            )
-        }
+            IconButton(onClick = { showReciterDialog(true) }) {
+                Icon(
+                    painter = painterResource(R.drawable.letter_case),
+                    contentDescription = "Размер шрифтов",
+                )
+            }
 
-        Spacer(modifier = Modifier.weight(1f))
+            Spacer(modifier = Modifier.weight(1f))
 
-        // Кнопка Play/Pause
-        IconButton(onClick = onClickPlayer) {
-            Icon(
-                painter = if (isPlaying) painterResource(R.drawable.pause) else painterResource(R.drawable.play),
-                contentDescription = "Play/Pause"
-            )
-        }
+            IconButton(onClick = onClickPlayer) {
+                Icon(
+                    painter = if (isPlaying) painterResource(R.drawable.pause) else painterResource(
+                        R.drawable.play
+                    ), contentDescription = "Play/Pause"
+                )
+            }
 
-        Spacer(modifier = Modifier.weight(1f))
+            Spacer(modifier = Modifier.weight(1f))
 
-        IconButton(onClick = { /* TODO: Избранное */ }) {
-            Icon(Icons.Default.Favorite, contentDescription = "Избранное")
-        }
-    }
-}
-
-fun handlePlayPauseForChapter(isPlaying: Boolean, player: ExoPlayer?) {
-    if (player != null) {
-        if (isPlaying) {
-            player.pause()
-        } else {
-            player.play()
+            IconButton(onClick = { /* TODO: Избранное */ }) {
+                Icon(Icons.Default.Favorite, contentDescription = "Избранное")
+            }
         }
     }
 }

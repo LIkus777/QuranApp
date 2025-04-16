@@ -8,6 +8,8 @@ val Gold = Color(0xFFCFAF5D) // Золотой акцент
 val DeepBlue = Color(0xFF283593) // Улучшенный глубокий синий
 val LightGray = Color(0xFFF5F5F5) // Светло-серый фон
 val DarkGray = Color(0xFF1C1C1C) // Тёмный фон
+val DarkGray75 = Color(0xBF1C1C1C) // Тёмный фон
+val DarkGray45 = Color(0x721C1C1C) // Тёмный фон
 val White = Color(0xFFFFFFFF) // Белый
 val Red = Color(0xFFD84315) // Красный (ошибки, улучшен)
 val SoftGreen = Color(0xFF66BB6A) // Улучшенный мягкий зелёный (успех)
@@ -28,8 +30,11 @@ val AppBarColor = PrimaryGreen // Основной цвет AppBar
 val StatusBarColor = DarkGray // Цвет StatusBar
 val IconColor = White // Цвет иконок
 
+
 // Светлая тема
 val LightThemeColors = QuranColors(
+    shadowForActiveBars = DarkGray75,
+    shadowForDialogs = DarkGray45,
     background = White,
     cardBackground = LightGray,
     boxBackground = Color(0xFFEAEAEA),
@@ -58,6 +63,8 @@ val LightThemeColors = QuranColors(
 
 // Тёмная тема
 val DarkThemeColors = QuranColors(
+    shadowForActiveBars = DarkGray75,
+    shadowForDialogs = DarkGray45,
     background = DarkerGray,
     cardBackground = DarkGray,
     boxBackground = Color(0xFF252525),
@@ -86,6 +93,8 @@ val DarkThemeColors = QuranColors(
 
 // Расширенная структура цветов
 data class QuranColors(
+    val shadowForActiveBars: Color,
+    val shadowForDialogs: Color,
     val background: Color,
     val cardBackground: Color,
     val boxBackground: Color,

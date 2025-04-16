@@ -1,4 +1,4 @@
-package com.zaur.features.surah.screen
+package com.zaur.presentation.ui
 
 import android.graphics.BitmapFactory
 import androidx.compose.foundation.Image
@@ -17,9 +17,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.zaur.features.R
-import com.zaur.presentation.ui.LightThemeColors
-import com.zaur.presentation.ui.QuranColors
+import com.zaur.presentation.R
 import com.zaur.presentation.ui.fonts.NotoFontMedium
 
 @Preview(showBackground = true)

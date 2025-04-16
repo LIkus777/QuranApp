@@ -101,6 +101,8 @@ class FakeQTranslationRAqc : QuranTranslationRepositoryAqc {
     }
 }
 
+class Fake
+
 class FakeQTextRV4 : QuranTextRepositoryV4 {
     override suspend fun getAllChapters(language: String): List<ChapterV4> {
         TODO("Not yet implemented")

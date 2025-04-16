@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.media3.common.AudioAttributes
 import androidx.media3.common.C
 import androidx.media3.common.MediaItem
+import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
 
@@ -47,9 +48,11 @@ interface AudioPlayer {
                             audioPlayerCallback?.audioEnded()
                         }
                     }
-                })
 
-                playWhenReady = true
+                    override fun onPlayerError(error: PlaybackException) {
+                        Log.e("TAGGG", "Playback error: ${error.errorCodeName} | ${error.message}")
+                    }
+                })
             }
         }
 
@@ -61,6 +64,7 @@ interface AudioPlayer {
                 if (currentMediaItem?.localConfiguration?.uri != mediaItem.localConfiguration?.uri) {
                     player?.setMediaItem(mediaItem)
                     player?.prepare()
+                    player?.playWhenReady = true
                 }
 
                 player?.play()

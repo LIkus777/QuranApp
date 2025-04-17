@@ -10,18 +10,18 @@ import retrofit2.http.Path
 
 interface QuranApiAqc {
 
-    @GET("/surah/{chapterNumber}/{reciter}")
-    suspend fun getChapterAudioOfReciter(
-        @Path("chapterNumber") chapterNumber: Int, @Path("reciter") reciter: String
-    ): ChapterAudiosFileAqc
+    @GET("/surah")
+    suspend fun getAllChapters(): ChaptersAqc
 
     @GET("/ayah/{verseKey}/{reciter}")
     suspend fun getVerseAudioFile(
         @Path("verseKey") verseKey: String, @Path("reciter") reciter: String
     ): VersesAudioFileAqc
 
-    @GET("/surah")
-    suspend fun getAllChapters(): ChaptersAqc
+    @GET("/surah/{chapterNumber}/{reciter}")
+    suspend fun getChapterAudioOfReciter(
+        @Path("chapterNumber") chapterNumber: Int, @Path("reciter") reciter: String
+    ): ChapterAudiosFileAqc
 
     @GET("/surah/{chapterNumber}")
     suspend fun getArabicChapter(@Path("chapterNumber") chapterNumber: Int): ArabicChaptersAqc

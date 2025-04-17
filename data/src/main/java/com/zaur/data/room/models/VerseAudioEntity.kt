@@ -1,20 +1,19 @@
-package com.zaur.domain.al_quran_cloud.models.audiofile
+package com.zaur.data.room.models
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import androidx.room.TypeConverters
 import com.google.gson.annotations.SerializedName
+import com.zaur.data.room.converters.GenericConverters
 
-data class VersesAudioFileAqc(
-    @SerializedName("code") val code: Long,
-    @SerializedName("status") val status: String,
-    @SerializedName("data") val versesAudio: VerseAudioAqc
-)
-
-data class VerseAudioAqc(
-    @SerializedName("number") val number: Long,
+@Entity(tableName = "verse_audio")
+data class VerseAudioEntity(
+    @PrimaryKey @SerializedName("number") val number: Long,
     @SerializedName("audio") val audio: String,
     @SerializedName("audioSecondary") val audioSecondary: List<String>,
     @SerializedName("text") val text: String,
-    @SerializedName("edition") val edition: EditionVerse,
-    @SerializedName("surah") val surah: Surah,
+    @TypeConverters(GenericConverters::class) @SerializedName("edition") val edition: EditionVerseEntity,
+    @TypeConverters(GenericConverters::class) @SerializedName("surah") val surah: SurahEntity,
     @SerializedName("numberInSurah") val numberInSurah: Long,
     @SerializedName("juz") val juz: Long,
     @SerializedName("manzil") val manzil: Long,
@@ -24,17 +23,17 @@ data class VerseAudioAqc(
     @SerializedName("sajda") val sajda: Boolean
 )
 
-data class EditionVerse(
+data class EditionVerseEntity(
     @SerializedName("identifier") val identifier: String,
     @SerializedName("language") val language: String,
     @SerializedName("name") val name: String,
     @SerializedName("englishName") val englishName: String,
     @SerializedName("format") val format: String,
     @SerializedName("type") val type: String,
-    @SerializedName("direction") val direction: Any? = null
+    @SerializedName("direction") val direction: String? = null
 )
 
-data class Surah(
+data class SurahEntity(
     @SerializedName("number") val number: Long,
     @SerializedName("name") val name: String,
     @SerializedName("englishName") val englishName: String,

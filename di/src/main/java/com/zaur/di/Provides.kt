@@ -2,6 +2,12 @@ package com.zaur.di
 
 import com.zaur.data.al_quran_aqc.api.QuranApiAqc
 import com.zaur.data.apiV4.api.QuranApiV4
+import com.zaur.data.room.dao.ArabicChapterDao
+import com.zaur.data.room.dao.ChapterAudioDao
+import com.zaur.data.room.dao.ChapterDao
+import com.zaur.data.room.dao.TranslationChapterDao
+import com.zaur.data.room.dao.VerseAudioDao
+import com.zaur.data.room.database.AppDatabase
 import com.zaur.domain.al_quran_cloud.repository.QuranAudioRepositoryAqc
 import com.zaur.domain.al_quran_cloud.repository.QuranTextRepositoryAqc
 import com.zaur.domain.al_quran_cloud.repository.QuranTranslationRepositoryAqc
@@ -13,15 +19,39 @@ import com.zaur.domain.apiV4.repository.QuranTafsirRepositoryV4
 import com.zaur.domain.apiV4.repository.QuranTajweedRepositoryV4
 import com.zaur.domain.apiV4.repository.QuranTextRepositoryV4
 import com.zaur.domain.apiV4.repository.QuranTranslationRepositoryV4
-import com.zaur.domain.storage.QuranStorage
 import com.zaur.domain.apiV4.use_case.QuranAudioUseCaseV4
 import com.zaur.domain.apiV4.use_case.QuranTafsirUseCaseV4
 import com.zaur.domain.apiV4.use_case.QuranTajweedUseCaseV4
 import com.zaur.domain.apiV4.use_case.QuranTextUseCaseV4
 import com.zaur.domain.apiV4.use_case.QuranTranslationUseCaseV4
+import com.zaur.domain.storage.QuranStorage
 import com.zaur.domain.storage.ReciterStorage
 import com.zaur.domain.storage.theme.ThemeStorage
 import com.zaur.domain.storage.theme.ThemeUseCase
+
+interface ProvideTranslationChapterDao {
+    fun provideTranslationChapterDao(): TranslationChapterDao
+}
+
+interface ProvideArabicChapterDao {
+    fun provideArabicChapterDao(): ArabicChapterDao
+}
+
+interface ProvideVerseAudioDao {
+    fun provideVerseAudioDao(): VerseAudioDao
+}
+
+interface ProvideChapterAudioDao {
+    fun provideChapterAudioDao(): ChapterAudioDao
+}
+
+interface ProvideChapterDao {
+    fun provideChapterDao(): ChapterDao
+}
+
+interface ProvideAppDatabase {
+    fun provideAppDatabase(): AppDatabase
+}
 
 interface ProvideThemeStorage {
     fun provideThemeStorage(): ThemeStorage

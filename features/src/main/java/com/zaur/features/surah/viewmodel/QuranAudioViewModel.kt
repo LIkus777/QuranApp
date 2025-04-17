@@ -44,7 +44,7 @@ interface QuranAudioViewModel : QuranAudioObservable.Read {
         private val stateManager: SurahDetailStateManager,
         private val observable: QuranAudioObservable.Mutable,
         private val quranAudioUseCaseAqc: QuranAudioUseCaseAqc
-    ) : BaseViewModel(), QuranAudioViewModel, QuranAudioObservable.Read {
+    ) : BaseViewModel(), QuranAudioViewModel {
 
         private val surahPlayer = SurahPlayer.Base(audioPlayer, stateManager)
 
@@ -90,6 +90,7 @@ interface QuranAudioViewModel : QuranAudioObservable.Read {
         }
 
         override fun getChaptersAudioOfReciter(chapterNumber: Int, reciter: String) {
+            //TODO ПЕРЕДЕЛАТЬ ЧТОБЫ ССЫЛКИ НА АУДИО БРАЛИСЬ ОТСЮДА ДЛЯ СУРЫ, А НЕ ДЕРГАЛИСЬ ПО 1
             viewModelScope.launch(Dispatchers.IO) {
                 val result = launchSafely {
                     quranAudioUseCaseAqc.getChapterAudioOfReciter(

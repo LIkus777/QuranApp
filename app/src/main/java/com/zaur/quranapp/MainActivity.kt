@@ -29,8 +29,7 @@ class MainActivity : ComponentActivity() {
 
     private val themeViewModel by lazy {
         ThemeViewModel.Base(
-            SavedStateHandle(),
-            di.provideThemeUseCase()
+            SavedStateHandle(), di.provideThemeUseCase()
         )
     }
 
@@ -39,12 +38,12 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             val navController = rememberNavController()
-            val chooseViewModelFactory = SurahChooseViewModelFactory.Base(quranTextUseCaseAqc = di.provideQuranTextUseCaseAqc())
+            val chooseViewModelFactory =
+                SurahChooseViewModelFactory.Base(quranTextUseCaseAqc = di.provideQuranTextUseCaseAqc())
             //QuranAppTheme {
             Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                QuranNavGraph(navController = navController,
-                    mainScreen = {
-                    MainScreen()
+                QuranNavGraph(navController = navController, mainScreen = {
+                    MainScreen(navController)
                 }, surahChooseScreen = {
                     SurahChooseScreen(
                         themeViewModel,
@@ -60,9 +59,17 @@ class MainActivity : ComponentActivity() {
                         chooseViewModelFactory,
                         surahDetailViewModel = SurahDetailViewModel.Base(stateManager),
                         themeViewModel = themeViewModel,
-                        quranTextViewModelFactory = QuranTextViewModelFactory.Base(quranTextUseCaseAqc = di.provideQuranTextUseCaseAqc()),
-                        quranTranslationViewModelFactory = QuranTranslationViewModelFactory.Base(quranTranslationUseCaseAqc = di.provideQuranTranslationUseCaseAqc()),
-                        quranAudioViewModelFactory = QuranAudioViewModelFactory.Base(context = this, stateManager = stateManager, quranAudioUseCaseAqc = di.provideQuranAudioUseCaseAqc()),
+                        quranTextViewModelFactory = QuranTextViewModelFactory.Base(
+                            quranTextUseCaseAqc = di.provideQuranTextUseCaseAqc()
+                        ),
+                        quranTranslationViewModelFactory = QuranTranslationViewModelFactory.Base(
+                            quranTranslationUseCaseAqc = di.provideQuranTranslationUseCaseAqc()
+                        ),
+                        quranAudioViewModelFactory = QuranAudioViewModelFactory.Base(
+                            context = this,
+                            stateManager = stateManager,
+                            quranAudioUseCaseAqc = di.provideQuranAudioUseCaseAqc()
+                        ),
                         controller
                     )
                 })

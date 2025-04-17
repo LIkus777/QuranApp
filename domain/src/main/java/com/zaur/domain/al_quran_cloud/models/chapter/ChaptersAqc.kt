@@ -3,16 +3,18 @@ package com.zaur.domain.al_quran_cloud.models.chapter
 import com.google.gson.annotations.SerializedName
 
 data class ChaptersAqc(
-    val code: Long, val status: String, @SerializedName("data") val chapters: List<ChapterAqc>
+    @SerializedName("code") val code: Long,
+    @SerializedName("status") val status: String,
+    @SerializedName("data") val chapters: List<ChapterAqc>
 )
 
 data class ChapterAqc(
-    val number: Long,
-    val name: String,
-    val englishName: String,
-    val englishNameTranslation: String,
-    val numberOfAyahs: Long,
-    val revelationType: RevelationType
+    @SerializedName("number") val number: Long,
+    @SerializedName("name") val name: String,
+    @SerializedName("englishName") val englishName: String,
+    @SerializedName("englishNameTranslation") val englishNameTranslation: String,
+    @SerializedName("numberOfAyahs") val numberOfAyahs: Long,
+    @SerializedName("revelationType") val revelationType: RevelationType
 )
 
 enum class RevelationType(val value: String) {

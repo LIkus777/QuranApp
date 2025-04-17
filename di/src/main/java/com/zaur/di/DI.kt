@@ -1,6 +1,7 @@
 package com.zaur.di
 
 import android.content.Context
+import androidx.room.Room
 import com.zaur.data.al_quran_aqc.api.QuranApiAqc
 import com.zaur.data.al_quran_aqc.repository_impl.QuranAudioRepositoryAqcImpl
 import com.zaur.data.al_quran_aqc.repository_impl.QuranTextRepositoryAqcImpl
@@ -15,6 +16,13 @@ import com.zaur.data.network.ApiFactory
 import com.zaur.data.preferences.QuranPreferences
 import com.zaur.data.preferences.ReciterPreferences
 import com.zaur.data.preferences.ThemePreferences
+import com.zaur.data.room.constans.DATABASE_NAME
+import com.zaur.data.room.dao.ArabicChapterDao
+import com.zaur.data.room.dao.ChapterAudioDao
+import com.zaur.data.room.dao.ChapterDao
+import com.zaur.data.room.dao.TranslationChapterDao
+import com.zaur.data.room.dao.VerseAudioDao
+import com.zaur.data.room.database.AppDatabase
 import com.zaur.domain.al_quran_cloud.repository.QuranAudioRepositoryAqc
 import com.zaur.domain.al_quran_cloud.repository.QuranTextRepositoryAqc
 import com.zaur.domain.al_quran_cloud.repository.QuranTranslationRepositoryAqc
@@ -36,11 +44,13 @@ import com.zaur.domain.storage.ReciterStorage
 import com.zaur.domain.storage.theme.ThemeStorage
 import com.zaur.domain.storage.theme.ThemeUseCase
 
-interface DI : ProvideThemeStorage, ProvideReciterStorage, ProvideQuranStorage, ProvideThemeUseCase,
-    ProvideQuranAudioUseCaseAqc, ProvideQuranTextUseCaseAqc, ProvideQuranTranslationUseCaseAqc,
-    ProvideQuranAudioUseCaseV4, ProvideQuranTextUseCase, ProvideQuranTajweedUseCase,
-    ProvideQuranTafsirUseCase, ProvideQuranTranslationUseCase, ProvideQuranApiAqc,
-    ProvideQuranApiV4, ProvideQuranAudioRepositoryAqc, ProvideQuranTextRepositoryAqc,
+interface DI : ProvideTranslationChapterDao, ProvideArabicChapterDao, ProvideVerseAudioDao, ProvideChapterAudioDao,
+    ProvideChapterDao, ProvideAppDatabase, ProvideThemeStorage, ProvideReciterStorage,
+    ProvideQuranStorage, ProvideThemeUseCase, ProvideQuranAudioUseCaseAqc,
+    ProvideQuranTextUseCaseAqc, ProvideQuranTranslationUseCaseAqc, ProvideQuranAudioUseCaseV4,
+    ProvideQuranTextUseCase, ProvideQuranTajweedUseCase, ProvideQuranTafsirUseCase,
+    ProvideQuranTranslationUseCase, ProvideQuranApiAqc, ProvideQuranApiV4,
+    ProvideQuranAudioRepositoryAqc, ProvideQuranTextRepositoryAqc,
     ProvideQuranTranslationRepositoryAqc, ProvideQuranAudioRepositoryV4,
     ProvideQuranTafsirRepositoryV4, ProvideQuranTajweedRepositoryV4,
     ProvideQuranTranslationRepositoryV4, ProvideQuranTextRepositoryV4 {
@@ -110,6 +120,24 @@ interface DI : ProvideThemeStorage, ProvideReciterStorage, ProvideQuranStorage, 
             QuranAudioRepositoryAqcImpl(provideQuranApiAqc())
 
         override fun provideThemeUseCase(): ThemeUseCase = ThemeUseCase(provideThemeStorage())
+
+        override fun provideArabicChapterDao(): ArabicChapterDao =
+            provideAppDatabase().arabicChapterDao()
+
+        override fun provideVerseAudioDao(): VerseAudioDao = provideAppDatabase().verseAudioDao()
+
+        override fun provideChapterAudioDao(): ChapterAudioDao =
+            provideAppDatabase().chapterAudioDao()
+
+        override fun provideChapterDao(): ChapterDao = provideAppDatabase().chapterDao()
+
+        override fun provideTranslationChapterDao(): TranslationChapterDao = provideAppDatabase().translationChapterDao()
+
+        override fun provideAppDatabase(): AppDatabase {
+            return Room.databaseBuilder(
+                context, AppDatabase::class.java, DATABASE_NAME
+            ).fallbackToDestructiveMigration().build()
+        }
     }
 
 }

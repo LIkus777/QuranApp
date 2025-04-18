@@ -1,62 +1,72 @@
 package com.zaur.domain.al_quran_cloud.use_case
 
-import com.zaur.domain.al_quran_cloud.models.arabic.ArabicChapter
-import com.zaur.domain.al_quran_cloud.models.arabic.ArabicChaptersAqc
-import com.zaur.domain.al_quran_cloud.models.audiofile.ChapterAudioFile
-import com.zaur.domain.al_quran_cloud.models.audiofile.ChapterAudiosFileAqc
-import com.zaur.domain.al_quran_cloud.models.chapter.ChapterAqc
-import com.zaur.domain.al_quran_cloud.models.chapter.ChaptersAqc
-import com.zaur.domain.al_quran_cloud.models.translate.TranslationAqc
-import com.zaur.domain.al_quran_cloud.models.translate.TranslationsChapterAqc
 import com.zaur.domain.al_quran_cloud.repository.MainRepository
 
 interface MainUseCase {
 
-    suspend fun loadChapters(): ChaptersAqc
-    suspend fun loadChaptersAudio(): List<ChapterAudiosFileAqc>
-    suspend fun loadChaptersArabic(): List<ArabicChaptersAqc>
-    suspend fun loadChaptersTranslate(): List<TranslationsChapterAqc>
+    suspend fun loadChapters()
+    suspend fun loadChaptersArabic(chaptersNumbers: IntRange)
+    suspend fun loadChaptersAudio(
+        chaptersNumbers: IntRange,
+        reciter: String,
+    )
 
-    suspend fun saveChapters(chaptersAqc: List<ChapterAqc>)
-    suspend fun saveChaptersAudio(chaptersAudio: List<ChapterAudioFile>)
+    suspend fun loadChaptersTranslate(
+        chaptersNumbers: IntRange,
+        translator: String,
+    )
+
+    /*suspend fun saveChapters(chaptersAqc: List<ChapterAqc>)
     suspend fun saveChaptersArabic(chaptersArabic: List<ArabicChapter>)
-    suspend fun saveChaptersTranslate(chaptersTranslate: List<TranslationAqc>)
+    suspend fun saveChaptersAudio(chaptersAudio: List<ChapterAudioFile>)
+    suspend fun saveChaptersTranslate(chaptersTranslate: List<TranslationAqc>)*/
 
     class Base(
         private val mainRepositoryLoad: MainRepository.Load,
         private val mainRepositorySave: MainRepository.Save,
     ) : MainUseCase {
-        override suspend fun loadChapters(): ChaptersAqc {
-            return mainRepositoryLoad.loadChapters()
+
+        override suspend fun loadChapters() {
+            val result = mainRepositoryLoad.loadChapters()
+            mainRepositorySave.saveChapters(result)
         }
 
-        override suspend fun loadChaptersAudio(): List<ChapterAudiosFileAqc> {
-            return mainRepositoryLoad.loadChaptersAudio()
+        override suspend fun loadChaptersArabic(chaptersNumbers: IntRange) {
+            val result = mainRepositoryLoad.loadChaptersArabic(chaptersNumbers)
+            mainRepositorySave.saveChaptersArabic(result)
         }
 
-        override suspend fun loadChaptersArabic(): List<ArabicChaptersAqc> {
-            return mainRepositoryLoad.loadChaptersArabic()
+        override suspend fun loadChaptersAudio(
+            chaptersNumbers: IntRange,
+            reciter: String,
+        ) {
+            val result = mainRepositoryLoad.loadChaptersAudio(chaptersNumbers, reciter)
+            mainRepositorySave.saveChaptersAudio(result)
         }
 
-        override suspend fun loadChaptersTranslate(): List<TranslationsChapterAqc> {
-            return mainRepositoryLoad.loadChaptersTranslate()
+        override suspend fun loadChaptersTranslate(
+            chaptersNumbers: IntRange,
+            translator: String,
+        ) {
+            val result = mainRepositoryLoad.loadChaptersTranslate(chaptersNumbers, translator)
+            mainRepositorySave.saveChaptersTranslate(result)
         }
 
-        override suspend fun saveChapters(chaptersAqc: List<ChapterAqc>) {
+        /*override suspend fun saveChapters(chaptersAqc: List<ChapterAqc>) {
             mainRepositorySave.saveChapters(chaptersAqc)
-        }
-
-        override suspend fun saveChaptersAudio(chaptersAudio: List<ChapterAudioFile>) {
-            mainRepositorySave.saveChaptersAudio(chaptersAudio)
         }
 
         override suspend fun saveChaptersArabic(chaptersArabic: List<ArabicChapter>) {
             mainRepositorySave.saveChaptersArabic(chaptersArabic)
         }
 
+        override suspend fun saveChaptersAudio(chaptersAudio: List<ChapterAudioFile>) {
+            mainRepositorySave.saveChaptersAudio(chaptersAudio)
+        }
+
         override suspend fun saveChaptersTranslate(chaptersTranslate: List<TranslationAqc>) {
             mainRepositorySave.saveChaptersTranslate(chaptersTranslate)
-        }
+        }*/
     }
 
 }

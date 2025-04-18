@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.zaur.core.BaseViewModel
 import com.zaur.core.HandleResult
+import com.zaur.domain.al_quran_cloud.models.chapter.ChapterAqc
 import com.zaur.domain.al_quran_cloud.models.chapter.ChaptersAqc
 import com.zaur.domain.al_quran_cloud.use_case.QuranTextUseCaseAqc
 import com.zaur.features.surah.observables.SurahChooseObservable
@@ -21,14 +22,13 @@ interface SurahChooseViewModel : SurahChooseObservable.Read {
         private val quranTextUseCaseAqc: QuranTextUseCaseAqc
     ) : BaseViewModel(), SurahChooseViewModel {
 
-
         override fun textState(): StateFlow<QuranTextAqcUIState> = observable.textState()
 
         override fun getAllChapters() {
             viewModelScope.launch(Dispatchers.IO) {
-                val result = launchSafely<ChaptersAqc> { quranTextUseCaseAqc.fetchAllChapters() }
-                result.handle(object : HandleResult<ChaptersAqc> {
-                    override fun handleSuccess(data: ChaptersAqc) {
+                val result = launchSafely<List<ChapterAqc>> { quranTextUseCaseAqc.fetchAllChapters() }
+                result.handle(object : HandleResult<List<ChapterAqc>> {
+                    override fun handleSuccess(data: List<ChapterAqc>) {
                         viewModelScope.launch {
                             Log.i("TAG", "handleSuccess: getAllChapters data $data")
                             observable.update(observable.state().value.copy(chapters = data))

@@ -7,9 +7,11 @@ import com.zaur.data.room.models.ArabicAyahEntity
 import com.zaur.data.room.models.AyahAudioEntity
 import com.zaur.data.room.models.EditionArabicEntity
 import com.zaur.data.room.models.EditionAudioEntity
+import com.zaur.data.room.models.EditionTranslationEntity
 import com.zaur.data.room.models.EditionVerseEntity
 import com.zaur.data.room.models.RevelationType
 import com.zaur.data.room.models.SurahEntity
+import com.zaur.data.room.models.TranslationAyahEntity
 
 class GenericConverters {
 
@@ -80,4 +82,20 @@ class GenericConverters {
             else -> throw IllegalArgumentException()
         }
     }
+
+    @TypeConverter
+    fun fromTranslationAyahList(list: List<TranslationAyahEntity>?): String? = gson.toJson(list)
+
+    @TypeConverter
+    fun toTranslationAyahList(json: String?): List<TranslationAyahEntity>? {
+        val type = object : TypeToken<List<TranslationAyahEntity>>() {}.type
+        return gson.fromJson(json, type)
+    }
+
+    @TypeConverter
+    fun fromEditionTranslation(edition: EditionTranslationEntity?): String? = gson.toJson(edition)
+
+    @TypeConverter
+    fun toEditionTranslation(json: String?): EditionTranslationEntity? =
+        gson.fromJson(json, EditionTranslationEntity::class.java)
 }

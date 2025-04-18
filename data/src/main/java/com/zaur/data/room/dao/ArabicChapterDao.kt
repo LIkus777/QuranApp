@@ -12,6 +12,9 @@ interface ArabicChapterDao {
     @Query("SELECT * FROM arabic_chapters")
     fun getAll(): List<ArabicChapterEntity>
 
+    @Query("SELECT * FROM arabic_chapters WHERE number=:chapterNumber")
+    fun getArabicChapter(chapterNumber: Int): ArabicChapterEntity
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun add(chapters: List<ArabicChapterEntity>)
 

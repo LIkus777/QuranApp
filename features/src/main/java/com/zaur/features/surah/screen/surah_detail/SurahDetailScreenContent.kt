@@ -63,7 +63,9 @@ fun SurahDetailScreenContent(
     val isBarsVisible = remember { mutableStateOf(true) }
 
     LaunchedEffect(textState.currentArabicText) {
-        textState.currentArabicText?.let { quranAudioViewModel.setAyahs(it) }
+        textState.currentArabicText?.ayahs?.let {
+            quranAudioViewModel.setAyahs(it)
+        }
     }
 
     LaunchedEffect(audioState.verseAudioFile, surahDetailState.audioPlayerState.restartAudio) {

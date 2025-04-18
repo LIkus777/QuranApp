@@ -12,6 +12,11 @@ interface ChapterAudioDao {
     @Query("SELECT * FROM chapter_audio")
     fun getAll(): List<ChapterAudioEntity>
 
+    @Query("SELECT * FROM chapter_audio WHERE number=:chapterNumber AND reciter=:reciter")
+    fun getChapterAudioOfReciter(
+        chapterNumber: Int, reciter: String,
+    ): ChapterAudioEntity
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun add(chaptersAudio: List<ChapterAudioEntity>)
 

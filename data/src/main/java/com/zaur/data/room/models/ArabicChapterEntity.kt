@@ -3,11 +3,13 @@ package com.zaur.data.room.models
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
+import com.google.gson.annotations.JsonAdapter
 import com.google.gson.annotations.SerializedName
 import com.zaur.data.room.converters.GenericConverters
 import com.zaur.domain.al_quran_cloud.models.arabic.ArabicChapter
 import com.zaur.domain.al_quran_cloud.models.arabic.Ayah
 import com.zaur.domain.al_quran_cloud.models.arabic.EditionArabic
+import com.zaur.domain.base.SajdaAdapter
 
 @Entity(tableName = "arabic_chapters")
 data class ArabicChapterEntity(
@@ -30,7 +32,7 @@ data class ArabicAyahEntity(
     @SerializedName("page") val page: Long,
     @SerializedName("ruku") val ruku: Long,
     @SerializedName("hizbQuarter") val hizbQuarter: Long,
-    @SerializedName("sajda") val sajda: Boolean,
+    @JsonAdapter(SajdaAdapter::class) @SerializedName("sajda") val sajda: Boolean,
 )
 
 data class EditionArabicEntity(
@@ -42,28 +44,3 @@ data class EditionArabicEntity(
     @SerializedName("type") val type: String,
     @SerializedName("direction") val direction: String,
 )
-
-fun ArabicChapter.toData(): ArabicChapterEntity {
-    return ArabicChapterEntity(
-        number,
-        name,
-        englishName,
-        englishNameTranslation,
-        revelationType,
-        numberOfAyahs,
-        ayahs = ayahs.map { it.toData() },
-        edition = edition.toData()
-    )
-}
-
-fun Ayah.toData(): ArabicAyahEntity {
-    return ArabicAyahEntity(
-        number, text, numberInSurah, juz, manzil, page, ruku, hizbQuarter, sajda
-    )
-}
-
-fun EditionArabic.toData(): EditionArabicEntity {
-    return EditionArabicEntity(
-        identifier, language, name, englishName, format, type, direction
-    )
-}

@@ -55,7 +55,7 @@ fun SurahChooseMenu(
         }
 
         val textState = surahChooseViewModelFactory.textState().collectAsState()
-        val chapters = textState.value.chapters?.chapters ?: emptyList()
+        val chapters = textState.value.chapters ?: emptyList()
 
         var selectedTabIndex by rememberSaveable { mutableIntStateOf(0) }
         val tabTitles = listOf("Суры", "Джузы")

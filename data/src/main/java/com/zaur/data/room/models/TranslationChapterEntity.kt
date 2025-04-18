@@ -2,10 +2,14 @@ package com.zaur.data.room.models
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import androidx.room.TypeConverters
+import com.google.gson.annotations.JsonAdapter
 import com.google.gson.annotations.SerializedName
+import com.zaur.data.room.converters.GenericConverters
 import com.zaur.domain.al_quran_cloud.models.translate.Ayah
 import com.zaur.domain.al_quran_cloud.models.translate.EditionTranslation
 import com.zaur.domain.al_quran_cloud.models.translate.TranslationAqc
+import com.zaur.domain.base.SajdaAdapter
 
 @Entity(tableName = "translation_chapter")
 data class TranslationEntity(
@@ -15,8 +19,9 @@ data class TranslationEntity(
     @SerializedName("englishNameTranslation") val englishNameTranslation: String,
     @SerializedName("revelationType") val revelationType: String,
     @SerializedName("numberOfAyahs") val numberOfAyahs: Long,
-    @SerializedName("ayahs") val translationAyahEntity: List<TranslationAyahEntity>,
-    @SerializedName("edition") val edition: EditionTranslationEntity,
+    @TypeConverters(GenericConverters::class) @SerializedName("ayahs") val translationAyahEntity: List<TranslationAyahEntity>,
+    @TypeConverters(GenericConverters::class) @SerializedName("edition") val edition: EditionTranslationEntity,
+    val translator: String
 )
 
 data class TranslationAyahEntity(
@@ -28,7 +33,7 @@ data class TranslationAyahEntity(
     @SerializedName("page") val page: Long,
     @SerializedName("ruku") val ruku: Long,
     @SerializedName("hizbQuarter") val hizbQuarter: Long,
-    @SerializedName("sajda") val sajda: Boolean,
+    @JsonAdapter(SajdaAdapter::class) @SerializedName("sajda") val sajda: Boolean,
 )
 
 data class EditionTranslationEntity(
@@ -40,28 +45,3 @@ data class EditionTranslationEntity(
     @SerializedName("type") val type: String,
     @SerializedName("direction") val direction: String,
 )
-
-fun TranslationAqc.toData(): TranslationEntity {
-    return TranslationEntity(
-        number,
-        name,
-        englishName,
-        englishNameTranslation,
-        revelationType,
-        numberOfAyahs,
-        ayahs.map { it.toData() },
-        edition.toData()
-    )
-}
-
-fun Ayah.toData(): TranslationAyahEntity {
-    return TranslationAyahEntity(
-        number, text, numberInSurah, juz, manzil, page, ruku, hizbQuarter, sajda
-    )
-}
-
-fun EditionTranslation.toData(): EditionTranslationEntity {
-    return EditionTranslationEntity(
-        identifier, language, name, englishName, format, type, direction
-    )
-}

@@ -1,18 +1,22 @@
 package com.zaur.data.al_quran_aqc.repository_impl
 
-import com.zaur.data.al_quran_aqc.api.QuranApiAqc
-import com.zaur.domain.al_quran_cloud.models.audiofile.ChapterAudiosFileAqc
+import com.zaur.data.room.dao.ChapterAudioDao
+import com.zaur.data.room.dao.VerseAudioDao
+import com.zaur.data.room.models.mappers.toDomain
+import com.zaur.domain.al_quran_cloud.models.audiofile.ChapterAudioFile
 import com.zaur.domain.al_quran_cloud.models.audiofile.VersesAudioFileAqc
 import com.zaur.domain.al_quran_cloud.repository.QuranAudioRepositoryAqc
 
 class QuranAudioRepositoryAqcImpl(
-    private val quranApiAqc: QuranApiAqc
+    private val chapterAudioDao: ChapterAudioDao,
+    private val verseAudioDao: VerseAudioDao,
 ) : QuranAudioRepositoryAqc {
     override suspend fun getChapterAudioOfReciter(
-        chapterNumber: Int, reciter: String
-    ): ChapterAudiosFileAqc = quranApiAqc.getChapterAudioOfReciter(chapterNumber, reciter)
+        chapterNumber: Int, reciter: String,
+    ): ChapterAudioFile =
+        chapterAudioDao.getChapterAudioOfReciter(chapterNumber, reciter).toDomain()
 
     override suspend fun getVerseAudioFile(
-        verseKey: String, reciter: String
-    ): VersesAudioFileAqc = quranApiAqc.getVerseAudioFile(verseKey, reciter)
+        verseKey: String, reciter: String,
+    ): VersesAudioFileAqc = verseAudioDao.getVerseAudioFile(verseKey, reciter)
 }

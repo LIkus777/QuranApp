@@ -3,8 +3,10 @@ package com.zaur.data.room.models
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
+import com.google.gson.annotations.JsonAdapter
 import com.google.gson.annotations.SerializedName
 import com.zaur.data.room.converters.GenericConverters
+import com.zaur.domain.base.SajdaAdapter
 
 @Entity(tableName = "verse_audio")
 data class VerseAudioEntity(
@@ -20,7 +22,7 @@ data class VerseAudioEntity(
     @SerializedName("page") val page: Long,
     @SerializedName("ruku") val ruku: Long,
     @SerializedName("hizbQuarter") val hizbQuarter: Long,
-    @SerializedName("sajda") val sajda: Boolean
+    @JsonAdapter(SajdaAdapter::class) @SerializedName("sajda") val sajda: Boolean
 )
 
 data class EditionVerseEntity(

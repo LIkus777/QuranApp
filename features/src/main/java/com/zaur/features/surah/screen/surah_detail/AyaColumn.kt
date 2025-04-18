@@ -34,10 +34,10 @@ fun AyaColumn(
     onClickSound: (Int) -> Unit = {}
 ) {
     val ayats = remember(textState.currentArabicText) {
-        textState.currentArabicText?.arabicChapters?.ayahs ?: emptyList()
+        textState.currentArabicText?.ayahs ?: emptyList()
     }
     val translations = remember(translateState.translations) {
-        translateState.translations?.translations?.ayahs ?: emptyList()
+        translateState.translations?.ayahs ?: emptyList()
     }
 
     if (isLoading) {

@@ -17,6 +17,7 @@ import com.zaur.features.surah.screen.surah_choose.SurahChooseScreen
 import com.zaur.features.surah.screen.surah_detail.SurahDetailScreen
 import com.zaur.features.surah.viewmodel.SurahDetailViewModel
 import com.zaur.features.surah.viewmodel.ThemeViewModel
+import com.zaur.features.surah.viewmodel.factory.MainViewModelFactory
 import com.zaur.features.surah.viewmodel.factory.QuranAudioViewModelFactory
 import com.zaur.features.surah.viewmodel.factory.QuranTextViewModelFactory
 import com.zaur.features.surah.viewmodel.factory.QuranTranslationViewModelFactory
@@ -43,7 +44,12 @@ class MainActivity : ComponentActivity() {
             //QuranAppTheme {
             Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                 QuranNavGraph(navController = navController, mainScreen = {
-                    MainScreen(navController)
+                    MainScreen(
+                        navController,
+                        mainViewModelFactory = MainViewModelFactory.Base(
+                            di.provideMainUseCase()
+                        )
+                    )
                 }, surahChooseScreen = {
                     SurahChooseScreen(
                         themeViewModel,

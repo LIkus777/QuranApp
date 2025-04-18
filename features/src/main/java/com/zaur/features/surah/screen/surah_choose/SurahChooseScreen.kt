@@ -56,7 +56,7 @@ fun SurahChooseScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         val chapters =
-            textState.value.chapters?.chapters ?: emptyList() // Избегаем повторного ?. вызова
+            textState.value.chapters ?: emptyList() // Избегаем повторного ?. вызова
         itemsIndexed(chapters) { index, chapter ->
             ModernSurahText(
                 number = chapter.number,

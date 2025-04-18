@@ -10,6 +10,11 @@ interface VerseAudioDao {
     @Query("SELECT * FROM verse_audio")
     fun getAll(): List<VerseAudioEntity>
 
+    /*@Query("SELECT * FROM verse_audio WHERE verseKey=:verseKey AND reciter=:reciter")
+    fun getVerseAudioFile(
+        verseKey: String, reciter: String,
+    ): VerseAudioEntity*/
+
     //todo пока не делаю
 
 }

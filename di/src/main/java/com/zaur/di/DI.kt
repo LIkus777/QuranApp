@@ -23,9 +23,13 @@ import com.zaur.data.room.dao.ChapterDao
 import com.zaur.data.room.dao.TranslationChapterDao
 import com.zaur.data.room.dao.VerseAudioDao
 import com.zaur.data.room.database.AppDatabase
+import com.zaur.data.room.repository.MainRepositoryLoadImpl
+import com.zaur.data.room.repository.MainRepositorySaveImpl
+import com.zaur.domain.al_quran_cloud.repository.MainRepository
 import com.zaur.domain.al_quran_cloud.repository.QuranAudioRepositoryAqc
 import com.zaur.domain.al_quran_cloud.repository.QuranTextRepositoryAqc
 import com.zaur.domain.al_quran_cloud.repository.QuranTranslationRepositoryAqc
+import com.zaur.domain.al_quran_cloud.use_case.MainUseCase
 import com.zaur.domain.al_quran_cloud.use_case.QuranAudioUseCaseAqc
 import com.zaur.domain.al_quran_cloud.use_case.QuranTextUseCaseAqc
 import com.zaur.domain.al_quran_cloud.use_case.QuranTranslationUseCaseAqc
@@ -44,9 +48,10 @@ import com.zaur.domain.storage.ReciterStorage
 import com.zaur.domain.storage.theme.ThemeStorage
 import com.zaur.domain.storage.theme.ThemeUseCase
 
-interface DI : ProvideTranslationChapterDao, ProvideArabicChapterDao, ProvideVerseAudioDao, ProvideChapterAudioDao,
-    ProvideChapterDao, ProvideAppDatabase, ProvideThemeStorage, ProvideReciterStorage,
-    ProvideQuranStorage, ProvideThemeUseCase, ProvideQuranAudioUseCaseAqc,
+interface DI : ProvideMainRepositorySave, ProvideMainRepositoryLoad, ProvideTranslationChapterDao,
+    ProvideArabicChapterDao, ProvideVerseAudioDao, ProvideChapterAudioDao, ProvideChapterDao,
+    ProvideAppDatabase, ProvideThemeStorage, ProvideReciterStorage, ProvideQuranStorage,
+    ProvideThemeUseCase, ProvideMainUseCase, ProvideQuranAudioUseCaseAqc,
     ProvideQuranTextUseCaseAqc, ProvideQuranTranslationUseCaseAqc, ProvideQuranAudioUseCaseV4,
     ProvideQuranTextUseCase, ProvideQuranTajweedUseCase, ProvideQuranTafsirUseCase,
     ProvideQuranTranslationUseCase, ProvideQuranApiAqc, ProvideQuranApiV4,
@@ -111,13 +116,13 @@ interface DI : ProvideTranslationChapterDao, ProvideArabicChapterDao, ProvideVer
             QuranTranslationUseCaseAqc.Base(provideQuranTranslationRepositoryAqc())
 
         override fun provideQuranTextRepositoryAqc(): QuranTextRepositoryAqc =
-            QuranTextRepositoryAqcImpl(provideQuranApiAqc())
+            QuranTextRepositoryAqcImpl(provideChapterDao(), provideArabicChapterDao())
 
         override fun provideQuranTranslationRepositoryAqc(): QuranTranslationRepositoryAqc =
-            QuranTranslationRepositoryAqcImpl(provideQuranApiAqc())
+            QuranTranslationRepositoryAqcImpl(provideTranslationChapterDao())
 
         override fun provideQuranAudioRepositoryAqc(): QuranAudioRepositoryAqc =
-            QuranAudioRepositoryAqcImpl(provideQuranApiAqc())
+            QuranAudioRepositoryAqcImpl(provideChapterAudioDao(), provideVerseAudioDao())
 
         override fun provideThemeUseCase(): ThemeUseCase = ThemeUseCase(provideThemeStorage())
 
@@ -131,13 +136,26 @@ interface DI : ProvideTranslationChapterDao, ProvideArabicChapterDao, ProvideVer
 
         override fun provideChapterDao(): ChapterDao = provideAppDatabase().chapterDao()
 
-        override fun provideTranslationChapterDao(): TranslationChapterDao = provideAppDatabase().translationChapterDao()
+        override fun provideTranslationChapterDao(): TranslationChapterDao =
+            provideAppDatabase().translationChapterDao()
 
-        override fun provideAppDatabase(): AppDatabase {
-            return Room.databaseBuilder(
-                context, AppDatabase::class.java, DATABASE_NAME
-            ).fallbackToDestructiveMigration().build()
-        }
+        override fun provideAppDatabase(): AppDatabase = Room.databaseBuilder(
+            context, AppDatabase::class.java, DATABASE_NAME
+        ).fallbackToDestructiveMigration().build()
+
+        override fun provideMainRepositorySave(): MainRepository.Save = MainRepositorySaveImpl(
+            provideChapterDao(),
+            provideChapterAudioDao(),
+            provideArabicChapterDao(),
+            provideTranslationChapterDao()
+        )
+
+        override fun provideMainRepositoryLoad(): MainRepository.Load =
+            MainRepositoryLoadImpl(provideQuranApiAqc())
+
+
+        override fun provideMainUseCase(): MainUseCase =
+            MainUseCase.Base(provideMainRepositoryLoad(), provideMainRepositorySave())
     }
 
 }

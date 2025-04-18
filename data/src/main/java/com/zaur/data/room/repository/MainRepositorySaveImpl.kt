@@ -4,7 +4,7 @@ import com.zaur.data.room.dao.ArabicChapterDao
 import com.zaur.data.room.dao.ChapterAudioDao
 import com.zaur.data.room.dao.ChapterDao
 import com.zaur.data.room.dao.TranslationChapterDao
-import com.zaur.data.room.models.toData
+import com.zaur.data.room.models.mappers.toData
 import com.zaur.domain.al_quran_cloud.models.arabic.ArabicChapter
 import com.zaur.domain.al_quran_cloud.models.audiofile.ChapterAudioFile
 import com.zaur.domain.al_quran_cloud.models.chapter.ChapterAqc

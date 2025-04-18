@@ -2,11 +2,14 @@ package com.zaur.data.room.models
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.google.gson.annotations.JsonAdapter
 import com.google.gson.annotations.SerializedName
 import com.zaur.domain.al_quran_cloud.models.audiofile.Ayah
 import com.zaur.domain.al_quran_cloud.models.audiofile.ChapterAudioFile
 import com.zaur.domain.al_quran_cloud.models.audiofile.EditionAudio
 import com.zaur.domain.al_quran_cloud.models.chapter.RevelationType
+import com.zaur.domain.base.SajdaAdapter
+import kotlin.String
 
 @Entity(tableName = "chapter_audio")
 data class ChapterAudioEntity(
@@ -18,6 +21,7 @@ data class ChapterAudioEntity(
     @SerializedName("numberOfAyahs") val numberOfAyahs: Long,
     @SerializedName("ayahs") val ayahs: List<AyahAudioEntity>,
     @SerializedName("edition") val edition: EditionAudioEntity,
+    val reciter: String
 )
 
 data class AyahAudioEntity(
@@ -31,7 +35,7 @@ data class AyahAudioEntity(
     @SerializedName("page") val page: Long,
     @SerializedName("ruku") val ruku: Long,
     @SerializedName("hizbQuarter") val hizbQuarter: Long,
-    @SerializedName("sajda") val sajda: Boolean,
+    @JsonAdapter(SajdaAdapter::class) @SerializedName("sajda") val sajda: Boolean,
 )
 
 data class EditionAudioEntity(
@@ -43,45 +47,3 @@ data class EditionAudioEntity(
     @SerializedName("type") val type: String,
     @SerializedName("direction") val direction: String? = null,
 )
-
-//todo переписать на нормальный ооп маппер
-fun ChapterAudioFile.toData(): ChapterAudioEntity {
-    return ChapterAudioEntity(
-        number,
-        name,
-        englishName,
-        englishNameTranslation,
-        revelationType = RevelationType.fromValue(revelationType).value,
-        numberOfAyahs,
-        ayahs = ayahs.map { it.toData() },
-        edition.toData()
-    )
-}
-
-fun EditionAudio.toData(): EditionAudioEntity {
-    return EditionAudioEntity(
-        identifier,
-        language,
-        name,
-        englishName,
-        format,
-        type,
-        direction
-    )
-}
-
-fun Ayah.toData(): AyahAudioEntity {
-    return AyahAudioEntity(
-        number,
-        audio,
-        audioSecondary,
-        text,
-        numberInSurah,
-        juz,
-        manzil,
-        page,
-        ruku,
-        hizbQuarter,
-        sajda
-    )
-}

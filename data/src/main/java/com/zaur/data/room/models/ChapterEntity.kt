@@ -28,15 +28,3 @@ enum class RevelationType(val value: String) {
         }
     }
 }
-
-//todo переписать на нормальный ооп маппер
-fun ChapterAqc.toData(): ChapterEntity {
-    return ChapterEntity(
-        number,
-        name,
-        englishName,
-        englishNameTranslation,
-        numberOfAyahs,
-        revelationType = RevelationType.fromValue(revelationType.value)
-    )
-}

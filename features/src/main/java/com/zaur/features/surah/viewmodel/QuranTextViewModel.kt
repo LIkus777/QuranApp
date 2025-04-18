@@ -4,7 +4,9 @@ import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.zaur.core.BaseViewModel
 import com.zaur.core.HandleResult
+import com.zaur.domain.al_quran_cloud.models.arabic.ArabicChapter
 import com.zaur.domain.al_quran_cloud.models.arabic.ArabicChaptersAqc
+import com.zaur.domain.al_quran_cloud.models.chapter.ChapterAqc
 import com.zaur.domain.al_quran_cloud.models.chapter.ChaptersAqc
 import com.zaur.domain.al_quran_cloud.use_case.QuranTextUseCaseAqc
 import com.zaur.features.surah.observables.QuranTextObservable
@@ -27,9 +29,9 @@ interface QuranTextViewModel : QuranTextObservable.Read {
 
         override fun getAllChapters() {
             viewModelScope.launch(Dispatchers.IO) {
-                val result = launchSafely<ChaptersAqc> { quranTextUseCaseAqc.fetchAllChapters() }
-                result.handle(object : HandleResult<ChaptersAqc> {
-                    override fun handleSuccess(data: ChaptersAqc) {
+                val result = launchSafely<List<ChapterAqc>> { quranTextUseCaseAqc.fetchAllChapters() }
+                result.handle(object : HandleResult<List<ChapterAqc>> {
+                    override fun handleSuccess(data: List<ChapterAqc>) {
                         viewModelScope.launch {
                             Log.i("TAG", "handleSuccess: getAllChapters data $data")
                             observable.update(observable.state().value.copy(chapters = data))
@@ -46,8 +48,8 @@ interface QuranTextViewModel : QuranTextObservable.Read {
         override fun getArabicChapter(chapterNumber: Int) {
             viewModelScope.launch(Dispatchers.IO) {
                 val result = launchSafely { quranTextUseCaseAqc.fetchArabicChapter(chapterNumber) }
-                result.handle(object : HandleResult<ArabicChaptersAqc> {
-                    override fun handleSuccess(data: ArabicChaptersAqc) {
+                result.handle(object : HandleResult<ArabicChapter> {
+                    override fun handleSuccess(data: ArabicChapter) {
                         viewModelScope.launch {
                             Log.i("TAG", "handleSuccess: getChapter data $data")
                             observable.update(observable.state().value.copy(currentArabicText = data))

@@ -1,6 +1,6 @@
 package com.zaur.features.surah.screen
 
-import com.zaur.domain.al_quran_cloud.models.arabic.ArabicChaptersAqc
+import com.zaur.domain.al_quran_cloud.models.arabic.Ayah
 import com.zaur.domain.al_quran_cloud.models.audiofile.VersesAudioFileAqc
 import com.zaur.features.surah.base.AudioPlayer
 import com.zaur.features.surah.base.AudioPlayerCallback
@@ -20,7 +20,7 @@ interface SurahPlayer {
 
     fun setQuranAudioVmCallback(callback: QuranAudioVmCallback)
 
-    fun setAyahs(ayahs: ArabicChaptersAqc)
+    fun setAyahs(ayahs: List<Ayah>)
 
     // Реализация плеера с разделением на управление состоянием и воспроизведением
     class Base(
@@ -29,11 +29,11 @@ interface SurahPlayer {
     ) : SurahPlayer {
 
         private var quranAudioVmCallback: QuranAudioVmCallback? = null
-        private var ayahs: ArabicChaptersAqc? = null
+        private var ayahs: List<Ayah>? = null
 
         private val state = surahDetailStateManager.getState()
 
-        override fun setAyahs(ayahs: ArabicChaptersAqc) {
+        override fun setAyahs(ayahs: List<Ayah>) {
             this.ayahs = ayahs
         }
 
@@ -113,7 +113,7 @@ interface SurahPlayer {
             }
 
             // Если воспроизведение главы — переходим к следующему аяту
-            val ayahs = ayahs!!.arabicChapters.ayahs
+            val ayahs = ayahs!!
             val currentIndex =
                 ayahs.indexOfFirst { it.numberInSurah.toInt() == state.value.audioPlayerState.currentAyah }
 

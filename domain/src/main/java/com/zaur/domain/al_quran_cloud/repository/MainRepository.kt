@@ -11,16 +11,16 @@ import com.zaur.domain.al_quran_cloud.models.translate.TranslationsChapterAqc
 
 interface MainRepository {
     interface Load {
-        suspend fun loadChapters(): ChaptersAqc
-        suspend fun loadChaptersAudio(): List<ChapterAudiosFileAqc>
-        suspend fun loadChaptersArabic(): List<ArabicChaptersAqc>
-        suspend fun loadChaptersTranslate(): List<TranslationsChapterAqc>
+        suspend fun loadChapters(): List<ChapterAqc>
+        suspend fun loadChaptersArabic(chaptersNumbers: IntRange): List<ArabicChapter>
+        suspend fun loadChaptersAudio(chaptersNumbers: IntRange, reciter: String): List<ChapterAudioFile>
+        suspend fun loadChaptersTranslate(chaptersNumbers: IntRange, translator: String): List<TranslationAqc>
     }
 
     interface Save {
         suspend fun saveChapters(chaptersAqc: List<ChapterAqc>)
-        suspend fun saveChaptersAudio(chaptersAudio: List<ChapterAudioFile>)
         suspend fun saveChaptersArabic(chaptersArabic: List<ArabicChapter>)
+        suspend fun saveChaptersAudio(chaptersAudio: List<ChapterAudioFile>)
         suspend fun saveChaptersTranslate(chaptersTranslate: List<TranslationAqc>)
     }
 }

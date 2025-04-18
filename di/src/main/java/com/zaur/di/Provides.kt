@@ -8,9 +8,11 @@ import com.zaur.data.room.dao.ChapterDao
 import com.zaur.data.room.dao.TranslationChapterDao
 import com.zaur.data.room.dao.VerseAudioDao
 import com.zaur.data.room.database.AppDatabase
+import com.zaur.domain.al_quran_cloud.repository.MainRepository
 import com.zaur.domain.al_quran_cloud.repository.QuranAudioRepositoryAqc
 import com.zaur.domain.al_quran_cloud.repository.QuranTextRepositoryAqc
 import com.zaur.domain.al_quran_cloud.repository.QuranTranslationRepositoryAqc
+import com.zaur.domain.al_quran_cloud.use_case.MainUseCase
 import com.zaur.domain.al_quran_cloud.use_case.QuranAudioUseCaseAqc
 import com.zaur.domain.al_quran_cloud.use_case.QuranTextUseCaseAqc
 import com.zaur.domain.al_quran_cloud.use_case.QuranTranslationUseCaseAqc
@@ -28,6 +30,13 @@ import com.zaur.domain.storage.QuranStorage
 import com.zaur.domain.storage.ReciterStorage
 import com.zaur.domain.storage.theme.ThemeStorage
 import com.zaur.domain.storage.theme.ThemeUseCase
+
+interface ProvideMainRepositorySave {
+    fun provideMainRepositorySave(): MainRepository.Save
+}
+interface ProvideMainRepositoryLoad {
+    fun provideMainRepositoryLoad(): MainRepository.Load
+}
 
 interface ProvideTranslationChapterDao {
     fun provideTranslationChapterDao(): TranslationChapterDao
@@ -67,6 +76,10 @@ interface ProvideReciterStorage {
 
 interface ProvideThemeUseCase {
     fun provideThemeUseCase(): ThemeUseCase
+}
+
+interface ProvideMainUseCase {
+    fun provideMainUseCase(): MainUseCase
 }
 
 interface ProvideQuranAudioUseCaseAqc {

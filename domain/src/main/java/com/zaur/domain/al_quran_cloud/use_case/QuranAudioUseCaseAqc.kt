@@ -1,5 +1,6 @@
 package com.zaur.domain.al_quran_cloud.use_case
 
+import com.zaur.domain.al_quran_cloud.models.audiofile.ChapterAudioFile
 import com.zaur.domain.al_quran_cloud.models.audiofile.ChapterAudiosFileAqc
 import com.zaur.domain.al_quran_cloud.models.audiofile.VersesAudioFileAqc
 import com.zaur.domain.al_quran_cloud.repository.QuranAudioRepositoryAqc
@@ -9,7 +10,7 @@ interface QuranAudioUseCaseAqc {
 
     fun getReciter(): String?
     fun saveReciter(identifier: String)
-    suspend fun getChapterAudioOfReciter(chapterNumber: Int, reciter: String): ChapterAudiosFileAqc
+    suspend fun getChapterAudioOfReciter(chapterNumber: Int, reciter: String): ChapterAudioFile
     suspend fun getVerseAudioFile(verseKey: String, reciter: String): VersesAudioFileAqc
 
     class Base(
@@ -19,7 +20,7 @@ interface QuranAudioUseCaseAqc {
         override suspend fun getChapterAudioOfReciter(
             chapterNumber: Int,
             reciter: String
-        ): ChapterAudiosFileAqc =
+        ): ChapterAudioFile =
             quranAudioRepositoryAqc.getChapterAudioOfReciter(chapterNumber, reciter)
 
         override suspend fun getVerseAudioFile(

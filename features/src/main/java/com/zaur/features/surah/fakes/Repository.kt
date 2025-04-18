@@ -1,9 +1,13 @@
 package com.zaur.features.surah.fakes
 
+import com.zaur.domain.al_quran_cloud.models.arabic.ArabicChapter
 import com.zaur.domain.al_quran_cloud.models.arabic.ArabicChaptersAqc
+import com.zaur.domain.al_quran_cloud.models.audiofile.ChapterAudioFile
 import com.zaur.domain.al_quran_cloud.models.audiofile.ChapterAudiosFileAqc
 import com.zaur.domain.al_quran_cloud.models.audiofile.VersesAudioFileAqc
+import com.zaur.domain.al_quran_cloud.models.chapter.ChapterAqc
 import com.zaur.domain.al_quran_cloud.models.chapter.ChaptersAqc
+import com.zaur.domain.al_quran_cloud.models.translate.TranslationAqc
 import com.zaur.domain.al_quran_cloud.models.translate.TranslationsChapterAqc
 import com.zaur.domain.al_quran_cloud.repository.QuranAudioRepositoryAqc
 import com.zaur.domain.al_quran_cloud.repository.QuranTextRepositoryAqc
@@ -67,27 +71,21 @@ class FakeQuranStorage() : QuranStorage {
 }
 
 class FakeQTextRAqc : QuranTextRepositoryAqc {
-    override suspend fun getAllChapters(): ChaptersAqc {
+    override suspend fun getAllChapters(): List<ChapterAqc> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun getArabicChapter(chapterNumber: Int): ArabicChaptersAqc {
+    override suspend fun getArabicChapter(chapterNumber: Int): ArabicChapter {
         TODO("Not yet implemented")
     }
+
 }
 
 class FakeQAudioRAqc : QuranAudioRepositoryAqc {
     override suspend fun getChapterAudioOfReciter(
         chapterNumber: Int,
-        reciter: String
-    ): ChapterAudiosFileAqc {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun getVerseAudioFile(
-        verseKey: String,
-        reciter: String
-    ): VersesAudioFileAqc {
+        reciter: String,
+    ): ChapterAudioFile {
         TODO("Not yet implemented")
     }
 }
@@ -95,13 +93,11 @@ class FakeQAudioRAqc : QuranAudioRepositoryAqc {
 class FakeQTranslationRAqc : QuranTranslationRepositoryAqc {
     override suspend fun getTranslationForChapter(
         chapterNumber: Int,
-        translator: String
-    ): TranslationsChapterAqc {
+        translator: String,
+    ): TranslationAqc {
         TODO("Not yet implemented")
     }
 }
-
-class Fake
 
 class FakeQTextRV4 : QuranTextRepositoryV4 {
     override suspend fun getAllChapters(language: String): List<ChapterV4> {

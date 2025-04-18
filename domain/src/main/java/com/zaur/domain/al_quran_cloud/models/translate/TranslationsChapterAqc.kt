@@ -1,6 +1,8 @@
 package com.zaur.domain.al_quran_cloud.models.translate
 
+import com.google.gson.annotations.JsonAdapter
 import com.google.gson.annotations.SerializedName
+import com.zaur.domain.base.SajdaAdapter
 
 data class TranslationsChapterAqc(
     @SerializedName("code") val code: Long,
@@ -16,7 +18,8 @@ data class TranslationAqc(
     @SerializedName("revelationType") val revelationType: String,
     @SerializedName("numberOfAyahs") val numberOfAyahs: Long,
     @SerializedName("ayahs") val ayahs: List<Ayah>,
-    @SerializedName("edition") val edition: EditionTranslation
+    @SerializedName("edition") val edition: EditionTranslation,
+    val translator: String
 )
 
 data class Ayah(
@@ -28,7 +31,7 @@ data class Ayah(
     @SerializedName("page") val page: Long,
     @SerializedName("ruku") val ruku: Long,
     @SerializedName("hizbQuarter") val hizbQuarter: Long,
-    @SerializedName("sajda") val sajda: Boolean
+    @JsonAdapter(SajdaAdapter::class) @SerializedName("sajda") val sajda: Boolean
 )
 
 data class EditionTranslation(

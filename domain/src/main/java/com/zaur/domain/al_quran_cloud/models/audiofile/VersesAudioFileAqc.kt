@@ -1,6 +1,8 @@
 package com.zaur.domain.al_quran_cloud.models.audiofile
 
+import com.google.gson.annotations.JsonAdapter
 import com.google.gson.annotations.SerializedName
+import com.zaur.domain.base.SajdaAdapter
 
 data class VersesAudioFileAqc(
     @SerializedName("code") val code: Long,
@@ -21,7 +23,7 @@ data class VerseAudioAqc(
     @SerializedName("page") val page: Long,
     @SerializedName("ruku") val ruku: Long,
     @SerializedName("hizbQuarter") val hizbQuarter: Long,
-    @SerializedName("sajda") val sajda: Boolean
+    @JsonAdapter(SajdaAdapter::class) @SerializedName("sajda") val sajda: Boolean
 )
 
 data class EditionVerse(

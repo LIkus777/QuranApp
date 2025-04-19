@@ -1,6 +1,9 @@
 package com.zaur.domain.al_quran_cloud.use_case
 
 import com.zaur.domain.al_quran_cloud.repository.MainRepository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 interface MainUseCase {
 
@@ -27,29 +30,37 @@ interface MainUseCase {
     ) : MainUseCase {
 
         override suspend fun loadChapters() {
-            val result = mainRepositoryLoad.loadChapters()
-            mainRepositorySave.saveChapters(result)
+            CoroutineScope(Dispatchers.IO).launch {
+                val result = mainRepositoryLoad.loadChapters()
+                mainRepositorySave.saveChapters(result)
+            }
         }
 
         override suspend fun loadChaptersArabic(chaptersNumbers: IntRange) {
-            val result = mainRepositoryLoad.loadChaptersArabic(chaptersNumbers)
-            mainRepositorySave.saveChaptersArabic(result)
+            CoroutineScope(Dispatchers.IO).launch {
+                val result = mainRepositoryLoad.loadChaptersArabic(chaptersNumbers)
+                mainRepositorySave.saveChaptersArabic(result)
+            }
         }
 
         override suspend fun loadChaptersAudio(
             chaptersNumbers: IntRange,
             reciter: String,
         ) {
-            val result = mainRepositoryLoad.loadChaptersAudio(chaptersNumbers, reciter)
-            mainRepositorySave.saveChaptersAudio(result)
+            CoroutineScope(Dispatchers.IO).launch {
+                val result = mainRepositoryLoad.loadChaptersAudio(chaptersNumbers, reciter)
+                mainRepositorySave.saveChaptersAudio(result)
+            }
         }
 
         override suspend fun loadChaptersTranslate(
             chaptersNumbers: IntRange,
             translator: String,
         ) {
-            val result = mainRepositoryLoad.loadChaptersTranslate(chaptersNumbers, translator)
-            mainRepositorySave.saveChaptersTranslate(result)
+            CoroutineScope(Dispatchers.IO).launch {
+                val result = mainRepositoryLoad.loadChaptersTranslate(chaptersNumbers, translator)
+                mainRepositorySave.saveChaptersTranslate(result)
+            }
         }
 
         /*override suspend fun saveChapters(chaptersAqc: List<ChapterAqc>) {

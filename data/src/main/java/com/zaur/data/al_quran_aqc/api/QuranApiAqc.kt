@@ -13,10 +13,10 @@ interface QuranApiAqc {
     @GET("/surah")
     suspend fun getAllChapters(): ChaptersAqc
 
-    @GET("/ayah/{verseKey}/{reciter}")
+    /*@GET("/ayah/{verseKey}/{reciter}")
     suspend fun getVerseAudioFile(
         @Path("verseKey") verseKey: String, @Path("reciter") reciter: String
-    ): VersesAudioFileAqc
+    ): VersesAudioFileAqc*/
 
     @GET("/surah/{chapterNumber}/{reciter}")
     suspend fun getChapterAudioOfReciter(

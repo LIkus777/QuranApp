@@ -10,14 +10,15 @@ import com.zaur.data.room.dao.ChapterDao
 import com.zaur.data.room.dao.TranslationChapterDao
 import com.zaur.data.room.dao.VerseAudioDao
 import com.zaur.data.room.models.ArabicChapterEntity
+import com.zaur.data.room.models.AyahAudioEntity
 import com.zaur.data.room.models.ChapterAudioEntity
 import com.zaur.data.room.models.ChapterEntity
 import com.zaur.data.room.models.TranslationEntity
 import com.zaur.data.room.models.VerseAudioEntity
 
 @Database(
-    entities = [ArabicChapterEntity::class, VerseAudioEntity::class, ChapterAudioEntity::class, ChapterEntity::class, TranslationEntity::class],
-    version = 2,
+    entities = [ArabicChapterEntity::class, VerseAudioEntity::class, ChapterAudioEntity::class, AyahAudioEntity::class, ChapterEntity::class, TranslationEntity::class],
+    version = 3,
     exportSchema = false
 )
 @TypeConverters(GenericConverters::class)

@@ -4,7 +4,7 @@ import retrofit2.HttpException
 import kotlinx.coroutines.delay
 
 suspend fun <T> retryWithBackoff(
-    maxAttempts: Int = 5,
+    maxAttempts: Int = 10,
     initialDelay: Long = 500,
     factor: Double = 2.0,
     block: suspend () -> T

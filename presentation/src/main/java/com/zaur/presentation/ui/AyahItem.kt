@@ -1,5 +1,6 @@
 package com.zaur.presentation.ui
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -34,18 +35,19 @@ import com.zaur.presentation.ui.fonts.OpenSansFontLight
 @Composable
 fun AyahItem(
     ayahNumber: Int = 72,
+    currentAyahInSurah: Int = 72,
+    isCurrent: Boolean = false,
     arabicText: String = "وَعَدَ اللَّهُ الْمُؤْمِنِينَ وَالْمُؤْمِنَاتِ جَنَّاتٍ تَجْرِي مِن تَحْتِهَا الْأَنْهَارُ خَالِدِينَ فِيهَا وَمَسَاكِنَ طَيِّبَةً فِي جَنَّاتِ عَدْنٍ وَرِضْوَانٌ مِّنَ اللَّهِ أَكْبَرُ ذَلِكَ هُوَ الْفَوْزُ الْعَظِيمُ",
     translation: String = "Аллах обещал верующим мужчинам и женщинам Райские сады, в которых текут реки и в которых они пребудут вечно, а также прекрасные жилища в садах Эдема. Но довольство Аллаха будет превыше этого. Это и есть великое преуспеяние.",
     colors: QuranColors = LightThemeColors,
     fontSizeArabic: Float = 24f,
     fontSizeRussian: Float = 16f,
     soundIsActive: Boolean = false,
-    currentAyah: Int = 72,
-    onClickSound: (Int) -> Unit = {}
+    onClickSound: (Int, Int) -> Unit = { _, _ -> }
 ) {
     val arabicTextFormatted = BidiFormatter.getInstance().unicodeWrap(arabicText)
     val backgroundColor =
-        if (currentAyah == ayahNumber && soundIsActive) colors.currentCard else Color.Unspecified
+        if (isCurrent && soundIsActive) colors.currentCard else Color.Unspecified
 
     Column(
         modifier = Modifier
@@ -64,7 +66,7 @@ fun AyahItem(
                     .fillMaxWidth()
             ) {
                 Text(
-                    text = ayahNumber.toString(),
+                    text = currentAyahInSurah.toString(),
                     fontSize = 10.sp,
                     color = colors.textSecondary,
                     fontWeight = FontWeight.Light,
@@ -79,11 +81,11 @@ fun AyahItem(
                 Icon(
                     painter = painterResource(R.drawable.volume),
                     contentDescription = "Звук",
-                    tint = if (currentAyah == ayahNumber && soundIsActive) colors.border else Color.Unspecified,
+                    tint = if (isCurrent && soundIsActive) colors.border else Color.Unspecified,
                     modifier = Modifier
                         .size(24.dp)
                         .clickable(onClick = {
-                            onClickSound(ayahNumber)
+                            onClickSound(ayahNumber, currentAyahInSurah)
                         })
                 )
             }

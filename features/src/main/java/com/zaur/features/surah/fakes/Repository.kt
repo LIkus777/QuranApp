@@ -1,14 +1,10 @@
 package com.zaur.features.surah.fakes
 
 import com.zaur.domain.al_quran_cloud.models.arabic.ArabicChapter
-import com.zaur.domain.al_quran_cloud.models.arabic.ArabicChaptersAqc
+import com.zaur.domain.al_quran_cloud.models.audiofile.Ayah
 import com.zaur.domain.al_quran_cloud.models.audiofile.ChapterAudioFile
-import com.zaur.domain.al_quran_cloud.models.audiofile.ChapterAudiosFileAqc
-import com.zaur.domain.al_quran_cloud.models.audiofile.VersesAudioFileAqc
 import com.zaur.domain.al_quran_cloud.models.chapter.ChapterAqc
-import com.zaur.domain.al_quran_cloud.models.chapter.ChaptersAqc
 import com.zaur.domain.al_quran_cloud.models.translate.TranslationAqc
-import com.zaur.domain.al_quran_cloud.models.translate.TranslationsChapterAqc
 import com.zaur.domain.al_quran_cloud.repository.QuranAudioRepositoryAqc
 import com.zaur.domain.al_quran_cloud.repository.QuranTextRepositoryAqc
 import com.zaur.domain.al_quran_cloud.repository.QuranTranslationRepositoryAqc
@@ -32,7 +28,7 @@ import com.zaur.domain.storage.ReciterStorage
 import com.zaur.domain.storage.theme.ThemeStorage
 import kotlinx.coroutines.flow.Flow
 
-class FakeThemeStorage(): ThemeStorage {
+class FakeThemeStorage() : ThemeStorage {
     override fun getIsDarkTheme(): Flow<Boolean> {
         TODO("Not yet implemented")
     }
@@ -88,6 +84,13 @@ class FakeQAudioRAqc : QuranAudioRepositoryAqc {
     ): ChapterAudioFile {
         TODO("Not yet implemented")
     }
+
+    override suspend fun getAyahAudioByKey(
+        verseKey: String,
+        reciter: String,
+    ): Ayah {
+        TODO("Not yet implemented")
+    }
 }
 
 class FakeQTranslationRAqc : QuranTranslationRepositoryAqc {
@@ -105,7 +108,7 @@ class FakeQTextRV4 : QuranTextRepositoryV4 {
     }
 
     override suspend fun getChapter(
-        chapterNumber: Int, language: String
+        chapterNumber: Int, language: String,
     ): ChapterV4 {
         TODO("Not yet implemented")
     }
@@ -121,13 +124,13 @@ class FakeQAudioRV4 : QuranAudioRepositoryV4 {
     }
 
     override suspend fun getChapterAudioOfReciter(
-        reciterId: Int, chapterNumber: Int
+        reciterId: Int, chapterNumber: Int,
     ): ChapterAudioFileV4 {
         TODO("Not yet implemented")
     }
 
     override suspend fun getVerseAudioFile(
-        reciterId: Int, verseKey: String
+        reciterId: Int, verseKey: String,
     ): VerseAudioFileV4 {
         TODO("Not yet implemented")
     }
@@ -141,7 +144,7 @@ class FakeQTajweedRV4 : QuranTajweedRepositoryV4 {
 
 class FakeQTafsirRV4 : QuranTafsirRepositoryV4 {
     override suspend fun getTafsirForChapter(
-        tafsirId: Int, chapterNumber: Int
+        tafsirId: Int, chapterNumber: Int,
     ): SingleTafsirsV4 {
         TODO("Not yet implemented")
     }

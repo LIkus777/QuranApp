@@ -19,6 +19,7 @@ interface SurahDetailViewModel {
     fun fontSizeArabic(fontSize: Float)
     fun fontSizeRussian(fontSize: Float)
     fun selectedReciter(reciter: String)
+    fun setAyahInSurahNumber(ayahInSurah: Int)
 
     class Base(
         private val stateManager: SurahDetailStateManager
@@ -64,6 +65,10 @@ interface SurahDetailViewModel {
 
         override fun selectedReciter(reciter: String) {
             stateManager.selectedReciter(reciter)
+        }
+
+        override fun setAyahInSurahNumber(ayahInSurah: Int) {
+            stateManager.setAyahInSurahNumber(ayahInSurah)
         }
     }
 }

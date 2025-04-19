@@ -12,6 +12,7 @@ import com.zaur.data.apiV4.repository_impl.QuranTafsirRepositoryV4Impl
 import com.zaur.data.apiV4.repository_impl.QuranTajweedRepositoryV4Impl
 import com.zaur.data.apiV4.repository_impl.QuranTextRepositoryV4Impl
 import com.zaur.data.apiV4.repository_impl.QuranTranslationRepositoryV4Impl
+import com.zaur.data.downloader.AudioDownloader
 import com.zaur.data.network.ApiFactory
 import com.zaur.data.preferences.QuranPreferences
 import com.zaur.data.preferences.ReciterPreferences
@@ -47,17 +48,23 @@ import com.zaur.domain.storage.QuranStorage
 import com.zaur.domain.storage.ReciterStorage
 import com.zaur.domain.storage.theme.ThemeStorage
 import com.zaur.domain.storage.theme.ThemeUseCase
+import com.zaur.features.surah.base.AudioPlayer
+import com.zaur.features.surah.screen.SurahDetailStateManager
+import com.zaur.features.surah.screen.surah_detail.player.AudioPlaybackHelper
+import com.zaur.features.surah.screen.surah_detail.player.AudioPlayerStateUpdater
+import com.zaur.features.surah.screen.surah_detail.player.PlaylistBuilder
 
-interface DI : ProvideMainRepositorySave, ProvideMainRepositoryLoad, ProvideTranslationChapterDao,
-    ProvideArabicChapterDao, ProvideVerseAudioDao, ProvideChapterAudioDao, ProvideChapterDao,
-    ProvideAppDatabase, ProvideThemeStorage, ProvideReciterStorage, ProvideQuranStorage,
-    ProvideThemeUseCase, ProvideMainUseCase, ProvideQuranAudioUseCaseAqc,
-    ProvideQuranTextUseCaseAqc, ProvideQuranTranslationUseCaseAqc, ProvideQuranAudioUseCaseV4,
-    ProvideQuranTextUseCase, ProvideQuranTajweedUseCase, ProvideQuranTafsirUseCase,
-    ProvideQuranTranslationUseCase, ProvideQuranApiAqc, ProvideQuranApiV4,
-    ProvideQuranAudioRepositoryAqc, ProvideQuranTextRepositoryAqc,
-    ProvideQuranTranslationRepositoryAqc, ProvideQuranAudioRepositoryV4,
-    ProvideQuranTafsirRepositoryV4, ProvideQuranTajweedRepositoryV4,
+interface DI : ProvideSurahDetailStateManager, ProvideAudioPlayer, ProvidePlaylistBuilder, ProvideAudioPlayerStateUpdater,
+    ProvideAudioPlaybackHelper, ProvideAudioDownloader, ProvideMainRepositorySave,
+    ProvideMainRepositoryLoad, ProvideTranslationChapterDao, ProvideArabicChapterDao,
+    ProvideVerseAudioDao, ProvideChapterAudioDao, ProvideChapterDao, ProvideAppDatabase,
+    ProvideThemeStorage, ProvideReciterStorage, ProvideQuranStorage, ProvideThemeUseCase,
+    ProvideMainUseCase, ProvideQuranAudioUseCaseAqc, ProvideQuranTextUseCaseAqc,
+    ProvideQuranTranslationUseCaseAqc, ProvideQuranAudioUseCaseV4, ProvideQuranTextUseCase,
+    ProvideQuranTajweedUseCase, ProvideQuranTafsirUseCase, ProvideQuranTranslationUseCase,
+    ProvideQuranApiAqc, ProvideQuranApiV4, ProvideQuranAudioRepositoryAqc,
+    ProvideQuranTextRepositoryAqc, ProvideQuranTranslationRepositoryAqc,
+    ProvideQuranAudioRepositoryV4, ProvideQuranTafsirRepositoryV4, ProvideQuranTajweedRepositoryV4,
     ProvideQuranTranslationRepositoryV4, ProvideQuranTextRepositoryV4 {
 
     class Base(private val context: Context) : DI {
@@ -141,10 +148,13 @@ interface DI : ProvideMainRepositorySave, ProvideMainRepositoryLoad, ProvideTran
 
         override fun provideAppDatabase(): AppDatabase = Room.databaseBuilder(
             context, AppDatabase::class.java, DATABASE_NAME
-        ).fallbackToDestructiveMigration().build()
+        ).fallbackToDestructiveMigration()
+            .build() // удалит и пересоздаст БД при изменении схемы. //todo Удалить в проде
 
         override fun provideMainRepositorySave(): MainRepository.Save = MainRepositorySaveImpl(
+            provideAudioDownloader(),
             provideChapterDao(),
+            provideVerseAudioDao(),
             provideChapterAudioDao(),
             provideArabicChapterDao(),
             provideTranslationChapterDao()
@@ -156,6 +166,23 @@ interface DI : ProvideMainRepositorySave, ProvideMainRepositoryLoad, ProvideTran
 
         override fun provideMainUseCase(): MainUseCase =
             MainUseCase.Base(provideMainRepositoryLoad(), provideMainRepositorySave())
+
+        override fun provideAudioDownloader(): AudioDownloader =
+            AudioDownloader.Base(context, provideChapterAudioDao())
+
+        override fun providePlaylistBuilder(): PlaylistBuilder =
+            PlaylistBuilder.Base(provideAudioDownloader())
+
+        override fun provideAudioPlayerStateUpdater(): AudioPlayerStateUpdater =
+            AudioPlayerStateUpdater.Base(provideSurahDetailStateManager()) //todo
+
+        override fun provideAudioPlaybackHelper(): AudioPlaybackHelper =
+            AudioPlaybackHelper.Base(provideAudioDownloader(), provideAudioPlayer())
+
+        override fun provideAudioPlayer(): AudioPlayer = AudioPlayer.Base(context)
+
+        override fun provideSurahDetailStateManager(): SurahDetailStateManager =
+            SurahDetailStateManager.Base()
     }
 
 }

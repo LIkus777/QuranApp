@@ -22,7 +22,9 @@ data class ReciterState(
 )
 
 data class AudioPlayerState(
+    val firstAyahNumber: Int = 0,
     val currentAyah: Int = 0,
+    val currentAyahInSurah: Int = 0,
     val currentSurahNumber: Int = 0,
     val isAudioPlaying: Boolean = false,
     val playWholeChapter: Boolean = true,

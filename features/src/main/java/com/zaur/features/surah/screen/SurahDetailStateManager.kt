@@ -37,6 +37,7 @@ interface SurahDetailStateManager : SurahDetailStateObservable.Mutable {
     fun fontSizeArabic(fontSize: Float)
     fun fontSizeRussian(fontSize: Float)
     fun selectedReciter(reciter: String)
+    fun setAyahInSurahNumber(ayahInSurah: Int)
 
     class Base(
         private val initial: SurahDetailScreenState = SurahDetailScreenState()
@@ -44,9 +45,14 @@ interface SurahDetailStateManager : SurahDetailStateObservable.Mutable {
 
         private val state = MutableStateFlow(initial)
 
+        init {
+            Log.i("TAG", "SurahDetailStateManager: state $state ")
+        }
+
         override fun surahDetailState(): StateFlow<SurahDetailScreenState> = state
 
         override fun updateState(state: SurahDetailScreenState) {
+            Log.i("TAG", "updateState:UPDATE STATE $state ")
             this.state.update {
                 it.copy(
                     audioPlayerState = state.audioPlayerState,
@@ -116,6 +122,12 @@ interface SurahDetailStateManager : SurahDetailStateObservable.Mutable {
         override fun selectedReciter(reciter: String) {
             state.update {
                 it.copy(reciterState = it.reciterState.copy(currentReciter = reciter))
+            }
+        }
+
+        override fun setAyahInSurahNumber(ayahInSurah: Int) {
+            state.update {
+                it.copy(audioPlayerState = it.audioPlayerState.copy(currentAyahInSurah = ayahInSurah))
             }
         }
 

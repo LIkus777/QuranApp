@@ -1,6 +1,7 @@
 package com.zaur.features.surah.base
 
 import android.content.Context
+import android.net.Uri
 import android.util.Log
 import androidx.media3.common.AudioAttributes
 import androidx.media3.common.C
@@ -8,20 +9,25 @@ import androidx.media3.common.MediaItem
 import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
+import java.io.File
 
 interface AudioPlayerCallback {
     fun audioEnded()
+    fun onAyahChanged(mediaId: String?)
 }
 
 // Интерфейс для всех операций с аудио
 interface AudioPlayer {
-    fun playAudio(url: String) // Воспроизвести аудио по URL
+    fun playAudio(url: String, playFromCache: Boolean = false) // Воспроизвести аудио по URL
     fun pauseAudio() // Пауза аудио
     fun stopAudio() // Остановка аудио
     fun restartAudio()
+    fun resume()
     fun release() // Освобождение ресурсов
     fun isPlaying(): Boolean // Проверка, воспроизводится ли аудио
     fun isPaused(): Boolean
+
+    fun playPlaylist(items: List<MediaItem>)
 
     fun clear()
 
@@ -44,10 +50,17 @@ interface AudioPlayer {
 
                 addListener(object : Player.Listener {
                     override fun onPlaybackStateChanged(state: Int) {
-                        if (state == ExoPlayer.STATE_ENDED) {
+                        if (state == Player.STATE_ENDED) {
                             audioPlayerCallback?.audioEnded()
                         }
                     }
+
+                    // ВОТ ТУТ: вызывается каждый раз, когда проигрыватель переходит к следующему аяту
+                    override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
+                        val mediaId = mediaItem?.mediaId
+                        audioPlayerCallback?.onAyahChanged(mediaId)
+                    }
+
 
                     override fun onPlayerError(error: PlaybackException) {
                         Log.e("TAGGG", "Playback error: ${error.errorCodeName} | ${error.message}")
@@ -56,22 +69,41 @@ interface AudioPlayer {
             }
         }
 
-        override fun playAudio(url: String) {
-            if (url.isNotEmpty()) {
-                val mediaItem = MediaItem.fromUri(url)
+        override fun resume() {
+            player?.play()
+        }
 
-                // Сравниваем текущий mediaItem с новым, проверяя их URI
-                if (currentMediaItem?.localConfiguration?.uri != mediaItem.localConfiguration?.uri) {
-                    player?.setMediaItem(mediaItem)
-                    player?.prepare()
-                    player?.playWhenReady = true
-                }
-
-                player?.play()
-                currentMediaItem = mediaItem
-            } else {
-                player?.play()
+        override fun playPlaylist(items: List<MediaItem>) {
+            player?.apply {
+                clearMediaItems()
+                addMediaItems(items)
+                prepare()
+                playWhenReady = true
             }
+        }
+
+        override fun playAudio(url: String, playFromCache: Boolean) {
+            if (url.isEmpty()) {
+                player?.play() // просто возобновляем
+                return
+            }
+
+            val uri = if (url.startsWith("http") && playFromCache == false) {
+                Uri.parse(url)
+            } else {
+                Uri.fromFile(File(url))
+            }
+
+            val mediaItem = MediaItem.fromUri(uri)
+
+            if (currentMediaItem?.localConfiguration?.uri != mediaItem.localConfiguration?.uri) {
+                player?.setMediaItem(mediaItem)
+                player?.prepare()
+                player?.playWhenReady = true
+            }
+
+            player?.play()
+            currentMediaItem = mediaItem
         }
 
         override fun pauseAudio() {
@@ -101,7 +133,8 @@ interface AudioPlayer {
             return player?.isPlaying == true
         }
 
-        override fun isPaused(): Boolean = !player?.isPlaying!! && player?.playbackState == Player.STATE_READY
+        override fun isPaused(): Boolean =
+            !player?.isPlaying!! && player?.playbackState == Player.STATE_READY
 
         override fun clear() {
             player?.stop()
@@ -111,7 +144,7 @@ interface AudioPlayer {
             audioPlayerCallback = null
         }
 
-        override fun setAudioPlayerCallback(callback: AudioPlayerCallback)  {
+        override fun setAudioPlayerCallback(callback: AudioPlayerCallback) {
             this.audioPlayerCallback = callback
         }
     }

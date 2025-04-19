@@ -7,7 +7,7 @@ import com.zaur.domain.base.SajdaAdapter
 data class ChapterAudiosFileAqc(
     @SerializedName("code") val code: Long,
     @SerializedName("status") val status: String,
-    @SerializedName("data") val chapterAudio: ChapterAudioFile
+    @SerializedName("data") val chapterAudio: ChapterAudioFile,
 )
 
 data class ChapterAudioFile(
@@ -19,11 +19,13 @@ data class ChapterAudioFile(
     @SerializedName("numberOfAyahs") val numberOfAyahs: Long,
     @SerializedName("ayahs") val ayahs: List<Ayah>,
     @SerializedName("edition") val edition: EditionAudio,
-    val reciter: String
+    val reciter: String,
 )
 
 data class Ayah(
-    @SerializedName("number") val number: Long,
+    val chapterNumber: Long,
+    @SerializedName("number") val verseNumber: Long,
+    val reciter: String,
     @SerializedName("audio") val audio: String,
     @SerializedName("audioSecondary") val audioSecondary: List<String>,
     @SerializedName("text") val text: String,
@@ -33,7 +35,7 @@ data class Ayah(
     @SerializedName("page") val page: Long,
     @SerializedName("ruku") val ruku: Long,
     @SerializedName("hizbQuarter") val hizbQuarter: Long,
-    @JsonAdapter(SajdaAdapter::class) @SerializedName("sajda") val sajda: Boolean
+    @JsonAdapter(SajdaAdapter::class) @SerializedName("sajda") val sajda: Boolean,
 )
 
 data class EditionAudio(
@@ -43,5 +45,5 @@ data class EditionAudio(
     @SerializedName("englishName") val englishName: String,
     @SerializedName("format") val format: String,
     @SerializedName("type") val type: String,
-    @SerializedName("direction") val direction: String? = null
+    @SerializedName("direction") val direction: String? = null,
 )

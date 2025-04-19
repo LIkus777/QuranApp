@@ -2,6 +2,7 @@ package com.zaur.di
 
 import com.zaur.data.al_quran_aqc.api.QuranApiAqc
 import com.zaur.data.apiV4.api.QuranApiV4
+import com.zaur.data.downloader.AudioDownloader
 import com.zaur.data.room.dao.ArabicChapterDao
 import com.zaur.data.room.dao.ChapterAudioDao
 import com.zaur.data.room.dao.ChapterDao
@@ -30,6 +31,35 @@ import com.zaur.domain.storage.QuranStorage
 import com.zaur.domain.storage.ReciterStorage
 import com.zaur.domain.storage.theme.ThemeStorage
 import com.zaur.domain.storage.theme.ThemeUseCase
+import com.zaur.features.surah.base.AudioPlayer
+import com.zaur.features.surah.screen.SurahDetailStateManager
+import com.zaur.features.surah.screen.surah_detail.player.AudioPlaybackHelper
+import com.zaur.features.surah.screen.surah_detail.player.AudioPlayerStateUpdater
+import com.zaur.features.surah.screen.surah_detail.player.PlaylistBuilder
+
+interface ProvideSurahDetailStateManager {
+    fun provideSurahDetailStateManager(): SurahDetailStateManager
+}
+
+interface ProvideAudioPlayer {
+    fun provideAudioPlayer(): AudioPlayer
+}
+
+interface ProvidePlaylistBuilder {
+    fun providePlaylistBuilder(): PlaylistBuilder
+}
+
+interface ProvideAudioPlayerStateUpdater {
+    fun provideAudioPlayerStateUpdater(): AudioPlayerStateUpdater
+}
+
+interface ProvideAudioPlaybackHelper {
+    fun provideAudioPlaybackHelper(): AudioPlaybackHelper
+}
+
+interface ProvideAudioDownloader {
+    fun provideAudioDownloader(): AudioDownloader
+}
 
 interface ProvideMainRepositorySave {
     fun provideMainRepositorySave(): MainRepository.Save

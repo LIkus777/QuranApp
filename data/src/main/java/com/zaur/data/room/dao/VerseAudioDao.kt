@@ -1,20 +1,34 @@
 package com.zaur.data.room.dao
 
 import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.zaur.data.room.models.VerseAudioEntity
+import com.zaur.data.room.models.AyahAudioEntity
 
 @Dao
 interface VerseAudioDao {
 
-    @Query("SELECT * FROM verse_audio")
-    fun getAll(): List<VerseAudioEntity>
+    @Query(
+        """
+        SELECT * FROM ayah_audio 
+        WHERE chapterNumber = :chapter AND verseNumber = :verse AND reciter = :reciter
+        """
+    )
+    suspend fun getAyahAudio(chapter: Long, verse: Long, reciter: String): AyahAudioEntity
 
-    /*@Query("SELECT * FROM verse_audio WHERE verseKey=:verseKey AND reciter=:reciter")
-    fun getVerseAudioFile(
-        verseKey: String, reciter: String,
-    ): VerseAudioEntity*/
+    suspend fun getAyahAudioByKey(verseKey: String, reciter: String): AyahAudioEntity {
+        val parts = verseKey.split(":")
+        require(parts.size == 2) { "Invalid verseKey format: $verseKey" }
 
-    //todo пока не делаю
+        val chapter = parts[0].toLongOrNull()
+            ?: throw IllegalArgumentException("Invalid chapter number in verseKey: $verseKey")
+        val verse = parts[1].toLongOrNull()
+            ?: throw IllegalArgumentException("Invalid verse number in verseKey: $verseKey")
 
+        return getAyahAudio(chapter, verse, reciter)
+    }
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(ayahs: List<AyahAudioEntity>)
 }

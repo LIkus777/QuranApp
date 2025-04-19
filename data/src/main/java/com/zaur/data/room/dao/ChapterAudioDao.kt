@@ -20,4 +20,7 @@ interface ChapterAudioDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun add(chaptersAudio: List<ChapterAudioEntity>)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertChapterAudio(chapter: ChapterAudioEntity)
+
 }

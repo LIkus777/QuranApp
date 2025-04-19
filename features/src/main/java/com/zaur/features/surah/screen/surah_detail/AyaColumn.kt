@@ -20,7 +20,7 @@ import com.zaur.presentation.ui.QuranColors
 @Composable
 fun AyaColumn(
     chapterNumber: Int,
-    currentAyah: Int,
+    currentAyahInSurah: Int,
     isLoading: Boolean,
     textState: QuranTextAqcUIState,
     translateState: QuranTranslationAqcUIState,
@@ -28,10 +28,8 @@ fun AyaColumn(
     fontSizeArabic: Float,
     fontSizeRussian: Float,
     soundIsActive: Boolean,
-    isScrollToAyah: Boolean,
     listState: LazyListState,
-    paddingValues: PaddingValues,
-    onClickSound: (Int) -> Unit = {}
+    onClickSound: (Int, Int) -> Unit
 ) {
     val ayats = remember(textState.currentArabicText) {
         textState.currentArabicText?.ayahs ?: emptyList()
@@ -46,7 +44,7 @@ fun AyaColumn(
         }
     } else {
         LazyColumn(
-            state = listState, contentPadding = paddingValues, modifier = Modifier.fillMaxSize()
+            state = listState, modifier = Modifier.fillMaxSize()
         ) {
             if (chapterNumber != 9) {
                 item {
@@ -66,15 +64,16 @@ fun AyaColumn(
                     else aya.text
 
                 AyahItem(
-                    ayahNumber = aya.numberInSurah.toInt(),
+                    ayahNumber = aya.number.toInt(),
+                    currentAyahInSurah = aya.numberInSurah.toInt(),
+                    isCurrent = currentAyahInSurah == aya.numberInSurah.toInt(),
                     arabicText = arabicText,
                     translation = translationText,
                     colors = colors,
                     fontSizeArabic = fontSizeArabic,
                     fontSizeRussian = fontSizeRussian,
                     soundIsActive = soundIsActive,
-                    currentAyah = currentAyah,
-                    onClickSound = { onClickSound(aya.numberInSurah.toInt()) })
+                    onClickSound = { number, numberInSurah -> onClickSound(number, numberInSurah) })
             }
         }
     }

@@ -1,12 +1,12 @@
 package com.zaur.features.surah.screen.surah_detail
 
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -20,7 +20,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.zaur.features.surah.viewmodel.SurahDetailViewModel
 import com.zaur.features.surah.viewmodel.ThemeViewModel
@@ -29,8 +28,6 @@ import com.zaur.features.surah.viewmodel.factory.QuranTextViewModelFactory
 import com.zaur.features.surah.viewmodel.factory.QuranTranslationViewModelFactory
 import com.zaur.presentation.ui.DarkThemeColors
 import com.zaur.presentation.ui.LightThemeColors
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 @Composable
 fun SurahDetailScreenContent(
@@ -42,7 +39,7 @@ fun SurahDetailScreenContent(
     quranAudioViewModelFactory: QuranAudioViewModelFactory,
     quranTranslationViewModelFactory: QuranTranslationViewModelFactory,
     controller: NavHostController,
-    onMenuClick: () -> Unit
+    onMenuClick: () -> Unit,
 ) {
     val quranTextViewModel = remember { quranTextViewModelFactory.create() }
     val quranAudioViewModel = remember { quranAudioViewModelFactory.create() }
@@ -55,7 +52,9 @@ fun SurahDetailScreenContent(
     surahDetailViewModel.setSurahNumber(chapterNumber)
     val isDarkTheme = themeViewModel.getIsDarkTheme().collectAsState(initial = false).value
 
-    val scope = rememberCoroutineScope()
+    Log.i("TAG", "SurahDetailScreenContent: surahDetailState $surahDetailState ")
+
+    rememberCoroutineScope()
     val listState = rememberLazyListState()
     val colors = if (isDarkTheme) DarkThemeColors else LightThemeColors
     val isLoading = textState.currentArabicText == null || translateState.translations == null
@@ -71,11 +70,14 @@ fun SurahDetailScreenContent(
     LaunchedEffect(audioState.verseAudioFile, surahDetailState.audioPlayerState.restartAudio) {
         if (audioState.verseAudioFile != null || surahDetailState.audioPlayerState.restartAudio) {
             quranAudioViewModel.onPlayVerse(verse = audioState.verseAudioFile!!)
-            scope.launch(Dispatchers.Main) {
-                if (surahDetailState.audioPlayerState.currentAyah > 0) {
-                    listState.animateScrollToItem(surahDetailState.audioPlayerState.currentAyah - 1)
-                }
-            }
+        }
+    }
+
+    LaunchedEffect(surahDetailState.audioPlayerState.currentAyahInSurah) {
+        val index = surahDetailState.audioPlayerState.currentAyahInSurah - 1
+        Log.i("TAGGG", "SurahDetailScreenContent: index $index")
+        if (index >= 0) {
+            listState.animateScrollToItem(index)
         }
     }
 
@@ -101,21 +103,22 @@ fun SurahDetailScreenContent(
             }) {
         // Основной контент на фоне
         AyaColumn(
-            chapterNumber,
-            surahDetailState.audioPlayerState.currentAyah,
-            isLoading,
-            textState,
-            translateState,
-            colors,
-            surahDetailState.uiPreferences.fontSizeArabic,
-            surahDetailState.uiPreferences.fontSizeRussian,
-            surahDetailState.audioPlayerState.isAudioPlaying,
-            surahDetailState.audioPlayerState.isScrollToAyah,
-            listState,
-            PaddingValues(0.dp), // paddingValues больше не нужен
-        ) { ayahNumber ->
-            quranAudioViewModel.onPlaySingleClicked(ayahNumber, chapterNumber)
-        }
+            chapterNumber = chapterNumber,
+            currentAyahInSurah = surahDetailState.audioPlayerState.currentAyahInSurah,
+            isLoading = isLoading,
+            textState = textState,
+            translateState = translateState,
+            colors = colors,
+            fontSizeArabic = surahDetailState.uiPreferences.fontSizeArabic,
+            fontSizeRussian = surahDetailState.uiPreferences.fontSizeRussian,
+            soundIsActive = surahDetailState.audioPlayerState.isAudioPlaying,
+            listState = listState,
+            onClickSound = { ayahNumber, ayahNumberInSurah ->
+                Log.i("TAGGG", "SurahDetailScreenContent: ayahNumber  $ayahNumber")
+                Log.i("TAGGG", "SurahDetailScreenContent: ayahNumberInSurah $ayahNumberInSurah")
+                surahDetailViewModel.setAyahInSurahNumber(ayahNumberInSurah)
+                quranAudioViewModel.onPlaySingleClicked(ayahNumber, chapterNumber)
+            })
 
         // TopBar поверх контента
         AnimatedVisibility(

@@ -107,7 +107,9 @@ fun EditionAudio.toData(): EditionAudioEntity {
 
 fun Ayah.toData(): AyahAudioEntity {
     return AyahAudioEntity(
-        number,
+        chapterNumber,
+        verseNumber,
+        reciter,
         audio,
         audioSecondary,
         text,

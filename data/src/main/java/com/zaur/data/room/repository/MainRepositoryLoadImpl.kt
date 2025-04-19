@@ -4,6 +4,7 @@ import android.util.Log
 import com.zaur.data.al_quran_aqc.api.QuranApiAqc
 import com.zaur.data.network.retryWithBackoff
 import com.zaur.domain.al_quran_cloud.models.arabic.ArabicChapter
+import com.zaur.domain.al_quran_cloud.models.audiofile.Ayah
 import com.zaur.domain.al_quran_cloud.models.audiofile.ChapterAudioFile
 import com.zaur.domain.al_quran_cloud.models.chapter.ChapterAqc
 import com.zaur.domain.al_quran_cloud.models.translate.TranslationAqc
@@ -31,12 +32,20 @@ class MainRepositoryLoadImpl(
         reciter: String,
     ): List<ChapterAudioFile> {
         val result = mutableListOf<ChapterAudioFile>()
-        chaptersNumbers.forEach {
-            val item = retryWithBackoff {
-                quranApiAqc.getChapterAudioOfReciter(it, reciter).chapterAudio
+        Log.i("TAG", "loadChaptersAudio: reciter $reciter")
+        chaptersNumbers.forEach { chapterNumber ->
+            var item = retryWithBackoff {
+                quranApiAqc.getChapterAudioOfReciter(chapterNumber, reciter).chapterAudio
             }
-            result.add(item.copy(reciter = reciter))
+            val newAyahs = mutableListOf<Ayah>()
+            item.ayahs.forEach {
+                newAyahs.add(it.copy(reciter = reciter, chapterNumber = chapterNumber.toLong()))
+            }
+            item = item.copy(ayahs = newAyahs, reciter = reciter) // Исправленная строка: указываем reciter!
+            Log.i("TAG", "loadChaptersAudio: item $item")
+            result.add(item)
             Log.i("TAG", "loadChaptersAudio:  added")
+            Log.i("TAG", "loadChaptersAudio:  result $result")
         }
         return result
     }

@@ -1,6 +1,7 @@
 package com.zaur.quranapp
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -58,7 +59,12 @@ class MainActivity : ComponentActivity() {
                         modifier = Modifier.padding(innerPadding)
                     )
                 }, surahDetailScreen = { surahNumber, surahName, controller ->
-                    val stateManager = remember { SurahDetailStateManager.Base() }
+                    val stateManager = remember { di.provideSurahDetailStateManager() }
+                    val audioPlayerStateUpdater = remember { di.provideAudioPlayerStateUpdater() }
+                    val audioPlaybackHelper = remember { di.provideAudioPlaybackHelper() }
+                    val audioPlayer = remember { di.provideAudioPlayer() }
+                    val playlistBuilder = remember { di.providePlaylistBuilder() }
+                    Log.i("TAG", "onCreate: stateManager $stateManager")
                     SurahDetailScreen(
                         surahName,
                         surahNumber,
@@ -72,7 +78,11 @@ class MainActivity : ComponentActivity() {
                             quranTranslationUseCaseAqc = di.provideQuranTranslationUseCaseAqc()
                         ),
                         quranAudioViewModelFactory = QuranAudioViewModelFactory.Base(
+                            playlistBuilder = playlistBuilder,
+                            audioPlayerStateUpdater = audioPlayerStateUpdater,
+                            audioPlaybackHelper = audioPlaybackHelper,
                             context = this,
+                            audioPlayer = audioPlayer,
                             stateManager = stateManager,
                             quranAudioUseCaseAqc = di.provideQuranAudioUseCaseAqc()
                         ),

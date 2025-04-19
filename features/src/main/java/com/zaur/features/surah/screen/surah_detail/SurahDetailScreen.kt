@@ -15,6 +15,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.zaur.data.downloader.AudioDownloader
 import com.zaur.domain.al_quran_cloud.use_case.QuranAudioUseCaseAqc
 import com.zaur.domain.al_quran_cloud.use_case.QuranTextUseCaseAqc
 import com.zaur.domain.al_quran_cloud.use_case.QuranTranslationUseCaseAqc
@@ -46,7 +47,7 @@ fun SurahDetailScreen(
     quranTextViewModelFactory: QuranTextViewModelFactory,
     quranTranslationViewModelFactory: QuranTranslationViewModelFactory,
     quranAudioViewModelFactory: QuranAudioViewModelFactory,
-    controller: NavHostController
+    controller: NavHostController,
 ) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -79,12 +80,12 @@ fun SurahDetailScreen(
 @Composable
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 fun SurahDetailScreenPreview() {
-    val fakeNavController = rememberNavController()
-    val chooseViewModelFactory = SurahChooseViewModelFactory.Base(
+    rememberNavController()
+    SurahChooseViewModelFactory.Base(
         quranTextUseCaseAqc = QuranTextUseCaseAqc.Base(
             FakeQTextRAqc(), FakeQuranStorage()
         )
-    )
+    )/*
     QuranAppTheme {
         Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
             SurahDetailScreen(
@@ -117,4 +118,5 @@ fun SurahDetailScreenPreview() {
             )
         }
     }
+*/
 }

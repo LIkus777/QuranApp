@@ -1,9 +1,12 @@
 package com.zaur.data.room.repository
 
+import android.util.Log
+import com.zaur.data.downloader.AudioDownloader
 import com.zaur.data.room.dao.ArabicChapterDao
 import com.zaur.data.room.dao.ChapterAudioDao
 import com.zaur.data.room.dao.ChapterDao
 import com.zaur.data.room.dao.TranslationChapterDao
+import com.zaur.data.room.dao.VerseAudioDao
 import com.zaur.data.room.models.mappers.toData
 import com.zaur.domain.al_quran_cloud.models.arabic.ArabicChapter
 import com.zaur.domain.al_quran_cloud.models.audiofile.ChapterAudioFile
@@ -12,7 +15,9 @@ import com.zaur.domain.al_quran_cloud.models.translate.TranslationAqc
 import com.zaur.domain.al_quran_cloud.repository.MainRepository
 
 class MainRepositorySaveImpl(
+    private val audioDownloader: AudioDownloader,
     private val chapterDao: ChapterDao,
+    private val verseAudioDao: VerseAudioDao,
     private val chapterAudioDao: ChapterAudioDao,
     private val arabicChapterDao: ArabicChapterDao,
     private val translationChapterDao: TranslationChapterDao,
@@ -22,7 +27,23 @@ class MainRepositorySaveImpl(
     }
 
     override suspend fun saveChaptersAudio(chaptersAudio: List<ChapterAudioFile>) {
-        chapterAudioDao.add(chaptersAudio.map { it.toData() })
+        Log.i("TAG", "saveChaptersAudio: chaptersAudio $chaptersAudio")
+        val chaptersData = chaptersAudio.map { it.toData() } // ChapterAudioEntity
+        Log.i("TAG", "saveChaptersAudio: chaptersData $chaptersData")
+        // Сохраняем главы
+        chapterAudioDao.add(chaptersData)
+        chaptersData.forEach {
+            audioDownloader.downloadAndSaveAyahs(it)
+        }
+        // Сохраняем аяты
+        val ayahs = chaptersData.flatMap { chapter ->
+            chapter.ayahs.map { ayah ->
+                ayah.copy(
+                    chapterNumber = chapter.number, reciter = chapter.reciter
+                )
+            }
+        }
+        verseAudioDao.insertAll(ayahs)
     }
 
     override suspend fun saveChaptersArabic(chaptersArabic: List<ArabicChapter>) {

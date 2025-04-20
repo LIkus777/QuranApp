@@ -127,6 +127,7 @@ interface SurahPlayer {
 
         override fun clear() {
             audioPlayer.clear()
+            currentAyahIndex = 0
             ayahs = null
             quranAudioVmCallback = null
         }

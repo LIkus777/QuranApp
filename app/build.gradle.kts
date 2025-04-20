@@ -80,6 +80,7 @@ dependencies {
     //releaseImplementation (libs.leakcanary.android.no.op)
 
     implementation(project(":di"))
+    implementation(project(":core"))
     implementation(project(":data"))
     implementation(project(":domain"))
     implementation(project(":features"))

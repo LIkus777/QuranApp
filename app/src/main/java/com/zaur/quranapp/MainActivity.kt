@@ -1,37 +1,37 @@
 package com.zaur.quranapp
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.compose.rememberNavController
 import com.zaur.features.surah.screen.MainScreen
-import com.zaur.features.surah.screen.SurahDetailStateManager
 import com.zaur.features.surah.screen.surah_choose.SurahChooseScreen
 import com.zaur.features.surah.screen.surah_detail.SurahDetailScreen
-import com.zaur.features.surah.viewmodel.SurahDetailViewModel
 import com.zaur.features.surah.viewmodel.ThemeViewModel
 import com.zaur.features.surah.viewmodel.factory.MainViewModelFactory
-import com.zaur.features.surah.viewmodel.factory.QuranAudioViewModelFactory
-import com.zaur.features.surah.viewmodel.factory.QuranTextViewModelFactory
-import com.zaur.features.surah.viewmodel.factory.QuranTranslationViewModelFactory
 import com.zaur.features.surah.viewmodel.factory.SurahChooseViewModelFactory
 import com.zaur.navigation.QuranNavGraph
+import com.zaur.presentation.ui.QuranAppTheme
 
 class MainActivity : ComponentActivity() {
 
-    private val di by lazy { (application as App).diModule }
+    private val di by lazy { (application as App).diModule() }
+
+    private val mainScreenModule by lazy {
+        di.provideMainScreenModule()
+    }
 
     private val themeViewModel by lazy {
         ThemeViewModel.Base(
-            SavedStateHandle(), di.provideThemeUseCase()
+            SavedStateHandle(), mainScreenModule.provideThemeUseCase()
         )
     }
 
@@ -40,18 +40,23 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             val navController = rememberNavController()
-            val chooseViewModelFactory =
-                SurahChooseViewModelFactory.Base(quranTextUseCaseAqc = di.provideQuranTextUseCaseAqc())
-            //QuranAppTheme {
+            val surahChooseModule = remember {
+                di.provideSurahChooseModule()
+            }
+            val chooseViewModelFactory = SurahChooseViewModelFactory.Base(
+                quranTextUseCaseAqc = surahChooseModule.provideQuranTextUseCaseAqc()
+            )
+            val isDarkTheme = themeViewModel.getIsDarkTheme().collectAsState(initial = false)
+            QuranAppTheme(darkTheme = isDarkTheme.value) {
             Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                 QuranNavGraph(navController = navController, mainScreen = {
                     MainScreen(
-                        navController,
-                        mainViewModelFactory = MainViewModelFactory.Base(
-                            di.provideMainUseCase()
+                        navController, mainViewModelFactory = MainViewModelFactory.Base(
+                            mainScreenModule.provideMainUseCase()
                         )
                     )
                 }, surahChooseScreen = {
+
                     SurahChooseScreen(
                         themeViewModel,
                         surahChooseViewModelFactory = chooseViewModelFactory,
@@ -59,38 +64,23 @@ class MainActivity : ComponentActivity() {
                         modifier = Modifier.padding(innerPadding)
                     )
                 }, surahDetailScreen = { surahNumber, surahName, controller ->
-                    val stateManager = remember { di.provideSurahDetailStateManager() }
-                    val audioPlayerStateUpdater = remember { di.provideAudioPlayerStateUpdater() }
-                    val audioPlaybackHelper = remember { di.provideAudioPlaybackHelper() }
-                    val audioPlayer = remember { di.provideAudioPlayer() }
-                    val playlistBuilder = remember { di.providePlaylistBuilder() }
-                    Log.i("TAG", "onCreate: stateManager $stateManager")
+                    val surahDetailModule = remember {
+                        di.provideSurahDetailModule()
+                    }
                     SurahDetailScreen(
                         surahName,
                         surahNumber,
                         chooseViewModelFactory,
-                        surahDetailViewModel = SurahDetailViewModel.Base(stateManager),
+                        surahDetailViewModel = surahDetailModule.provideSurahDetailViewModel(),
                         themeViewModel = themeViewModel,
-                        quranTextViewModelFactory = QuranTextViewModelFactory.Base(
-                            quranTextUseCaseAqc = di.provideQuranTextUseCaseAqc()
-                        ),
-                        quranTranslationViewModelFactory = QuranTranslationViewModelFactory.Base(
-                            quranTranslationUseCaseAqc = di.provideQuranTranslationUseCaseAqc()
-                        ),
-                        quranAudioViewModelFactory = QuranAudioViewModelFactory.Base(
-                            playlistBuilder = playlistBuilder,
-                            audioPlayerStateUpdater = audioPlayerStateUpdater,
-                            audioPlaybackHelper = audioPlaybackHelper,
-                            context = this,
-                            audioPlayer = audioPlayer,
-                            stateManager = stateManager,
-                            quranAudioUseCaseAqc = di.provideQuranAudioUseCaseAqc()
-                        ),
-                        controller
+                        quranTextViewModelFactory = surahDetailModule.provideQuranTextViewModelFactory(),
+                        quranTranslationViewModelFactory = surahDetailModule.provideQuranTranslationViewModelFactory(),
+                        quranAudioViewModelFactory = surahDetailModule.provideQuranAudioViewModelFactory(),
+                        controller,
                     )
                 })
             }
-            //}
+            }
         }
     }
 }

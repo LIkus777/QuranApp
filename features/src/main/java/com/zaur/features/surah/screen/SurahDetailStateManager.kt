@@ -1,6 +1,5 @@
 package com.zaur.features.surah.screen
 
-import android.util.Log
 import com.zaur.features.surah.base.Observable
 import com.zaur.features.surah.ui_state.aqc.SurahDetailScreenState
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,7 +16,7 @@ interface SurahDetailStateObservable : Observable.Mutable<SurahDetailScreenState
     interface Mutable : Update, Read
 
     class Base(
-        private val initial: SurahDetailScreenState
+        private val initial: SurahDetailScreenState,
     ) : Observable.Abstract<SurahDetailScreenState>(initial), Mutable {
         override fun surahDetailState(): StateFlow<SurahDetailScreenState> = state()
     }
@@ -39,20 +38,17 @@ interface SurahDetailStateManager : SurahDetailStateObservable.Mutable {
     fun selectedReciter(reciter: String)
     fun setAyahInSurahNumber(ayahInSurah: Int)
 
+    fun clear()
+
     class Base(
-        private val initial: SurahDetailScreenState = SurahDetailScreenState()
+        private val initial: SurahDetailScreenState = SurahDetailScreenState(),
     ) : Observable.Abstract<SurahDetailScreenState>(initial), SurahDetailStateManager {
 
         private val state = MutableStateFlow(initial)
 
-        init {
-            Log.i("TAG", "SurahDetailStateManager: state $state ")
-        }
-
         override fun surahDetailState(): StateFlow<SurahDetailScreenState> = state
 
         override fun updateState(state: SurahDetailScreenState) {
-            Log.i("TAG", "updateState:UPDATE STATE $state ")
             this.state.update {
                 it.copy(
                     audioPlayerState = state.audioPlayerState,
@@ -128,6 +124,18 @@ interface SurahDetailStateManager : SurahDetailStateObservable.Mutable {
         override fun setAyahInSurahNumber(ayahInSurah: Int) {
             state.update {
                 it.copy(audioPlayerState = it.audioPlayerState.copy(currentAyahInSurah = ayahInSurah))
+            }
+        }
+
+        override fun clear() {
+            val base = SurahDetailScreenState()
+            state.update {
+                it.copy(
+                    audioPlayerState = base.audioPlayerState,
+                    reciterState = base.reciterState,
+                    uiPreferences = base.uiPreferences,
+                    bottomSheetState = base.bottomSheetState
+                )
             }
         }
 

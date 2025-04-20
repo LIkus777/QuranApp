@@ -21,6 +21,8 @@ interface SurahDetailViewModel {
     fun selectedReciter(reciter: String)
     fun setAyahInSurahNumber(ayahInSurah: Int)
 
+    fun clear()
+
     class Base(
         private val stateManager: SurahDetailStateManager
     ) : BaseViewModel(), SurahDetailViewModel {
@@ -69,6 +71,10 @@ interface SurahDetailViewModel {
 
         override fun setAyahInSurahNumber(ayahInSurah: Int) {
             stateManager.setAyahInSurahNumber(ayahInSurah)
+        }
+
+        override fun clear() {
+            stateManager.clear()
         }
     }
 }

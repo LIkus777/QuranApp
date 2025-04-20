@@ -13,6 +13,9 @@ import com.zaur.domain.al_quran_cloud.models.audiofile.ChapterAudioFile
 import com.zaur.domain.al_quran_cloud.models.chapter.ChapterAqc
 import com.zaur.domain.al_quran_cloud.models.translate.TranslationAqc
 import com.zaur.domain.al_quran_cloud.repository.MainRepository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class MainRepositorySaveImpl(
     private val audioDownloader: AudioDownloader,
@@ -27,23 +30,25 @@ class MainRepositorySaveImpl(
     }
 
     override suspend fun saveChaptersAudio(chaptersAudio: List<ChapterAudioFile>) {
-        Log.i("TAG", "saveChaptersAudio: chaptersAudio $chaptersAudio")
-        val chaptersData = chaptersAudio.map { it.toData() } // ChapterAudioEntity
-        Log.i("TAG", "saveChaptersAudio: chaptersData $chaptersData")
-        // Сохраняем главы
-        chapterAudioDao.add(chaptersData)
-        chaptersData.forEach {
-            audioDownloader.downloadAndSaveAyahs(it)
-        }
-        // Сохраняем аяты
-        val ayahs = chaptersData.flatMap { chapter ->
-            chapter.ayahs.map { ayah ->
-                ayah.copy(
-                    chapterNumber = chapter.number, reciter = chapter.reciter
-                )
+        CoroutineScope(Dispatchers.IO).launch {
+            Log.i("TAG", "saveChaptersAudio: chaptersAudio $chaptersAudio")
+            val chaptersData = chaptersAudio.map { it.toData() } // ChapterAudioEntity
+            Log.i("TAG", "saveChaptersAudio: chaptersData $chaptersData")
+            // Сохраняем главы
+            chapterAudioDao.add(chaptersData)
+            chaptersData.forEach {
+                audioDownloader.downloadAndCacheChapter(it)
             }
+            // Сохраняем аяты
+            val ayahs = chaptersData.flatMap { chapter ->
+                chapter.ayahs.map { ayah ->
+                    ayah.copy(
+                        chapterNumber = chapter.number, reciter = chapter.reciter
+                    )
+                }
+            }
+            verseAudioDao.insertAll(ayahs)
         }
-        verseAudioDao.insertAll(ayahs)
     }
 
     override suspend fun saveChaptersArabic(chaptersArabic: List<ArabicChapter>) {

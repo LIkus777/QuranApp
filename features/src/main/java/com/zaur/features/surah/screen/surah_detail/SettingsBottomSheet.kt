@@ -17,28 +17,31 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.zaur.presentation.ui.LightThemeColors
 import com.zaur.presentation.ui.QuranColors
 
+@Preview(showBackground = true)
 @Composable
 fun SettingsBottomSheet(
-    showSheet: Boolean,
-    colors: QuranColors,
-    selectedReciter: String?,
-    showReciterDialog: (Boolean) -> Unit,
-    showArabic: Boolean,
-    onShowArabicChange: (Boolean) -> Unit,
-    showRussian: Boolean,
-    onShowRussianChange: (Boolean) -> Unit,
-    onDismiss: () -> Unit
+    showSheet: Boolean = true,
+    colors: QuranColors = LightThemeColors,
+    selectedReciter: String? = "Alafasy",
+    showReciterDialog: (Boolean) -> Unit = {},
+    showArabic: Boolean = true,
+    onShowArabicChange: (Boolean) -> Unit = {},
+    showRussian: Boolean = true,
+    onShowRussianChange: (Boolean) -> Unit = {},
+    onDismiss: () -> Unit = {}
 ) {
 
     CustomBottomSheet(
         colors = colors,
         isVisible = showSheet,
         onDismiss = { onDismiss() },
-        alignment = Alignment.BottomCenter
+        alignment = Alignment.BottomStart
     ) {
         Box(
             modifier = Modifier
@@ -50,7 +53,6 @@ fun SettingsBottomSheet(
             Column(
                 modifier = Modifier
                     .align(Alignment.Center)
-                    .padding(horizontal = 16.dp)
             ) {
                 Text("Настройки", fontSize = 20.sp, fontWeight = FontWeight.Bold)
 

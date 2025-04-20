@@ -1,4 +1,4 @@
-package com.zaur.di
+package com.zaur.di.provides
 
 import com.zaur.data.al_quran_aqc.api.QuranApiAqc
 import com.zaur.data.apiV4.api.QuranApiV4
@@ -36,6 +36,30 @@ import com.zaur.features.surah.screen.SurahDetailStateManager
 import com.zaur.features.surah.screen.surah_detail.player.AudioPlaybackHelper
 import com.zaur.features.surah.screen.surah_detail.player.AudioPlayerStateUpdater
 import com.zaur.features.surah.screen.surah_detail.player.PlaylistBuilder
+import com.zaur.features.surah.screen.surah_detail.player.SurahPlayer
+import com.zaur.features.surah.viewmodel.SurahDetailViewModel
+import com.zaur.features.surah.viewmodel.factory.QuranAudioViewModelFactory
+import com.zaur.features.surah.viewmodel.factory.QuranTextViewModelFactory
+import com.zaur.features.surah.viewmodel.factory.QuranTranslationViewModelFactory
+
+interface ProvideQuranTextViewModelFactory {
+    fun provideQuranTextViewModelFactory(): QuranTextViewModelFactory
+}
+interface ProvideQuranAudioViewModelFactory {
+    fun provideQuranAudioViewModelFactory(): QuranAudioViewModelFactory
+}
+
+interface ProvideTranslationViewModelFactory {
+    fun provideQuranTranslationViewModelFactory(): QuranTranslationViewModelFactory
+}
+
+interface ProvideSurahDetailViewModel {
+    fun provideSurahDetailViewModel(): SurahDetailViewModel
+}
+
+interface ProvideSurahPlayer {
+    fun provideSurahPlayer(): SurahPlayer
+}
 
 interface ProvideSurahDetailStateManager {
     fun provideSurahDetailStateManager(): SurahDetailStateManager

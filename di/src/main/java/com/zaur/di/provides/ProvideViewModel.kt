@@ -1,4 +1,4 @@
-package com.zaur.di
+package com.zaur.di.provides
 
 import androidx.lifecycle.ViewModel
 

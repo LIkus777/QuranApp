@@ -18,6 +18,7 @@ interface AudioPlayerCallback {
 
 // Интерфейс для всех операций с аудио
 interface AudioPlayer {
+
     fun playAudio(url: String, playFromCache: Boolean = false) // Воспроизвести аудио по URL
     fun pauseAudio() // Пауза аудио
     fun stopAudio() // Остановка аудио
@@ -41,6 +42,7 @@ interface AudioPlayer {
         private var audioPlayerCallback: AudioPlayerCallback? = null
 
         init {
+            Log.i("TAG", "SurahPlayer: player $player")
             player = ExoPlayer.Builder(context).build().apply {
                 setAudioAttributes(
                     AudioAttributes.Builder().setUsage(C.USAGE_MEDIA)
@@ -107,6 +109,7 @@ interface AudioPlayer {
         }
 
         override fun pauseAudio() {
+            Log.i("TAG", "pauseAudio: PAUSE}")
             player?.pause()
         }
 
@@ -130,6 +133,7 @@ interface AudioPlayer {
         }
 
         override fun isPlaying(): Boolean {
+            Log.i("TAG", "isPlaying: ${player?.isPlaying == true}")
             return player?.isPlaying == true
         }
 

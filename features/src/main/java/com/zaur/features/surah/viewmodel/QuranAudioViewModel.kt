@@ -8,12 +8,8 @@ import com.zaur.data.al_quran_aqc.constans.ReciterList
 import com.zaur.domain.al_quran_cloud.models.arabic.Ayah
 import com.zaur.domain.al_quran_cloud.models.audiofile.ChapterAudioFile
 import com.zaur.domain.al_quran_cloud.use_case.QuranAudioUseCaseAqc
-import com.zaur.features.surah.base.AudioPlayer
 import com.zaur.features.surah.observables.QuranAudioObservable
 import com.zaur.features.surah.screen.SurahDetailStateManager
-import com.zaur.features.surah.screen.surah_detail.player.AudioPlaybackHelper
-import com.zaur.features.surah.screen.surah_detail.player.AudioPlayerStateUpdater
-import com.zaur.features.surah.screen.surah_detail.player.PlaylistBuilder
 import com.zaur.features.surah.screen.surah_detail.player.SurahPlayer
 import com.zaur.features.surah.ui_state.aqc.QuranAudioAqcUIState
 import kotlinx.coroutines.Dispatchers
@@ -42,22 +38,11 @@ interface QuranAudioViewModel : QuranAudioObservable.Read {
     }
 
     class Base(
-        private val playlistBuilder: PlaylistBuilder,
-        private val audioPlayerStateUpdater: AudioPlayerStateUpdater,
-        private val audioPlaybackHelper: AudioPlaybackHelper,
-        private val audioPlayer: AudioPlayer,
+        private val surahPlayer: SurahPlayer,
         private val stateManager: SurahDetailStateManager,
         private val observable: QuranAudioObservable.Mutable,
         private val quranAudioUseCaseAqc: QuranAudioUseCaseAqc,
     ) : BaseViewModel(), QuranAudioViewModel {
-
-        private val surahPlayer = SurahPlayer.Base(
-            playlistBuilder,
-            audioPlayerStateUpdater,
-            audioPlaybackHelper,
-            audioPlayer,
-            stateManager
-        )
 
         init {
             surahPlayer.setQuranAudioVmCallback(object : QuranAudioVmCallback {

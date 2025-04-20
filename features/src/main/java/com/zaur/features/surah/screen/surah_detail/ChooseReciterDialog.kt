@@ -12,8 +12,6 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -24,27 +22,26 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.zaur.data.al_quran_aqc.constans.ReciterList
+import com.zaur.presentation.ui.LightThemeColors
 import com.zaur.presentation.ui.QuranColors
 
-//@Preview(showBackground = true)
+@Preview(showBackground = true)
 @Composable
 fun ChooseReciterDialog(
-    showDialog: Boolean,
-    isFirstSelection: Boolean,
-    colors: QuranColors,
-    onDismiss: (String) -> Unit
+    showDialog: Boolean = true,
+    colors: QuranColors = LightThemeColors,
+    onDismiss: (String) -> Unit = {},
 ) {
     if (showDialog) {
         var selectedItem by remember { mutableStateOf<String>("") }
 
         Dialog(onDismissRequest = {
-            if (!isFirstSelection) {
-                onDismiss("") // Разрешаем закрытие, если чтец уже был выбран
-            }
+            onDismiss("") // Разрешаем закрытие, если чтец уже был выбран
         }) {
             Box(
                 modifier = Modifier
@@ -65,13 +62,11 @@ fun ChooseReciterDialog(
                         Box(contentAlignment = Alignment.Center, modifier = Modifier
                             .clickable {
                                 selectedItem = identifier
-                                if (!isFirstSelection) {
-                                    onDismiss(identifier)
-                                }
+                                onDismiss(identifier)
                             }
                             .padding(9.dp)
                             .background(
-                                if (isSelected) colors.buttonSecondary else colors.buttonDisabled,
+                                if (isSelected) colors.buttonPrimary else colors.buttonDisabled,
                                 shape = RoundedCornerShape(16.dp)
                             )
                             .fillMaxWidth()) {
@@ -90,24 +85,6 @@ fun ChooseReciterDialog(
                                     .fillMaxWidth()
                                     .background(colors.divider)
                             )
-                        }
-                    }
-
-                    if (isFirstSelection) {
-                        Spacer(
-                            modifier = Modifier
-                                .height(10.dp)
-                                .background(Color.Black)
-                        )
-
-                        Button(
-                            onClick = {
-                                onDismiss(selectedItem) // Передаем выбранный identifier
-                            }, enabled = selectedItem.isNotEmpty(), colors = ButtonDefaults.buttonColors(
-                                containerColor = colors.buttonPrimary, contentColor = Color.White
-                            )
-                        ) {
-                            Text("ГОТОВО")
                         }
                     }
                 }

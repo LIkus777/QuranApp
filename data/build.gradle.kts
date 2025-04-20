@@ -53,8 +53,8 @@ dependencies {
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.androidx.datastore.core)
 
-    implementation("androidx.media3:media3-exoplayer:1.2.0")
-    implementation("androidx.media3:media3-datasource:1.2.0")
+    implementation(libs.androidx.media3.exoplayer.v120)
+    implementation(libs.androidx.media3.datasource)
 
     implementation(project(":core"))
     implementation(project(":domain"))

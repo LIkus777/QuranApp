@@ -7,23 +7,19 @@ import androidx.annotation.OptIn
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.DataSpec
 import androidx.media3.datasource.DefaultDataSource
-import com.zaur.data.room.dao.ChapterAudioDao
 import com.zaur.data.room.models.ChapterAudioEntity
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
-
 
 interface AudioDownloader {
 
     fun getDownloadDirectory(): File?
     fun getAudioFile(chapterNumber: Long, verseNumber: Long, reciter: String): File?
     suspend fun downloadAndSaveAyahs(chapterAudio: ChapterAudioEntity)
-    suspend fun downloadAndCacheChapter(
-        chapterNumber: Int,
-        reciter: String,
-    )
-
+    suspend fun downloadAndCacheChapter(chapterAudio: ChapterAudioEntity)
     suspend fun downloadFile(
         url: String,
         localFile: File,
@@ -31,7 +27,6 @@ interface AudioDownloader {
 
     class Base(
         private val context: Context,
-        private val chapterAudioDao: ChapterAudioDao,
     ) : AudioDownloader {
 
         private var downloadDirectory: File? = null
@@ -46,41 +41,37 @@ interface AudioDownloader {
             return internalDir
         }
 
-        override suspend fun downloadAndCacheChapter(
-            chapterNumber: Int,
-            reciter: String,
-        ) {
+        override suspend fun downloadAndCacheChapter(chapterAudio: ChapterAudioEntity) {
             withContext(Dispatchers.IO) {
                 try {
-                    val chapterAudio =
-                        chapterAudioDao.getChapterAudioOfReciter(chapterNumber, reciter)
                     downloadAndSaveAyahs(chapterAudio)
                 } catch (e: Exception) {
-                    e.printStackTrace()
-                    Log.e("AudioDownloader", "Error downloading chapter: ${e.message}")
+                    Log.e("AudioDownloader", "Error caching chapter: ${e.message}")
                 }
             }
         }
 
         override suspend fun downloadAndSaveAyahs(chapterAudio: ChapterAudioEntity) {
-            val ayahs = chapterAudio.ayahs
+            CoroutineScope(Dispatchers.IO).launch {
+                val ayahs = chapterAudio.ayahs
 
-            for (ayah in ayahs) {
-                val localFile = File(
-                    downloadDirectory,
-                    "${chapterAudio.reciter}_${chapterAudio.number}_${ayah.numberInSurah}.mp3"
-                )
-                val url = ayah.audio
-                if (!localFile.exists()) {
-                    try {
-                        downloadFile(url, localFile)
-                        Log.i("AudioDownloader", "File ${localFile.name} downloaded")
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                        Log.e("AudioDownloader", "Error downloading file: ${e.message}")
+                for (ayah in ayahs) {
+                    val localFile = File(
+                        downloadDirectory,
+                        "${chapterAudio.reciter}_${chapterAudio.number}_${ayah.numberInSurah}.mp3"
+                    )
+                    val url = ayah.audio
+                    if (!localFile.exists()) {
+                        try {
+                            downloadFile(url, localFile)
+                            Log.i("AudioDownloader", "File ${localFile.name} downloaded")
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                            Log.e("AudioDownloader", "Error downloading file: ${e.message}")
+                        }
+                    } else {
+                        Log.i("AudioDownloader", "File ${localFile.name} already exists")
                     }
-                } else {
-                    Log.i("AudioDownloader", "File ${localFile.name} already exists")
                 }
             }
         }

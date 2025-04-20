@@ -17,20 +17,23 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.zaur.presentation.ui.LightThemeColors
 import com.zaur.presentation.ui.QuranColors
 
+@Preview(showBackground = true)
 @Composable
 fun ChooseTextDialog(
-    colors: QuranColors,
-    showTextDialog: Boolean,
-    isDarkTheme: Boolean,
-    onThemeChange: (Boolean) -> Unit,
-    fontSizeArabic: Float,
-    onFontSizeArabicChange: (Float) -> Unit,
-    fontSizeRussian: Float,
-    onFontSizeRussianChange: (Float) -> Unit,
-    onDismiss: () -> Unit
+    colors: QuranColors = LightThemeColors,
+    showTextDialog: Boolean = true,
+    isDarkTheme: Boolean = false,
+    onThemeChange: (Boolean) -> Unit = {},
+    fontSizeArabic: Float = 24f,
+    onFontSizeArabicChange: (Float) -> Unit = {},
+    fontSizeRussian: Float = 24f,
+    onFontSizeRussianChange: (Float) -> Unit = {},
+    onDismiss: () -> Unit = {},
 ) {
     if (showTextDialog) {
         CustomBottomSheet(
@@ -49,7 +52,6 @@ fun ChooseTextDialog(
                 Column(
                     modifier = Modifier
                         .align(Alignment.Center)
-                        .padding(horizontal = 16.dp)
                 ) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text("Тема:")

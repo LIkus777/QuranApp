@@ -9,6 +9,10 @@ import com.zaur.domain.al_quran_cloud.models.audiofile.ChapterAudioFile
 import com.zaur.domain.al_quran_cloud.models.chapter.ChapterAqc
 import com.zaur.domain.al_quran_cloud.models.translate.TranslationAqc
 import com.zaur.domain.al_quran_cloud.repository.MainRepository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 
 class MainRepositoryLoadImpl(
     private val quranApiAqc: QuranApiAqc,
@@ -31,23 +35,28 @@ class MainRepositoryLoadImpl(
         chaptersNumbers: IntRange,
         reciter: String,
     ): List<ChapterAudioFile> {
-        val result = mutableListOf<ChapterAudioFile>()
-        Log.i("TAG", "loadChaptersAudio: reciter $reciter")
-        chaptersNumbers.forEach { chapterNumber ->
-            var item = retryWithBackoff {
-                quranApiAqc.getChapterAudioOfReciter(chapterNumber, reciter).chapterAudio
+        return CoroutineScope(Dispatchers.IO).async {
+            val result = mutableListOf<ChapterAudioFile>()
+            Log.i("TAG", "loadChaptersAudio: reciter $reciter")
+            chaptersNumbers.forEach { chapterNumber ->
+                var item = retryWithBackoff {
+                    quranApiAqc.getChapterAudioOfReciter(chapterNumber, reciter).chapterAudio
+                }
+                val newAyahs = mutableListOf<Ayah>()
+                item.ayahs.forEach {
+                    newAyahs.add(it.copy(reciter = reciter, chapterNumber = chapterNumber.toLong()))
+                }
+                item = item.copy(
+                    ayahs = newAyahs,
+                    reciter = reciter
+                ) // Исправленная строка: указываем reciter!
+                Log.i("TAG", "loadChaptersAudio: item $item")
+                result.add(item)
+                Log.i("TAG", "loadChaptersAudio:  added")
+                Log.i("TAG", "loadChaptersAudio:  result $result")
             }
-            val newAyahs = mutableListOf<Ayah>()
-            item.ayahs.forEach {
-                newAyahs.add(it.copy(reciter = reciter, chapterNumber = chapterNumber.toLong()))
-            }
-            item = item.copy(ayahs = newAyahs, reciter = reciter) // Исправленная строка: указываем reciter!
-            Log.i("TAG", "loadChaptersAudio: item $item")
-            result.add(item)
-            Log.i("TAG", "loadChaptersAudio:  added")
-            Log.i("TAG", "loadChaptersAudio:  result $result")
-        }
-        return result
+            return@async result
+        }.await()
     }
 
     override suspend fun loadChaptersTranslate(

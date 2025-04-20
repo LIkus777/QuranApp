@@ -1,12 +1,13 @@
 package com.zaur.quranapp
 
 import android.app.Application
-import androidx.lifecycle.SavedStateHandle
 import com.zaur.di.DI
 
 class App() : Application() {
 
-    lateinit var diModule: DI
+    private lateinit var diModule: DI
+
+    fun diModule(): DI = diModule
 
     override fun onCreate() {
         super.onCreate()

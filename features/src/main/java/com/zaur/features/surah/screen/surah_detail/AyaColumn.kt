@@ -1,7 +1,6 @@
 package com.zaur.features.surah.screen.surah_detail
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
@@ -25,6 +24,8 @@ fun AyaColumn(
     textState: QuranTextAqcUIState,
     translateState: QuranTranslationAqcUIState,
     colors: QuranColors,
+    showArabic: Boolean,
+    showRussian: Boolean,
     fontSizeArabic: Float,
     fontSizeRussian: Float,
     soundIsActive: Boolean,
@@ -73,7 +74,10 @@ fun AyaColumn(
                     fontSizeArabic = fontSizeArabic,
                     fontSizeRussian = fontSizeRussian,
                     soundIsActive = soundIsActive,
-                    onClickSound = { number, numberInSurah -> onClickSound(number, numberInSurah) })
+                    showArabic = showArabic,
+                    showRussian = showRussian,
+                    onClickSound = { number, numberInSurah -> onClickSound(number, numberInSurah) }
+                )
             }
         }
     }

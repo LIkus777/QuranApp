@@ -15,11 +15,10 @@ fun ChooseReciterDialogComponent(
 ) {
     ChooseReciterDialog(
         showDialog = state.reciterState.showReciterDialog,
-        isFirstSelection = state.reciterState.isFirstSelection,
         colors = colors
     ) { identifier ->
         viewModel.showReciterDialog(false)
-        audioViewModel.saveReciter(identifier)
+        if (!identifier.isNullOrEmpty()) audioViewModel.saveReciter(identifier)
         viewModel.selectedReciter(audioViewModel.getReciterName().toString())
     }
 }

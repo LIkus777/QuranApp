@@ -1,9 +1,9 @@
 package com.zaur.presentation.ui
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -43,11 +43,18 @@ fun AyahItem(
     fontSizeArabic: Float = 24f,
     fontSizeRussian: Float = 16f,
     soundIsActive: Boolean = false,
-    onClickSound: (Int, Int) -> Unit = { _, _ -> }
+    showArabic: Boolean = true,
+    showRussian: Boolean = true,
+    onClickSound: (Int, Int) -> Unit = { _, _ -> },
 ) {
     val arabicTextFormatted = BidiFormatter.getInstance().unicodeWrap(arabicText)
     val backgroundColor =
         if (isCurrent && soundIsActive) colors.currentCard else Color.Unspecified
+    val soundIconColor = when {
+        isCurrent && soundIsActive -> colors.border
+        isSystemInDarkTheme() -> Color.White
+        else -> Color.Unspecified
+    }
 
     Column(
         modifier = Modifier
@@ -68,20 +75,20 @@ fun AyahItem(
                 Text(
                     text = currentAyahInSurah.toString(),
                     fontSize = 10.sp,
-                    color = colors.textSecondary,
+                    color = colors.ayahColor,
                     fontWeight = FontWeight.Light,
                     modifier = Modifier
                         .border(
-                            4.dp, colors.border, shape = RoundedCornerShape(8.dp)
+                            4.dp, colors.ayahBorder, shape = RoundedCornerShape(8.dp)
                         )
                         .background(color = Color.Unspecified, shape = RoundedCornerShape(8.dp))
-                        .padding(horizontal = 8.dp, vertical = 4.dp)
+                        .padding(horizontal = 8.dp)
                 )
                 Spacer(modifier = Modifier.weight(1f))
                 Icon(
                     painter = painterResource(R.drawable.volume),
                     contentDescription = "Звук",
-                    tint = if (isCurrent && soundIsActive) colors.border else Color.Unspecified,
+                    tint = soundIconColor,
                     modifier = Modifier
                         .size(24.dp)
                         .clickable(onClick = {
@@ -94,28 +101,32 @@ fun AyahItem(
         Spacer(modifier = Modifier.width(8.dp)) // Отступ от номера аята
 
         Column {
-            Text(
-                text = arabicTextFormatted,
-                fontFamily = NotoFontMedium,
-                fontSize = fontSizeArabic.sp,
-                color = colors.textPrimary,
-                textAlign = TextAlign.Right,
-                modifier = Modifier.fillMaxWidth(),
-                lineHeight = (fontSizeArabic * 1.4).sp, // Увеличиваем расстояние между строками
-                maxLines = Int.MAX_VALUE
-            )
+            if (showArabic) {
+                Text(
+                    text = arabicTextFormatted,
+                    fontFamily = NotoFontMedium,
+                    fontSize = fontSizeArabic.sp,
+                    color = colors.textPrimary,
+                    textAlign = TextAlign.Right,
+                    modifier = Modifier.fillMaxWidth(),
+                    lineHeight = (fontSizeArabic * 1.4).sp, // Увеличиваем расстояние между строками
+                    maxLines = Int.MAX_VALUE
+                )
+            }
             Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = translation,
-                fontFamily = OpenSansFontLight,
-                fontSize = fontSizeRussian.sp,
-                color = colors.textSecondary,
-                textAlign = TextAlign.Left,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .heightIn(min = (fontSizeRussian * 2).dp), // Минимальная высота предотвращает наложение
-                lineHeight = (fontSizeRussian * 1.4).sp
-            )
+            if (showRussian) {
+                Text(
+                    text = translation,
+                    fontFamily = OpenSansFontLight,
+                    fontSize = fontSizeRussian.sp,
+                    color = colors.textSecondary,
+                    textAlign = TextAlign.Left,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .heightIn(min = (fontSizeRussian * 2).dp), // Минимальная высота предотвращает наложение
+                    lineHeight = (fontSizeRussian * 1.4).sp
+                )
+            }
         }
     }
 

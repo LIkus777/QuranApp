@@ -8,8 +8,9 @@ import com.zaur.data.al_quran_aqc.constans.ReciterList
 import com.zaur.domain.al_quran_cloud.models.arabic.Ayah
 import com.zaur.domain.al_quran_cloud.models.audiofile.ChapterAudioFile
 import com.zaur.domain.al_quran_cloud.use_case.QuranAudioUseCaseAqc
+import com.zaur.features.surah.manager.ReciterManager
 import com.zaur.features.surah.observables.QuranAudioObservable
-import com.zaur.features.surah.screen.SurahDetailStateManager
+import com.zaur.features.surah.screen.surah_detail.SurahDetailStateManager
 import com.zaur.features.surah.screen.surah_detail.player.SurahPlayer
 import com.zaur.features.surah.ui_state.aqc.QuranAudioAqcUIState
 import kotlinx.coroutines.Dispatchers
@@ -39,10 +40,17 @@ interface QuranAudioViewModel : QuranAudioObservable.Read {
 
     class Base(
         private val surahPlayer: SurahPlayer,
+        private val reciterManager: ReciterManager,
         private val stateManager: SurahDetailStateManager,
         private val observable: QuranAudioObservable.Mutable,
         private val quranAudioUseCaseAqc: QuranAudioUseCaseAqc,
     ) : BaseViewModel(), QuranAudioViewModel {
+
+        override fun getReciter(): String? = reciterManager.getReciter()
+
+        override fun saveReciter(identifier: String) = reciterManager.saveReciter(identifier)
+
+        override fun getReciterName(): String? = reciterManager.getReciterName()
 
         init {
             surahPlayer.setQuranAudioVmCallback(object : QuranAudioVmCallback {
@@ -50,24 +58,13 @@ interface QuranAudioViewModel : QuranAudioObservable.Read {
                     Log.i("TAGGG", "callVerseAudioFile CALLED} ayah $ayah")
                     getAyahAudioByKey(
                         "${stateManager.getState().value.audioPlayerState.currentSurahNumber}:$ayah",
-                        getReciter().toString()
+                        reciterManager.getReciter().toString()
                     )
                 }
             })
         }
 
         override fun audioState(): StateFlow<QuranAudioAqcUIState> = observable.audioState()
-
-        override fun saveReciter(identifier: String) {
-            quranAudioUseCaseAqc.saveReciter(identifier)
-        }
-
-        override fun getReciter(): String? = quranAudioUseCaseAqc.getReciter()
-
-        override fun getReciterName(): String? {
-            val identifier = getReciter()
-            return ReciterList.reciters[identifier] // Берем имя чтеца из списка
-        }
 
         override fun onPlayWholeClicked() {
             surahPlayer.onPlayWholeClicked()

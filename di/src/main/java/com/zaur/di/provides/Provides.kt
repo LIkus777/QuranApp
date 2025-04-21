@@ -17,6 +17,7 @@ import com.zaur.domain.al_quran_cloud.use_case.MainUseCase
 import com.zaur.domain.al_quran_cloud.use_case.QuranAudioUseCaseAqc
 import com.zaur.domain.al_quran_cloud.use_case.QuranTextUseCaseAqc
 import com.zaur.domain.al_quran_cloud.use_case.QuranTranslationUseCaseAqc
+import com.zaur.domain.al_quran_cloud.use_case.ReciterUseCase
 import com.zaur.domain.apiV4.repository.QuranAudioRepositoryV4
 import com.zaur.domain.apiV4.repository.QuranTafsirRepositoryV4
 import com.zaur.domain.apiV4.repository.QuranTajweedRepositoryV4
@@ -32,7 +33,8 @@ import com.zaur.domain.storage.ReciterStorage
 import com.zaur.domain.storage.theme.ThemeStorage
 import com.zaur.domain.storage.theme.ThemeUseCase
 import com.zaur.features.surah.base.AudioPlayer
-import com.zaur.features.surah.screen.SurahDetailStateManager
+import com.zaur.features.surah.manager.ReciterManager
+import com.zaur.features.surah.screen.surah_detail.SurahDetailStateManager
 import com.zaur.features.surah.screen.surah_detail.player.AudioPlaybackHelper
 import com.zaur.features.surah.screen.surah_detail.player.AudioPlayerStateUpdater
 import com.zaur.features.surah.screen.surah_detail.player.PlaylistBuilder
@@ -45,6 +47,7 @@ import com.zaur.features.surah.viewmodel.factory.QuranTranslationViewModelFactor
 interface ProvideQuranTextViewModelFactory {
     fun provideQuranTextViewModelFactory(): QuranTextViewModelFactory
 }
+
 interface ProvideQuranAudioViewModelFactory {
     fun provideQuranAudioViewModelFactory(): QuranAudioViewModelFactory
 }
@@ -88,6 +91,7 @@ interface ProvideAudioDownloader {
 interface ProvideMainRepositorySave {
     fun provideMainRepositorySave(): MainRepository.Save
 }
+
 interface ProvideMainRepositoryLoad {
     fun provideMainRepositoryLoad(): MainRepository.Load
 }
@@ -126,6 +130,14 @@ interface ProvideQuranStorage {
 
 interface ProvideReciterStorage {
     fun provideReciterStorage(): ReciterStorage
+}
+
+interface ProvideReciterManager {
+    fun provideReciterManager(): ReciterManager
+}
+
+interface ProvideReciterUseCase {
+    fun provideReciterUseCase(): ReciterUseCase
 }
 
 interface ProvideThemeUseCase {

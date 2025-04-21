@@ -23,6 +23,7 @@ import com.zaur.presentation.ui.QuranColors
 
 @Composable
 fun SreenContent(
+    isDarkTheme: Boolean,
     chapterNumber: Int,
     textState: QuranTextAqcUIState,
     translateState: QuranTranslationAqcUIState,
@@ -47,6 +48,7 @@ fun SreenContent(
             }) {
         // Основной контент на фоне
         AyaColumn(
+            isDarkTheme = isDarkTheme,
             chapterNumber = chapterNumber,
             currentAyahInSurah = surahDetailState.audioPlayerState.currentAyahInSurah,
             isLoading = isLoading,

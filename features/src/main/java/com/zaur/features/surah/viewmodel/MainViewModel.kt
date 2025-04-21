@@ -4,6 +4,7 @@ import androidx.lifecycle.viewModelScope
 import com.zaur.core.BaseViewModel
 import com.zaur.core.HandleResult
 import com.zaur.domain.al_quran_cloud.use_case.MainUseCase
+import com.zaur.features.surah.manager.ReciterManager
 import com.zaur.features.surah.observables.MainObservable
 import com.zaur.features.surah.ui_state.main.MainState
 import kotlinx.coroutines.Dispatchers
@@ -11,6 +12,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 interface MainViewModel : MainObservable.Read {
+
+    fun getReciter(): String?
+    fun saveReciter(identifier: String)
+    fun getReciterName(): String?
 
     fun loadQuranData()
     fun loadChaptersArabic(chaptersNumbers: IntRange = 1..114)
@@ -25,11 +30,18 @@ interface MainViewModel : MainObservable.Read {
     )
 
     class Base(
-        private val observable: MainObservable.Mutable,
         private val mainUseCase: MainUseCase,
+        private val reciterManager: ReciterManager,
+        private val observable: MainObservable.Mutable,
     ) : BaseViewModel(), MainViewModel {
 
         override fun quranState(): StateFlow<MainState> = observable.quranState()
+
+        override fun getReciter(): String? = reciterManager.getReciter()
+
+        override fun saveReciter(identifier: String) = reciterManager.saveReciter(identifier)
+
+        override fun getReciterName(): String? = reciterManager.getReciterName()
 
         override fun loadQuranData() {
             viewModelScope.launch(Dispatchers.IO) {

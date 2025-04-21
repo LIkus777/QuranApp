@@ -18,6 +18,7 @@ import com.zaur.presentation.ui.QuranColors
 
 @Composable
 fun AyaColumn(
+    isDarkTheme: Boolean,
     chapterNumber: Int,
     currentAyahInSurah: Int,
     isLoading: Boolean,
@@ -65,6 +66,7 @@ fun AyaColumn(
                     else aya.text
 
                 AyahItem(
+                    isDarkTheme = isDarkTheme,
                     ayahNumber = aya.number.toInt(),
                     currentAyahInSurah = aya.numberInSurah.toInt(),
                     isCurrent = currentAyahInSurah == aya.numberInSurah.toInt(),

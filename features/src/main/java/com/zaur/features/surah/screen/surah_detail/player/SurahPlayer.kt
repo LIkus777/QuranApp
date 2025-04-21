@@ -4,7 +4,7 @@ import android.util.Log
 import com.zaur.domain.al_quran_cloud.models.audiofile.Ayah
 import com.zaur.features.surah.base.AudioPlayer
 import com.zaur.features.surah.base.AudioPlayerCallback
-import com.zaur.features.surah.screen.SurahDetailStateManager
+import com.zaur.features.surah.screen.surah_detail.SurahDetailStateManager
 import com.zaur.features.surah.viewmodel.QuranAudioViewModel
 
 // Интерфейс для управления плеером

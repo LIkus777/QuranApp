@@ -28,6 +28,8 @@ import com.zaur.features.surah.fakes.FakeThemeStorage
 import com.zaur.features.surah.viewmodel.ThemeViewModel
 import com.zaur.features.surah.viewmodel.factory.SurahChooseViewModelFactory
 import com.zaur.navigation.Screen
+import com.zaur.presentation.ui.DarkThemeColors
+import com.zaur.presentation.ui.LightThemeColors
 import com.zaur.presentation.ui.ModernSurahText
 import com.zaur.presentation.ui.QuranAppTheme
 
@@ -40,6 +42,8 @@ fun SurahChooseScreen(
 ) {
 
     val surahChooseViewModelFactory = remember { surahChooseViewModelFactory.create() }
+    val isDarkTheme = themeViewModel.getIsDarkTheme().collectAsState(initial = false).value
+    val colors = if (isDarkTheme) DarkThemeColors else LightThemeColors
 
     LaunchedEffect(Unit) {
         surahChooseViewModelFactory.getAllChapters()
@@ -50,7 +54,7 @@ fun SurahChooseScreen(
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFFFFFFF))
+            .background(colors.background)
             .padding(20.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -59,6 +63,7 @@ fun SurahChooseScreen(
             textState.value.chapters ?: emptyList() // Избегаем повторного ?. вызова
         itemsIndexed(chapters) { index, chapter ->
             ModernSurahText(
+                colors = colors,
                 number = chapter.number,
                 englishName = chapter.englishName,
                 arabicName = chapter.name,

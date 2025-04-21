@@ -1,4 +1,4 @@
-package com.zaur.features.surah.screen
+package com.zaur.features.surah.screen.surah_detail
 
 import com.zaur.features.surah.base.Observable
 import com.zaur.features.surah.ui_state.aqc.SurahDetailScreenState

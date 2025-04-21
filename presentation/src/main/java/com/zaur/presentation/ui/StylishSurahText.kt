@@ -35,6 +35,7 @@ import com.zaur.presentation.ui.fonts.NotoFontMedium
 @Preview(showBackground = true)
 @Composable
 fun ModernSurahText(
+    colors: QuranColors = DarkThemeColors,
     number: Long = 1L,
     englishName: String = "Al-Bakara",
     arabicName: String = "بِسۡمِ ٱللَّهِ",
@@ -42,7 +43,6 @@ fun ModernSurahText(
     revelationType: RevelationType = RevelationType.Meccan,
     modifier: Modifier = Modifier
 ) {
-    val colors = LightThemeColors
     Card(
         shape = RoundedCornerShape(16.dp), colors = CardDefaults.cardColors(
             containerColor = colors.cardBackground

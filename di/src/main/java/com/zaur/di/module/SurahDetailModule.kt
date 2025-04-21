@@ -34,6 +34,8 @@ import com.zaur.di.provides.ProvideQuranTranslationRepositoryAqc
 import com.zaur.di.provides.ProvideQuranTranslationRepositoryV4
 import com.zaur.di.provides.ProvideQuranTranslationUseCase
 import com.zaur.di.provides.ProvideQuranTranslationUseCaseAqc
+import com.zaur.di.provides.ProvideReciterManager
+import com.zaur.di.provides.ProvideReciterUseCase
 import com.zaur.di.provides.ProvideSurahDetailStateManager
 import com.zaur.di.provides.ProvideSurahDetailViewModel
 import com.zaur.di.provides.ProvideSurahPlayer
@@ -45,6 +47,7 @@ import com.zaur.domain.al_quran_cloud.repository.QuranTranslationRepositoryAqc
 import com.zaur.domain.al_quran_cloud.use_case.QuranAudioUseCaseAqc
 import com.zaur.domain.al_quran_cloud.use_case.QuranTextUseCaseAqc
 import com.zaur.domain.al_quran_cloud.use_case.QuranTranslationUseCaseAqc
+import com.zaur.domain.al_quran_cloud.use_case.ReciterUseCase
 import com.zaur.domain.apiV4.repository.QuranAudioRepositoryV4
 import com.zaur.domain.apiV4.repository.QuranTafsirRepositoryV4
 import com.zaur.domain.apiV4.repository.QuranTajweedRepositoryV4
@@ -57,7 +60,8 @@ import com.zaur.domain.apiV4.use_case.QuranTextUseCaseV4
 import com.zaur.domain.apiV4.use_case.QuranTranslationUseCaseV4
 import com.zaur.domain.storage.theme.ThemeUseCase
 import com.zaur.features.surah.base.AudioPlayer
-import com.zaur.features.surah.screen.SurahDetailStateManager
+import com.zaur.features.surah.manager.ReciterManager
+import com.zaur.features.surah.screen.surah_detail.SurahDetailStateManager
 import com.zaur.features.surah.screen.surah_detail.player.AudioPlaybackHelper
 import com.zaur.features.surah.screen.surah_detail.player.AudioPlayerStateUpdater
 import com.zaur.features.surah.screen.surah_detail.player.PlaylistBuilder
@@ -67,16 +71,16 @@ import com.zaur.features.surah.viewmodel.factory.QuranAudioViewModelFactory
 import com.zaur.features.surah.viewmodel.factory.QuranTextViewModelFactory
 import com.zaur.features.surah.viewmodel.factory.QuranTranslationViewModelFactory
 
-interface SurahDetailModule : ProvideThemeUseCase, ProvideTranslationViewModelFactory,
-    ProvideQuranAudioViewModelFactory, ProvideQuranTextViewModelFactory,
-    ProvideSurahDetailViewModel, ProvideSurahPlayer, ProvideSurahDetailStateManager,
-    ProvideAudioPlayer, ProvidePlaylistBuilder, ProvideAudioPlayerStateUpdater,
-    ProvideAudioPlaybackHelper, ProvideQuranAudioUseCaseAqc, ProvideQuranTextUseCaseAqc,
-    ProvideQuranTranslationUseCaseAqc, ProvideQuranAudioUseCaseV4, ProvideQuranTextUseCase,
-    ProvideQuranTajweedUseCase, ProvideQuranTafsirUseCase, ProvideQuranTranslationUseCase,
-    ProvideQuranApiV4, ProvideQuranAudioRepositoryAqc, ProvideQuranTextRepositoryAqc,
-    ProvideQuranTranslationRepositoryAqc, ProvideQuranAudioRepositoryV4,
-    ProvideQuranTafsirRepositoryV4, ProvideQuranTajweedRepositoryV4,
+interface SurahDetailModule : ProvideReciterUseCase, ProvideReciterManager, ProvideThemeUseCase,
+    ProvideTranslationViewModelFactory, ProvideQuranAudioViewModelFactory,
+    ProvideQuranTextViewModelFactory, ProvideSurahDetailViewModel, ProvideSurahPlayer,
+    ProvideSurahDetailStateManager, ProvideAudioPlayer, ProvidePlaylistBuilder,
+    ProvideAudioPlayerStateUpdater, ProvideAudioPlaybackHelper, ProvideQuranAudioUseCaseAqc,
+    ProvideQuranTextUseCaseAqc, ProvideQuranTranslationUseCaseAqc, ProvideQuranAudioUseCaseV4,
+    ProvideQuranTextUseCase, ProvideQuranTajweedUseCase, ProvideQuranTafsirUseCase,
+    ProvideQuranTranslationUseCase, ProvideQuranApiV4, ProvideQuranAudioRepositoryAqc,
+    ProvideQuranTextRepositoryAqc, ProvideQuranTranslationRepositoryAqc,
+    ProvideQuranAudioRepositoryV4, ProvideQuranTafsirRepositoryV4, ProvideQuranTajweedRepositoryV4,
     ProvideQuranTranslationRepositoryV4, ProvideQuranTextRepositoryV4 {
 
     class Base(private val context: Context, private val dataModule: DataModule) :
@@ -100,6 +104,7 @@ interface SurahDetailModule : ProvideThemeUseCase, ProvideTranslationViewModelFa
         private val quranAudioViewModelFactory by lazy {
             QuranAudioViewModelFactory.Base(
                 provideSurahPlayer(),
+                provideReciterManager(),
                 provideSurahDetailStateManager(),
                 quranAudioUseCaseAqc = provideQuranAudioUseCaseAqc()
             )
@@ -111,7 +116,7 @@ interface SurahDetailModule : ProvideThemeUseCase, ProvideTranslationViewModelFa
 
         private val quranAudioUseCaseAqc by lazy {
             QuranAudioUseCaseAqc.Base(
-                provideQuranAudioRepositoryAqc(), dataModule.provideReciterStorage()
+                provideQuranAudioRepositoryAqc()
             )
         }
 
@@ -216,6 +221,12 @@ interface SurahDetailModule : ProvideThemeUseCase, ProvideTranslationViewModelFa
 
         override fun provideSurahDetailViewModel(): SurahDetailViewModel =
             SurahDetailViewModel.Base(provideSurahDetailStateManager())
+
+        override fun provideReciterManager(): ReciterManager =
+            ReciterManager.Base(provideReciterUseCase())
+
+        override fun provideReciterUseCase(): ReciterUseCase =
+            ReciterUseCase.Base(dataModule.provideReciterStorage())
     }
 
 }

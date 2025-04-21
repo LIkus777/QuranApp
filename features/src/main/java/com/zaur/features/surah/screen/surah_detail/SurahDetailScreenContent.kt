@@ -53,6 +53,7 @@ fun SurahDetailScreenContent(
     )
 
     SreenContent(
+        isDarkTheme,
         chapterNumber,
         textState,
         translateState,

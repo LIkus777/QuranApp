@@ -1,5 +1,6 @@
 package com.zaur.presentation.ui
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -34,6 +35,7 @@ import com.zaur.presentation.ui.fonts.OpenSansFontLight
 @Preview(showBackground = true)
 @Composable
 fun AyahItem(
+    isDarkTheme: Boolean = true,
     ayahNumber: Int = 72,
     currentAyahInSurah: Int = 72,
     isCurrent: Boolean = false,
@@ -52,9 +54,12 @@ fun AyahItem(
         if (isCurrent && soundIsActive) colors.currentCard else Color.Unspecified
     val soundIconColor = when {
         isCurrent && soundIsActive -> colors.border
-        isSystemInDarkTheme() -> Color.White
+        isDarkTheme -> Color.White
         else -> Color.Unspecified
     }
+
+    Log.i("TAGGGG", "AyahItem: isSystemInDarkTheme() ${isSystemInDarkTheme()}")
+    Log.i("TAGGGG", "AyahItem: soundIconColor ${soundIconColor.value}")
 
     Column(
         modifier = Modifier

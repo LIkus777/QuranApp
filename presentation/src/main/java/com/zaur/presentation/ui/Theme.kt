@@ -65,7 +65,8 @@ val LightThemeColors = QuranColors(
     iconColor = IconColor,
     currentCard = CurrentGray,
     ayahBorder = AyahBorderLight,
-    ayahColor = AyahColorLight
+    ayahColor = AyahColorLight,
+    ayahTextPrimary =White
 )
 
 // Тёмная тема
@@ -97,7 +98,8 @@ val DarkThemeColors = QuranColors(
     statusBarColor = StatusBarColor,
     iconColor = IconColor,
     ayahBorder = AyahBorderDark,
-    ayahColor = AyahColorDark
+    ayahColor = AyahColorDark,
+    ayahTextPrimary =White
 )
 
 // Расширенная структура цветов
@@ -110,6 +112,7 @@ data class QuranColors(
     val ayahColor: Color,
     val ayahBorder: Color,
     val textPrimary: Color,
+    val ayahTextPrimary: Color,
     val textSecondary: Color,
     val textOnCard: Color,
     val textOnButton: Color,

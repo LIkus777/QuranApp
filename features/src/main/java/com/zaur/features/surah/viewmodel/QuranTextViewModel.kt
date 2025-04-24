@@ -15,6 +15,11 @@ import kotlinx.coroutines.launch
 
 interface QuranTextViewModel : QuranTextObservable.Read {
 
+    fun getFontSizeArabic(): Float
+    fun getFontSizeRussian(): Float
+    fun saveFontSizeArabic(size: Float)
+    fun saveFontSizeRussian(size: Float)
+
     fun getAllChapters()
     fun getArabicChapter(chapterNumber: Int)
 
@@ -24,6 +29,18 @@ interface QuranTextViewModel : QuranTextObservable.Read {
     ) : BaseViewModel(), QuranTextViewModel {
 
         override fun textState(): StateFlow<QuranTextAqcUIState> = observable.textState()
+
+        override fun getFontSizeArabic() = quranTextUseCaseAqc.getFontSizeArabic()
+
+        override fun getFontSizeRussian() = quranTextUseCaseAqc.getFontSizeRussian()
+
+        override fun saveFontSizeArabic(size: Float) {
+            quranTextUseCaseAqc.saveFontSizeArabic(size)
+        }
+
+        override fun saveFontSizeRussian(size: Float) {
+            quranTextUseCaseAqc.saveFontSizeRussian(size)
+        }
 
         override fun getAllChapters() {
             viewModelScope.launch(Dispatchers.IO) {

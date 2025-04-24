@@ -47,9 +47,9 @@ class MainActivity : ComponentActivity() {
             val chooseViewModelFactory = SurahChooseViewModelFactory.Base(
                 quranTextUseCaseAqc = surahChooseModule.provideQuranTextUseCaseAqc()
             )
-            val isDarkTheme = themeViewModel.getIsDarkTheme().collectAsState(initial = false)
-            Log.i("TAGGGG", "AyahItem: isDarkTheme ${isDarkTheme.value}")
-            QuranAppTheme(darkTheme = isDarkTheme.value) {
+            val isDarkTheme = themeViewModel.getIsDarkTheme()
+            Log.i("TAGGGG", "AyahItem: isDarkTheme ${isDarkTheme}")
+            QuranAppTheme(darkTheme = isDarkTheme) {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     QuranNavGraph(navController = navController, mainScreen = {
                         MainScreen(

@@ -35,7 +35,7 @@ import com.zaur.presentation.ui.fonts.NotoFontMedium
 @Preview(showBackground = true)
 @Composable
 fun ModernSurahText(
-    colors: QuranColors = DarkThemeColors,
+    colors: QuranColors = LightThemeColors,
     number: Long = 1L,
     englishName: String = "Al-Bakara",
     arabicName: String = "بِسۡمِ ٱللَّهِ",
@@ -50,7 +50,7 @@ fun ModernSurahText(
         modifier = Modifier
             .fillMaxWidth()
             .background(colors.background)
-            .padding(12.dp)
+            .padding(start = 6.dp, end = 6.dp)
     ) {
         Row(
             modifier = modifier
@@ -62,17 +62,17 @@ fun ModernSurahText(
             // Прямоугольник с номером суры
             Box(
                 modifier = Modifier
-                    .size(50.dp)
-                    .border(4.dp, Color.White, shape = RoundedCornerShape(12.dp))
+                    .size(45.dp)
+                    .border(4.dp, colors.border, shape = RoundedCornerShape(12.dp))
                     .background(
-                        color = colors.backgroundForBoxes, shape = RoundedCornerShape(12.dp)
+                        color = colors.appBarColor, shape = RoundedCornerShape(12.dp)
                     ), contentAlignment = Alignment.Center
             ) {
                 Text(
                     text = "$number", style = TextStyle(
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Color.White,
+                        color = colors.ayahTextPrimary,
                     ), modifier = Modifier.padding(2.dp)
                 )
             }
@@ -88,10 +88,10 @@ fun ModernSurahText(
                             Font(R.font.noto_medium)
                         ),
                         color = colors.textPrimary, // Синий цвет ссылки
-                    ), modifier = Modifier.padding(start = 6.dp)
+                    ), modifier = Modifier.padding(start = 6.dp).height(30.dp)
                 )
 
-                Spacer(modifier = Modifier.height(4.dp))
+                //Spacer(modifier = Modifier.height(2.dp))
 
                 Text(
                     text = "$numberOfAyats аятов • ${if (revelationType == RevelationType.Meccan) "Мекканская" else "Мединская"}",
@@ -100,6 +100,8 @@ fun ModernSurahText(
                     ),
                     modifier = Modifier.padding(start = 6.dp)
                 )
+
+                Spacer(modifier = Modifier.height(4.dp))
             }
 
             Text(

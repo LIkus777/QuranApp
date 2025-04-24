@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,7 +30,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.zaur.domain.al_quran_cloud.models.chapter.RevelationType
 import com.zaur.presentation.R
+import com.zaur.presentation.ui.DarkThemeColors
 import com.zaur.presentation.ui.LightThemeColors
+import com.zaur.presentation.ui.QuranColors
 
 @Preview(showBackground = true)
 @Composable
@@ -39,14 +42,14 @@ fun SurahChooseItem(
     arabicName: String = "بِسۡمِ ٱللَّهِ",
     numberOfAyats: Int = 100,
     revelationType: RevelationType = RevelationType.Meccan,
-    modifier: Modifier = Modifier
+    colors: QuranColors = DarkThemeColors,
+    modifier: Modifier = Modifier,
 ) {
-    val colors = LightThemeColors
     Row(
         modifier = modifier
             .width(LocalConfiguration.current.screenWidthDp.dp / 1.5f)
             .height(IntrinsicSize.Min)
-            .padding(start = 10.dp, top = 6.dp, bottom = 6.dp),
+            .background(colors.cardBackground),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Absolute.Left
     ) {
@@ -54,7 +57,8 @@ fun SurahChooseItem(
         Box(
             modifier = Modifier
                 .size(45.dp)
-                .border(2.dp, Color.White, shape = RoundedCornerShape(8.dp))
+                .padding(start = 10.dp, top = 6.dp, bottom = 6.dp)
+                .border(2.dp, colors.border, shape = RoundedCornerShape(8.dp))
                 .background(
                     color = colors.appBarColor, shape = RoundedCornerShape(8.dp)
                 ), contentAlignment = Alignment.Center
@@ -68,13 +72,13 @@ fun SurahChooseItem(
             )
         }
 
-        Spacer(modifier = Modifier.width(4.dp))
+        Spacer(modifier = Modifier.width(2.dp))
 
         Column(modifier = Modifier
-            .padding(start = 2.dp)
+            .padding(start = 10.dp, top = 6.dp, bottom = 6.dp)
             .fillMaxHeight()) {
-            //Spacer(modifier = Modifier.height(3.dp))
             Text(
+                modifier = Modifier.height(20.dp),
                 text = englishName, style = TextStyle(
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Thin,
@@ -94,6 +98,7 @@ fun SurahChooseItem(
                     letterSpacing = 0.5.sp
                 ),
             )
+            Spacer(modifier = Modifier.height(3.dp))
         }
     }
 }

@@ -18,7 +18,7 @@ interface QuranTranslationViewModel : QuranTranslationObservable.Read {
     class Base(
         private val observable: QuranTranslationObservable.Mutable,
         private val quranTranslationUseCaseAqc: QuranTranslationUseCaseAqc
-    ) : BaseViewModel(), QuranTranslationViewModel, QuranTranslationObservable.Read {
+    ) : BaseViewModel(), QuranTranslationViewModel {
 
         override fun translationState(): StateFlow<QuranTranslationAqcUIState> =
             observable.translationState()

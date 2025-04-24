@@ -34,8 +34,9 @@ import androidx.navigation.NavController
 import com.zaur.features.surah.viewmodel.ThemeViewModel
 import com.zaur.features.surah.viewmodel.factory.SurahChooseViewModelFactory
 import com.zaur.navigation.Screen
+import com.zaur.presentation.ui.DarkThemeColors
+import com.zaur.presentation.ui.LightThemeColors
 
-//@Preview(showBackground = true)
 @Composable
 fun SurahChooseMenu(
     themeViewModel: ThemeViewModel,
@@ -43,8 +44,11 @@ fun SurahChooseMenu(
     navController: NavController,
     modifier: Modifier,
 ) {
+    val isDarkTheme = themeViewModel.getIsDarkTheme()
+    val colors = if (isDarkTheme) DarkThemeColors else LightThemeColors
     Box(
         Modifier
+            .background(colors.cardBackground)
             .fillMaxHeight()
             .width(LocalConfiguration.current.screenWidthDp.dp / 1.5f)
     ) {
@@ -63,7 +67,6 @@ fun SurahChooseMenu(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color.White)
                 .padding(4.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -99,6 +102,7 @@ fun SurahChooseMenu(
                         arabicName = chapter.name,
                         numberOfAyats = chapter.numberOfAyahs.toInt(),
                         revelationType = chapter.revelationType,
+                        colors = colors,
                         modifier = Modifier.clickable {
                             navController.navigate(
                                 Screen.SurahDetail.createRoute(

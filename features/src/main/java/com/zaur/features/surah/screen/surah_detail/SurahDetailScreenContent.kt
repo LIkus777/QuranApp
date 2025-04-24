@@ -35,7 +35,9 @@ fun SurahDetailScreenContent(
     val translateState by quranTranslationViewModel.translationState().collectAsState()
     val surahDetailState by surahDetailViewModel.getState().collectAsState()
     surahDetailViewModel.setSurahNumber(chapterNumber)
-    val isDarkTheme = themeViewModel.getIsDarkTheme().collectAsState(initial = false).value
+    surahDetailViewModel.fontSizeArabic(quranTextViewModel.getFontSizeArabic())
+    surahDetailViewModel.fontSizeRussian(quranTextViewModel.getFontSizeRussian())
+    val isDarkTheme = themeViewModel.getIsDarkTheme()
 
     val listState = rememberLazyListState()
     val colors = if (isDarkTheme) DarkThemeColors else LightThemeColors
@@ -67,11 +69,15 @@ fun SurahDetailScreenContent(
     )
 
     SettingsBottomSheetComponent(surahDetailState, colors, surahDetailViewModel)
-    ChooseTextDialogComponent(colors, surahDetailState, isDarkTheme, themeViewModel, surahDetailViewModel)
-    ChooseReciterDialogComponent(
-        surahDetailState,
+    ChooseTextDialogComponent(
         colors,
-        surahDetailViewModel,
-        quranAudioViewModel
+        surahDetailState,
+        isDarkTheme,
+        quranTextViewModel,
+        themeViewModel,
+        surahDetailViewModel
+    )
+    ChooseReciterDialogComponent(
+        surahDetailState, colors, surahDetailViewModel, quranAudioViewModel
     )
 }

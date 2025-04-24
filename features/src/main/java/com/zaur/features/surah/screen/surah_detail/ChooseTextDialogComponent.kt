@@ -2,6 +2,7 @@ package com.zaur.features.surah.screen.surah_detail
 
 import androidx.compose.runtime.Composable
 import com.zaur.features.surah.ui_state.aqc.SurahDetailScreenState
+import com.zaur.features.surah.viewmodel.QuranTextViewModel
 import com.zaur.features.surah.viewmodel.SurahDetailViewModel
 import com.zaur.features.surah.viewmodel.ThemeViewModel
 import com.zaur.presentation.ui.QuranColors
@@ -11,8 +12,9 @@ fun ChooseTextDialogComponent(
     colors: QuranColors,
     state: SurahDetailScreenState,
     isDarkTheme: Boolean,
+    quranTextViewModel: QuranTextViewModel,
     themeViewModel: ThemeViewModel,
-    viewModel: SurahDetailViewModel
+    surahDetailViewModel: SurahDetailViewModel,
 ) {
     ChooseTextDialog(
         colors = colors,
@@ -20,9 +22,14 @@ fun ChooseTextDialogComponent(
         isDarkTheme = isDarkTheme,
         onThemeChange = { themeViewModel.saveTheme(it) },
         fontSizeArabic = state.uiPreferences.fontSizeArabic,
-        onFontSizeArabicChange = { viewModel.fontSizeArabic(it) },
+        onFontSizeArabicChange = {
+            surahDetailViewModel.fontSizeArabic(it)
+            quranTextViewModel.saveFontSizeArabic(it)
+        },
         fontSizeRussian = state.uiPreferences.fontSizeRussian,
-        onFontSizeRussianChange = { viewModel.fontSizeRussian(it) },
-        onDismiss = { viewModel.showTextBottomSheet(false) }
-    )
+        onFontSizeRussianChange = {
+            surahDetailViewModel.fontSizeRussian(it)
+            quranTextViewModel.saveFontSizeRussian(it)
+        },
+        onDismiss = { surahDetailViewModel.showTextBottomSheet(false) })
 }

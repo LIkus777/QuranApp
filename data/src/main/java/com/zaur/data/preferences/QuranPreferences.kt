@@ -8,6 +8,20 @@ class QuranPreferences(context: Context) : QuranStorage {
     private val sharedPreferences =
         context.getSharedPreferences(QuranSharedPrefKeys.QURAN_PREFS, Context.MODE_PRIVATE)
 
+    override fun getFontSizeArabic(): Float =
+        sharedPreferences.getFloat(QuranSharedPrefKeys.ARABIC_FONT_SIZE, 0f)
+
+    override fun getFontSizeRussian(): Float =
+        sharedPreferences.getFloat(QuranSharedPrefKeys.RUSSIAN_FONT_SIZE, 0f)
+
+    override fun saveFontSizeArabic(size: Float) {
+        sharedPreferences.edit().putFloat(QuranSharedPrefKeys.ARABIC_FONT_SIZE, size).apply()
+    }
+
+    override fun saveFontSizeRussian(size: Float) {
+        sharedPreferences.edit().putFloat(QuranSharedPrefKeys.RUSSIAN_FONT_SIZE, size).apply()
+    }
+
     override fun saveLastRead(chapterNumber: Int, ayahNumber: Int) {
         sharedPreferences.edit().putInt(QuranSharedPrefKeys.LAST_CHAPTER, chapterNumber)
             .putInt(QuranSharedPrefKeys.LAST_AYAH, ayahNumber).apply()

@@ -29,11 +29,11 @@ import com.zaur.domain.storage.theme.ThemeStorage
 import kotlinx.coroutines.flow.Flow
 
 class FakeThemeStorage() : ThemeStorage {
-    override fun getIsDarkTheme(): Flow<Boolean> {
+    override fun getIsDarkTheme(): Boolean {
         TODO("Not yet implemented")
     }
 
-    override suspend fun saveTheme(isDark: Boolean) {
+    override fun saveTheme(isDark: Boolean) {
         TODO("Not yet implemented")
     }
 }
@@ -49,6 +49,22 @@ class FakeReciterStorage() : ReciterStorage {
 }
 
 class FakeQuranStorage() : QuranStorage {
+    override fun getFontSizeArabic(): Float {
+        TODO("Not yet implemented")
+    }
+
+    override fun getFontSizeRussian(): Float {
+        TODO("Not yet implemented")
+    }
+
+    override fun saveFontSizeArabic(size: Float) {
+        TODO("Not yet implemented")
+    }
+
+    override fun saveFontSizeRussian(size: Float) {
+        TODO("Not yet implemented")
+    }
+
     override fun saveLastRead(chapterNumber: Int, ayahNumber: Int) {
         TODO("Not yet implemented")
     }

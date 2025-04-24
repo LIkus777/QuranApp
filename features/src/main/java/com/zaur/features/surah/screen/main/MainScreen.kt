@@ -43,7 +43,7 @@ fun MainScreen(
     var showAudioChoiceDialog by rememberSaveable { mutableStateOf(false) }
     var showDownloadScreen by rememberSaveable { mutableStateOf(false) }
 
-    val isDarkTheme = themeViewModel.getIsDarkTheme().collectAsState(initial = false).value
+    val isDarkTheme = themeViewModel.getIsDarkTheme()
     val colors = if (isDarkTheme) DarkThemeColors else LightThemeColors
 
     LaunchedEffect(selectedReciter) {
@@ -80,6 +80,8 @@ fun MainScreen(
 
     if (showDownloadScreen) {
         QuranDataLoadingUI(mainState, navController)
+    } else {
+        navController.navigate(Screen.SurahChoose.route)
     }
 }
 

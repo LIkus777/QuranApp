@@ -3,7 +3,9 @@ package com.zaur.features.surah.screen.surah_choose
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -42,7 +44,7 @@ fun SurahChooseScreen(
 ) {
 
     val surahChooseViewModelFactory = remember { surahChooseViewModelFactory.create() }
-    val isDarkTheme = themeViewModel.getIsDarkTheme().collectAsState(initial = false).value
+    val isDarkTheme = themeViewModel.getIsDarkTheme()
     val colors = if (isDarkTheme) DarkThemeColors else LightThemeColors
 
     LaunchedEffect(Unit) {
@@ -62,6 +64,11 @@ fun SurahChooseScreen(
         val chapters =
             textState.value.chapters ?: emptyList() // Избегаем повторного ?. вызова
         itemsIndexed(chapters) { index, chapter ->
+            if (index == 0){
+                Spacer(Modifier.height(20.dp))
+            } else {
+                Spacer(Modifier.height(6.dp))
+            }
             ModernSurahText(
                 colors = colors,
                 number = chapter.number,
@@ -76,6 +83,7 @@ fun SurahChooseScreen(
                         )
                     )
                 })
+            Spacer(Modifier.height(6.dp))
         }
     }
 }

@@ -12,7 +12,7 @@ interface ThemeViewModel : ThemeObservable.Read {
     fun getIsDarkTheme(): Boolean
 
     class Base(
-        private val observable: ThemeObservable.Mutable,
+        private val observable: ThemeObservable.Mutable = ThemeObservable.Base(ThemeUIState()),
         private val themeUseCase: ThemeUseCase,
     ) : BaseViewModel(), ThemeViewModel {
 

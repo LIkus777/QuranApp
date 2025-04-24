@@ -8,10 +8,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.compose.rememberNavController
 import com.zaur.features.surah.screen.main.MainScreen
 import com.zaur.features.surah.screen.surah_choose.SurahChooseScreen
@@ -32,7 +30,7 @@ class MainActivity : ComponentActivity() {
 
     private val themeViewModel by lazy {
         ThemeViewModel.Base(
-            SavedStateHandle(), mainScreenModule.provideThemeUseCase()
+            themeUseCase = mainScreenModule.provideThemeUseCase()
         )
     }
 

@@ -12,6 +12,7 @@ import com.zaur.data.room.models.TranslationAyahEntity
 import com.zaur.data.room.models.TranslationEntity
 import com.zaur.domain.al_quran_cloud.models.arabic.ArabicChapter
 import com.zaur.domain.al_quran_cloud.models.arabic.EditionArabic
+import com.zaur.domain.al_quran_cloud.models.audiofile.Ayah
 import com.zaur.domain.al_quran_cloud.models.audiofile.ChapterAudioFile
 import com.zaur.domain.al_quran_cloud.models.audiofile.EditionAudio
 import com.zaur.domain.al_quran_cloud.models.chapter.ChapterAqc
@@ -67,20 +68,40 @@ fun ChapterAudioEntity.toDomain(): ChapterAudioFile {
         englishNameTranslation,
         com.zaur.domain.al_quran_cloud.models.chapter.RevelationType.fromValue(revelationType).value,
         numberOfAyahs,
-        ayahs = ayahs.map { it.toDomain() },
+        ayahs = ayahs.map { it.toDomainAyah() },
         edition = edition.toDomain(),
         reciter
     )
 }
 
-fun AyahAudioEntity.toDomain(): com.zaur.domain.al_quran_cloud.models.audiofile.Ayah {
-    return com.zaur.domain.al_quran_cloud.models.audiofile.Ayah(
+fun AyahAudioEntity.toDomainAyah(): Ayah {
+    return Ayah(
         chapterNumber,
         verseNumber,
         reciter,
         audio,
         audioSecondary,
         text,
+        numberInSurah,
+        juz,
+        manzil,
+        page,
+        ruku,
+        hizbQuarter,
+        sajda
+    )
+}
+
+fun AyahAudioEntity.toDomain(): com.zaur.domain.al_quran_cloud.models.audiofile.VerseAudioAqc {
+    return com.zaur.domain.al_quran_cloud.models.audiofile.VerseAudioAqc(
+        chapterNumber,
+        verseNumber,
+        reciter,
+        audio,
+        audioSecondary,
+        text,
+        edition,
+        surah,
         numberInSurah,
         juz,
         manzil,

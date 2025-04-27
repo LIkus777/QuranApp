@@ -5,13 +5,14 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.zaur.data.room.models.AyahAudioEntity
+import com.zaur.data.room.models.VerseAudioEntity
 
 @Dao
 interface VerseAudioDao {
 
     @Query(
         """
-        SELECT * FROM ayah_audio 
+        SELECT * FROM verse_audio 
         WHERE chapterNumber = :chapter AND verseNumber = :verse AND reciter = :reciter
         """
     )
@@ -30,5 +31,5 @@ interface VerseAudioDao {
     }
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAll(ayahs: List<AyahAudioEntity>)
+    suspend fun insertAll(ayahs: List<VerseAudioEntity>)
 }

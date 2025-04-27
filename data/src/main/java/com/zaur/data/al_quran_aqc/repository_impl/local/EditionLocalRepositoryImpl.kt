@@ -1,11 +1,11 @@
-package com.zaur.data.al_quran_aqc.repository_impl
+package com.zaur.data.al_quran_aqc.repository_impl.local
 
 import com.zaur.domain.al_quran_cloud.models.edition.Editions
 import com.zaur.domain.al_quran_cloud.models.edition.Languages
 import com.zaur.domain.al_quran_cloud.models.edition.Types
 import com.zaur.domain.al_quran_cloud.repository.EditionRepository
 
-class EditionRepositoryImpl(
+class EditionLocalRepositoryImpl(
 
 ) : EditionRepository {
     override suspend fun getAllTypes(): Types {

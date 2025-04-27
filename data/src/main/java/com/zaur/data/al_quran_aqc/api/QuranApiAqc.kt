@@ -17,7 +17,7 @@ interface QuranApiAqc {
     suspend fun getAllChapters(): ChaptersAqc
 
     @GET("/ayah/{verseKey}/{reciter}")
-    suspend fun getVerseAudioFile(
+    suspend fun getAyahAudioByKey(
         @Path("verseKey") verseKey: String, @Path("reciter") reciter: String,
     ): VersesAudioFileAqc
 
@@ -51,10 +51,10 @@ interface QuranApiAqc {
     suspend fun getEditionByLanguage(@Path("language") language: String): Editions
 
     @GET("/edition?format={format}&language={language}&type={type}")
-    suspend fun getEdition(
+    suspend fun getEditionByParam(
         @Path("format") format: String,
         @Path("language") language: String,
         @Path("type") type: String,
-    )
+    ): Editions
 
 }

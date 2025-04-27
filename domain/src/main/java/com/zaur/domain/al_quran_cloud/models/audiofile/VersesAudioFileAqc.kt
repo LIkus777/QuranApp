@@ -11,7 +11,9 @@ data class VersesAudioFileAqc(
 )
 
 data class VerseAudioAqc(
-    @SerializedName("number") val number: Long,
+    val chapterNumber: Long,
+    @SerializedName("number") val verseNumber: Long,
+    val reciter: String,
     @SerializedName("audio") val audio: String,
     @SerializedName("audioSecondary") val audioSecondary: List<String>,
     @SerializedName("text") val text: String,

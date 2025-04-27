@@ -2,19 +2,23 @@ package com.zaur.data.room.models.mappers
 
 import com.zaur.data.room.models.ArabicAyahEntity
 import com.zaur.data.room.models.ArabicChapterEntity
-import com.zaur.data.room.models.AyahAudioEntity
 import com.zaur.data.room.models.ChapterAudioEntity
 import com.zaur.data.room.models.ChapterEntity
 import com.zaur.data.room.models.EditionArabicEntity
 import com.zaur.data.room.models.EditionAudioEntity
 import com.zaur.data.room.models.EditionTranslationEntity
+import com.zaur.data.room.models.EditionVerseEntity
+import com.zaur.data.room.models.SurahEntity
 import com.zaur.data.room.models.TranslationAyahEntity
 import com.zaur.data.room.models.TranslationEntity
+import com.zaur.data.room.models.VerseAudioEntity
 import com.zaur.domain.al_quran_cloud.models.arabic.ArabicChapter
 import com.zaur.domain.al_quran_cloud.models.arabic.EditionArabic
-import com.zaur.domain.al_quran_cloud.models.audiofile.Ayah
 import com.zaur.domain.al_quran_cloud.models.audiofile.ChapterAudioFile
 import com.zaur.domain.al_quran_cloud.models.audiofile.EditionAudio
+import com.zaur.domain.al_quran_cloud.models.audiofile.EditionVerse
+import com.zaur.domain.al_quran_cloud.models.audiofile.Surah
+import com.zaur.domain.al_quran_cloud.models.audiofile.VerseAudioAqc
 import com.zaur.domain.al_quran_cloud.models.chapter.ChapterAqc
 import com.zaur.domain.al_quran_cloud.models.chapter.RevelationType
 import com.zaur.domain.al_quran_cloud.models.translate.EditionTranslation
@@ -105,14 +109,28 @@ fun EditionAudio.toData(): EditionAudioEntity {
     )
 }
 
-fun Ayah.toData(): AyahAudioEntity {
-    return AyahAudioEntity(
+fun EditionVerse.toData(): EditionVerseEntity {
+    return EditionVerseEntity(
+        identifier, language, name, englishName, format, type, direction.toString()
+    )
+}
+
+fun Surah.toData(): SurahEntity {
+    return SurahEntity(
+        number, name, englishName, englishNameTranslation, numberOfAyahs, revelationType
+    )
+}
+
+fun VerseAudioAqc.toData(): VerseAudioEntity {
+    return VerseAudioEntity(
         chapterNumber,
         verseNumber,
         reciter,
         audio,
         audioSecondary,
         text,
+        edition = edition.toData(),
+        surah = surah.toData(),
         numberInSurah,
         juz,
         manzil,

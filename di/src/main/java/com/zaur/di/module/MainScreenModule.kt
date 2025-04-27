@@ -1,7 +1,7 @@
 package com.zaur.di.module
 
-import com.zaur.data.room.repository.MainRepositoryLoadImpl
-import com.zaur.data.room.repository.MainRepositorySaveImpl
+import com.zaur.data.al_quran_aqc.repository_impl.cloud.MainRepositoryLoadImpl
+import com.zaur.data.al_quran_aqc.repository_impl.local.MainRepositorySaveImpl
 import com.zaur.di.provides.ProvideMainRepositoryLoad
 import com.zaur.di.provides.ProvideMainRepositorySave
 import com.zaur.di.provides.ProvideMainUseCase

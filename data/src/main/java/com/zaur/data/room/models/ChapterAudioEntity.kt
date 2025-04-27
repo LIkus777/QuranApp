@@ -2,10 +2,10 @@ package com.zaur.data.room.models
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import androidx.room.TypeConverters
 import com.google.gson.annotations.JsonAdapter
 import com.google.gson.annotations.SerializedName
-import com.zaur.data.room.converters.GenericConverters
+import com.zaur.domain.al_quran_cloud.models.audiofile.EditionVerse
+import com.zaur.domain.al_quran_cloud.models.audiofile.Surah
 import com.zaur.domain.base.SajdaAdapter
 
 @Entity(tableName = "chapter_audio")
@@ -21,14 +21,15 @@ data class ChapterAudioEntity(
     val reciter: String,
 )
 
-@Entity(tableName = "ayah_audio", primaryKeys = ["chapterNumber", "verseNumber", "reciter"])
 data class AyahAudioEntity(
     val chapterNumber: Long,
     val verseNumber: Long,
     val reciter: String,
     @SerializedName("audio") val audio: String,
-    @TypeConverters(GenericConverters::class) @SerializedName("audioSecondary") val audioSecondary: List<String>,
+    @SerializedName("audioSecondary") val audioSecondary: List<String>,
     @SerializedName("text") val text: String,
+    @SerializedName("edition") val edition: EditionVerse,
+    @SerializedName("surah") val surah: Surah,
     @SerializedName("numberInSurah") val numberInSurah: Long,
     @SerializedName("juz") val juz: Long,
     @SerializedName("manzil") val manzil: Long,

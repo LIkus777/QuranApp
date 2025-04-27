@@ -1,16 +1,17 @@
 package com.zaur.data.room.models
 
 import androidx.room.Entity
-import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
 import com.google.gson.annotations.JsonAdapter
 import com.google.gson.annotations.SerializedName
 import com.zaur.data.room.converters.GenericConverters
 import com.zaur.domain.base.SajdaAdapter
 
-@Entity(tableName = "verse_audio")
+@Entity(tableName = "verse_audio", primaryKeys = ["chapterNumber", "verseNumber", "reciter"])
 data class VerseAudioEntity(
-    @PrimaryKey @SerializedName("number") val number: Long,
+    val chapterNumber: Long,
+    val verseNumber: Long,
+    val reciter: String,
     @SerializedName("audio") val audio: String,
     @SerializedName("audioSecondary") val audioSecondary: List<String>,
     @SerializedName("text") val text: String,
@@ -22,7 +23,7 @@ data class VerseAudioEntity(
     @SerializedName("page") val page: Long,
     @SerializedName("ruku") val ruku: Long,
     @SerializedName("hizbQuarter") val hizbQuarter: Long,
-    @JsonAdapter(SajdaAdapter::class) @SerializedName("sajda") val sajda: Boolean
+    @JsonAdapter(SajdaAdapter::class) @SerializedName("sajda") val sajda: Boolean,
 )
 
 data class EditionVerseEntity(
@@ -32,7 +33,7 @@ data class EditionVerseEntity(
     @SerializedName("englishName") val englishName: String,
     @SerializedName("format") val format: String,
     @SerializedName("type") val type: String,
-    @SerializedName("direction") val direction: String? = null
+    @SerializedName("direction") val direction: String? = null,
 )
 
 data class SurahEntity(
@@ -41,5 +42,5 @@ data class SurahEntity(
     @SerializedName("englishName") val englishName: String,
     @SerializedName("englishNameTranslation") val englishNameTranslation: String,
     @SerializedName("numberOfAyahs") val numberOfAyahs: Long,
-    @SerializedName("revelationType") val revelationType: String
+    @SerializedName("revelationType") val revelationType: String,
 )

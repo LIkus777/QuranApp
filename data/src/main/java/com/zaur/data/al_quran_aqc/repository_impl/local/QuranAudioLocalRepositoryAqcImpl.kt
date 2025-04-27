@@ -1,22 +1,22 @@
-package com.zaur.data.al_quran_aqc.repository_impl
+package com.zaur.data.al_quran_aqc.repository_impl.local
 
 import com.zaur.data.room.dao.ChapterAudioDao
 import com.zaur.data.room.dao.VerseAudioDao
 import com.zaur.data.room.models.mappers.toDomain
-import com.zaur.domain.al_quran_cloud.models.audiofile.Ayah
 import com.zaur.domain.al_quran_cloud.models.audiofile.ChapterAudioFile
+import com.zaur.domain.al_quran_cloud.models.audiofile.VerseAudioAqc
 import com.zaur.domain.al_quran_cloud.repository.QuranAudioRepositoryAqc
 
-class QuranAudioRepositoryAqcImpl(
+class QuranAudioLocalRepositoryAqcImpl(
     private val chapterAudioDao: ChapterAudioDao,
     private val verseAudioDao: VerseAudioDao,
-) : QuranAudioRepositoryAqc {
-    override suspend fun getChapterAudioOfReciter(
+) : QuranAudioRepositoryAqc.Local {
+    override suspend fun getChapterAudioOfReciterLocal(
         chapterNumber: Int, reciter: String,
     ): ChapterAudioFile =
         chapterAudioDao.getChapterAudioOfReciter(chapterNumber, reciter).toDomain()
 
-    override suspend fun getAyahAudioByKey(
+    override suspend fun getAyahAudioByKeyLocal(
         verseKey: String, reciter: String,
-    ): Ayah = verseAudioDao.getAyahAudioByKey(verseKey, reciter).toDomain()
+    ): VerseAudioAqc = verseAudioDao.getAyahAudioByKey(verseKey, reciter).toDomain()
 }

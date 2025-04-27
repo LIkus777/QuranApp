@@ -1,9 +1,9 @@
 package com.zaur.di.module
 
 import android.content.Context
-import com.zaur.data.al_quran_aqc.repository_impl.QuranAudioRepositoryAqcImpl
-import com.zaur.data.al_quran_aqc.repository_impl.QuranTextRepositoryAqcImpl
-import com.zaur.data.al_quran_aqc.repository_impl.QuranTranslationRepositoryAqcImpl
+import com.zaur.data.al_quran_aqc.repository_impl.local.QuranAudioLocalRepositoryAqcImpl
+import com.zaur.data.al_quran_aqc.repository_impl.local.QuranTextLocalRepositoryAqcImpl
+import com.zaur.data.al_quran_aqc.repository_impl.local.QuranTranslationLocalRepositoryAqcImpl
 import com.zaur.data.apiV4.api.QuranApiV4
 import com.zaur.data.apiV4.repository_impl.QuranAudioRepositoryV4Impl
 import com.zaur.data.apiV4.repository_impl.QuranTafsirRepositoryV4Impl
@@ -133,15 +133,15 @@ interface SurahDetailModule : ProvideReciterUseCase, ProvideReciterManager, Prov
         override fun provideThemeUseCase(): ThemeUseCase = themeUseCase
 
         override fun provideQuranTextRepositoryAqc(): QuranTextRepositoryAqc =
-            QuranTextRepositoryAqcImpl(
+            QuranTextLocalRepositoryAqcImpl(
                 dataModule.provideChapterDao(), dataModule.provideArabicChapterDao()
             )
 
         override fun provideQuranTranslationRepositoryAqc(): QuranTranslationRepositoryAqc =
-            QuranTranslationRepositoryAqcImpl(dataModule.provideTranslationChapterDao())
+            QuranTranslationLocalRepositoryAqcImpl(dataModule.provideTranslationChapterDao())
 
         override fun provideQuranAudioRepositoryAqc(): QuranAudioRepositoryAqc =
-            QuranAudioRepositoryAqcImpl(
+            QuranAudioLocalRepositoryAqcImpl(
                 dataModule.provideChapterAudioDao(), dataModule.provideVerseAudioDao()
             )
 

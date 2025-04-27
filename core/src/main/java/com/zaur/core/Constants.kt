@@ -18,3 +18,8 @@ object ThemeSharedPrefKeys {
     const val THEME_PREFS = "THEME_PREFS"
     const val IS_DARK_THEME = "IS_DARK_THEME"
 }
+
+object OfflineSharedPrefKeys {
+    const val OFFLINE_PREFS = "OFFLINE_PREFS"
+    const val IS_OFFLINE = "IS_OFFLINE"
+}

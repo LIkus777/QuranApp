@@ -1,7 +1,7 @@
 package com.zaur.features.surah.screen.surah_detail.player
 
 import android.util.Log
-import com.zaur.domain.al_quran_cloud.models.audiofile.Ayah
+import com.zaur.domain.al_quran_cloud.models.audiofile.VerseAudioAqc
 import com.zaur.features.surah.base.AudioPlayer
 import com.zaur.features.surah.base.AudioPlayerCallback
 import com.zaur.features.surah.screen.surah_detail.SurahDetailStateManager
@@ -10,7 +10,7 @@ import com.zaur.features.surah.viewmodel.QuranAudioViewModel
 // Интерфейс для управления плеером
 interface SurahPlayer {
 
-    fun onPlayVerse(verse: Ayah)
+    fun onPlayVerse(verse: VerseAudioAqc)
     fun onPlayWholeClicked()
     fun onPlaySingleClicked(ayahNumber: Int, surahNumber: Int)
     fun onAudioEnded()
@@ -63,7 +63,7 @@ interface SurahPlayer {
             this.ayahs = ayahs
         }
 
-        override fun onPlayVerse(verse: Ayah) {
+        override fun onPlayVerse(verse: VerseAudioAqc) {
             if (state.value.audioPlayerState.restartAudio) {
                 audioPlayer.restartAudio()
             } else {

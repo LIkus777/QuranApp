@@ -1,6 +1,6 @@
 package com.zaur.di.module
 
-import com.zaur.data.al_quran_aqc.repository_impl.QuranTextRepositoryAqcImpl
+import com.zaur.data.al_quran_aqc.repository_impl.local.QuranTextLocalRepositoryAqcImpl
 import com.zaur.di.provides.ProvideQuranTextRepositoryAqc
 import com.zaur.di.provides.ProvideQuranTextUseCaseAqc
 import com.zaur.di.provides.ProvideThemeUseCase
@@ -26,7 +26,7 @@ interface SurahChooseModule : ProvideThemeUseCase, ProvideQuranTextUseCaseAqc,
         override fun provideQuranTextUseCaseAqc(): QuranTextUseCaseAqc = quranTextUseCaseAqc
 
         override fun provideQuranTextRepositoryAqc(): QuranTextRepositoryAqc =
-            QuranTextRepositoryAqcImpl(
+            QuranTextLocalRepositoryAqcImpl(
                 dataModule.provideChapterDao(), dataModule.provideArabicChapterDao()
             )
     }

@@ -1,19 +1,19 @@
 package com.zaur.features.surah.screen.surah_detail.player
 
 import com.zaur.data.downloader.AudioDownloader
-import com.zaur.domain.al_quran_cloud.models.audiofile.Ayah
+import com.zaur.domain.al_quran_cloud.models.audiofile.VerseAudioAqc
 import com.zaur.features.surah.base.AudioPlayer
 
 interface AudioPlaybackHelper {
 
-    fun play(verse: Ayah)
+    fun play(verse: VerseAudioAqc)
 
     class Base(
         private val audioDownloader: AudioDownloader,
         private val audioPlayer: AudioPlayer,
         private val playFromLocal: Boolean = true,
     ) : AudioPlaybackHelper {
-        override fun play(verse: Ayah) {
+        override fun play(verse: VerseAudioAqc) {
             val localFile = audioDownloader.getAudioFile(
                 verse.chapterNumber, verse.numberInSurah, "ar.alafasy"
             )

@@ -2,13 +2,14 @@ package com.zaur.domain.al_quran_cloud.use_case
 
 import com.zaur.domain.al_quran_cloud.models.arabic.ArabicChapter
 import com.zaur.domain.al_quran_cloud.models.chapter.ChapterAqc
+import com.zaur.domain.al_quran_cloud.repository.OfflineRepository
 import com.zaur.domain.al_quran_cloud.repository.QuranTextRepositoryAqc
 import com.zaur.domain.storage.QuranStorage
 
 interface QuranTextUseCaseAqc {
 
-    suspend fun fetchAllChapters(): List<ChapterAqc>
-    suspend fun fetchArabicChapter(chapterNumber: Int): ArabicChapter
+    suspend fun getAllChapters(): List<ChapterAqc>
+    suspend fun getArabicChapter(chapterNumber: Int): ArabicChapter
 
     fun getFontSizeArabic(): Float
     fun getFontSizeRussian(): Float
@@ -21,14 +22,27 @@ interface QuranTextUseCaseAqc {
     fun saveLastReadPosition(chapterNumber: Int, ayahNumber: Int)
 
     class Base(
-        private val quranTextRepositoryAqc: QuranTextRepositoryAqc,
         private val quranStorage: QuranStorage,
+        private val offlineRepository: OfflineRepository,
+        private val quranTextRepositoryAqcLocal: QuranTextRepositoryAqc.Local,
+        private val quranTextRepositoryAqcCloud: QuranTextRepositoryAqc.Cloud,
     ) : QuranTextUseCaseAqc {
-        override suspend fun fetchAllChapters(): List<ChapterAqc> =
-            quranTextRepositoryAqc.getAllChapters()
 
-        override suspend fun fetchArabicChapter(chapterNumber: Int): ArabicChapter =
-            quranTextRepositoryAqc.getArabicChapter(chapterNumber)
+        override suspend fun getAllChapters(): List<ChapterAqc> {
+            return if (offlineRepository.isOffline()) {
+                quranTextRepositoryAqcLocal.getAllChaptersLocal()
+            } else {
+                quranTextRepositoryAqcCloud.getAllChaptersCloud()
+            }
+        }
+
+        override suspend fun getArabicChapter(chapterNumber: Int): ArabicChapter {
+            return if (offlineRepository.isOffline()) {
+                quranTextRepositoryAqcLocal.getArabicChapterLocal(chapterNumber)
+            } else {
+                quranTextRepositoryAqcCloud.getArabicChapterCloud(chapterNumber)
+            }
+        }
 
         override fun getFontSizeArabic(): Float {
             val result = quranStorage.getFontSizeArabic()

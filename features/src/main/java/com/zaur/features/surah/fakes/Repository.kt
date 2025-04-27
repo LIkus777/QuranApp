@@ -1,7 +1,6 @@
 package com.zaur.features.surah.fakes
 
 import com.zaur.domain.al_quran_cloud.models.arabic.ArabicChapter
-import com.zaur.domain.al_quran_cloud.models.audiofile.Ayah
 import com.zaur.domain.al_quran_cloud.models.audiofile.ChapterAudioFile
 import com.zaur.domain.al_quran_cloud.models.chapter.ChapterAqc
 import com.zaur.domain.al_quran_cloud.models.translate.TranslationAqc

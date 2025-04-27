@@ -4,9 +4,11 @@ import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.zaur.core.BaseViewModel
 import com.zaur.core.HandleResult
-import com.zaur.data.al_quran_aqc.constans.ReciterList
 import com.zaur.domain.al_quran_cloud.models.arabic.Ayah
 import com.zaur.domain.al_quran_cloud.models.audiofile.ChapterAudioFile
+import com.zaur.domain.al_quran_cloud.models.audiofile.ChapterAudiosFileAqc
+import com.zaur.domain.al_quran_cloud.models.audiofile.VerseAudioAqc
+import com.zaur.domain.al_quran_cloud.use_case.OfflineUseCase
 import com.zaur.domain.al_quran_cloud.use_case.QuranAudioUseCaseAqc
 import com.zaur.features.surah.manager.ReciterManager
 import com.zaur.features.surah.observables.QuranAudioObservable
@@ -29,7 +31,7 @@ interface QuranAudioViewModel : QuranAudioObservable.Read {
     fun setAyahs(ayahs: List<Ayah>)
 
     fun onPlayWholeClicked()
-    fun onPlayVerse(verse: com.zaur.domain.al_quran_cloud.models.audiofile.Ayah)
+    fun onPlayVerse(verse: VerseAudioAqc)
     fun onPlaySingleClicked(ayahNumber: Int, chapterNumber: Int)
 
     fun clear()
@@ -70,7 +72,7 @@ interface QuranAudioViewModel : QuranAudioObservable.Read {
             surahPlayer.onPlayWholeClicked()
         }
 
-        override fun onPlayVerse(verse: com.zaur.domain.al_quran_cloud.models.audiofile.Ayah) {
+        override fun onPlayVerse(verse: VerseAudioAqc) {
             surahPlayer.onPlayVerse(verse)
         }
 
@@ -83,7 +85,6 @@ interface QuranAudioViewModel : QuranAudioObservable.Read {
         }
 
         override fun getChaptersAudioOfReciter(chapterNumber: Int, reciter: String) {
-            //TODO ПЕРЕДЕЛАТЬ ЧТОБЫ ССЫЛКИ НА АУДИО БРАЛИСЬ ОТСЮДА ДЛЯ СУРЫ, А НЕ ДЕРГАЛИСЬ ПО 1
             viewModelScope.launch(Dispatchers.IO) {
                 val result = launchSafely {
                     quranAudioUseCaseAqc.getChapterAudioOfReciter(
@@ -114,8 +115,8 @@ interface QuranAudioViewModel : QuranAudioObservable.Read {
                 val result =
                     launchSafely { quranAudioUseCaseAqc.getAyahAudioByKey(verseKey, reciter) }
                 result.handle(object :
-                    HandleResult<com.zaur.domain.al_quran_cloud.models.audiofile.Ayah> {
-                    override fun handleSuccess(data: com.zaur.domain.al_quran_cloud.models.audiofile.Ayah) {
+                    HandleResult<VerseAudioAqc> {
+                    override fun handleSuccess(data: VerseAudioAqc) {
                         Log.i("TAGGG", "getVerseAudioFile: data $data ")
                         viewModelScope.launch {
                             if (data == observable.state().value.verseAudioFile) {

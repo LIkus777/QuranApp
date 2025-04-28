@@ -35,7 +35,7 @@ class MainRepositorySaveImpl(
         // Сохраняем аяты
         val ayahs = versesAudio.map { verse ->
             verse.copy(
-                chapterNumber = verse.chapterNumber, reciter = verse.reciter
+                surah = verse.surah.copy(), reciter = verse.reciter
             )
         }
         verseAudioDao.insertAll(ayahs.map { it.toData() })

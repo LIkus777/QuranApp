@@ -76,7 +76,6 @@ fun ChapterAudioEntity.toDomain(): ChapterAudioFile {
 
 fun AyahAudioEntity.toDomainAyah(): Ayah {
     return Ayah(
-        chapterNumber,
         verseNumber,
         reciter,
         audio,
@@ -94,7 +93,6 @@ fun AyahAudioEntity.toDomainAyah(): Ayah {
 
 fun AyahAudioEntity.toDomain(): com.zaur.domain.al_quran_cloud.models.audiofile.VerseAudioAqc {
     return com.zaur.domain.al_quran_cloud.models.audiofile.VerseAudioAqc(
-        chapterNumber,
         verseNumber,
         reciter,
         audio,

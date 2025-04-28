@@ -1,5 +1,6 @@
 package com.zaur.data.room.models
 
+import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.TypeConverters
 import com.google.gson.annotations.JsonAdapter
@@ -7,16 +8,15 @@ import com.google.gson.annotations.SerializedName
 import com.zaur.data.room.converters.GenericConverters
 import com.zaur.domain.base.SajdaAdapter
 
-@Entity(tableName = "verse_audio", primaryKeys = ["chapterNumber", "verseNumber", "reciter"])
+@Entity(tableName = "verse_audio", primaryKeys = ["number", "verseNumber", "reciter"])
 data class VerseAudioEntity(
-    val chapterNumber: Long,
+    @Embedded(prefix = "surah_") val surah: SurahEntity,
     val verseNumber: Long,
     val reciter: String,
     @SerializedName("audio") val audio: String,
     @SerializedName("audioSecondary") val audioSecondary: List<String>,
     @SerializedName("text") val text: String,
     @TypeConverters(GenericConverters::class) @SerializedName("edition") val edition: EditionVerseEntity,
-    @TypeConverters(GenericConverters::class) @SerializedName("surah") val surah: SurahEntity,
     @SerializedName("numberInSurah") val numberInSurah: Long,
     @SerializedName("juz") val juz: Long,
     @SerializedName("manzil") val manzil: Long,

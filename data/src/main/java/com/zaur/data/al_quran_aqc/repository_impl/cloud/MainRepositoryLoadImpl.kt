@@ -4,14 +4,14 @@ import android.util.Log
 import com.zaur.data.al_quran_aqc.api.QuranApiAqc
 import com.zaur.data.network.retryWithBackoff
 import com.zaur.domain.al_quran_cloud.models.arabic.ArabicChapter
+import com.zaur.domain.al_quran_cloud.models.arabic.ArabicChaptersAqc
 import com.zaur.domain.al_quran_cloud.models.audiofile.ChapterAudioFile
+import com.zaur.domain.al_quran_cloud.models.audiofile.ChapterAudiosFileAqc
 import com.zaur.domain.al_quran_cloud.models.audiofile.VerseAudioAqc
 import com.zaur.domain.al_quran_cloud.models.chapter.ChapterAqc
 import com.zaur.domain.al_quran_cloud.models.translate.TranslationAqc
+import com.zaur.domain.al_quran_cloud.models.translate.TranslationsChapterAqc
 import com.zaur.domain.al_quran_cloud.repository.MainRepository
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 
 class MainRepositoryLoadImpl(
     private val quranApiAqc: QuranApiAqc,
@@ -20,41 +20,37 @@ class MainRepositoryLoadImpl(
     override suspend fun loadChapters(): List<ChapterAqc> = quranApiAqc.getAllChapters().chapters
 
     override suspend fun loadChaptersArabic(chaptersNumbers: IntRange): List<ArabicChapter> {
-        val result = mutableListOf<ArabicChapter>()
-        chaptersNumbers.forEach {
-            val item = retryWithBackoff {
-                quranApiAqc.getArabicChapter(it).arabicChapters
+        return chaptersNumbers.map { chapterNumber ->
+            retryWithBackoff {
+                quranApiAqc.getArabicChapter(chapterNumber)
+                    .map(ArabicChaptersAqc.Mapper.ArabicChapters())
             }
-            result.add(item)
         }
-        return result
+    }
+
+    override suspend fun loadVersesAudio(
+        chaptersNumbers: IntRange,
+        reciter: String
+    ): List<VerseAudioAqc> {
+
+            retryWithBackoff {
+                quranApiAqc.getAyahAudioByKey()
+            }
+
     }
 
     override suspend fun loadChaptersAudio(
         chaptersNumbers: IntRange,
         reciter: String,
     ): List<ChapterAudioFile> {
-        return CoroutineScope(Dispatchers.IO).async {
-            val result = mutableListOf<ChapterAudioFile>()
-            Log.i("TAG", "loadChaptersAudio: reciter $reciter")
-            chaptersNumbers.forEach { chapterNumber ->
-                var item = retryWithBackoff {
-                    quranApiAqc.getChapterAudioOfReciter(chapterNumber, reciter).chapterAudio
-                }
-                val newAyahs = mutableListOf<VerseAudioAqc>()
-                item.ayahs.forEach {
-                    newAyahs.add(it.copy(reciter = reciter, chapterNumber = chapterNumber.toLong()))
-                }
-                item = item.copy(
-                    ayahs = newAyahs, reciter = reciter
-                ) // Исправленная строка: указываем reciter!
-                Log.i("TAG", "loadChaptersAudio: item $item")
-                result.add(item)
-                Log.i("TAG", "loadChaptersAudio:  added")
-                Log.i("TAG", "loadChaptersAudio:  result $result")
+        return chaptersNumbers.map { chapterNumber ->
+            Log.i("TAG", "Loading chapter: $chapterNumber for reciter: $reciter")
+
+            retryWithBackoff {
+                quranApiAqc.getChapterAudioOfReciter(chapterNumber, reciter)
+                    .map(ChapterAudiosFileAqc.Mapper.ChapterAudio())
             }
-            return@async result
-        }.await()
+        }
     }
 
     override suspend fun loadChaptersTranslate(
@@ -62,11 +58,12 @@ class MainRepositoryLoadImpl(
         translator: String,
     ): List<TranslationAqc> {
         val result = mutableListOf<TranslationAqc>()
-        chaptersNumbers.forEach {
+        chaptersNumbers.forEach { chapterNumber ->
             val item = retryWithBackoff {
-                quranApiAqc.getTranslationForChapter(it, translator).translations
+                quranApiAqc.getTranslationForChapter(chapterNumber, translator)
+                    .map(TranslationsChapterAqc.Mapper.Translations())
             }
-            result.add(item.copy(translator = translator))
+            result.add(item.withTranslator(translator))
         }
         return result
     }

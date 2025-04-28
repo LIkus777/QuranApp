@@ -22,7 +22,6 @@ data class ChapterAudioEntity(
 )
 
 data class AyahAudioEntity(
-    val chapterNumber: Long,
     val verseNumber: Long,
     val reciter: String,
     @SerializedName("audio") val audio: String,

@@ -15,7 +15,7 @@ interface AudioPlaybackHelper {
     ) : AudioPlaybackHelper {
         override fun play(verse: VerseAudioAqc) {
             val localFile = audioDownloader.getAudioFile(
-                verse.chapterNumber, verse.numberInSurah, "ar.alafasy"
+                verse.surah.number, verse.numberInSurah, "ar.alafasy"
             )
             if (playFromLocal && localFile?.exists() == true) {
                 audioPlayer.playAudio(localFile.absolutePath, playFromCache = true)

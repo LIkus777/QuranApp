@@ -123,7 +123,6 @@ fun Surah.toData(): SurahEntity {
 
 fun VerseAudioAqc.toData(): VerseAudioEntity {
     return VerseAudioEntity(
-        chapterNumber,
         verseNumber,
         reciter,
         audio,

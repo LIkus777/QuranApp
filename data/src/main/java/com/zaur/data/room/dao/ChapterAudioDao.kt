@@ -10,17 +10,17 @@ import com.zaur.data.room.models.ChapterAudioEntity
 interface ChapterAudioDao {
 
     @Query("SELECT * FROM chapter_audio")
-    fun getAll(): List<ChapterAudioEntity>
+    fun getAll(): List<ChapterAudioEntity.Base>
 
     @Query("SELECT * FROM chapter_audio WHERE number=:chapterNumber AND reciter=:reciter")
     fun getChapterAudioOfReciter(
         chapterNumber: Int, reciter: String,
-    ): ChapterAudioEntity
+    ): ChapterAudioEntity.Base
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun add(chaptersAudio: List<ChapterAudioEntity>)
+    fun add(chaptersAudio: List<ChapterAudioEntity.Base>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertChapterAudio(chapter: ChapterAudioEntity)
+    suspend fun insertChapterAudio(chapter: ChapterAudioEntity.Base)
 
 }

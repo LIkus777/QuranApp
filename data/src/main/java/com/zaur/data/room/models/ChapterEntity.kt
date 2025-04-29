@@ -6,25 +6,47 @@ import androidx.room.TypeConverters
 import com.google.gson.annotations.SerializedName
 import com.zaur.data.room.converters.GenericConverters
 import com.zaur.domain.al_quran_cloud.models.chapter.ChapterAqc
+import com.zaur.domain.al_quran_cloud.models.chapter.RevelationType
 
-@Entity(tableName = "chapters")
-data class ChapterEntity(
-    @PrimaryKey @SerializedName("number") val number: Long,
-    @SerializedName("name") val name: String,
-    @SerializedName("englishName") val englishName: String,
-    @SerializedName("englishNameTranslation") val englishNameTranslation: String,
-    @SerializedName("numberOfAyahs") val numberOfAyahs: Long,
-    @TypeConverters(GenericConverters::class) @SerializedName("revelationType") val revelationType: RevelationType
-)
+interface ChapterEntity {
 
-enum class RevelationType(val value: String) {
-    Meccan("Meccan"), Medinan("Medinan");
+    fun <T> map(mapper: Mapper<T>): T
 
-    companion object {
-        fun fromValue(value: String): RevelationType = when (value) {
-            "Meccan" -> Meccan
-            "Medinan" -> Medinan
-            else -> throw IllegalArgumentException()
+    @Entity(tableName = "chapters")
+    data class Base(
+        @PrimaryKey @SerializedName("number") private val number: Long,
+        @SerializedName("name") private val name: String,
+        @SerializedName("englishName") private val englishName: String,
+        @SerializedName("englishNameTranslation") private val englishNameTranslation: String,
+        @SerializedName("numberOfAyahs") private val numberOfAyahs: Long,
+        @TypeConverters(GenericConverters::class) @SerializedName("revelationType") private val revelationType: RevelationType,
+    ) : ChapterEntity {
+        override fun <T> map(mapper: Mapper<T>): T = mapper.map(
+            number, name, englishName, englishNameTranslation, numberOfAyahs, revelationType
+        )
+    }
+
+    interface Mapper<T> {
+        fun map(
+            number: Long,
+            name: String,
+            englishName: String,
+            englishNameTranslation: String,
+            numberOfAyahs: Long,
+            revelationType: RevelationType,
+        ): T
+
+        class ToDomain : Mapper<ChapterAqc> {
+            override fun map(
+                number: Long,
+                name: String,
+                englishName: String,
+                englishNameTranslation: String,
+                numberOfAyahs: Long,
+                revelationType: RevelationType,
+            ): ChapterAqc = ChapterAqc.Base(
+                number, name, englishName, englishNameTranslation, numberOfAyahs, revelationType
+            )
         }
     }
 }

@@ -22,6 +22,14 @@ interface VersesAudioFileAqc {
             status: String,
             verseAudio: VerseAudioAqc,
         ): T
+
+        class VerseAudio : Mapper<VerseAudioAqc> {
+            override fun map(
+                code: Long,
+                status: String,
+                verseAudio: VerseAudioAqc,
+            ): VerseAudioAqc = verseAudio
+        }
     }
 }
 

@@ -10,9 +10,9 @@ import com.zaur.data.room.models.VerseAudioEntity
 interface VerseAudioDao {
 
     @Query("""SELECT * FROM verse_audio WHERE surah_number = :chapter AND verseNumber = :verse AND reciter = :reciter""")
-    suspend fun getAyahAudio(chapter: Long, verse: Long, reciter: String): VerseAudioEntity
+    suspend fun getAyahAudio(chapter: Long, verse: Long, reciter: String): VerseAudioEntity.Base
 
-    suspend fun getAyahAudioByKey(verseKey: String, reciter: String): VerseAudioEntity {
+    suspend fun getAyahAudioByKey(verseKey: String, reciter: String): VerseAudioEntity.Base {
         val parts = verseKey.split(":")
         require(parts.size == 2) { "Invalid verseKey format: $verseKey" }
 
@@ -25,5 +25,5 @@ interface VerseAudioDao {
     }
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAll(ayahs: List<VerseAudioEntity>)
+    suspend fun insertAll(ayahs: List<VerseAudioEntity.Base>)
 }

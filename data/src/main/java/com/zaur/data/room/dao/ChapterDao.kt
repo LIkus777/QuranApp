@@ -10,9 +10,9 @@ import com.zaur.data.room.models.ChapterEntity
 interface ChapterDao {
 
     @Query("SELECT * FROM chapters")
-    fun getAllChapters(): List<ChapterEntity>
+    fun getAllChapters(): List<ChapterEntity.Base>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun add(chapters: List<ChapterEntity>)
+    fun add(chapters: List<ChapterEntity.Base>)
 
 }

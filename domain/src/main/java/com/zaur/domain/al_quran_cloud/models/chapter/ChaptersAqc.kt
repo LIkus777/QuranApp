@@ -20,6 +20,14 @@ interface ChaptersAqc {
             status: String,
             chapters: List<ChapterAqc>
         ): T
+
+        class Chapters : Mapper<List<ChapterAqc>> {
+            override fun map(
+                code: Long,
+                status: String,
+                chapters: List<ChapterAqc>,
+            ): List<ChapterAqc> = chapters
+        }
     }
 }
 

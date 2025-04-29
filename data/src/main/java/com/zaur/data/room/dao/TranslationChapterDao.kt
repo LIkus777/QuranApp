@@ -12,15 +12,15 @@ import retrofit2.http.Path
 interface TranslationChapterDao {
 
     @Query("SELECT * FROM translation_chapter")
-    fun getAll(): List<TranslationEntity>
+    fun getAll(): List<TranslationEntity.Base>
 
     @Query("SELECT * FROM translation_chapter WHERE number=:chapterNumber AND translator=:translator")
     fun getTranslationForChapter(
         chapterNumber: Int,
         translator: String
-    ): TranslationEntity
+    ): TranslationEntity.Base
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun add(chapters: List<TranslationEntity>)
+    fun add(chapters: List<TranslationEntity.Base>)
 
 }

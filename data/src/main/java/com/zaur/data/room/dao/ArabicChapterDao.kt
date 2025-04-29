@@ -10,12 +10,11 @@ import com.zaur.data.room.models.ArabicChapterEntity
 interface ArabicChapterDao {
 
     @Query("SELECT * FROM arabic_chapters")
-    fun getAll(): List<ArabicChapterEntity>
+    fun getAll(): List<ArabicChapterEntity.Base>
 
     @Query("SELECT * FROM arabic_chapters WHERE number=:chapterNumber")
-    fun getArabicChapter(chapterNumber: Int): ArabicChapterEntity
+    fun getArabicChapter(chapterNumber: Int): ArabicChapterEntity.Base
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun add(chapters: List<ArabicChapterEntity>)
-
+    fun add(chapters: List<ArabicChapterEntity.Base>)
 }

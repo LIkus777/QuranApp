@@ -3,6 +3,10 @@ package com.zaur.data.room.models
 import androidx.room.ColumnInfo
 import androidx.room.Embedded
 import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.Index
+import androidx.room.PrimaryKey
+import androidx.room.Relation
 import androidx.room.TypeConverters
 import com.google.gson.annotations.JsonAdapter
 import com.google.gson.annotations.SerializedName
@@ -12,13 +16,44 @@ import com.zaur.domain.al_quran_cloud.models.audiofile.Surah
 import com.zaur.domain.al_quran_cloud.models.audiofile.VerseAudioAqc
 import com.zaur.domain.base.SajdaAdapter
 
+interface VerseAudioWithSurah {
+
+    fun <T> map(mapper: Mapper<T>): T
+
+    class Base(
+        @Embedded val verse: VerseAudioEntity.Base,
+        @Relation(
+            parentColumn = "surahNumber", entityColumn = "number"
+        ) val surah: SurahEntity.Base,
+    ) : VerseAudioWithSurah {
+        override fun <T> map(mapper: Mapper<T>): T = mapper.map(verse, surah)
+    }
+
+    interface Mapper<T> {
+        fun map(
+            verse: VerseAudioEntity.Base,
+            surah: SurahEntity.Base,
+        ): T
+    }
+}
+
 interface VerseAudioEntity {
 
     fun <T> map(mapper: Mapper<T>): T
 
-    @Entity(tableName = "verse_audio", primaryKeys = ["number", "verseNumber", "reciter"])
+    @Entity(
+        tableName = "verse_audio",
+        foreignKeys = [ForeignKey(
+            entity = SurahEntity.Base::class,
+            parentColumns = ["number"],
+            childColumns = ["surahNumber"],
+            onDelete = ForeignKey.CASCADE
+        )],
+        indices = [Index("surahNumber")],
+        primaryKeys = ["surahNumber", "verseNumber", "reciter"]
+    )
     data class Base(
-        @Embedded(prefix = "surah_") private val surah: SurahEntity,
+        @ColumnInfo(name = "surahNumber") val surahNumber: Long,
         private val verseNumber: Long,
         private val reciter: String,
         @SerializedName("audio") private val audio: String,
@@ -34,12 +69,12 @@ interface VerseAudioEntity {
         @JsonAdapter(SajdaAdapter::class) @SerializedName("sajda") private val sajda: Boolean,
     ) : VerseAudioEntity {
         override fun <T> map(mapper: Mapper<T>): T = mapper.map(
+            surahNumber,
             verseNumber,
             reciter,
             audio,
             audioSecondary,
             text,
-            surah,
             edition,
             numberInSurah,
             juz,
@@ -51,14 +86,15 @@ interface VerseAudioEntity {
         )
     }
 
+    // Интерфейс для маппинга VerseAudioEntity.Base
     interface Mapper<T> {
         fun map(
+            surahNumber: Long,
             verseNumber: Long,
             reciter: String,
             audio: String,
             audioSecondary: List<String>,
             text: String,
-            surah: SurahEntity,
             edition: EditionVerseEntity,
             numberInSurah: Long,
             juz: Long,
@@ -69,14 +105,15 @@ interface VerseAudioEntity {
             sajda: Boolean,
         ): T
 
-        class ToDomain : Mapper<VerseAudioAqc> {
+        // Реализация маппинга в VerseAudioAqc
+        class ToDomain(private val surah: Surah) : Mapper<VerseAudioAqc> {
             override fun map(
+                surahNumber: Long,
                 verseNumber: Long,
                 reciter: String,
                 audio: String,
                 audioSecondary: List<String>,
                 text: String,
-                surah: SurahEntity,
                 edition: EditionVerseEntity,
                 numberInSurah: Long,
                 juz: Long,
@@ -93,7 +130,7 @@ interface VerseAudioEntity {
                     audioSecondary,
                     text,
                     edition.map(EditionVerseEntity.Mapper.ToDomain()),
-                    surah.map(SurahEntity.Mapper.ToDomain()),
+                    surah, // Теперь мы используем переданный Surah
                     numberInSurah,
                     juz,
                     manzil,
@@ -158,13 +195,14 @@ interface SurahEntity {
 
     fun <T> map(mapper: Mapper<T>): T
 
+    @Entity(tableName = "surah")
     data class Base(
-        private val number: Long,
+        @PrimaryKey private val number: Long,
         @SerializedName("name") private val name: String,
         @SerializedName("englishName") private val englishName: String,
         @SerializedName("englishNameTranslation") private val englishNameTranslation: String,
         @SerializedName("numberOfAyahs") private val numberOfAyahs: Long,
-        @SerializedName("revelationType") private val revelationType: String
+        @SerializedName("revelationType") private val revelationType: String,
     ) : SurahEntity {
         override fun <T> map(mapper: Mapper<T>): T = mapper.map(
             number, name, englishName, englishNameTranslation, numberOfAyahs, revelationType

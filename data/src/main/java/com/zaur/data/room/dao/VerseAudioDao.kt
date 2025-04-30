@@ -9,7 +9,7 @@ import com.zaur.data.room.models.VerseAudioEntity
 @Dao
 interface VerseAudioDao {
 
-    @Query("""SELECT * FROM verse_audio WHERE surah_number = :chapter AND verseNumber = :verse AND reciter = :reciter""")
+    @Query("SELECT * FROM verse_audio WHERE surahNumber = :chapter AND verseNumber = :verse AND reciter = :reciter")
     suspend fun getAyahAudio(chapter: Long, verse: Long, reciter: String): VerseAudioEntity.Base
 
     suspend fun getAyahAudioByKey(verseKey: String, reciter: String): VerseAudioEntity.Base {

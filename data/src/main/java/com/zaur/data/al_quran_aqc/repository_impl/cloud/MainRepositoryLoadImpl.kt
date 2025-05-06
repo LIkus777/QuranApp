@@ -17,7 +17,7 @@ class MainRepositoryLoadImpl(
     private val quranApiAqc: QuranApiAqc,
 ) : MainRepository.Load {
 
-    override suspend fun loadChapters(): List<ChapterAqc> = quranApiAqc.getAllChapters().chapters
+    override suspend fun loadChapters(): List<ChapterAqc> = quranApiAqc.getAllChapters().chapters()
 
     override suspend fun loadChaptersArabic(chaptersNumbers: IntRange): List<ArabicChapter> {
         return chaptersNumbers.map { chapterNumber ->
@@ -30,13 +30,12 @@ class MainRepositoryLoadImpl(
 
     override suspend fun loadVersesAudio(
         chaptersNumbers: IntRange,
-        reciter: String
+        reciter: String,
     ): List<VerseAudioAqc> {
-
-            retryWithBackoff {
-                quranApiAqc.getAyahAudioByKey()
-            }
-
+        return emptyList<VerseAudioAqc>()
+        /*retryWithBackoff { //TODO
+            quranApiAqc.getAyahAudioByKey()
+        }*/
     }
 
     override suspend fun loadChaptersAudio(

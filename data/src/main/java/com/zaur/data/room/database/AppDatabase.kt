@@ -10,14 +10,14 @@ import com.zaur.data.room.dao.ChapterDao
 import com.zaur.data.room.dao.TranslationChapterDao
 import com.zaur.data.room.dao.VerseAudioDao
 import com.zaur.data.room.models.ArabicChapterEntity
-import com.zaur.data.room.models.AyahAudioEntity
 import com.zaur.data.room.models.ChapterAudioEntity
 import com.zaur.data.room.models.ChapterEntity
+import com.zaur.data.room.models.SurahEntity
 import com.zaur.data.room.models.TranslationEntity
 import com.zaur.data.room.models.VerseAudioEntity
 
 @Database(
-    entities = [ArabicChapterEntity::class, VerseAudioEntity::class, ChapterAudioEntity::class, AyahAudioEntity::class, ChapterEntity::class, TranslationEntity::class],
+    entities = [ArabicChapterEntity.Base::class, VerseAudioEntity.Base::class, ChapterAudioEntity.Base::class, ChapterEntity.Base::class, TranslationEntity.Base::class, SurahEntity.Base::class],
     version = 3,
     exportSchema = false
 )

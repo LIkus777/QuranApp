@@ -10,17 +10,32 @@ import com.zaur.domain.al_quran_cloud.models.chapter.RevelationType
 
 interface ChapterEntity {
 
+    fun number(): Long
+    fun name(): String
+    fun englishName(): String
+    fun englishNameTranslation(): String
+    fun numberOfAyahs(): Long
+    fun revelationType(): RevelationType
+
     fun <T> map(mapper: Mapper<T>): T
 
     @Entity(tableName = "chapters")
     data class Base(
-        @PrimaryKey @SerializedName("number") private val number: Long,
-        @SerializedName("name") private val name: String,
-        @SerializedName("englishName") private val englishName: String,
-        @SerializedName("englishNameTranslation") private val englishNameTranslation: String,
-        @SerializedName("numberOfAyahs") private val numberOfAyahs: Long,
-        @TypeConverters(GenericConverters::class) @SerializedName("revelationType") private val revelationType: RevelationType,
+        @PrimaryKey @SerializedName("number") val number: Long,
+        @SerializedName("name") val name: String,
+        @SerializedName("englishName") val englishName: String,
+        @SerializedName("englishNameTranslation") val englishNameTranslation: String,
+        @SerializedName("numberOfAyahs") val numberOfAyahs: Long,
+        @TypeConverters(GenericConverters::class) @SerializedName("revelationType") val revelationType: RevelationType,
     ) : ChapterEntity {
+
+        override fun number(): Long = number
+        override fun name(): String = name
+        override fun englishName(): String = englishName
+        override fun englishNameTranslation(): String = englishNameTranslation
+        override fun numberOfAyahs(): Long = numberOfAyahs
+        override fun revelationType(): RevelationType = revelationType
+
         override fun <T> map(mapper: Mapper<T>): T = mapper.map(
             number, name, englishName, englishNameTranslation, numberOfAyahs, revelationType
         )
@@ -45,6 +60,19 @@ interface ChapterEntity {
                 numberOfAyahs: Long,
                 revelationType: RevelationType,
             ): ChapterAqc = ChapterAqc.Base(
+                number, name, englishName, englishNameTranslation, numberOfAyahs, revelationType
+            )
+        }
+
+        class ToData : Mapper<ChapterEntity> {
+            override fun map(
+                number: Long,
+                name: String,
+                englishName: String,
+                englishNameTranslation: String,
+                numberOfAyahs: Long,
+                revelationType: RevelationType,
+            ): ChapterEntity = Base(
                 number, name, englishName, englishNameTranslation, numberOfAyahs, revelationType
             )
         }

@@ -9,9 +9,9 @@ import com.zaur.data.room.models.EditionArabicEntity
 import com.zaur.data.room.models.EditionAudioEntity
 import com.zaur.data.room.models.EditionTranslationEntity
 import com.zaur.data.room.models.EditionVerseEntity
-import com.zaur.data.room.models.RevelationType
 import com.zaur.data.room.models.SurahEntity
 import com.zaur.data.room.models.TranslationAyahEntity
+import com.zaur.domain.al_quran_cloud.models.chapter.RevelationType
 
 class GenericConverters {
 

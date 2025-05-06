@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ModalNavigationDrawer
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -15,15 +16,27 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.zaur.domain.al_quran_cloud.use_case.QuranAudioUseCaseAqc
 import com.zaur.domain.al_quran_cloud.use_case.QuranTextUseCaseAqc
-import com.zaur.features.surah.fakes.FakeQTextRAqc
+import com.zaur.domain.al_quran_cloud.use_case.QuranTranslationUseCaseAqc
+import com.zaur.domain.storage.theme.ThemeUseCase
+import com.zaur.features.surah.fakes.FakeOfflineRepos
+import com.zaur.features.surah.fakes.FakeQAudioRAqcCloud
+import com.zaur.features.surah.fakes.FakeQAudioRAqcLocal
+import com.zaur.features.surah.fakes.FakeQTextRAqcCloud
+import com.zaur.features.surah.fakes.FakeQTextRAqcLocal
+import com.zaur.features.surah.fakes.FakeQTranslationRAqcCloud
+import com.zaur.features.surah.fakes.FakeQTranslationRAqcLocal
 import com.zaur.features.surah.fakes.FakeQuranStorage
+import com.zaur.features.surah.fakes.FakeThemeStorage
+import com.zaur.features.surah.ui_state.aqc.SurahDetailScreenState
 import com.zaur.features.surah.viewmodel.SurahDetailViewModel
 import com.zaur.features.surah.viewmodel.ThemeViewModel
 import com.zaur.features.surah.viewmodel.factory.QuranAudioViewModelFactory
 import com.zaur.features.surah.viewmodel.factory.QuranTextViewModelFactory
 import com.zaur.features.surah.viewmodel.factory.QuranTranslationViewModelFactory
 import com.zaur.features.surah.viewmodel.factory.SurahChooseViewModelFactory
+import com.zaur.presentation.ui.QuranAppTheme
 import kotlinx.coroutines.launch
 
 @Composable
@@ -81,12 +94,19 @@ fun SurahDetailScreen(
 @Composable
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 fun SurahDetailScreenPreview() {
-    rememberNavController()
-    SurahChooseViewModelFactory.Base(
-        quranTextUseCaseAqc = QuranTextUseCaseAqc.Base(
-            FakeQTextRAqc(), FakeQuranStorage()
-        )
-    )/*
+    val fakeNavController = rememberNavController()
+    val textUseCaseAqc = QuranTextUseCaseAqc.Base(
+        FakeQuranStorage(), FakeOfflineRepos(), FakeQTextRAqcLocal(), FakeQTextRAqcCloud()
+    )
+    val translationUseCaseAqc = QuranTranslationUseCaseAqc.Base(
+        FakeOfflineRepos(), FakeQTranslationRAqcLocal(), FakeQTranslationRAqcCloud()
+    )
+    val audioUseCaseAqc = QuranAudioUseCaseAqc.Base(
+        FakeOfflineRepos(), FakeQAudioRAqcLocal(), FakeQAudioRAqcCloud()
+    )
+    val chooseViewModelFactory = SurahChooseViewModelFactory.Base(
+        quranTextUseCaseAqc = textUseCaseAqc
+    )
     QuranAppTheme {
         Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
             SurahDetailScreen(
@@ -97,27 +117,20 @@ fun SurahDetailScreenPreview() {
                     SurahDetailStateManager.Base(SurahDetailScreenState())
                 ),
                 themeViewModel = ThemeViewModel.Base(
-                    SavedStateHandle(), ThemeUseCase(FakeThemeStorage())
+                    themeUseCase = ThemeUseCase(FakeThemeStorage())
                 ),
                 quranTextViewModelFactory = QuranTextViewModelFactory.Base(
-                    quranTextUseCaseAqc = QuranTextUseCaseAqc.Base(
-                        FakeQTextRAqc(), FakeQuranStorage()
-                    )
+                    quranTextUseCaseAqc = textUseCaseAqc
                 ),
                 quranTranslationViewModelFactory = QuranTranslationViewModelFactory.Base(
-                    quranTranslationUseCaseAqc = QuranTranslationUseCaseAqc.Base(
-                        FakeQTranslationRAqc()
-                    )
+                    quranTranslationUseCaseAqc = translationUseCaseAqc
                 ),
                 quranAudioViewModelFactory = QuranAudioViewModelFactory.Base(
                     stateManager = SurahDetailStateManager.Base(SurahDetailScreenState()),
-                    quranAudioUseCaseAqc = QuranAudioUseCaseAqc.Base(
-                        FakeQAudioRAqc(), FakeReciterStorage()
-                    )
+                    quranAudioUseCaseAqc = audioUseCaseAqc
                 ),
                 fakeNavController
             )
         }
     }
-*/
 }

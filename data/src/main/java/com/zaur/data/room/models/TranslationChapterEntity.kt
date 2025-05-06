@@ -17,15 +17,15 @@ interface TranslationEntity {
 
     @Entity(tableName = "translation_chapter")
     data class Base(
-        @PrimaryKey @SerializedName("number") private val number: Long,
-        @SerializedName("name") private val name: String,
-        @SerializedName("englishName") private val englishName: String,
-        @SerializedName("englishNameTranslation") private val englishNameTranslation: String,
-        @SerializedName("revelationType") private val revelationType: String,
-        @SerializedName("numberOfAyahs") private val numberOfAyahs: Long,
-        @TypeConverters(GenericConverters::class) @SerializedName("ayahs") private val translationAyahEntity: List<TranslationAyahEntity>,
-        @TypeConverters(GenericConverters::class) @SerializedName("edition") private val edition: EditionTranslationEntity,
-        private val translator: String,
+        @PrimaryKey @SerializedName("number") val number: Long,
+        @SerializedName("name") val name: String,
+        @SerializedName("englishName") val englishName: String,
+        @SerializedName("englishNameTranslation") val englishNameTranslation: String,
+        @SerializedName("revelationType") val revelationType: String,
+        @SerializedName("numberOfAyahs") val numberOfAyahs: Long,
+        @TypeConverters(GenericConverters::class) @SerializedName("ayahs") val translationAyahEntity: List<TranslationAyahEntity>,
+        @TypeConverters(GenericConverters::class) @SerializedName("edition") val edition: EditionTranslationEntity,
+        val translator: String,
     ) : TranslationEntity {
         override fun <T> map(mapper: Mapper<T>): T = mapper.map(
             number,

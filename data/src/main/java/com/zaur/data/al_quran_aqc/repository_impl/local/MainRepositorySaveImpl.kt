@@ -7,11 +7,10 @@ import com.zaur.data.room.dao.ChapterAudioDao
 import com.zaur.data.room.dao.ChapterDao
 import com.zaur.data.room.dao.TranslationChapterDao
 import com.zaur.data.room.dao.VerseAudioDao
-import com.zaur.data.room.models.mappers.toData
+import com.zaur.data.room.models.mappers.ChapterMapper
 import com.zaur.domain.al_quran_cloud.models.arabic.ArabicChapter
 import com.zaur.domain.al_quran_cloud.models.audiofile.ChapterAudioFile
 import com.zaur.domain.al_quran_cloud.models.audiofile.VerseAudioAqc
-import com.zaur.domain.al_quran_cloud.models.audiofile.VersesAudioFileAqc
 import com.zaur.domain.al_quran_cloud.models.chapter.ChapterAqc
 import com.zaur.domain.al_quran_cloud.models.translate.TranslationAqc
 import com.zaur.domain.al_quran_cloud.repository.MainRepository
@@ -21,14 +20,17 @@ import kotlinx.coroutines.launch
 
 class MainRepositorySaveImpl(
     private val audioDownloader: AudioDownloader,
+    private val chapterMapper: ChapterMapper,
     private val chapterDao: ChapterDao,
     private val verseAudioDao: VerseAudioDao,
     private val chapterAudioDao: ChapterAudioDao,
     private val arabicChapterDao: ArabicChapterDao,
     private val translationChapterDao: TranslationChapterDao,
 ) : MainRepository.Save {
+
     override suspend fun saveChapters(chaptersAqc: List<ChapterAqc>) {
-        chapterDao.add(chaptersAqc.map { it.toData() })
+        val chaptersEntities = chaptersAqc.map { chapterMapper.toData(it) }
+        chapterDao.add(chaptersEntities)
     }
 
     override suspend fun saveVersesAudio(versesAudio: List<VerseAudioAqc>) {

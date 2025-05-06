@@ -17,14 +17,14 @@ interface ArabicChapterEntity {
 
     @Entity(tableName = "arabic_chapters")
     data class Base(
-        @PrimaryKey @SerializedName("number") private val number: Long,
-        @SerializedName("name") private val name: String,
-        @SerializedName("englishName") private val englishName: String,
-        @SerializedName("englishNameTranslation") private val englishNameTranslation: String,
-        @SerializedName("revelationType") private val revelationType: String,
-        @SerializedName("numberOfAyahs") private val numberOfAyahs: Long,
-        @TypeConverters(GenericConverters::class) @SerializedName("ayahs") private val ayahs: List<ArabicAyahEntity>,
-        @TypeConverters(GenericConverters::class) @SerializedName("edition") private val edition: EditionArabicEntity,
+        @PrimaryKey @SerializedName("number") val number: Long,
+        @SerializedName("name") val name: String,
+        @SerializedName("englishName") val englishName: String,
+        @SerializedName("englishNameTranslation") val englishNameTranslation: String,
+        @SerializedName("revelationType") val revelationType: String,
+        @SerializedName("numberOfAyahs") val numberOfAyahs: Long,
+        @TypeConverters(GenericConverters::class) @SerializedName("ayahs") val ayahs: List<ArabicAyahEntity>,
+        @TypeConverters(GenericConverters::class) @SerializedName("edition") val edition: EditionArabicEntity,
     ) : ArabicChapterEntity {
         override fun <T> map(mapper: Mapper<T>): T = mapper.map(
             number,
@@ -82,15 +82,15 @@ interface ArabicAyahEntity {
     fun <T> map(mapper: Mapper<T>): T
 
     data class Base(
-        @SerializedName("number") private val number: Long,
-        @SerializedName("text") private val text: String,
-        @SerializedName("numberInSurah") private val numberInSurah: Long,
-        @SerializedName("juz") private val juz: Long,
-        @SerializedName("manzil") private val manzil: Long,
-        @SerializedName("page") private val page: Long,
-        @SerializedName("ruku") private val ruku: Long,
-        @SerializedName("hizbQuarter") private val hizbQuarter: Long,
-        @JsonAdapter(SajdaAdapter::class) @SerializedName("sajda") private val sajda: Boolean,
+        @SerializedName("number") val number: Long,
+        @SerializedName("text") val text: String,
+        @SerializedName("numberInSurah") val numberInSurah: Long,
+        @SerializedName("juz") val juz: Long,
+        @SerializedName("manzil") val manzil: Long,
+        @SerializedName("page") val page: Long,
+        @SerializedName("ruku") val ruku: Long,
+        @SerializedName("hizbQuarter") val hizbQuarter: Long,
+        @JsonAdapter(SajdaAdapter::class) @SerializedName("sajda") val sajda: Boolean,
     ) : ArabicAyahEntity {
         override fun <T> map(mapper: Mapper<T>): T = mapper.map(
             number, text, numberInSurah, juz, manzil, page, ruku, hizbQuarter, sajda
@@ -135,13 +135,13 @@ interface EditionArabicEntity {
     fun <T> map(mapper: Mapper<T>): T
 
     data class Base(
-        @SerializedName("identifier") private val identifier: String,
-        @SerializedName("language") private val language: String,
-        @SerializedName("name") private val name: String,
-        @SerializedName("englishName") private val englishName: String,
-        @SerializedName("format") private val format: String,
-        @SerializedName("type") private val type: String,
-        @SerializedName("direction") private val direction: String,
+        @SerializedName("identifier") val identifier: String,
+        @SerializedName("language") val language: String,
+        @SerializedName("name") val name: String,
+        @SerializedName("englishName") val englishName: String,
+        @SerializedName("format") val format: String,
+        @SerializedName("type") val type: String,
+        @SerializedName("direction") val direction: String,
     ) : EditionArabicEntity {
         override fun <T> map(mapper: Mapper<T>): T = mapper.map(
             identifier, language, name, englishName, format, type, direction

@@ -54,19 +54,19 @@ interface VerseAudioEntity {
     )
     data class Base(
         @ColumnInfo(name = "surahNumber") val surahNumber: Long,
-        private val verseNumber: Long,
-        private val reciter: String,
-        @SerializedName("audio") private val audio: String,
-        @SerializedName("audioSecondary") private val audioSecondary: List<String>,
-        @SerializedName("text") private val text: String,
-        @TypeConverters(GenericConverters::class) @SerializedName("edition") private val edition: EditionVerseEntity,
-        @SerializedName("numberInSurah") private val numberInSurah: Long,
-        @SerializedName("juz") private val juz: Long,
-        @SerializedName("manzil") private val manzil: Long,
-        @SerializedName("page") private val page: Long,
-        @SerializedName("ruku") private val ruku: Long,
-        @SerializedName("hizbQuarter") private val hizbQuarter: Long,
-        @JsonAdapter(SajdaAdapter::class) @SerializedName("sajda") private val sajda: Boolean,
+        val verseNumber: Long,
+        val reciter: String,
+        @SerializedName("audio") val audio: String,
+        @SerializedName("audioSecondary") val audioSecondary: List<String>,
+        @SerializedName("text") val text: String,
+        @TypeConverters(GenericConverters::class) @SerializedName("edition") val edition: EditionVerseEntity,
+        @SerializedName("numberInSurah") val numberInSurah: Long,
+        @SerializedName("juz") val juz: Long,
+        @SerializedName("manzil") val manzil: Long,
+        @SerializedName("page") val page: Long,
+        @SerializedName("ruku") val ruku: Long,
+        @SerializedName("hizbQuarter") val hizbQuarter: Long,
+        @JsonAdapter(SajdaAdapter::class) @SerializedName("sajda") val sajda: Boolean,
     ) : VerseAudioEntity {
         override fun <T> map(mapper: Mapper<T>): T = mapper.map(
             surahNumber,
@@ -106,7 +106,7 @@ interface VerseAudioEntity {
         ): T
 
         // Реализация маппинга в VerseAudioAqc
-        class ToDomain(private val surah: Surah) : Mapper<VerseAudioAqc> {
+        class ToDomain(val surah: Surah) : Mapper<VerseAudioAqc> {
             override fun map(
                 surahNumber: Long,
                 verseNumber: Long,
@@ -149,13 +149,13 @@ interface EditionVerseEntity {
     fun <T> map(mapper: Mapper<T>): T
 
     data class Base(
-        @SerializedName("identifier") private val identifier: String,
-        @SerializedName("language") private val language: String,
-        @SerializedName("name") private val name: String,
-        @SerializedName("englishName") private val englishName: String,
-        @SerializedName("format") private val format: String,
-        @SerializedName("type") private val type: String,
-        @SerializedName("direction") private val direction: String? = null,
+        @SerializedName("identifier") val identifier: String,
+        @SerializedName("language") val language: String,
+        @SerializedName("name") val name: String,
+        @SerializedName("englishName") val englishName: String,
+        @SerializedName("format") val format: String,
+        @SerializedName("type") val type: String,
+        @SerializedName("direction") val direction: String? = null,
     ) : EditionVerseEntity {
         override fun <T> map(mapper: Mapper<T>): T = mapper.map(
             identifier, language, name, englishName, format, type, direction
@@ -197,12 +197,12 @@ interface SurahEntity {
 
     @Entity(tableName = "surah")
     data class Base(
-        @PrimaryKey private val number: Long,
-        @SerializedName("name") private val name: String,
-        @SerializedName("englishName") private val englishName: String,
-        @SerializedName("englishNameTranslation") private val englishNameTranslation: String,
-        @SerializedName("numberOfAyahs") private val numberOfAyahs: Long,
-        @SerializedName("revelationType") private val revelationType: String,
+        @PrimaryKey val number: Long,
+        @SerializedName("name") val name: String,
+        @SerializedName("englishName") val englishName: String,
+        @SerializedName("englishNameTranslation") val englishNameTranslation: String,
+        @SerializedName("numberOfAyahs") val numberOfAyahs: Long,
+        @SerializedName("revelationType") val revelationType: String,
     ) : SurahEntity {
         override fun <T> map(mapper: Mapper<T>): T = mapper.map(
             number, name, englishName, englishNameTranslation, numberOfAyahs, revelationType

@@ -4,13 +4,18 @@ import com.google.gson.annotations.SerializedName
 
 interface ChaptersAqc {
 
+    fun chapters(): List<ChapterAqc>
+
     fun <T> map(mapper: Mapper<T>): T
 
     class Base(
         @SerializedName("code") private val code: Long,
         @SerializedName("status") private val status: String,
-        @SerializedName("data") private val chapters: List<ChapterAqc>
+        @SerializedName("data") private val chapters: List<ChapterAqc>,
     ) : ChaptersAqc {
+
+        override fun chapters(): List<ChapterAqc> = chapters
+
         override fun <T> map(mapper: Mapper<T>): T = mapper.map(code, status, chapters)
     }
 
@@ -18,7 +23,7 @@ interface ChaptersAqc {
         fun map(
             code: Long,
             status: String,
-            chapters: List<ChapterAqc>
+            chapters: List<ChapterAqc>,
         ): T
 
         class Chapters : Mapper<List<ChapterAqc>> {
@@ -33,6 +38,13 @@ interface ChaptersAqc {
 
 interface ChapterAqc {
 
+    fun number(): Long
+    fun name(): String
+    fun englishName(): String
+    fun englishNameTranslation(): String
+    fun numberOfAyahs(): Long
+    fun revelationType(): RevelationType
+
     fun <T> map(mapper: Mapper<T>): T
 
     class Base(
@@ -41,15 +53,18 @@ interface ChapterAqc {
         @SerializedName("englishName") private val englishName: String,
         @SerializedName("englishNameTranslation") private val englishNameTranslation: String,
         @SerializedName("numberOfAyahs") private val numberOfAyahs: Long,
-        @SerializedName("revelationType") private val revelationType: RevelationType
+        @SerializedName("revelationType") private val revelationType: RevelationType,
     ) : ChapterAqc {
+
+        override fun number(): Long = number
+        override fun name(): String = name
+        override fun englishName(): String = englishName
+        override fun englishNameTranslation(): String = englishNameTranslation
+        override fun numberOfAyahs(): Long = numberOfAyahs
+        override fun revelationType(): RevelationType = revelationType
+
         override fun <T> map(mapper: Mapper<T>): T = mapper.map(
-            number,
-            name,
-            englishName,
-            englishNameTranslation,
-            numberOfAyahs,
-            revelationType
+            number, name, englishName, englishNameTranslation, numberOfAyahs, revelationType
         )
     }
 
@@ -60,7 +75,7 @@ interface ChapterAqc {
             englishName: String,
             englishNameTranslation: String,
             numberOfAyahs: Long,
-            revelationType: RevelationType
+            revelationType: RevelationType,
         ): T
     }
 }

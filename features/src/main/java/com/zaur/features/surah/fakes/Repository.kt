@@ -2,8 +2,10 @@ package com.zaur.features.surah.fakes
 
 import com.zaur.domain.al_quran_cloud.models.arabic.ArabicChapter
 import com.zaur.domain.al_quran_cloud.models.audiofile.ChapterAudioFile
+import com.zaur.domain.al_quran_cloud.models.audiofile.VerseAudioAqc
 import com.zaur.domain.al_quran_cloud.models.chapter.ChapterAqc
 import com.zaur.domain.al_quran_cloud.models.translate.TranslationAqc
+import com.zaur.domain.al_quran_cloud.repository.OfflineRepository
 import com.zaur.domain.al_quran_cloud.repository.QuranAudioRepositoryAqc
 import com.zaur.domain.al_quran_cloud.repository.QuranTextRepositoryAqc
 import com.zaur.domain.al_quran_cloud.repository.QuranTranslationRepositoryAqc
@@ -47,6 +49,16 @@ class FakeReciterStorage() : ReciterStorage {
     }
 }
 
+class FakeOfflineRepos : OfflineRepository {
+    override fun isOffline(): Boolean {
+        TODO("Not yet implemented")
+    }
+
+    override fun setIsOffline(isOffline: Boolean) {
+        TODO("Not yet implemented")
+    }
+}
+
 class FakeQuranStorage() : QuranStorage {
     override fun getFontSizeArabic(): Float {
         TODO("Not yet implemented")
@@ -81,41 +93,77 @@ class FakeQuranStorage() : QuranStorage {
     }
 }
 
-class FakeQTextRAqc : QuranTextRepositoryAqc {
-    override suspend fun getAllChapters(): List<ChapterAqc> {
+class FakeQTextRAqcLocal : QuranTextRepositoryAqc.Local {
+    override suspend fun getAllChaptersLocal(): List<ChapterAqc> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun getArabicChapter(chapterNumber: Int): ArabicChapter {
+    override suspend fun getArabicChapterLocal(chapterNumber: Int): ArabicChapter {
         TODO("Not yet implemented")
     }
-
 }
 
-class FakeQAudioRAqc : QuranAudioRepositoryAqc {
-    override suspend fun getChapterAudioOfReciter(
+class FakeQTextRAqcCloud : QuranTextRepositoryAqc.Cloud {
+    override suspend fun getAllChaptersCloud(): List<ChapterAqc> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getArabicChapterCloud(chapterNumber: Int): ArabicChapter {
+        TODO("Not yet implemented")
+    }
+}
+
+
+class FakeQAudioRAqcLocal : QuranAudioRepositoryAqc.Local {
+    override suspend fun getChapterAudioOfReciterLocal(
         chapterNumber: Int,
         reciter: String,
     ): ChapterAudioFile {
         TODO("Not yet implemented")
     }
 
-    override suspend fun getAyahAudioByKey(
+    override suspend fun getAyahAudioByKeyLocal(
         verseKey: String,
         reciter: String,
-    ): Ayah {
+    ): VerseAudioAqc {
         TODO("Not yet implemented")
     }
 }
 
-class FakeQTranslationRAqc : QuranTranslationRepositoryAqc {
-    override suspend fun getTranslationForChapter(
+class FakeQAudioRAqcCloud : QuranAudioRepositoryAqc.Cloud {
+    override suspend fun getChapterAudioOfReciterCloud(
+        chapterNumber: Int,
+        reciter: String,
+    ): ChapterAudioFile {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getAyahAudioByKeyCloud(
+        verseKey: String,
+        reciter: String,
+    ): VerseAudioAqc {
+        TODO("Not yet implemented")
+    }
+}
+
+class FakeQTranslationRAqcLocal : QuranTranslationRepositoryAqc.Local {
+    override suspend fun getTranslationForChapterLocal(
         chapterNumber: Int,
         translator: String,
     ): TranslationAqc {
         TODO("Not yet implemented")
     }
 }
+
+class FakeQTranslationRAqcCloud : QuranTranslationRepositoryAqc.Cloud {
+    override suspend fun getTranslationForChapterCloud(
+        chapterNumber: Int,
+        translator: String,
+    ): TranslationAqc {
+        TODO("Not yet implemented")
+    }
+}
+
 
 class FakeQTextRV4 : QuranTextRepositoryV4 {
     override suspend fun getAllChapters(language: String): List<ChapterV4> {

@@ -7,7 +7,6 @@ QuranApp is a modern and feature-rich Android application designed to provide an
 - 📖 **Enhanced Search** – Find verses by meaning, keywords, and context. (in progress)
 - 📚 **Interactive Tafsir** – Access detailed explanations of Quranic verses. (in progress)
 - 🔊 **Audio Recitation** – Listen to high-quality recitations with translations. 
-- 🎯 **Gamification** – Earn rewards and complete challenges to stay motivated. (in progress)
 - 🌙 **Dark Mode Support** – Comfortable reading experience for all lighting conditions.
 - 🌍 **Multilingual Support** – Read and listen in multiple languages. (in progress)
 

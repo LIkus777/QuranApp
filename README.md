@@ -1,16 +1,12 @@
 # QuranApp
 
-QuranApp is a modern and feature-rich Android application designed to provide an immersive Quran reading and learning experience. It offers an enhanced search function, interactive tafsir, high-quality audio recitation, gamification elements, a Hadith encyclopedia, prayer time tracking, and Azkar reminders to engage users in their Quranic journey.
+QuranApp is a modern and feature-rich Android application designed to provide an immersive Quran reading and learning experience. It offers an enhanced search function, interactive tafsir and high-quality audio recitation to engage users in their Quranic journey.
 
 ## Features
 
-- 📜 **Hadith Encyclopedia** – Access a comprehensive collection of hadiths. (in progress)
-- 🕋 **Prayer Time Tracking** – Stay updated with accurate prayer times. (in progress)
-- 🤲 **Azkar & Duas** – Recite daily supplications and remembrance. (in progress)
 - 📖 **Enhanced Search** – Find verses by meaning, keywords, and context. (in progress)
 - 📚 **Interactive Tafsir** – Access detailed explanations of Quranic verses. (in progress)
 - 🔊 **Audio Recitation** – Listen to high-quality recitations with translations. 
-- 🎯 **Gamification** – Earn rewards and complete challenges to stay motivated. (in progress)
 - 🌙 **Dark Mode Support** – Comfortable reading experience for all lighting conditions.
 - 🌍 **Multilingual Support** – Read and listen in multiple languages. (in progress)
 

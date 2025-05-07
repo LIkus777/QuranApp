@@ -7,7 +7,6 @@ interface ChapterMapper {
     fun toData(chapterAqc: ChapterAqc): ChapterEntity.Base
     fun fromData(chapterEntity: ChapterEntity): ChapterAqc.Base
 
-    // В маппере
     class Base : ChapterMapper {
         override fun toData(chapterAqc: ChapterAqc): ChapterEntity.Base {
             return ChapterEntity.Base(

@@ -13,12 +13,10 @@ class QuranAudioCloudRepositoryAqcImpl(
     override suspend fun getChapterAudioOfReciterCloud(
         chapterNumber: Int,
         reciter: String,
-    ): ChapterAudioFile = quranApiAqc.getChapterAudioOfReciter(chapterNumber, reciter).map(
-        ChapterAudiosFileAqc.Mapper.ChapterAudio()
-    )
+    ): ChapterAudioFile.Base = quranApiAqc.getChapterAudioOfReciter(chapterNumber, reciter).chapterAudio()
 
     override suspend fun getAyahAudioByKeyCloud(
         verseKey: String,
         reciter: String,
-    ): VerseAudioAqc = quranApiAqc.getAyahAudioByKey(verseKey, reciter).map(VersesAudioFileAqc.Mapper.VerseAudio())
+    ): VerseAudioAqc.Base = quranApiAqc.getAyahAudioByKey(verseKey, reciter).verseAudio()
 }

@@ -6,13 +6,16 @@ import com.zaur.domain.base.SajdaAdapter
 
 interface VersesAudioFileAqc {
 
+    fun verseAudio(): VerseAudioAqc.Base
+
     fun <T> map(mapper: Mapper<T>): T
 
     class Base(
         @SerializedName("code") private val code: Long,
         @SerializedName("status") private val status: String,
-        @SerializedName("data") private val verseAudio: VerseAudioAqc,
+        @SerializedName("data") private val verseAudio: VerseAudioAqc.Base,
     ) : VersesAudioFileAqc {
+        override fun verseAudio(): VerseAudioAqc.Base = verseAudio
         override fun <T> map(mapper: Mapper<T>): T = mapper.map(code, status, verseAudio)
     }
 
@@ -22,14 +25,6 @@ interface VersesAudioFileAqc {
             status: String,
             verseAudio: VerseAudioAqc,
         ): T
-
-        class VerseAudio : Mapper<VerseAudioAqc> {
-            override fun map(
-                code: Long,
-                status: String,
-                verseAudio: VerseAudioAqc,
-            ): VerseAudioAqc = verseAudio
-        }
     }
 }
 
@@ -40,8 +35,8 @@ interface VerseAudioAqc {
     fun audio(): String
     fun audioSecondary(): List<String>
     fun text(): String
-    fun edition(): EditionVerse
-    fun surah(): Surah
+    fun edition(): EditionVerse.Base
+    fun surah(): Surah.Base
     fun numberInSurah(): Long
     fun juz(): Long
     fun manzil(): Long
@@ -58,8 +53,8 @@ interface VerseAudioAqc {
         @SerializedName("audio") private val audio: String,
         @SerializedName("audioSecondary") private val audioSecondary: List<String>,
         @SerializedName("text") private val text: String,
-        @SerializedName("edition") private val edition: EditionVerse,
-        @SerializedName("surah") private val surah: Surah,
+        @SerializedName("edition") private val edition: EditionVerse.Base,
+        @SerializedName("surah") private val surah: Surah.Base,
         @SerializedName("numberInSurah") private val numberInSurah: Long,
         @SerializedName("juz") private val juz: Long,
         @SerializedName("manzil") private val manzil: Long,
@@ -74,8 +69,8 @@ interface VerseAudioAqc {
         override fun audio(): String = audio
         override fun audioSecondary(): List<String> = audioSecondary
         override fun text(): String = text
-        override fun edition(): EditionVerse = edition
-        override fun surah(): Surah = surah
+        override fun edition(): EditionVerse.Base = edition
+        override fun surah(): Surah.Base = surah
         override fun numberInSurah(): Long = numberInSurah
         override fun juz(): Long = juz
         override fun manzil(): Long = manzil

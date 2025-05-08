@@ -7,7 +7,11 @@ import com.zaur.data.room.dao.ChapterAudioDao
 import com.zaur.data.room.dao.ChapterDao
 import com.zaur.data.room.dao.TranslationChapterDao
 import com.zaur.data.room.dao.VerseAudioDao
-import com.zaur.data.room.models.mappers.ChapterMapper
+import com.zaur.data.room.models.mappers.arabic.ArabicMapper
+import com.zaur.data.room.models.mappers.audiofile.ChapterAudioMapper
+import com.zaur.data.room.models.mappers.audiofile.VerseAudioMapper
+import com.zaur.data.room.models.mappers.chapter.ChapterMapper
+import com.zaur.data.room.models.mappers.translate.TranslationMapper
 import com.zaur.domain.al_quran_cloud.models.arabic.ArabicChapter
 import com.zaur.domain.al_quran_cloud.models.audiofile.ChapterAudioFile
 import com.zaur.domain.al_quran_cloud.models.audiofile.VerseAudioAqc
@@ -21,6 +25,10 @@ import kotlinx.coroutines.launch
 class MainRepositorySaveImpl(
     private val audioDownloader: AudioDownloader,
     private val chapterMapper: ChapterMapper,
+    private val chapterAudioMapper: ChapterAudioMapper,
+    private val verseAudioMapper: VerseAudioMapper,
+    private val translationMapper: TranslationMapper,
+    private val arabicMapper: ArabicMapper,
     private val chapterDao: ChapterDao,
     private val verseAudioDao: VerseAudioDao,
     private val chapterAudioDao: ChapterAudioDao,
@@ -28,30 +36,25 @@ class MainRepositorySaveImpl(
     private val translationChapterDao: TranslationChapterDao,
 ) : MainRepository.Save {
 
-    override suspend fun saveChapters(chaptersAqc: List<ChapterAqc>) {
+    override suspend fun saveChapters(chaptersAqc: List<ChapterAqc.Base>) {
         val chaptersEntities = chaptersAqc.map { chapterMapper.toData(it) }
         chapterDao.add(chaptersEntities)
     }
 
-    override suspend fun saveVersesAudio(versesAudio: List<VerseAudioAqc>) {
+    override suspend fun saveVersesAudio(versesAudio: List<VerseAudioAqc.Base>) {
         // Сохраняем аяты
-        val ayahs = versesAudio.map { verse ->
-            verse.copy(
-                surah = verse.surah.copy(), reciter = verse.reciter
-            )
-        }
-        verseAudioDao.insertAll(ayahs.map { it.toData() })
+        verseAudioDao.insertAll(versesAudio.map { verseAudioMapper.toData(it) })
     }
 
-
-    override suspend fun saveChaptersArabic(chaptersArabic: List<ArabicChapter>) {
-        arabicChapterDao.add(chaptersArabic.map { it.toData() })
+    override suspend fun saveChaptersArabic(chaptersArabic: List<ArabicChapter.Base>) {
+        arabicChapterDao.add(chaptersArabic.map { arabicMapper.toData(it) })
     }
 
-    override suspend fun saveChaptersAudio(chaptersAudio: List<ChapterAudioFile>) {
+    override suspend fun saveChaptersAudio(chaptersAudio: List<ChapterAudioFile.Base>) {
         CoroutineScope(Dispatchers.IO).launch {
             Log.i("TAG", "saveChaptersAudio: chaptersAudio $chaptersAudio")
-            val chaptersData = chaptersAudio.map { it.toData() } // ChapterAudioEntity
+            val chaptersData =
+                chaptersAudio.map { chapterAudioMapper.toData(it) } // ChapterAudioEntity
             Log.i("TAG", "saveChaptersAudio: chaptersData $chaptersData")
             // Сохраняем главы
             chapterAudioDao.add(chaptersData)
@@ -61,7 +64,7 @@ class MainRepositorySaveImpl(
         }
     }
 
-    override suspend fun saveChaptersTranslate(chaptersTranslate: List<TranslationAqc>) {
-        translationChapterDao.add(chaptersTranslate.map { it.toData() })
+    override suspend fun saveChaptersTranslate(chaptersTranslate: List<TranslationAqc.Base>) {
+        translationChapterDao.add(chaptersTranslate.map { translationMapper.toData(it) })
     }
 }

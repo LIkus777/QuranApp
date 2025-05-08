@@ -17,7 +17,7 @@ import com.zaur.features.surah.manager.ReciterManager
 interface MainScreenModule : ProvideReciterUseCase, ProvideReciterManager,
     ProvideMainRepositorySave, ProvideMainRepositoryLoad, ProvideThemeUseCase, ProvideMainUseCase {
 
-    class Base(private val dataModule: DataModule) : MainScreenModule {
+    class Base(private val dataModule: DataModule, private val mapperModule: MapperModule) : MainScreenModule {
 
         private val themeUseCase by lazy {
             ThemeUseCase(dataModule.provideThemeStorage())
@@ -31,6 +31,11 @@ interface MainScreenModule : ProvideReciterUseCase, ProvideReciterManager,
 
         override fun provideMainRepositorySave(): MainRepository.Save = MainRepositorySaveImpl(
             dataModule.provideAudioDownloader(),
+            mapperModule.provideChapterMapper(),
+            mapperModule.provideChapterAudioMapper(),
+            mapperModule.provideVerseAudioMapper(),
+            mapperModule.provideTranslationMapper(),
+            mapperModule.provideArabicMapper(),
             dataModule.provideChapterDao(),
             dataModule.provideVerseAudioDao(),
             dataModule.provideChapterAudioDao(),

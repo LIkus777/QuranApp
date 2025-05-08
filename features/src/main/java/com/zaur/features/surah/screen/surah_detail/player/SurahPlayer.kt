@@ -21,7 +21,7 @@ interface SurahPlayer {
 
     fun setQuranAudioVmCallback(callback: QuranAudioViewModel.QuranAudioVmCallback)
 
-    fun setAyahs(ayahs: List<com.zaur.domain.al_quran_cloud.models.arabic.Ayah>)
+    fun setAyahs(ayahs: List<com.zaur.domain.al_quran_cloud.models.arabic.Ayah.Base>)
 
     // Реализация плеера с разделением на управление состоянием и воспроизведением
     class Base(
@@ -33,7 +33,7 @@ interface SurahPlayer {
     ) : SurahPlayer {
 
         private var quranAudioVmCallback: QuranAudioViewModel.QuranAudioVmCallback? = null
-        private var ayahs: List<com.zaur.domain.al_quran_cloud.models.arabic.Ayah>? = null
+        private var ayahs: List<com.zaur.domain.al_quran_cloud.models.arabic.Ayah.Base>? = null
         private var currentAyahIndex = 0
 
         private val state = surahDetailStateManager.getState()
@@ -48,18 +48,18 @@ interface SurahPlayer {
                 override fun onAyahChanged(mediaId: String?) {
                     val ayahNumberInSurah = mediaId?.toIntOrNull() ?: return
                     val ayah =
-                        ayahs?.find { it.numberInSurah.toInt() == ayahNumberInSurah } ?: return
+                        ayahs?.find { it.numberInSurah().toInt() == ayahNumberInSurah } ?: return
                     Log.d("TAG", "onAyahChanged: ayahNumberInSurah=$ayahNumberInSurah")
                     Log.d("TAG", "onAyahChanged: number=$ayah.number.toInt()")
-                    Log.d("TAG", "onAyahChanged: numberInSurah=${ayah.numberInSurah.toInt()}")
+                    Log.d("TAG", "onAyahChanged: numberInSurah=${ayah.numberInSurah().toInt()}")
                     audioPlayerStateUpdater.updateCurrentAyah(
-                        ayah.number.toInt(), ayah.numberInSurah.toInt()
+                        ayah.number().toInt(), ayah.numberInSurah().toInt()
                     )
                 }
             })
         }
 
-        override fun setAyahs(ayahs: List<com.zaur.domain.al_quran_cloud.models.arabic.Ayah>) {
+        override fun setAyahs(ayahs: List<com.zaur.domain.al_quran_cloud.models.arabic.Ayah.Base>) {
             this.ayahs = ayahs
         }
 
@@ -97,8 +97,8 @@ interface SurahPlayer {
         fun playCurrentAyah() {
             val currentAyah = ayahs?.getOrNull(currentAyahIndex)
             if (currentAyah != null) {
-                audioPlayerStateUpdater.updateCurrentAyahInSurah(currentAyah.numberInSurah.toInt())
-                quranAudioVmCallback?.callVerseAudioFile(currentAyah.number.toInt())
+                audioPlayerStateUpdater.updateCurrentAyahInSurah(currentAyah.numberInSurah().toInt())
+                quranAudioVmCallback?.callVerseAudioFile(currentAyah.number().toInt())
             } else {
                 audioPlayerStateUpdater.markWholeChapterPlaying(false, true)
             }

@@ -8,8 +8,8 @@ import com.zaur.domain.storage.QuranStorage
 
 interface QuranTextUseCaseAqc {
 
-    suspend fun getAllChapters(): List<ChapterAqc>
-    suspend fun getArabicChapter(chapterNumber: Int): ArabicChapter
+    suspend fun getAllChapters(): List<ChapterAqc.Base>
+    suspend fun getArabicChapter(chapterNumber: Int): ArabicChapter.Base
 
     fun getFontSizeArabic(): Float
     fun getFontSizeRussian(): Float
@@ -28,7 +28,7 @@ interface QuranTextUseCaseAqc {
         private val quranTextRepositoryAqcCloud: QuranTextRepositoryAqc.Cloud,
     ) : QuranTextUseCaseAqc {
 
-        override suspend fun getAllChapters(): List<ChapterAqc> {
+        override suspend fun getAllChapters(): List<ChapterAqc.Base> {
             return if (offlineRepository.isOffline()) {
                 quranTextRepositoryAqcLocal.getAllChaptersLocal()
             } else {
@@ -36,7 +36,7 @@ interface QuranTextUseCaseAqc {
             }
         }
 
-        override suspend fun getArabicChapter(chapterNumber: Int): ArabicChapter {
+        override suspend fun getArabicChapter(chapterNumber: Int): ArabicChapter.Base {
             return if (offlineRepository.isOffline()) {
                 quranTextRepositoryAqcLocal.getArabicChapterLocal(chapterNumber)
             } else {

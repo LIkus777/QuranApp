@@ -8,12 +8,12 @@ import com.zaur.domain.base.repository.BaseQuranTextRepository
 
 interface QuranTextRepositoryAqc : BaseQuranTextRepository {
     interface Local : QuranTextRepositoryAqc {
-        suspend fun getAllChaptersLocal(): List<ChapterAqc>
-        suspend fun getArabicChapterLocal(chapterNumber: Int): ArabicChapter
+        suspend fun getAllChaptersLocal(): List<ChapterAqc.Base>
+        suspend fun getArabicChapterLocal(chapterNumber: Int): ArabicChapter.Base
     }
 
     interface Cloud : QuranTextRepositoryAqc{
-        suspend fun getAllChaptersCloud(): List<ChapterAqc>
-        suspend fun getArabicChapterCloud(chapterNumber: Int): ArabicChapter
+        suspend fun getAllChaptersCloud(): List<ChapterAqc.Base>
+        suspend fun getArabicChapterCloud(chapterNumber: Int): ArabicChapter.Base
     }
 }

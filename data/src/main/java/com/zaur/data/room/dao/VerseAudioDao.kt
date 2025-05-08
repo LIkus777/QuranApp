@@ -4,15 +4,18 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import com.zaur.data.room.models.VerseAudioEntity
+import com.zaur.data.room.models.VerseAudioWithSurah
 
 @Dao
 interface VerseAudioDao {
 
+    @Transaction
     @Query("SELECT * FROM verse_audio WHERE surahNumber = :chapter AND verseNumber = :verse AND reciter = :reciter")
-    suspend fun getAyahAudio(chapter: Long, verse: Long, reciter: String): VerseAudioEntity.Base
+    suspend fun getAyahAudio(chapter: Long, verse: Long, reciter: String): VerseAudioWithSurah.Base
 
-    suspend fun getAyahAudioByKey(verseKey: String, reciter: String): VerseAudioEntity.Base {
+    suspend fun getAyahAudioByKey(verseKey: String, reciter: String): VerseAudioWithSurah.Base {
         val parts = verseKey.split(":")
         require(parts.size == 2) { "Invalid verseKey format: $verseKey" }
 

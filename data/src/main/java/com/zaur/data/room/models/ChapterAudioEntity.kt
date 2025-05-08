@@ -2,11 +2,10 @@ package com.zaur.data.room.models
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import androidx.room.TypeConverters
 import com.google.gson.annotations.JsonAdapter
 import com.google.gson.annotations.SerializedName
-import com.zaur.domain.al_quran_cloud.models.audiofile.Ayah
-import com.zaur.domain.al_quran_cloud.models.audiofile.ChapterAudioFile
-import com.zaur.domain.al_quran_cloud.models.audiofile.EditionAudio
+import com.zaur.data.room.converters.GenericConverters
 import com.zaur.domain.base.SajdaAdapter
 
 interface ChapterAudioEntity {
@@ -15,14 +14,14 @@ interface ChapterAudioEntity {
 
     @Entity(tableName = "chapter_audio")
     data class Base(
-        @PrimaryKey @SerializedName("number") val number: Long,
+        @PrimaryKey val number: Long,
         @SerializedName("name") val name: String,
         @SerializedName("englishName") val englishName: String,
         @SerializedName("englishNameTranslation") val englishNameTranslation: String,
         @SerializedName("revelationType") val revelationType: String,
         @SerializedName("numberOfAyahs") val numberOfAyahs: Long,
-        @SerializedName("ayahs") val ayahs: List<AyahAudioEntity>,
-        @SerializedName("edition") val edition: EditionAudioEntity,
+        @TypeConverters(GenericConverters::class) @SerializedName("ayahs") val ayahs: List<AyahAudioEntity.Base>,
+        @TypeConverters(GenericConverters::class) @SerializedName("edition") val edition: EditionAudioEntity.Base,
         val reciter: String,
     ) : ChapterAudioEntity {
         override fun <T> map(mapper: Mapper<T>): T = mapper.map(
@@ -50,35 +49,24 @@ interface ChapterAudioEntity {
             edition: EditionAudioEntity,
             reciter: String,
         ): T
-
-        class ToDomain : Mapper<ChapterAudioFile> {
-            override fun map(
-                number: Long,
-                name: String,
-                englishName: String,
-                englishNameTranslation: String,
-                revelationType: String,
-                numberOfAyahs: Long,
-                ayahs: List<AyahAudioEntity>,
-                edition: EditionAudioEntity,
-                reciter: String,
-            ): ChapterAudioFile = ChapterAudioFile.Base(
-                number,
-                name,
-                englishName,
-                englishNameTranslation,
-                revelationType,
-                numberOfAyahs,
-                ayahs.map { it.map(AyahAudioEntity.Mapper.ToDomain()) },
-                edition.map(EditionAudioEntity.Mapper.ToDomain()),
-                reciter
-            )
-        }
     }
 }
 
 
 interface AyahAudioEntity {
+
+    fun reciter(): String
+    fun verseNumber(): Long
+    fun audio(): String
+    fun audioSecondary(): List<String>
+    fun text(): String
+    fun numberInSurah(): Long
+    fun juz(): Long
+    fun manzil(): Long
+    fun page(): Long
+    fun ruku(): Long
+    fun hizbQuarter(): Long
+    fun sajda(): Boolean
 
     fun <T> map(mapper: Mapper<T>): T
 
@@ -96,6 +84,20 @@ interface AyahAudioEntity {
         @SerializedName("hizbQuarter") val hizbQuarter: Long,
         @JsonAdapter(SajdaAdapter::class) @SerializedName("sajda") val sajda: Boolean,
     ) : AyahAudioEntity {
+
+        override fun reciter() = reciter
+        override fun verseNumber() = verseNumber
+        override fun audio() = audio
+        override fun audioSecondary() = audioSecondary
+        override fun text() = text
+        override fun numberInSurah() = numberInSurah
+        override fun juz() = juz
+        override fun manzil() = manzil
+        override fun page() = page
+        override fun ruku() = ruku
+        override fun hizbQuarter() = hizbQuarter
+        override fun sajda() = sajda
+
         override fun <T> map(mapper: Mapper<T>): T = mapper.map(
             reciter,
             verseNumber,
@@ -127,45 +129,23 @@ interface AyahAudioEntity {
             hizbQuarter: Long,
             sajda: Boolean,
         ): T
-
-        class ToDomain : Mapper<Ayah> {
-            override fun map(
-                reciter: String,
-                verseNumber: Long,
-                audio: String,
-                audioSecondary: List<String>,
-                text: String,
-                numberInSurah: Long,
-                juz: Long,
-                manzil: Long,
-                page: Long,
-                ruku: Long,
-                hizbQuarter: Long,
-                sajda: Boolean,
-            ): Ayah = Ayah.Base(
-                reciter,
-                verseNumber,
-                audio,
-                audioSecondary,
-                text,
-                numberInSurah,
-                juz,
-                manzil,
-                page,
-                ruku,
-                hizbQuarter,
-                sajda
-            )
-        }
     }
 }
 
 interface EditionAudioEntity {
 
+    fun identifier(): String
+    fun language(): String
+    fun name(): String
+    fun englishName(): String
+    fun format(): String
+    fun type(): String
+    fun direction(): String?
+
     fun <T> map(mapper: Mapper<T>): T
 
     data class Base(
-        @PrimaryKey @SerializedName("identifier") val identifier: String,
+        @PrimaryKey val identifier: String,
         @SerializedName("language") val language: String,
         @SerializedName("name") val name: String,
         @SerializedName("englishName") val englishName: String,
@@ -173,6 +153,15 @@ interface EditionAudioEntity {
         @SerializedName("type") val type: String,
         @SerializedName("direction") val direction: String? = null,
     ) : EditionAudioEntity {
+
+        override fun identifier() = identifier
+        override fun language() = language
+        override fun name() = name
+        override fun englishName() = englishName
+        override fun format() = format
+        override fun type() = type
+        override fun direction() = direction
+
         override fun <T> map(mapper: Mapper<T>): T = mapper.map(
             identifier, language, name, englishName, format, type, direction
         )
@@ -188,19 +177,5 @@ interface EditionAudioEntity {
             type: String,
             direction: String?,
         ): T
-
-        class ToDomain : Mapper<EditionAudio> {
-            override fun map(
-                identifier: String,
-                language: String,
-                name: String,
-                englishName: String,
-                format: String,
-                type: String,
-                direction: String?,
-            ): EditionAudio = EditionAudio.Base(
-                identifier, language, name, englishName, format, type, direction
-            )
-        }
     }
 }

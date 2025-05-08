@@ -30,7 +30,7 @@ fun SurahDetailEffects(
     val lifecycleOwner = LocalLifecycleOwner.current
 
     LaunchedEffect(textState.currentArabicText) {
-        textState.currentArabicText?.ayahs?.let {
+        textState.currentArabicText?.ayahs()?.let {
             quranAudioViewModel.setAyahs(it)
         }
     }

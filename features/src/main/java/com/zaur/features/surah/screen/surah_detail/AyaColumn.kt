@@ -34,10 +34,10 @@ fun AyaColumn(
     onClickSound: (Int, Int) -> Unit
 ) {
     val ayats = remember(textState.currentArabicText) {
-        textState.currentArabicText?.ayahs ?: emptyList()
+        textState.currentArabicText?.ayahs() ?: emptyList()
     }
     val translations = remember(translateState.translations) {
-        translateState.translations?.ayahs ?: emptyList()
+        translateState.translations?.translationAyahs() ?: emptyList()
     }
 
     if (isLoading) {
@@ -56,20 +56,20 @@ fun AyaColumn(
 
             itemsIndexed(
                 items = ayats,
-                key = { index, aya -> aya.number } // или любой другой уникальный параметр
+                key = { index, aya -> aya.number() } // или любой другой уникальный параметр
             ) { index, aya ->
                 val translationText =
-                    if (index < translations.size) translations[index].text else "Перевод отсутствует"
+                    if (index < translations.size) translations[index].text() else "Перевод отсутствует"
                 val arabicText =
-                    if (index == 0 && chapterNumber != 9) aya.text.removePrefix("بِسۡمِ ٱللَّهِ ٱلرَّحۡمَـٰنِ ٱلرَّحِیمِ")
+                    if (index == 0 && chapterNumber != 9) aya.text().removePrefix("بِسۡمِ ٱللَّهِ ٱلرَّحۡمَـٰنِ ٱلرَّحِیمِ")
                         .trimStart(' ', '،', '\n')
-                    else aya.text
+                    else aya.text()
 
                 AyahItem(
                     isDarkTheme = isDarkTheme,
-                    ayahNumber = aya.number.toInt(),
-                    currentAyahInSurah = aya.numberInSurah.toInt(),
-                    isCurrent = currentAyahInSurah == aya.numberInSurah.toInt(),
+                    ayahNumber = aya.number().toInt(),
+                    currentAyahInSurah = aya.numberInSurah().toInt(),
+                    isCurrent = currentAyahInSurah == aya.numberInSurah().toInt(),
                     arabicText = arabicText,
                     translation = translationText,
                     colors = colors,

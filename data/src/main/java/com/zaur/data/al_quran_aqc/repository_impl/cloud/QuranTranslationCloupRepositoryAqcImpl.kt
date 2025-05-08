@@ -11,7 +11,5 @@ class QuranTranslationCloupRepositoryAqcImpl(
     override suspend fun getTranslationForChapterCloud(
         chapterNumber: Int,
         translator: String,
-    ): TranslationAqc = quranApiAqc.getTranslationForChapter(chapterNumber, translator).map(
-        TranslationsChapterAqc.Mapper.Translations()
-    )
+    ): TranslationAqc.Base = quranApiAqc.getTranslationForChapter(chapterNumber, translator).translations()
 }

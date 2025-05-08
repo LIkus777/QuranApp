@@ -4,17 +4,17 @@ import com.google.gson.annotations.SerializedName
 
 interface ChaptersAqc {
 
-    fun chapters(): List<ChapterAqc>
+    fun chapters(): List<ChapterAqc.Base>
 
     fun <T> map(mapper: Mapper<T>): T
 
     class Base(
         @SerializedName("code") private val code: Long,
         @SerializedName("status") private val status: String,
-        @SerializedName("data") private val chapters: List<ChapterAqc>,
+        @SerializedName("data") private val chapters: List<ChapterAqc.Base>,
     ) : ChaptersAqc {
 
-        override fun chapters(): List<ChapterAqc> = chapters
+        override fun chapters(): List<ChapterAqc.Base> = chapters
 
         override fun <T> map(mapper: Mapper<T>): T = mapper.map(code, status, chapters)
     }
@@ -25,14 +25,6 @@ interface ChaptersAqc {
             status: String,
             chapters: List<ChapterAqc>,
         ): T
-
-        class Chapters : Mapper<List<ChapterAqc>> {
-            override fun map(
-                code: Long,
-                status: String,
-                chapters: List<ChapterAqc>,
-            ): List<ChapterAqc> = chapters
-        }
     }
 }
 

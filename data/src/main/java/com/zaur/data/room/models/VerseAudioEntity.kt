@@ -18,9 +18,6 @@ import com.zaur.domain.base.SajdaAdapter
 
 interface VerseAudioWithSurah {
 
-    fun verse(): VerseAudioEntity
-    fun surah(): SurahEntity
-
     fun <T> map(mapper: Mapper<T>): T
 
     class Base(
@@ -29,9 +26,6 @@ interface VerseAudioWithSurah {
             parentColumn = "surahNumber", entityColumn = "number"
         ) val surah: SurahEntity.Base,
     ) : VerseAudioWithSurah {
-        override fun verse(): VerseAudioEntity = verse
-        override fun surah(): SurahEntity = surah
-
         override fun <T> map(mapper: Mapper<T>): T = mapper.map(verse, surah)
     }
 
@@ -44,20 +38,6 @@ interface VerseAudioWithSurah {
 }
 
 interface VerseAudioEntity {
-
-    fun verseNumber(): Long
-    fun reciter(): String
-    fun audio(): String
-    fun audioSecondary(): List<String>
-    fun text(): String
-    fun edition(): EditionVerseEntity
-    fun numberInSurah(): Long
-    fun juz(): Long
-    fun manzil(): Long
-    fun page(): Long
-    fun ruku(): Long
-    fun hizbQuarter(): Long
-    fun sajda(): Boolean
 
     fun <T> map(mapper: Mapper<T>): T
 
@@ -73,13 +53,13 @@ interface VerseAudioEntity {
         primaryKeys = ["surahNumber", "verseNumber", "reciter"]
     )
     data class Base(
-        @ColumnInfo(name = "surahNumber") val surahNumber: Long = 0L,
-        val verseNumber: Long = 0L,
-        val reciter: String = "",
+        @ColumnInfo(name = "surahNumber") val surahNumber: Long,
+        val verseNumber: Long,
+        val reciter: String,
         @SerializedName("audio") val audio: String,
         @SerializedName("audioSecondary") val audioSecondary: List<String>,
         @SerializedName("text") val text: String,
-        @TypeConverters(GenericConverters::class) @SerializedName("edition") val edition: EditionVerseEntity,
+        @TypeConverters(GenericConverters::class) @SerializedName("edition") val edition: EditionVerseEntity.Base,
         @SerializedName("numberInSurah") val numberInSurah: Long,
         @SerializedName("juz") val juz: Long,
         @SerializedName("manzil") val manzil: Long,
@@ -88,20 +68,6 @@ interface VerseAudioEntity {
         @SerializedName("hizbQuarter") val hizbQuarter: Long,
         @JsonAdapter(SajdaAdapter::class) @SerializedName("sajda") val sajda: Boolean,
     ) : VerseAudioEntity {
-
-        override fun verseNumber(): Long = verseNumber
-        override fun reciter(): String = reciter
-        override fun audio(): String = audio
-        override fun audioSecondary(): List<String> = audioSecondary
-        override fun text(): String = text
-        override fun edition(): EditionVerseEntity = edition
-        override fun numberInSurah(): Long = numberInSurah
-        override fun juz(): Long = juz
-        override fun manzil(): Long = manzil
-        override fun page(): Long = page
-        override fun ruku(): Long = ruku
-        override fun hizbQuarter(): Long = hizbQuarter
-        override fun sajda(): Boolean = sajda
 
         override fun <T> map(mapper: Mapper<T>): T = mapper.map(
             surahNumber,
@@ -144,14 +110,6 @@ interface VerseAudioEntity {
 
 interface EditionVerseEntity {
 
-    fun identifier(): String
-    fun language(): String
-    fun name(): String
-    fun englishName(): String
-    fun format(): String
-    fun type(): String
-    fun direction(): String
-
     fun <T> map(mapper: Mapper<T>): T
 
     data class Base(
@@ -163,14 +121,6 @@ interface EditionVerseEntity {
         @SerializedName("type") val type: String,
         @SerializedName("direction") val direction: String? = null,
     ) : EditionVerseEntity {
-        override fun identifier(): String = identifier
-        override fun language(): String = language
-        override fun name(): String = name
-        override fun englishName(): String = englishName
-        override fun format(): String = format
-        override fun type(): String = type
-        override fun direction(): String = direction.toString()
-
         override fun <T> map(mapper: Mapper<T>): T = mapper.map(
             identifier, language, name, englishName, format, type, direction
         )
@@ -191,14 +141,6 @@ interface EditionVerseEntity {
 
 interface SurahEntity {
 
-    fun number(): Long
-    fun name(): String
-    fun englishName(): String
-    fun englishNameTranslation(): String
-    fun numberOfAyahs(): Long
-    fun revelationType(): String
-
-
     fun <T> map(mapper: Mapper<T>): T
 
     @Entity(tableName = "surah")
@@ -210,13 +152,6 @@ interface SurahEntity {
         @SerializedName("numberOfAyahs") val numberOfAyahs: Long,
         @SerializedName("revelationType") val revelationType: String,
     ) : SurahEntity {
-        override fun number(): Long = number
-        override fun name(): String = name
-        override fun englishName(): String = englishName
-        override fun englishNameTranslation(): String = englishNameTranslation
-        override fun numberOfAyahs(): Long = numberOfAyahs
-        override fun revelationType(): String = revelationType
-
         override fun <T> map(mapper: Mapper<T>): T = mapper.map(
             number, name, englishName, englishNameTranslation, numberOfAyahs, revelationType
         )

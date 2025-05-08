@@ -5,6 +5,7 @@ import androidx.room.Room
 import com.zaur.data.al_quran_aqc.api.QuranApiAqc
 import com.zaur.data.downloader.AudioDownloader
 import com.zaur.data.network.ApiFactory
+import com.zaur.data.preferences.OfflinePreferences
 import com.zaur.data.preferences.QuranPreferences
 import com.zaur.data.preferences.ReciterPreferences
 import com.zaur.data.preferences.ThemePreferences
@@ -20,19 +21,21 @@ import com.zaur.di.provides.ProvideArabicChapterDao
 import com.zaur.di.provides.ProvideAudioDownloader
 import com.zaur.di.provides.ProvideChapterAudioDao
 import com.zaur.di.provides.ProvideChapterDao
+import com.zaur.di.provides.ProvideOfflineRepository
 import com.zaur.di.provides.ProvideQuranApiAqc
 import com.zaur.di.provides.ProvideQuranStorage
 import com.zaur.di.provides.ProvideReciterStorage
 import com.zaur.di.provides.ProvideThemeStorage
 import com.zaur.di.provides.ProvideTranslationChapterDao
 import com.zaur.di.provides.ProvideVerseAudioDao
+import com.zaur.domain.al_quran_cloud.repository.OfflineRepository
 import com.zaur.domain.storage.QuranStorage
 import com.zaur.domain.storage.ReciterStorage
 import com.zaur.domain.storage.theme.ThemeStorage
 
 interface DataModule : ProvideQuranApiAqc, ProvideAudioDownloader, ProvideAppDatabase, ProvideChapterDao,
     ProvideArabicChapterDao, ProvideVerseAudioDao, ProvideChapterAudioDao,
-    ProvideTranslationChapterDao, ProvideReciterStorage, ProvideQuranStorage, ProvideThemeStorage {
+    ProvideTranslationChapterDao, ProvideReciterStorage, ProvideQuranStorage, ProvideThemeStorage, ProvideOfflineRepository {
 
     class Base(private val context: Context) : DataModule {
 
@@ -66,5 +69,7 @@ interface DataModule : ProvideQuranApiAqc, ProvideAudioDownloader, ProvideAppDat
         override fun provideQuranStorage(): QuranStorage = QuranPreferences(context)
 
         override fun provideReciterStorage(): ReciterStorage = ReciterPreferences(context)
+
+        override fun provideOfflineRepository(): OfflineRepository = OfflinePreferences(context)
     }
 }

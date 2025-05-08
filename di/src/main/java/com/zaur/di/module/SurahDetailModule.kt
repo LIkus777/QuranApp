@@ -1,6 +1,9 @@
 package com.zaur.di.module
 
 import android.content.Context
+import com.zaur.data.al_quran_aqc.repository_impl.cloud.QuranAudioCloudRepositoryAqcImpl
+import com.zaur.data.al_quran_aqc.repository_impl.cloud.QuranTextCloudRepositoryAqcImpl
+import com.zaur.data.al_quran_aqc.repository_impl.cloud.QuranTranslationCloupRepositoryAqcImpl
 import com.zaur.data.al_quran_aqc.repository_impl.local.QuranAudioLocalRepositoryAqcImpl
 import com.zaur.data.al_quran_aqc.repository_impl.local.QuranTextLocalRepositoryAqcImpl
 import com.zaur.data.al_quran_aqc.repository_impl.local.QuranTranslationLocalRepositoryAqcImpl
@@ -16,7 +19,8 @@ import com.zaur.di.provides.ProvideAudioPlayer
 import com.zaur.di.provides.ProvideAudioPlayerStateUpdater
 import com.zaur.di.provides.ProvidePlaylistBuilder
 import com.zaur.di.provides.ProvideQuranApiV4
-import com.zaur.di.provides.ProvideQuranAudioRepositoryAqc
+import com.zaur.di.provides.ProvideQuranAudioRepositoryAqcCloud
+import com.zaur.di.provides.ProvideQuranAudioRepositoryAqcLocal
 import com.zaur.di.provides.ProvideQuranAudioRepositoryV4
 import com.zaur.di.provides.ProvideQuranAudioUseCaseAqc
 import com.zaur.di.provides.ProvideQuranAudioUseCaseV4
@@ -25,12 +29,14 @@ import com.zaur.di.provides.ProvideQuranTafsirRepositoryV4
 import com.zaur.di.provides.ProvideQuranTafsirUseCase
 import com.zaur.di.provides.ProvideQuranTajweedRepositoryV4
 import com.zaur.di.provides.ProvideQuranTajweedUseCase
-import com.zaur.di.provides.ProvideQuranTextRepositoryAqc
+import com.zaur.di.provides.ProvideQuranTextRepositoryAqcCloud
+import com.zaur.di.provides.ProvideQuranTextRepositoryAqcLocal
 import com.zaur.di.provides.ProvideQuranTextRepositoryV4
 import com.zaur.di.provides.ProvideQuranTextUseCase
 import com.zaur.di.provides.ProvideQuranTextUseCaseAqc
 import com.zaur.di.provides.ProvideQuranTextViewModelFactory
-import com.zaur.di.provides.ProvideQuranTranslationRepositoryAqc
+import com.zaur.di.provides.ProvideQuranTranslationRepositoryAqcCloud
+import com.zaur.di.provides.ProvideQuranTranslationRepositoryAqcLocal
 import com.zaur.di.provides.ProvideQuranTranslationRepositoryV4
 import com.zaur.di.provides.ProvideQuranTranslationUseCase
 import com.zaur.di.provides.ProvideQuranTranslationUseCaseAqc
@@ -78,13 +84,18 @@ interface SurahDetailModule : ProvideReciterUseCase, ProvideReciterManager, Prov
     ProvideAudioPlayerStateUpdater, ProvideAudioPlaybackHelper, ProvideQuranAudioUseCaseAqc,
     ProvideQuranTextUseCaseAqc, ProvideQuranTranslationUseCaseAqc, ProvideQuranAudioUseCaseV4,
     ProvideQuranTextUseCase, ProvideQuranTajweedUseCase, ProvideQuranTafsirUseCase,
-    ProvideQuranTranslationUseCase, ProvideQuranApiV4, ProvideQuranAudioRepositoryAqc,
-    ProvideQuranTextRepositoryAqc, ProvideQuranTranslationRepositoryAqc,
-    ProvideQuranAudioRepositoryV4, ProvideQuranTafsirRepositoryV4, ProvideQuranTajweedRepositoryV4,
+    ProvideQuranTranslationUseCase, ProvideQuranApiV4, ProvideQuranAudioRepositoryAqcLocal,
+    ProvideQuranAudioRepositoryAqcCloud, ProvideQuranTextRepositoryAqcLocal,
+    ProvideQuranTextRepositoryAqcCloud, ProvideQuranTranslationRepositoryAqcCloud,
+    ProvideQuranTranslationRepositoryAqcLocal, ProvideQuranAudioRepositoryV4,
+    ProvideQuranTafsirRepositoryV4, ProvideQuranTajweedRepositoryV4,
     ProvideQuranTranslationRepositoryV4, ProvideQuranTextRepositoryV4 {
 
-    class Base(private val context: Context, private val dataModule: DataModule) :
-        SurahDetailModule {
+    class Base(
+        private val context: Context,
+        private val dataModule: DataModule,
+        private val mapperModule: MapperModule,
+    ) : SurahDetailModule {
 
         private val themeUseCase by lazy {
             ThemeUseCase(dataModule.provideThemeStorage())
@@ -116,33 +127,58 @@ interface SurahDetailModule : ProvideReciterUseCase, ProvideReciterManager, Prov
 
         private val quranAudioUseCaseAqc by lazy {
             QuranAudioUseCaseAqc.Base(
-                provideQuranAudioRepositoryAqc()
+                dataModule.provideOfflineRepository(),
+                provideQuranAudioRepositoryAqcLocal(),
+                provideQuranAudioRepositoryAqcCloud()
             )
         }
 
         private val quranTextUseCaseAqc by lazy {
             QuranTextUseCaseAqc.Base(
-                provideQuranTextRepositoryAqc(), dataModule.provideQuranStorage()
+                dataModule.provideQuranStorage(),
+                dataModule.provideOfflineRepository(),
+                provideQuranTextRepositoryAqcLocal(),
+                provideQuranTextRepositoryAqcCloud()
             )
         }
 
         private val quranTranslationUseCaseAqc by lazy {
-            QuranTranslationUseCaseAqc.Base(provideQuranTranslationRepositoryAqc())
+            QuranTranslationUseCaseAqc.Base(
+                dataModule.provideOfflineRepository(),
+                provideQuranTranslationRepositoryAqcLocal(),
+                provideQuranTranslationRepositoryAqcCloud()
+            )
+        }
+
+        private val audioRepositoryCloud by lazy {
+            QuranAudioCloudRepositoryAqcImpl(dataModule.provideQuranApiAqc())
+        }
+
+        private val textRepositoryCloud by lazy {
+            QuranTextCloudRepositoryAqcImpl(
+                dataModule.provideQuranApiAqc()
+            )
         }
 
         override fun provideThemeUseCase(): ThemeUseCase = themeUseCase
 
-        override fun provideQuranTextRepositoryAqc(): QuranTextRepositoryAqc =
+        override fun provideQuranTextRepositoryAqcLocal(): QuranTextRepositoryAqc.Local =
             QuranTextLocalRepositoryAqcImpl(
-                dataModule.provideChapterDao(), dataModule.provideArabicChapterDao()
+                mapperModule.provideChapterMapper(),
+                mapperModule.provideArabicMapper(),
+                dataModule.provideChapterDao(),
+                dataModule.provideArabicChapterDao()
             )
 
-        override fun provideQuranTranslationRepositoryAqc(): QuranTranslationRepositoryAqc =
-            QuranTranslationLocalRepositoryAqcImpl(dataModule.provideTranslationChapterDao())
+        override fun provideQuranTranslationRepositoryAqcCloud(): QuranTranslationRepositoryAqc.Cloud =
+            QuranTranslationCloupRepositoryAqcImpl(dataModule.provideQuranApiAqc())
 
-        override fun provideQuranAudioRepositoryAqc(): QuranAudioRepositoryAqc =
+        override fun provideQuranAudioRepositoryAqcLocal(): QuranAudioRepositoryAqc.Local =
             QuranAudioLocalRepositoryAqcImpl(
-                dataModule.provideChapterAudioDao(), dataModule.provideVerseAudioDao()
+                dataModule.provideChapterAudioDao(),
+                dataModule.provideVerseAudioDao(),
+                mapperModule.provideChapterAudioMapper(),
+                mapperModule.provideVerseAudioMapper()
             )
 
         override fun provideQuranApiV4(): QuranApiV4 =
@@ -227,6 +263,17 @@ interface SurahDetailModule : ProvideReciterUseCase, ProvideReciterManager, Prov
 
         override fun provideReciterUseCase(): ReciterUseCase =
             ReciterUseCase.Base(dataModule.provideReciterStorage())
+
+        override fun provideQuranAudioRepositoryAqcCloud(): QuranAudioRepositoryAqc.Cloud =
+            audioRepositoryCloud
+
+        override fun provideQuranTextRepositoryAqcCloud(): QuranTextRepositoryAqc.Cloud =
+            textRepositoryCloud
+
+        override fun provideQuranTranslationRepositoryAqcLocal(): QuranTranslationRepositoryAqc.Local =
+            QuranTranslationLocalRepositoryAqcImpl(
+                dataModule.provideTranslationChapterDao(), mapperModule.provideTranslationMapper()
+            )
     }
 
 }

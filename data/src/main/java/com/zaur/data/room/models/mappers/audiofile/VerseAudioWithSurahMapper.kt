@@ -1,20 +1,21 @@
-package com.zaur.data.room.models.mappers
+package com.zaur.data.room.models.mappers.audiofile
 
 import com.zaur.data.room.models.SurahEntity
 import com.zaur.data.room.models.VerseAudioEntity
 import com.zaur.data.room.models.VerseAudioWithSurah
+import com.zaur.data.room.models.mappers.audiofile.SurahMapper
 import com.zaur.domain.al_quran_cloud.models.audiofile.VerseAudioAqc
 
 interface VerseAudioWithSurahMapper {
-    fun toData(verse: VerseAudioAqc): VerseAudioWithSurah
-    fun fromData(data: VerseAudioWithSurah): VerseAudioAqc
+    fun toData(verse: VerseAudioAqc.Base): VerseAudioWithSurah.Base
+    fun fromData(data: VerseAudioWithSurah.Base): VerseAudioAqc.Base
 
     class Base(
         private val verseMapper: VerseAudioMapper,
         private val surahMapper: SurahMapper
     ) : VerseAudioWithSurahMapper {
 
-        override fun toData(verse: VerseAudioAqc): VerseAudioWithSurah {
+        override fun toData(verse: VerseAudioAqc.Base): VerseAudioWithSurah.Base {
             val surah = verse.surah()
             val surahEntity = surahMapper.toData(surah)
             val verseEntity = verseMapper.toData(verse)
@@ -24,8 +25,8 @@ interface VerseAudioWithSurahMapper {
             )
         }
 
-        override fun fromData(data: VerseAudioWithSurah): VerseAudioAqc {
-            return verseMapper.fromData(data.verse(), data.surah())
+        override fun fromData(data: VerseAudioWithSurah.Base): VerseAudioAqc.Base {
+            return verseMapper.fromData(data.verse, data.surah)
         }
     }
 }

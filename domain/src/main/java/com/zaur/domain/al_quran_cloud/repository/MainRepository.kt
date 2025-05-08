@@ -12,18 +12,18 @@ import com.zaur.domain.al_quran_cloud.models.translate.TranslationsChapterAqc
 
 interface MainRepository {
     interface Load {
-        suspend fun loadChapters(): List<ChapterAqc>
-        suspend fun loadChaptersArabic(chaptersNumbers: IntRange): List<ArabicChapter>
-        suspend fun loadVersesAudio(chaptersNumbers: IntRange, reciter: String): List<VerseAudioAqc>
-        suspend fun loadChaptersAudio(chaptersNumbers: IntRange, reciter: String): List<ChapterAudioFile>
-        suspend fun loadChaptersTranslate(chaptersNumbers: IntRange, translator: String): List<TranslationAqc>
+        suspend fun loadChapters(): List<ChapterAqc.Base>
+        suspend fun loadChaptersArabic(chaptersNumbers: IntRange): List<ArabicChapter.Base>
+        suspend fun loadVersesAudio(chaptersNumbers: IntRange, reciter: String): List<VerseAudioAqc.Base>
+        suspend fun loadChaptersAudio(chaptersNumbers: IntRange, reciter: String): List<ChapterAudioFile.Base>
+        suspend fun loadChaptersTranslate(chaptersNumbers: IntRange, translator: String): List<TranslationAqc.Base>
     }
 
     interface Save {
-        suspend fun saveChapters(chaptersAqc: List<ChapterAqc>)
-        suspend fun saveVersesAudio(versesAudio: List<VerseAudioAqc>)
-        suspend fun saveChaptersArabic(chaptersArabic: List<ArabicChapter>)
-        suspend fun saveChaptersAudio(chaptersAudio: List<ChapterAudioFile>)
-        suspend fun saveChaptersTranslate(chaptersTranslate: List<TranslationAqc>)
+        suspend fun saveChapters(chaptersAqc: List<ChapterAqc.Base>)
+        suspend fun saveVersesAudio(versesAudio: List<VerseAudioAqc.Base>)
+        suspend fun saveChaptersArabic(chaptersArabic: List<ArabicChapter.Base>)
+        suspend fun saveChaptersAudio(chaptersAudio: List<ChapterAudioFile.Base>)
+        suspend fun saveChaptersTranslate(chaptersTranslate: List<TranslationAqc.Base>)
     }
 }

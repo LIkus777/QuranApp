@@ -97,16 +97,16 @@ fun SurahChooseMenu(
             ) {
                 if (selectedTabIndex == 0) itemsIndexed(chapters) { index, chapter ->
                     SurahChooseItem(
-                        number = chapter.number,
-                        englishName = chapter.englishName,
-                        arabicName = chapter.name,
-                        numberOfAyats = chapter.numberOfAyahs.toInt(),
-                        revelationType = chapter.revelationType,
+                        number = chapter.number(),
+                        englishName = chapter.englishName(),
+                        arabicName = chapter.name(),
+                        numberOfAyats = chapter.numberOfAyahs().toInt(),
+                        revelationType = chapter.revelationType(),
                         colors = colors,
                         modifier = Modifier.clickable {
                             navController.navigate(
                                 Screen.SurahDetail.createRoute(
-                                    chapter.number.toInt(), chapter.englishName
+                                    chapter.number().toInt(), chapter.englishName()
                                 )
                             )
                         })

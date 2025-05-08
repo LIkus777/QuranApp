@@ -59,10 +59,12 @@ class MainActivity : ComponentActivity() {
                             )
                         )
                     }, surahChooseScreen = {
-
+                        //todo пофиксить рекомпоуз и создаватаь модельки тут
+                        Log.d("TAG", "NAHHOST SurahChooseScreen CALLED")
+                        val surahChooseViewModel = remember { chooseViewModelFactory.create() }
                         SurahChooseScreen(
                             themeViewModel,
-                            surahChooseViewModelFactory = chooseViewModelFactory,
+                            surahChooseViewModel = surahChooseViewModel,
                             navController,
                             modifier = Modifier.padding(innerPadding)
                         )

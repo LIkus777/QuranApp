@@ -9,17 +9,17 @@ interface QuranAudioRepositoryAqc : BaseQuranAudioRepository {
         suspend fun getChapterAudioOfReciterLocal(
             chapterNumber: Int,
             reciter: String,
-        ): ChapterAudioFile
+        ): ChapterAudioFile.Base
 
-        suspend fun getAyahAudioByKeyLocal(verseKey: String, reciter: String): VerseAudioAqc
+        suspend fun getAyahAudioByKeyLocal(verseKey: String, reciter: String): VerseAudioAqc.Base
     }
 
     interface Cloud : QuranAudioRepositoryAqc {
         suspend fun getChapterAudioOfReciterCloud(
             chapterNumber: Int,
             reciter: String,
-        ): ChapterAudioFile
+        ): ChapterAudioFile.Base
 
-        suspend fun getAyahAudioByKeyCloud(verseKey: String, reciter: String): VerseAudioAqc
+        suspend fun getAyahAudioByKeyCloud(verseKey: String, reciter: String): VerseAudioAqc.Base
     }
 }

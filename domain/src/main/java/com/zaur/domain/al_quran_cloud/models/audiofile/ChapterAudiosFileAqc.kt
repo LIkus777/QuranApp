@@ -6,13 +6,16 @@ import com.zaur.domain.base.SajdaAdapter
 
 interface ChapterAudiosFileAqc {
 
+    fun chapterAudio(): ChapterAudioFile.Base
+
     fun <T> map(mapper: Mapper<T>): T
 
     class Base(
         @SerializedName("code") private val code: Long,
         @SerializedName("status") private val status: String,
-        @SerializedName("data") private val chapterAudio: ChapterAudioFile,
+        @SerializedName("data") private val chapterAudio: ChapterAudioFile.Base,
     ) : ChapterAudiosFileAqc {
+        override fun chapterAudio(): ChapterAudioFile.Base = chapterAudio
         override fun <T> map(mapper: Mapper<T>): T = mapper.map(code, status, chapterAudio)
     }
 
@@ -22,18 +25,20 @@ interface ChapterAudiosFileAqc {
             status: String,
             chapterAudio: ChapterAudioFile,
         ): T
-
-        class ChapterAudio() : Mapper<ChapterAudioFile> {
-            override fun map(
-                code: Long,
-                status: String,
-                chapterAudio: ChapterAudioFile,
-            ): ChapterAudioFile = chapterAudio
-        }
     }
 }
 
 interface ChapterAudioFile {
+
+    fun number(): Long
+    fun name(): String
+    fun englishName(): String
+    fun englishNameTranslation(): String
+    fun revelationType(): String
+    fun numberOfAyahs(): Long
+    fun ayahs(): List<Ayah.Base>
+    fun edition(): EditionAudio.Base
+    fun reciter(): String
 
     fun <T> map(mapper: Mapper<T>): T
 
@@ -44,10 +49,20 @@ interface ChapterAudioFile {
         @SerializedName("englishNameTranslation") private val englishNameTranslation: String,
         @SerializedName("revelationType") private val revelationType: String,
         @SerializedName("numberOfAyahs") private val numberOfAyahs: Long,
-        @SerializedName("ayahs") private val ayahs: List<Ayah>,
-        @SerializedName("edition") private val edition: EditionAudio,
+        @SerializedName("ayahs") private val ayahs: List<Ayah.Base>,
+        @SerializedName("edition") private val edition: EditionAudio.Base,
         private val reciter: String,
     ) : ChapterAudioFile {
+        override fun number(): Long = number
+        override fun name(): String = name
+        override fun englishName(): String = englishName
+        override fun englishNameTranslation(): String = englishNameTranslation
+        override fun revelationType(): String = revelationType
+        override fun numberOfAyahs(): Long = numberOfAyahs
+        override fun ayahs(): List<Ayah.Base> = ayahs
+        override fun edition(): EditionAudio.Base = edition
+        override fun reciter(): String = reciter
+
         override fun <T> map(mapper: Mapper<T>): T = mapper.map(
             number,
             name,
@@ -69,14 +84,27 @@ interface ChapterAudioFile {
             englishNameTranslation: String,
             revelationType: String,
             numberOfAyahs: Long,
-            ayahs: List<Ayah>,
-            edition: EditionAudio,
+            ayahs: List<Ayah.Base>,
+            edition: EditionAudio.Base,
             reciter: String,
         ): T
     }
 }
 
 interface Ayah {
+
+    fun reciter(): String
+    fun verseNumber(): Long
+    fun audio(): String
+    fun audioSecondary(): List<String>
+    fun text(): String
+    fun numberInSurah(): Long
+    fun juz(): Long
+    fun manzil(): Long
+    fun page(): Long
+    fun ruku(): Long
+    fun hizbQuarter(): Long
+    fun sajda(): Boolean
 
     fun <T> map(mapper: Mapper<T>): T
 
@@ -94,6 +122,20 @@ interface Ayah {
         @SerializedName("hizbQuarter") private val hizbQuarter: Long,
         @JsonAdapter(SajdaAdapter::class) @SerializedName("sajda") private val sajda: Boolean,
     ) : Ayah {
+
+        override fun reciter() = reciter
+        override fun verseNumber() = verseNumber
+        override fun audio() = audio
+        override fun audioSecondary() = audioSecondary
+        override fun text() = text
+        override fun numberInSurah() = numberInSurah
+        override fun juz() = juz
+        override fun manzil() = manzil
+        override fun page() = page
+        override fun ruku() = ruku
+        override fun hizbQuarter() = hizbQuarter
+        override fun sajda() = sajda
+
         override fun <T> map(mapper: Mapper<T>): T = mapper.map(
             reciter,
             verseNumber,
@@ -131,6 +173,14 @@ interface Ayah {
 
 interface EditionAudio {
 
+    fun identifier(): String
+    fun language(): String
+    fun name(): String
+    fun englishName(): String
+    fun format(): String
+    fun type(): String
+    fun direction(): String?
+
     fun <T> map(mapper: Mapper<T>): T
 
     class Base(
@@ -142,6 +192,15 @@ interface EditionAudio {
         @SerializedName("type") private val type: String,
         @SerializedName("direction") private val direction: String? = null,
     ) : EditionAudio {
+
+        override fun identifier() = identifier
+        override fun language() = language
+        override fun name() = name
+        override fun englishName() = englishName
+        override fun format() = format
+        override fun type() = type
+        override fun direction() = direction
+
         override fun <T> map(mapper: Mapper<T>): T =
             mapper.map(identifier, language, name, englishName, format, type, direction)
     }

@@ -28,7 +28,7 @@ interface QuranAudioViewModel : QuranAudioObservable.Read {
     fun getAyahAudioByKey(verseKey: String, reciter: String)
     fun getChaptersAudioOfReciter(chapterNumber: Int, reciter: String)
 
-    fun setAyahs(ayahs: List<Ayah>)
+    fun setAyahs(ayahs: List<Ayah.Base>)
 
     fun onPlayWholeClicked()
     fun onPlayVerse(verse: VerseAudioAqc)
@@ -105,7 +105,7 @@ interface QuranAudioViewModel : QuranAudioObservable.Read {
             }
         }
 
-        override fun setAyahs(ayahs: List<Ayah>) {
+        override fun setAyahs(ayahs: List<Ayah.Base>) {
             surahPlayer.setAyahs(ayahs)
         }
 

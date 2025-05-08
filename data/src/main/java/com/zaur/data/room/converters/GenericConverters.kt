@@ -36,12 +36,13 @@ class GenericConverters {
     }
 
     @TypeConverter
-    fun fromAyahAudioList(list: List<AyahAudioEntity>?): String? = gson.toJson(list)
+    fun fromEdition(edition: EditionArabicEntity.Base): String {
+        return gson.toJson(edition)
+    }
 
     @TypeConverter
-    fun toAyahAudioList(json: String?): List<AyahAudioEntity>? {
-        val type = object : TypeToken<List<AyahAudioEntity>>() {}.type
-        return gson.fromJson(json, type)
+    fun toEdition(json: String): EditionArabicEntity.Base {
+        return gson.fromJson(json, EditionArabicEntity.Base::class.java)
     }
 
     @TypeConverter
@@ -78,24 +79,81 @@ class GenericConverters {
     fun toType(value: String): RevelationType {
         return when (value) {
             "Meccan" -> RevelationType.Meccan
-            "Medinan" -> RevelationType.Meccan
-            else -> throw IllegalArgumentException()
+            "Medinan" -> RevelationType.Medinan
+            else -> throw IllegalArgumentException("Unknown RevelationType: $value")
         }
     }
 
+    // Non-nullable version for TranslationAyahEntity
     @TypeConverter
-    fun fromTranslationAyahList(list: List<TranslationAyahEntity>?): String? = gson.toJson(list)
+    fun fromTranslationAyahList(list: List<TranslationAyahEntity.Base>): String {
+        return gson.toJson(list)
+    }
 
     @TypeConverter
-    fun toTranslationAyahList(json: String?): List<TranslationAyahEntity>? {
-        val type = object : TypeToken<List<TranslationAyahEntity>>() {}.type
+    fun toTranslationAyahList(json: String): List<TranslationAyahEntity.Base> {
+        val type = object : TypeToken<List<TranslationAyahEntity.Base>>() {}.type
         return gson.fromJson(json, type)
     }
 
+    // Nullable version for TranslationAyahEntity (added to avoid signature clash)
+    @TypeConverter
+    fun fromNullableTranslationAyahList(list: List<TranslationAyahEntity.Base>?): String? {
+        return gson.toJson(list)
+    }
+
+    @TypeConverter
+    fun toNullableTranslationAyahList(json: String?): List<TranslationAyahEntity.Base>? {
+        val type = object : TypeToken<List<TranslationAyahEntity.Base>>() {}.type
+        return gson.fromJson(json, type)
+    }
+
+    // EditionTranslationEntity converter methods
     @TypeConverter
     fun fromEditionTranslation(edition: EditionTranslationEntity?): String? = gson.toJson(edition)
 
     @TypeConverter
     fun toEditionTranslation(json: String?): EditionTranslationEntity? =
         gson.fromJson(json, EditionTranslationEntity::class.java)
+
+    // EditionVerseEntity.Base converter methods
+    @TypeConverter
+    fun fromEditionVerseBase(edition: EditionVerseEntity.Base?): String? = gson.toJson(edition)
+
+    @TypeConverter
+    fun toEditionVerseBase(json: String?): EditionVerseEntity.Base? =
+        gson.fromJson(json, EditionVerseEntity.Base::class.java)
+
+    // Additional methods for EditionTranslationEntity.Base
+    @TypeConverter
+    fun fromEditionTranslationEntity(value: EditionTranslationEntity.Base): String {
+        return gson.toJson(value)
+    }
+
+    @TypeConverter
+    fun toEditionTranslationEntity(value: String): EditionTranslationEntity.Base {
+        return gson.fromJson(value, EditionTranslationEntity.Base::class.java)
+    }
+
+    // Конвертер для списка AyahAudioEntity.Base
+    @TypeConverter
+    fun fromAyahAudioList(list: List<AyahAudioEntity.Base>?): String? {
+        return gson.toJson(list)
+    }
+
+    @TypeConverter
+    fun toAyahAudioList(json: String?): List<AyahAudioEntity.Base>? {
+        val type = object : TypeToken<List<AyahAudioEntity.Base>>() {}.type
+        return gson.fromJson(json, type)
+    }
+
+    @TypeConverter
+    fun fromAudioEdition(edition: EditionAudioEntity.Base): String {
+        return gson.toJson(edition)
+    }
+
+    @TypeConverter
+    fun toAudioEdition(json: String): EditionAudioEntity.Base {
+        return gson.fromJson(json, EditionAudioEntity.Base::class.java)
+    }
 }

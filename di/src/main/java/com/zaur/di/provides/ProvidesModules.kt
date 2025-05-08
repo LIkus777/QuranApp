@@ -2,11 +2,12 @@ package com.zaur.di.provides
 
 import com.zaur.di.module.DataModule
 import com.zaur.di.module.MainScreenModule
+import com.zaur.di.module.MapperModule
 import com.zaur.di.module.SurahChooseModule
 import com.zaur.di.module.SurahDetailModule
 
 interface ProvidesModules : ProvideMainScreenModule, ProvideSurahChooseModule,
-    ProvideSurahDetailModule, ProvideDatabaseModule
+    ProvideSurahDetailModule, ProvideDatabaseModule, ProvideMapperModule
 
 interface ProvideMainScreenModule {
     fun provideMainScreenModule(): MainScreenModule
@@ -22,4 +23,8 @@ interface ProvideSurahDetailModule {
 
 interface ProvideDatabaseModule {
     fun provideDataModule(): DataModule
+}
+
+interface ProvideMapperModule {
+    fun provideMapperModule(): MapperModule
 }

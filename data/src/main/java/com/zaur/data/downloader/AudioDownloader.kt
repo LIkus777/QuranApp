@@ -18,8 +18,8 @@ interface AudioDownloader {
 
     fun getDownloadDirectory(): File?
     fun getAudioFile(chapterNumber: Long, verseNumber: Long, reciter: String): File?
-    suspend fun downloadAndSaveAyahs(chapterAudio: ChapterAudioEntity)
-    suspend fun downloadAndCacheChapter(chapterAudio: ChapterAudioEntity)
+    suspend fun downloadAndSaveAyahs(chapterAudio: ChapterAudioEntity.Base)
+    suspend fun downloadAndCacheChapter(chapterAudio: ChapterAudioEntity.Base)
     suspend fun downloadFile(
         url: String,
         localFile: File,
@@ -41,7 +41,7 @@ interface AudioDownloader {
             return internalDir
         }
 
-        override suspend fun downloadAndCacheChapter(chapterAudio: ChapterAudioEntity) {
+        override suspend fun downloadAndCacheChapter(chapterAudio: ChapterAudioEntity.Base) {
             withContext(Dispatchers.IO) {
                 try {
                     downloadAndSaveAyahs(chapterAudio)
@@ -51,7 +51,7 @@ interface AudioDownloader {
             }
         }
 
-        override suspend fun downloadAndSaveAyahs(chapterAudio: ChapterAudioEntity) {
+        override suspend fun downloadAndSaveAyahs(chapterAudio: ChapterAudioEntity.Base) {
             CoroutineScope(Dispatchers.IO).launch {
                 val ayahs = chapterAudio.ayahs
 

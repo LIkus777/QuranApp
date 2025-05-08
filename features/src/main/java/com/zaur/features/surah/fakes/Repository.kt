@@ -27,7 +27,6 @@ import com.zaur.domain.apiV4.repository.QuranTranslationRepositoryV4
 import com.zaur.domain.storage.QuranStorage
 import com.zaur.domain.storage.ReciterStorage
 import com.zaur.domain.storage.theme.ThemeStorage
-import kotlinx.coroutines.flow.Flow
 
 class FakeThemeStorage() : ThemeStorage {
     override fun getIsDarkTheme(): Boolean {
@@ -94,21 +93,21 @@ class FakeQuranStorage() : QuranStorage {
 }
 
 class FakeQTextRAqcLocal : QuranTextRepositoryAqc.Local {
-    override suspend fun getAllChaptersLocal(): List<ChapterAqc> {
+    override suspend fun getAllChaptersLocal(): List<ChapterAqc.Base> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun getArabicChapterLocal(chapterNumber: Int): ArabicChapter {
+    override suspend fun getArabicChapterLocal(chapterNumber: Int): ArabicChapter.Base {
         TODO("Not yet implemented")
     }
 }
 
 class FakeQTextRAqcCloud : QuranTextRepositoryAqc.Cloud {
-    override suspend fun getAllChaptersCloud(): List<ChapterAqc> {
+    override suspend fun getAllChaptersCloud(): List<ChapterAqc.Base> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun getArabicChapterCloud(chapterNumber: Int): ArabicChapter {
+    override suspend fun getArabicChapterCloud(chapterNumber: Int): ArabicChapter.Base {
         TODO("Not yet implemented")
     }
 }
@@ -118,14 +117,14 @@ class FakeQAudioRAqcLocal : QuranAudioRepositoryAqc.Local {
     override suspend fun getChapterAudioOfReciterLocal(
         chapterNumber: Int,
         reciter: String,
-    ): ChapterAudioFile {
+    ): ChapterAudioFile.Base {
         TODO("Not yet implemented")
     }
 
     override suspend fun getAyahAudioByKeyLocal(
         verseKey: String,
         reciter: String,
-    ): VerseAudioAqc {
+    ): VerseAudioAqc.Base {
         TODO("Not yet implemented")
     }
 }
@@ -134,14 +133,14 @@ class FakeQAudioRAqcCloud : QuranAudioRepositoryAqc.Cloud {
     override suspend fun getChapterAudioOfReciterCloud(
         chapterNumber: Int,
         reciter: String,
-    ): ChapterAudioFile {
+    ): ChapterAudioFile.Base {
         TODO("Not yet implemented")
     }
 
     override suspend fun getAyahAudioByKeyCloud(
         verseKey: String,
         reciter: String,
-    ): VerseAudioAqc {
+    ): VerseAudioAqc.Base {
         TODO("Not yet implemented")
     }
 }
@@ -150,7 +149,7 @@ class FakeQTranslationRAqcLocal : QuranTranslationRepositoryAqc.Local {
     override suspend fun getTranslationForChapterLocal(
         chapterNumber: Int,
         translator: String,
-    ): TranslationAqc {
+    ): TranslationAqc.Base {
         TODO("Not yet implemented")
     }
 }
@@ -159,7 +158,7 @@ class FakeQTranslationRAqcCloud : QuranTranslationRepositoryAqc.Cloud {
     override suspend fun getTranslationForChapterCloud(
         chapterNumber: Int,
         translator: String,
-    ): TranslationAqc {
+    ): TranslationAqc.Base {
         TODO("Not yet implemented")
     }
 }

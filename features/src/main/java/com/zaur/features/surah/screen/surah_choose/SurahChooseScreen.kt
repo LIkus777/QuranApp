@@ -1,5 +1,6 @@
 package com.zaur.features.surah.screen.surah_choose
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -13,7 +14,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -27,8 +27,10 @@ import com.zaur.features.surah.fakes.FakeQTextRAqcCloud
 import com.zaur.features.surah.fakes.FakeQTextRAqcLocal
 import com.zaur.features.surah.fakes.FakeQuranStorage
 import com.zaur.features.surah.fakes.FakeThemeStorage
+import com.zaur.features.surah.observables.SurahChooseObservable
+import com.zaur.features.surah.ui_state.aqc.QuranTextAqcUIState
+import com.zaur.features.surah.viewmodel.SurahChooseViewModel
 import com.zaur.features.surah.viewmodel.ThemeViewModel
-import com.zaur.features.surah.viewmodel.factory.SurahChooseViewModelFactory
 import com.zaur.navigation.Screen
 import com.zaur.presentation.ui.DarkThemeColors
 import com.zaur.presentation.ui.LightThemeColors
@@ -38,20 +40,20 @@ import com.zaur.presentation.ui.QuranAppTheme
 @Composable
 fun SurahChooseScreen(
     themeViewModel: ThemeViewModel,
-    surahChooseViewModelFactory: SurahChooseViewModelFactory,
+    surahChooseViewModel: SurahChooseViewModel,
     navController: NavController,
     modifier: Modifier,
 ) {
 
-    val surahChooseViewModelFactory = remember { surahChooseViewModelFactory.create() }
     val isDarkTheme = themeViewModel.getIsDarkTheme()
     val colors = if (isDarkTheme) DarkThemeColors else LightThemeColors
 
-    LaunchedEffect(Unit) {
-        surahChooseViewModelFactory.getAllChapters()
+    LaunchedEffect(surahChooseViewModel) {
+        Log.d("TAG", "LaunchedEffect(Unit) { getAllChaptersCloud() CALLED ")
+        surahChooseViewModel.getAllChapters()
     }
 
-    val textState = surahChooseViewModelFactory.textState().collectAsState()
+    val textState = surahChooseViewModel.textState().collectAsState()
 
     LazyColumn(
         modifier = Modifier
@@ -96,8 +98,10 @@ fun SurahChoosePreview() {
             SurahChooseScreen(
                 themeViewModel = ThemeViewModel.Base(
                     themeUseCase = ThemeUseCase(FakeThemeStorage())
-                ), surahChooseViewModelFactory = SurahChooseViewModelFactory.Base(
-                    quranTextUseCaseAqc = QuranTextUseCaseAqc.Base(
+                ), surahChooseViewModel = SurahChooseViewModel.Base(
+                    observable = SurahChooseObservable.Base(
+                        QuranTextAqcUIState()
+                    ), quranTextUseCaseAqc = QuranTextUseCaseAqc.Base(
                         FakeQuranStorage(),
                         FakeOfflineRepos(),
                         FakeQTextRAqcLocal(),

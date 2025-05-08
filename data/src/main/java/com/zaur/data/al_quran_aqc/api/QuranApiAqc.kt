@@ -14,47 +14,47 @@ import retrofit2.http.Path
 interface QuranApiAqc {
 
     @GET("/surah")
-    suspend fun getAllChapters(): ChaptersAqc
+    suspend fun getAllChapters(): ChaptersAqc.Base
 
     @GET("/ayah/{verseKey}/{reciter}")
     suspend fun getAyahAudioByKey(
         @Path("verseKey") verseKey: String, @Path("reciter") reciter: String,
-    ): VersesAudioFileAqc
+    ): VersesAudioFileAqc.Base
 
     @GET("/surah/{chapterNumber}/{reciter}")
     suspend fun getChapterAudioOfReciter(
         @Path("chapterNumber") chapterNumber: Int, @Path("reciter") reciter: String,
-    ): ChapterAudiosFileAqc
+    ): ChapterAudiosFileAqc.Base
 
     @GET("/surah/{chapterNumber}")
-    suspend fun getArabicChapter(@Path("chapterNumber") chapterNumber: Int): ArabicChaptersAqc
+    suspend fun getArabicChapter(@Path("chapterNumber") chapterNumber: Int): ArabicChaptersAqc.Base
 
     @GET("/surah/{chapterNumber}/{translator}")
     suspend fun getTranslationForChapter(
         @Path("chapterNumber") chapterNumber: Int,
         @Path("translator") translator: String,
-    ): TranslationsChapterAqc
+    ): TranslationsChapterAqc.Base
 
     @GET("/type")
-    suspend fun getAllTypes(): Types
+    suspend fun getAllTypes(): Types.Base
 
     @GET("/edition")
-    suspend fun getAllEditions(): Editions
+    suspend fun getAllEditions(): Editions.Base
 
     @GET("/language")
-    suspend fun getAllLanguages(): Languages
+    suspend fun getAllLanguages(): Languages.Base
 
     @GET("/type/{type}")
-    suspend fun getEditionByType(@Path("type") type: String): Editions
+    suspend fun getEditionByType(@Path("type") type: String): Editions.Base
 
     @GET("/language/{language}")
-    suspend fun getEditionByLanguage(@Path("language") language: String): Editions
+    suspend fun getEditionByLanguage(@Path("language") language: String): Editions.Base
 
     @GET("/edition?format={format}&language={language}&type={type}")
     suspend fun getEditionByParam(
         @Path("format") format: String,
         @Path("language") language: String,
         @Path("type") type: String,
-    ): Editions
+    ): Editions.Base
 
 }

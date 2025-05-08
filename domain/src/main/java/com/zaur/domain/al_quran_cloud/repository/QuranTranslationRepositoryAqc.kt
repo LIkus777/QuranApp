@@ -6,13 +6,13 @@ import com.zaur.domain.base.repository.BaseQuranTranslationRepository
 
 interface QuranTranslationRepositoryAqc : BaseQuranTranslationRepository {
     interface Local : QuranTranslationRepositoryAqc {
-        suspend fun getTranslationForChapterLocal(chapterNumber: Int, translator: String): TranslationAqc
+        suspend fun getTranslationForChapterLocal(chapterNumber: Int, translator: String): TranslationAqc.Base
     }
 
     interface Cloud : QuranTranslationRepositoryAqc {
         suspend fun getTranslationForChapterCloud(
             chapterNumber: Int,
             translator: String,
-        ): TranslationAqc
+        ): TranslationAqc.Base
     }
 }

@@ -17,14 +17,14 @@ interface TranslationEntity {
 
     @Entity(tableName = "translation_chapter")
     data class Base(
-        @PrimaryKey @SerializedName("number") val number: Long,
+        @PrimaryKey val number: Long,
         @SerializedName("name") val name: String,
         @SerializedName("englishName") val englishName: String,
         @SerializedName("englishNameTranslation") val englishNameTranslation: String,
         @SerializedName("revelationType") val revelationType: String,
         @SerializedName("numberOfAyahs") val numberOfAyahs: Long,
-        @TypeConverters(GenericConverters::class) @SerializedName("ayahs") val translationAyahEntity: List<TranslationAyahEntity>,
-        @TypeConverters(GenericConverters::class) @SerializedName("edition") val edition: EditionTranslationEntity,
+        @TypeConverters(GenericConverters::class) @SerializedName("ayahs") val translationAyahEntity: List<TranslationAyahEntity.Base>,
+        @TypeConverters(GenericConverters::class) @SerializedName("edition") val edition: EditionTranslationEntity.Base,
         val translator: String,
     ) : TranslationEntity {
         override fun <T> map(mapper: Mapper<T>): T = mapper.map(
@@ -52,49 +52,27 @@ interface TranslationEntity {
             edition: EditionTranslationEntity,
             translator: String,
         ): T
-
-        class ToDomain : Mapper<TranslationAqc> {
-            override fun map(
-                number: Long,
-                name: String,
-                englishName: String,
-                englishNameTranslation: String,
-                revelationType: String,
-                numberOfAyahs: Long,
-                translationAyahEntity: List<TranslationAyahEntity>,
-                edition: EditionTranslationEntity,
-                translator: String,
-            ): TranslationAqc {
-                return TranslationAqc.Base(
-                    number,
-                    name,
-                    englishName,
-                    englishNameTranslation,
-                    revelationType,
-                    numberOfAyahs,
-                    translationAyahEntity.map { it.map(TranslationAyahEntity.Mapper.ToDomain()) },
-                    edition.map(EditionTranslationEntity.Mapper.ToDomain()),
-                    translator
-                )
-            }
-        }
     }
 }
 
-data class TranslationAyahEntity(
-    @PrimaryKey @SerializedName("number") val number: Long,
-    @SerializedName("text") val text: String,
-    @SerializedName("numberInSurah") val numberInSurah: Long,
-    @SerializedName("juz") val juz: Long,
-    @SerializedName("manzil") val manzil: Long,
-    @SerializedName("page") val page: Long,
-    @SerializedName("ruku") val ruku: Long,
-    @SerializedName("hizbQuarter") val hizbQuarter: Long,
-    @JsonAdapter(SajdaAdapter::class) @SerializedName("sajda") val sajda: Boolean,
-) {
+interface TranslationAyahEntity {
 
-    fun <T> map(mapper: Mapper<T>): T =
-        mapper.map(number, text, numberInSurah, juz, manzil, page, ruku, hizbQuarter, sajda)
+    fun <T> map(mapper: Mapper<T>): T
+
+    data class Base(
+        @PrimaryKey val number: Long,
+        @SerializedName("text") val text: String,
+        @SerializedName("numberInSurah") val numberInSurah: Long,
+        @SerializedName("juz") val juz: Long,
+        @SerializedName("manzil") val manzil: Long,
+        @SerializedName("page") val page: Long,
+        @SerializedName("ruku") val ruku: Long,
+        @SerializedName("hizbQuarter") val hizbQuarter: Long,
+        @JsonAdapter(SajdaAdapter::class) @SerializedName("sajda") val sajda: Boolean,
+    ) : TranslationAyahEntity {
+        override fun <T> map(mapper: Mapper<T>): T =
+            mapper.map(number, text, numberInSurah, juz, manzil, page, ruku, hizbQuarter, sajda)
+    }
 
     interface Mapper<T> {
         fun map(
@@ -127,20 +105,28 @@ data class TranslationAyahEntity(
             }
         }
     }
+
 }
 
-data class EditionTranslationEntity(
-    @PrimaryKey @SerializedName("identifier") val identifier: String,
-    @SerializedName("language") val language: String,
-    @SerializedName("name") val name: String,
-    @SerializedName("englishName") val englishName: String,
-    @SerializedName("format") val format: String,
-    @SerializedName("type") val type: String,
-    @SerializedName("direction") val direction: String?,
-) {
 
-    fun <T> map(mapper: Mapper<T>): T =
-        mapper.map(identifier, language, name, englishName, format, type, direction)
+interface EditionTranslationEntity {
+
+    fun <T> map(mapper: Mapper<T>): T
+
+    data class Base(
+        @PrimaryKey val identifier: String,
+        @SerializedName("language") val language: String,
+        @SerializedName("name") val name: String,
+        @SerializedName("englishName") val englishName: String,
+        @SerializedName("format") val format: String,
+        @SerializedName("type") val type: String,
+        @SerializedName("direction") val direction: String?,
+    ) : EditionTranslationEntity {
+
+        override fun <T> map(mapper: Mapper<T>): T =
+            mapper.map(identifier, language, name, englishName, format, type, direction)
+
+    }
 
     interface Mapper<T> {
         fun map(

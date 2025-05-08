@@ -45,9 +45,9 @@ interface QuranTextViewModel : QuranTextObservable.Read {
         override fun getAllChapters() {
             viewModelScope.launch(Dispatchers.IO) {
                 val result =
-                    launchSafely<List<ChapterAqc>> { quranTextUseCaseAqc.fetchAllChapters() }
-                result.handle(object : HandleResult<List<ChapterAqc>> {
-                    override fun handleSuccess(data: List<ChapterAqc>) {
+                    launchSafely<List<ChapterAqc.Base>> { quranTextUseCaseAqc.getAllChapters() }
+                result.handle(object : HandleResult<List<ChapterAqc.Base>> {
+                    override fun handleSuccess(data: List<ChapterAqc.Base>) {
                         viewModelScope.launch {
                             Log.i("TAG", "handleSuccess: getAllChapters data $data")
                             observable.update(observable.state().value.copy(chapters = data))
@@ -63,9 +63,9 @@ interface QuranTextViewModel : QuranTextObservable.Read {
 
         override fun getArabicChapter(chapterNumber: Int) {
             viewModelScope.launch(Dispatchers.IO) {
-                val result = launchSafely { quranTextUseCaseAqc.fetchArabicChapter(chapterNumber) }
-                result.handle(object : HandleResult<ArabicChapter> {
-                    override fun handleSuccess(data: ArabicChapter) {
+                val result = launchSafely { quranTextUseCaseAqc.getArabicChapter(chapterNumber) }
+                result.handle(object : HandleResult<ArabicChapter.Base> {
+                    override fun handleSuccess(data: ArabicChapter.Base) {
                         viewModelScope.launch {
                             observable.update(observable.state().value.copy(currentArabicText = data))
                         }

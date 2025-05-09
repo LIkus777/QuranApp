@@ -8,7 +8,7 @@ interface AudioPlayerStateUpdater {
     fun markWholeChapterPlaying(isAudioPlaying: Boolean, playWholeChapter: Boolean)
     fun setPlayWholeChapter(playing: Boolean)
     fun setPlaying(playing: Boolean)
-    fun updateCurrentAyah(number: Int, numberInSurah: Int)
+    fun updateCurrentAyah(numberInSurah: Int)
     fun updateCurrentAyahInSurah(ayah: Int)
     fun setRestartAudio(restart: Boolean, isAudioPlaying: Boolean)
     fun setCurrentAyahAndSurah(ayah: Int, surah: Int)
@@ -27,7 +27,12 @@ interface AudioPlayerStateUpdater {
 
         override fun setRestartAudio(restart: Boolean, isAudioPlaying: Boolean) {
             surahDetailStateManager.updateState(
-                state.value.copy(audioPlayerState = state.value.audioPlayerState.copy(restartAudio = restart, isAudioPlaying = isAudioPlaying))
+                state.value.copy(
+                    audioPlayerState = state.value.audioPlayerState.copy(
+                        restartAudio = restart,
+                        isAudioPlaying = isAudioPlaying
+                    )
+                )
             )
         }
 
@@ -41,11 +46,11 @@ interface AudioPlayerStateUpdater {
             )
         }
 
-        override fun updateCurrentAyah(number: Int, numberInSurah: Int) {
+        override fun updateCurrentAyah(numberInSurah: Int) {
             surahDetailStateManager.updateState(
                 state.value.copy(
                     audioPlayerState = state.value.audioPlayerState.copy(
-                        currentAyah = number, currentAyahInSurah = numberInSurah,
+                        currentAyahInSurah = numberInSurah,
                     )
                 )
             )
@@ -81,10 +86,7 @@ interface AudioPlayerStateUpdater {
             surahDetailStateManager.updateState(
                 state.value.copy(
                     audioPlayerState = state.value.audioPlayerState.copy(
-                        currentAyah = ayah,
-                        currentSurahNumber = surah,
-                        isAudioPlaying = true,
-                        playWholeChapter = false
+                        currentSurahNumber = surah, isAudioPlaying = true, playWholeChapter = false
                     )
                 )
             )

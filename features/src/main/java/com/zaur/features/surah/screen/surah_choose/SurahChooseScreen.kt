@@ -42,7 +42,6 @@ fun SurahChooseScreen(
     themeViewModel: ThemeViewModel,
     surahChooseViewModel: SurahChooseViewModel,
     navController: NavController,
-    modifier: Modifier,
 ) {
 
     val isDarkTheme = themeViewModel.getIsDarkTheme()
@@ -107,7 +106,7 @@ fun SurahChoosePreview() {
                         FakeQTextRAqcLocal(),
                         FakeQTextRAqcCloud()
                     )
-                ), navController = fakeNavController, modifier = Modifier.padding(innerPadding)
+                ), navController = fakeNavController
             )
         }
     }

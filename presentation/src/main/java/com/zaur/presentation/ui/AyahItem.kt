@@ -58,9 +58,6 @@ fun AyahItem(
         else -> Color.Unspecified
     }
 
-    Log.i("TAGGGG", "AyahItem: isSystemInDarkTheme() ${isSystemInDarkTheme()}")
-    Log.i("TAGGGG", "AyahItem: soundIconColor ${soundIconColor.value}")
-
     Column(
         modifier = Modifier
             .fillMaxWidth()

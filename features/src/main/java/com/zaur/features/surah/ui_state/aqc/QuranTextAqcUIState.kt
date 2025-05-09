@@ -2,6 +2,7 @@ package com.zaur.features.surah.ui_state.aqc
 
 import com.zaur.domain.al_quran_cloud.models.arabic.ArabicChapter
 import com.zaur.domain.al_quran_cloud.models.arabic.ArabicChaptersAqc
+import com.zaur.domain.al_quran_cloud.models.audiofile.ChapterAudioFile
 import com.zaur.domain.al_quran_cloud.models.chapter.ChapterAqc
 import com.zaur.domain.al_quran_cloud.models.chapter.ChaptersAqc
 import com.zaur.domain.apiV4.models.juz.JuzV4

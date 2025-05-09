@@ -1,5 +1,6 @@
 package com.zaur.features.surah.screen.surah_detail
 
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -63,7 +64,8 @@ fun SreenContent(
             listState = listState,
             onClickSound = { ayahNumber, ayahNumberInSurah ->
                 surahDetailViewModel.setAyahInSurahNumber(ayahNumberInSurah)
-                quranAudioViewModel.onPlaySingleClicked(ayahNumber, chapterNumber)
+                Log.i("TAG", "SreenContent: ayahNumber $ayahNumber ayahNumberInSurah $ayahNumberInSurah")
+                quranAudioViewModel.onPlaySingleClicked(ayahNumberInSurah, chapterNumber)
             })
 
         // TopBar поверх контента

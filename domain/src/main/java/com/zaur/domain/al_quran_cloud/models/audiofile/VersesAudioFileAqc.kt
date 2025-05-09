@@ -47,7 +47,7 @@ interface VerseAudioAqc {
 
     fun <T> map(mapper: Mapper<T>): T
 
-    class Base(
+    data class Base(
         @SerializedName("number") private val verseNumber: Long,
         private val reciter: String,
         @SerializedName("audio") private val audio: String,

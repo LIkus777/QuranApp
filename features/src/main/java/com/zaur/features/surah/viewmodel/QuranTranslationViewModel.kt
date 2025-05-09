@@ -36,10 +36,6 @@ interface QuranTranslationViewModel : QuranTranslationObservable.Read {
                             observable.update(observable.state().value.copy(translations = data))
                         }
                     }
-
-                    override fun handleError(e: Exception) {
-                        super.handleError(e)
-                    }
                 })
             }
         }

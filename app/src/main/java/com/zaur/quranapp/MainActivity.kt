@@ -49,24 +49,22 @@ class MainActivity : ComponentActivity() {
             Log.i("TAGGGG", "AyahItem: isDarkTheme ${isDarkTheme}")
             QuranAppTheme(darkTheme = isDarkTheme) {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    QuranNavGraph(navController = navController, mainScreen = {
+                    QuranNavGraph(navController = navController, mainScreen = { controller ->
                         MainScreen(
-                            navController,
+                            controller,
                             themeViewModel,
                             mainViewModelFactory = MainViewModelFactory.Base(
                                 mainScreenModule.provideMainUseCase(),
                                 mainScreenModule.provideReciterManager()
                             )
                         )
-                    }, surahChooseScreen = {
+                    }, surahChooseScreen = { controller ->
                         //todo пофиксить рекомпоуз и создаватаь модельки тут
-                        Log.d("TAG", "NAHHOST SurahChooseScreen CALLED")
                         val surahChooseViewModel = remember { chooseViewModelFactory.create() }
                         SurahChooseScreen(
                             themeViewModel,
                             surahChooseViewModel = surahChooseViewModel,
-                            navController,
-                            modifier = Modifier.padding(innerPadding)
+                            controller,
                         )
                     }, surahDetailScreen = { surahNumber, surahName, controller ->
                         val surahDetailModule = remember {

@@ -59,7 +59,7 @@ class MainRepositorySaveImpl(
             // Сохраняем главы
             chapterAudioDao.add(chaptersData)
             chaptersData.forEach {
-                audioDownloader.downloadAndCacheChapter(it)
+                audioDownloader.downloadAndSaveChapter(it)
             }
         }
     }

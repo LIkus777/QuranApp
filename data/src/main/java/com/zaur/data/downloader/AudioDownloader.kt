@@ -13,13 +13,17 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
+import java.io.FileOutputStream
+import java.net.HttpURLConnection
+import java.net.URL
 
 interface AudioDownloader {
 
     fun getDownloadDirectory(): File?
     fun getAudioFile(chapterNumber: Long, verseNumber: Long, reciter: String): File?
+    suspend fun downloadToCache(url: String, fileName: String): File
     suspend fun downloadAndSaveAyahs(chapterAudio: ChapterAudioEntity.Base)
-    suspend fun downloadAndCacheChapter(chapterAudio: ChapterAudioEntity.Base)
+    suspend fun downloadAndSaveChapter(chapterAudio: ChapterAudioEntity.Base)
     suspend fun downloadFile(
         url: String,
         localFile: File,
@@ -41,7 +45,7 @@ interface AudioDownloader {
             return internalDir
         }
 
-        override suspend fun downloadAndCacheChapter(chapterAudio: ChapterAudioEntity.Base) {
+        override suspend fun downloadAndSaveChapter(chapterAudio: ChapterAudioEntity.Base) {
             withContext(Dispatchers.IO) {
                 try {
                     downloadAndSaveAyahs(chapterAudio)
@@ -113,6 +117,21 @@ interface AudioDownloader {
         override fun getAudioFile(chapterNumber: Long, verseNumber: Long, reciter: String): File? {
             val fileName = "${reciter}_${chapterNumber}_${verseNumber}.mp3"
             return downloadDirectory?.let { File(it, fileName) }
+        }
+
+        override suspend fun downloadToCache(url: String, fileName: String): File {
+            val cacheFile = File(context.cacheDir, fileName)
+            if (cacheFile.exists()) return cacheFile
+
+            withContext(Dispatchers.IO) {
+                val urlConnection = URL(url).openConnection() as HttpURLConnection
+                urlConnection.inputStream.use { input ->
+                    FileOutputStream(cacheFile).use { output ->
+                        input.copyTo(output)
+                    }
+                }
+            }
+            return cacheFile
         }
     }
 }

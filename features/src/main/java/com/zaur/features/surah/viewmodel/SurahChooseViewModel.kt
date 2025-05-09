@@ -35,10 +35,6 @@ interface SurahChooseViewModel : SurahChooseObservable.Read {
                             observable.update(observable.state().value.copy(chapters = data))
                         }
                     }
-
-                    override fun handleError(e: Exception) {
-                        super.handleError(e)
-                    }
                 })
             }
         }

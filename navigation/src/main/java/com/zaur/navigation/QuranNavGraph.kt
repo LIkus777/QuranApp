@@ -10,7 +10,7 @@ fun QuranNavGraph(
     navController: NavHostController,
     mainScreen: @Composable (NavHostController) -> Unit,
     surahChooseScreen: @Composable (NavHostController) -> Unit,
-    surahDetailScreen: @Composable (Int, String, NavHostController) -> Unit
+    surahDetailScreen: @Composable (Int, String, NavHostController) -> Unit,
 ) {
     NavHost(
         navController = navController,

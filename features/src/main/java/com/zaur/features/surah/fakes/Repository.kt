@@ -1,6 +1,7 @@
 package com.zaur.features.surah.fakes
 
 import com.zaur.domain.al_quran_cloud.models.arabic.ArabicChapter
+import com.zaur.domain.al_quran_cloud.models.audiofile.CacheAudio
 import com.zaur.domain.al_quran_cloud.models.audiofile.ChapterAudioFile
 import com.zaur.domain.al_quran_cloud.models.audiofile.VerseAudioAqc
 import com.zaur.domain.al_quran_cloud.models.chapter.ChapterAqc
@@ -130,6 +131,13 @@ class FakeQAudioRAqcLocal : QuranAudioRepositoryAqc.Local {
 }
 
 class FakeQAudioRAqcCloud : QuranAudioRepositoryAqc.Cloud {
+    override suspend fun downloadToCache(
+        chapterNumber: Int,
+        reciter: String,
+    ): List<CacheAudio.Base> {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun getChapterAudioOfReciterCloud(
         chapterNumber: Int,
         reciter: String,

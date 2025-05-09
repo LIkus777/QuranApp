@@ -1,6 +1,8 @@
 package com.zaur.features.surah.screen.surah_detail.player
 
 import android.util.Log
+import com.zaur.domain.al_quran_cloud.models.audiofile.Ayah
+import com.zaur.domain.al_quran_cloud.models.audiofile.CacheAudio
 import com.zaur.domain.al_quran_cloud.models.audiofile.VerseAudioAqc
 import com.zaur.features.surah.base.AudioPlayer
 import com.zaur.features.surah.base.AudioPlayerCallback
@@ -21,7 +23,8 @@ interface SurahPlayer {
 
     fun setQuranAudioVmCallback(callback: QuranAudioViewModel.QuranAudioVmCallback)
 
-    fun setAyahs(ayahs: List<com.zaur.domain.al_quran_cloud.models.arabic.Ayah.Base>)
+    fun setAyahs(ayahs: List<Ayah.Base>)
+    fun setCacheAudios(ayahs: List<CacheAudio.Base>)
 
     // Реализация плеера с разделением на управление состоянием и воспроизведением
     class Base(
@@ -33,7 +36,8 @@ interface SurahPlayer {
     ) : SurahPlayer {
 
         private var quranAudioVmCallback: QuranAudioViewModel.QuranAudioVmCallback? = null
-        private var ayahs: List<com.zaur.domain.al_quran_cloud.models.arabic.Ayah.Base>? = null
+        private var ayahs: List<Ayah.Base>? = null
+        private var cacheAyahs: List<CacheAudio.Base>? = null
         private var currentAyahIndex = 0
 
         private val state = surahDetailStateManager.getState()
@@ -53,17 +57,22 @@ interface SurahPlayer {
                     Log.d("TAG", "onAyahChanged: number=$ayah.number.toInt()")
                     Log.d("TAG", "onAyahChanged: numberInSurah=${ayah.numberInSurah().toInt()}")
                     audioPlayerStateUpdater.updateCurrentAyah(
-                        ayah.number().toInt(), ayah.numberInSurah().toInt()
+                        ayah.numberInSurah().toInt()
                     )
                 }
             })
         }
 
-        override fun setAyahs(ayahs: List<com.zaur.domain.al_quran_cloud.models.arabic.Ayah.Base>) {
+        override fun setAyahs(ayahs: List<Ayah.Base>) {
             this.ayahs = ayahs
         }
 
+        override fun setCacheAudios(ayahs: List<CacheAudio.Base>) {
+            this.cacheAyahs = ayahs
+        }
+
         override fun onPlayVerse(verse: VerseAudioAqc) {
+            Log.i("TAG", "onPlayVerse: VERSE ${verse.audio()}")
             if (state.value.audioPlayerState.restartAudio) {
                 audioPlayer.restartAudio()
             } else {
@@ -74,10 +83,18 @@ interface SurahPlayer {
 
         override fun onPlayWholeClicked() {
             if (!audioPlayer.isPlaying() && !audioPlayer.isPaused()) {
-                val items =
-                    playlistBuilder.build(ayahs!!, state.value.audioPlayerState.currentSurahNumber)
-                audioPlayer.playPlaylist(items)
-                audioPlayerStateUpdater.markWholeChapterPlaying(true, true)
+                if (/*state.value.audioPlayerState.isOfflineMode*/true) { //todo
+                    val items = playlistBuilder.buildCachePlaylist(cacheAyahs!!)
+                    audioPlayer.playPlaylist(items)
+                    audioPlayerStateUpdater.markWholeChapterPlaying(true, true)
+                } else {
+                    val items = playlistBuilder.buildLocalPlaylist(
+                        ayahs!!,
+                        state.value.audioPlayerState.currentSurahNumber
+                    ) //todo
+                    audioPlayer.playPlaylist(items)
+                    audioPlayerStateUpdater.markWholeChapterPlaying(true, true)
+                }
             } else {
                 if (audioPlayer.isPlaying()) {
                     audioPlayer.pauseAudio()
@@ -97,8 +114,10 @@ interface SurahPlayer {
         fun playCurrentAyah() {
             val currentAyah = ayahs?.getOrNull(currentAyahIndex)
             if (currentAyah != null) {
-                audioPlayerStateUpdater.updateCurrentAyahInSurah(currentAyah.numberInSurah().toInt())
-                quranAudioVmCallback?.callVerseAudioFile(currentAyah.number().toInt())
+                audioPlayerStateUpdater.updateCurrentAyahInSurah(
+                    currentAyah.numberInSurah().toInt()
+                )
+                quranAudioVmCallback?.callVerseAudioFile(currentAyah.numberInSurah().toInt())
             } else {
                 audioPlayerStateUpdater.markWholeChapterPlaying(false, true)
             }

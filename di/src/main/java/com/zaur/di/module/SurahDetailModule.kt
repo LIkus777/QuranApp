@@ -151,7 +151,7 @@ interface SurahDetailModule : ProvideReciterUseCase, ProvideReciterManager, Prov
         }
 
         private val audioRepositoryCloud by lazy {
-            QuranAudioCloudRepositoryAqcImpl(dataModule.provideQuranApiAqc())
+            QuranAudioCloudRepositoryAqcImpl(dataModule.provideQuranApiAqc(), dataModule.provideAudioDownloader())
         }
 
         private val textRepositoryCloud by lazy {

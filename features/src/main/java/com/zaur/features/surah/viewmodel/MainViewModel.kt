@@ -52,10 +52,6 @@ interface MainViewModel : MainObservable.Read {
                     override fun handleSuccess(data: Unit) {
                         observable.update(observable.state().value.copy(isChaptersLoaded = true))
                     }
-
-                    override fun handleError(e: Exception) {
-                        super.handleError(e)
-                    }
                 })
             }
         }
@@ -68,10 +64,6 @@ interface MainViewModel : MainObservable.Read {
                 result.handle(object : HandleResult<Unit> {
                     override fun handleSuccess(data: Unit) {
                         observable.update(observable.state().value.copy(isChaptersArabicsLoaded = true))
-                    }
-
-                    override fun handleError(e: Exception) {
-                        super.handleError(e)
                     }
                 })
             }
@@ -89,10 +81,6 @@ interface MainViewModel : MainObservable.Read {
                     override fun handleSuccess(data: Unit) {
                         observable.update(observable.state().value.copy(isChaptersAudiosLoaded = true))
                     }
-
-                    override fun handleError(e: Exception) {
-                        super.handleError(e)
-                    }
                 })
             }
         }
@@ -108,10 +96,6 @@ interface MainViewModel : MainObservable.Read {
                 result.handle(object : HandleResult<Unit> {
                     override fun handleSuccess(data: Unit) {
                         observable.update(observable.state().value.copy(isChaptersTranslationsLoaded = true))
-                    }
-
-                    override fun handleError(e: Exception) {
-                        super.handleError(e)
                     }
                 })
             }

@@ -1,5 +1,6 @@
 package com.zaur.features.surah.screen.main
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -80,8 +81,12 @@ fun MainScreen(
 
     if (showDownloadScreen) {
         QuranDataLoadingUI(mainState, navController)
-    } else {
-        navController.navigate(Screen.SurahChoose.route)
+    } else if (!showReciterDialog && !showAudioChoiceDialog) {
+        // Мы попадаем сюда ТОЛЬКО после закрытия обоих диалогов, и только один раз
+        LaunchedEffect(Unit) {
+            Log.i("TAG", "navController.navigate(Screen.SurahChoose.route) CALLED")
+            navController.navigate(Screen.SurahChoose.route)
+        }
     }
 }
 

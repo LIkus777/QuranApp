@@ -53,10 +53,6 @@ interface QuranTextViewModel : QuranTextObservable.Read {
                             observable.update(observable.state().value.copy(chapters = data))
                         }
                     }
-
-                    override fun handleError(e: Exception) {
-                        super.handleError(e)
-                    }
                 })
             }
         }
@@ -69,10 +65,6 @@ interface QuranTextViewModel : QuranTextObservable.Read {
                         viewModelScope.launch {
                             observable.update(observable.state().value.copy(currentArabicText = data))
                         }
-                    }
-
-                    override fun handleError(e: Exception) {
-                        Log.e("TAG", "handleError: $e")
                     }
                 })
             }

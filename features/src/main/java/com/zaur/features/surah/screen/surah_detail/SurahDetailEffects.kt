@@ -29,8 +29,14 @@ fun SurahDetailEffects(
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
 
-    LaunchedEffect(textState.currentArabicText) {
-        textState.currentArabicText?.ayahs()?.let {
+    LaunchedEffect(audioState.cacheAudios) {
+        audioState.cacheAudios?.let {
+            quranAudioViewModel.setCacheAudios(it)
+        }
+    }
+
+    LaunchedEffect(audioState.chaptersAudioFile) {
+        audioState.chaptersAudioFile?.ayahs()?.let {
             quranAudioViewModel.setAyahs(it)
         }
     }
@@ -55,7 +61,11 @@ fun SurahDetailEffects(
             surahDetailViewModel.showReciterDialog(true)
         }
         quranTextViewModel.getArabicChapter(chapterNumber)
-        quranTranslationViewModel.getTranslationForChapter(chapterNumber, "ru.kuliev")
+        quranTranslationViewModel.getTranslationForChapter(chapterNumber, "ru.kuliev") //todo
+        quranAudioViewModel.downloadToCache(
+            chapterNumber,
+            quranAudioViewModel.getReciter().toString()
+        )
         quranAudioViewModel.getChaptersAudioOfReciter(
             chapterNumber, quranAudioViewModel.getReciter().toString()
         )

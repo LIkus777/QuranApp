@@ -1,5 +1,6 @@
 package com.zaur.features.surah.screen.surah_detail
 
+import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
@@ -12,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.zaur.features.surah.ui_state.aqc.QuranTextAqcUIState
 import com.zaur.features.surah.ui_state.aqc.QuranTranslationAqcUIState
+import com.zaur.features.surah.ui_state.aqc.SurahDetailScreenState
 import com.zaur.presentation.ui.AyahItem
 import com.zaur.presentation.ui.BasmalaItem
 import com.zaur.presentation.ui.QuranColors
@@ -20,25 +22,22 @@ import com.zaur.presentation.ui.QuranColors
 fun AyaColumn(
     isDarkTheme: Boolean,
     chapterNumber: Int,
-    currentAyahInSurah: Int,
     isLoading: Boolean,
     textState: QuranTextAqcUIState,
     translateState: QuranTranslationAqcUIState,
     colors: QuranColors,
-    showArabic: Boolean,
-    showRussian: Boolean,
-    fontSizeArabic: Float,
-    fontSizeRussian: Float,
-    soundIsActive: Boolean,
+    surahDetailState: SurahDetailScreenState,
     listState: LazyListState,
-    onClickSound: (Int, Int) -> Unit
+    onClickSound: (Int, Int) -> Unit,
 ) {
-    val ayats = remember(textState.currentArabicText) {
-        textState.currentArabicText?.ayahs() ?: emptyList()
+    val ayats = remember(textState.currentArabicText().ayahs()) {
+        textState.currentArabicText().ayahs()
     }
-    val translations = remember(translateState.translations) {
-        translateState.translations?.translationAyahs() ?: emptyList()
+    val translations = remember(translateState.translations().translationAyahs()) {
+        translateState.translations().translationAyahs()
     }
+
+    Log.i("TAG", "AyaColumn: translations $translations")
 
     if (isLoading) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -60,26 +59,33 @@ fun AyaColumn(
             ) { index, aya ->
                 val translationText =
                     if (index < translations.size) translations[index].text() else "Перевод отсутствует"
-                val arabicText =
-                    if (index == 0 && chapterNumber != 9) aya.text().removePrefix("بِسۡمِ ٱللَّهِ ٱلرَّحۡمَـٰنِ ٱلرَّحِیمِ")
-                        .trimStart(' ', '،', '\n')
-                    else aya.text()
+                val arabicText = if (index == 0 && chapterNumber != 9) aya.text()
+                    .removePrefix("بِسۡمِ ٱللَّهِ ٱلرَّحۡمَـٰنِ ٱلرَّحِیمِ")
+                    .trimStart(' ', '،', '\n')
+                else aya.text()
 
-                AyahItem(
-                    isDarkTheme = isDarkTheme,
-                    ayahNumber = aya.number().toInt(),
-                    currentAyahInSurah = aya.numberInSurah().toInt(),
-                    isCurrent = currentAyahInSurah == aya.numberInSurah().toInt(),
-                    arabicText = arabicText,
-                    translation = translationText,
-                    colors = colors,
-                    fontSizeArabic = fontSizeArabic,
-                    fontSizeRussian = fontSizeRussian,
-                    soundIsActive = soundIsActive,
-                    showArabic = showArabic,
-                    showRussian = showRussian,
-                    onClickSound = { number, numberInSurah -> onClickSound(number, numberInSurah) }
-                )
+                with(surahDetailState) {
+                    AyahItem(
+                        isDarkTheme = isDarkTheme,
+                        ayahNumber = aya.number().toInt(),
+                        currentAyahInSurah = aya.numberInSurah().toInt(),
+                        isCurrent = audioPlayerState().currentAyahInSurah() == aya.numberInSurah()
+                            .toInt(),
+                        arabicText = arabicText,
+                        translation = translationText,
+                        colors = colors,
+                        fontSizeArabic = uiPreferencesState().fontSizeArabic(),
+                        fontSizeRussian = uiPreferencesState().fontSizeRussian(),
+                        soundIsActive = audioPlayerState().isAudioPlaying(),
+                        showArabic = uiPreferencesState().showArabic(),
+                        showRussian = uiPreferencesState().showRussian(),
+                        onClickSound = { number, numberInSurah ->
+                            onClickSound(
+                                number,
+                                numberInSurah
+                            )
+                        })
+                }
             }
         }
     }

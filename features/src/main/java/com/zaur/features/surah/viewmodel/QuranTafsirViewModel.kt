@@ -1,25 +1,20 @@
 package com.zaur.features.surah.viewmodel
 
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.viewModelScope
 import com.zaur.core.BaseViewModel
-import com.zaur.core.HandleResult
-import com.zaur.domain.apiV4.use_case.QuranTafsirUseCaseV4
-import com.zaur.features.surah.ui_state.v4.QuranTafsirV4UIState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.launch
 
-interface QuranTafsirViewModel {
+interface QuranTafsirViewModel {/*
     class Base(
         private val savedStateHandle: SavedStateHandle,
-        private val quranTafsirUseCaseV4: QuranTafsirUseCaseV4
+        private val quranTafsirUseCaseV4: QuranTafsirUseCaseV4,
     ) : BaseViewModel(savedStateHandle), QuranTafsirViewModel {
 
         private val _uiState = MutableStateFlow(QuranTafsirV4UIState())
         val tafsirUiState: StateFlow<QuranTafsirV4UIState> = _uiState
 
-        /*suspend fun getTafsirForChapter(tafsirId: Int, chapterNumber: Int) {
+        *//*suspend fun getTafsirForChapter(tafsirId: Int, chapterNumber: Int) {
             val result =
                 launchSafely { quranTafsirUseCaseV4.getTafsirForChapter(tafsirId, chapterNumber) }
             result.handle(object : HandleResult<SingleTafsirs> {
@@ -48,7 +43,9 @@ interface QuranTafsirViewModel {
                     super.handleError(e)
                 }
             })
-        }*/
+        }*//*
+
 
     }
+*/
 }

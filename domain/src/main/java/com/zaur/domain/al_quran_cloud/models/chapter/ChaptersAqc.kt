@@ -70,10 +70,22 @@ interface ChapterAqc {
             revelationType: RevelationType,
         ): T
     }
+
+    object Empty : ChapterAqc {
+        override fun number(): Long = 0
+        override fun name(): String = ""
+        override fun englishName(): String = ""
+        override fun englishNameTranslation(): String = ""
+        override fun numberOfAyahs(): Long = 0
+        override fun revelationType(): RevelationType = RevelationType.Unknown
+        override fun <T> map(mapper: Mapper<T>): T = mapper.map(
+            number(), name(), englishName(), englishNameTranslation(), numberOfAyahs(), revelationType()
+        )
+    }
 }
 
 enum class RevelationType(val value: String) {
-    Meccan("Meccan"), Medinan("Medinan");
+    Meccan("Meccan"), Medinan("Medinan"), Unknown("");
 
     companion object {
         fun fromValue(value: String): RevelationType = when (value) {

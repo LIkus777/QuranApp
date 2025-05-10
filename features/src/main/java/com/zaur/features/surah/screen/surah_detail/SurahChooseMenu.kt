@@ -21,7 +21,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -31,8 +30,8 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.zaur.features.surah.viewmodel.SurahChooseViewModel
 import com.zaur.features.surah.viewmodel.ThemeViewModel
-import com.zaur.features.surah.viewmodel.factory.SurahChooseViewModelFactory
 import com.zaur.navigation.Screen
 import com.zaur.presentation.ui.DarkThemeColors
 import com.zaur.presentation.ui.LightThemeColors
@@ -40,7 +39,7 @@ import com.zaur.presentation.ui.LightThemeColors
 @Composable
 fun SurahChooseMenu(
     themeViewModel: ThemeViewModel,
-    surahChooseViewModelFactory: SurahChooseViewModelFactory,
+    surahChooseViewModel: SurahChooseViewModel,
     navController: NavController,
     modifier: Modifier,
 ) {
@@ -52,14 +51,12 @@ fun SurahChooseMenu(
             .fillMaxHeight()
             .width(LocalConfiguration.current.screenWidthDp.dp / 1.5f)
     ) {
-        val surahChooseViewModelFactory = remember { surahChooseViewModelFactory.create() }
-
         LaunchedEffect(Unit) {
-            surahChooseViewModelFactory.getAllChapters()
+            surahChooseViewModel.getAllChapters()
         }
 
-        val textState = surahChooseViewModelFactory.textState().collectAsState()
-        val chapters = textState.value.chapters ?: emptyList()
+        val textState = surahChooseViewModel.textState().collectAsState()
+        val chapters = textState.value.chapters()
 
         var selectedTabIndex by rememberSaveable { mutableIntStateOf(0) }
         val tabTitles = listOf("Суры", "Джузы")

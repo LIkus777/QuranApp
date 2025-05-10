@@ -14,7 +14,7 @@ fun ChooseReciterDialogComponent(
     audioViewModel: QuranAudioViewModel
 ) {
     ChooseReciterDialog(
-        showDialog = state.reciterState.showReciterDialog,
+        showDialog = state.reciterState().showReciterDialog(),
         colors = colors
     ) { identifier ->
         viewModel.showReciterDialog(false)

@@ -1,17 +1,26 @@
 package com.zaur.features.surah.ui_state.aqc
 
 import com.zaur.domain.al_quran_cloud.models.arabic.ArabicChapter
-import com.zaur.domain.al_quran_cloud.models.arabic.ArabicChaptersAqc
-import com.zaur.domain.al_quran_cloud.models.audiofile.ChapterAudioFile
 import com.zaur.domain.al_quran_cloud.models.chapter.ChapterAqc
-import com.zaur.domain.al_quran_cloud.models.chapter.ChaptersAqc
-import com.zaur.domain.apiV4.models.juz.JuzV4
 
-data class QuranTextAqcUIState(
-    val isLoading: Boolean = false,
-    val chapters: List<ChapterAqc>? = null,
-    val currentChapter: ChapterAqc? = null,
-    val currentArabicText: ArabicChapter? = null,
-    val errorMessage: String? = null,
-    val isRefreshing: Boolean = false
-)
+interface QuranTextAqcUIState {
+    fun isLoading(): Boolean
+    fun chapters(): List<ChapterAqc>
+    fun currentChapter(): ChapterAqc
+    fun currentArabicText(): ArabicChapter
+    fun isRefreshing(): Boolean
+
+    data class Base(
+        private val isLoading: Boolean = false,
+        private val chapters: List<ChapterAqc> = emptyList(),
+        private val currentChapter: ChapterAqc = ChapterAqc.Empty,
+        private val currentArabicText: ArabicChapter = ArabicChapter.Empty,
+        private val isRefreshing: Boolean = false
+    ) : QuranTextAqcUIState {
+        override fun isLoading() = isLoading
+        override fun chapters() = chapters
+        override fun currentChapter() = currentChapter
+        override fun currentArabicText() = currentArabicText
+        override fun isRefreshing() = isRefreshing
+    }
+}

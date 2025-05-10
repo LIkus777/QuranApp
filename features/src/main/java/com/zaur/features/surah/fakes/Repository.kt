@@ -1,6 +1,7 @@
 package com.zaur.features.surah.fakes
 
 import com.zaur.domain.al_quran_cloud.models.arabic.ArabicChapter
+import com.zaur.domain.al_quran_cloud.models.audiofile.Ayah
 import com.zaur.domain.al_quran_cloud.models.audiofile.CacheAudio
 import com.zaur.domain.al_quran_cloud.models.audiofile.ChapterAudioFile
 import com.zaur.domain.al_quran_cloud.models.audiofile.VerseAudioAqc
@@ -10,24 +11,12 @@ import com.zaur.domain.al_quran_cloud.repository.OfflineRepository
 import com.zaur.domain.al_quran_cloud.repository.QuranAudioRepositoryAqc
 import com.zaur.domain.al_quran_cloud.repository.QuranTextRepositoryAqc
 import com.zaur.domain.al_quran_cloud.repository.QuranTranslationRepositoryAqc
-import com.zaur.domain.apiV4.models.audiofile.ChapterAudioFileV4
-import com.zaur.domain.apiV4.models.audiofile.VerseAudioFileV4
-import com.zaur.domain.apiV4.models.chapter.ChapterV4
-import com.zaur.domain.apiV4.models.juz.JuzV4
-import com.zaur.domain.apiV4.models.recitations.RecitationsV4
-import com.zaur.domain.apiV4.models.tafsir.SingleTafsirsV4
-import com.zaur.domain.apiV4.models.tafsir.TafsirV4
-import com.zaur.domain.apiV4.models.tajweed.VerseUthmanTajweedV4
-import com.zaur.domain.apiV4.models.translate.SingleTranslationsV4
-import com.zaur.domain.apiV4.models.translate.TranslationV4
-import com.zaur.domain.apiV4.repository.QuranAudioRepositoryV4
-import com.zaur.domain.apiV4.repository.QuranTafsirRepositoryV4
-import com.zaur.domain.apiV4.repository.QuranTajweedRepositoryV4
-import com.zaur.domain.apiV4.repository.QuranTextRepositoryV4
-import com.zaur.domain.apiV4.repository.QuranTranslationRepositoryV4
 import com.zaur.domain.storage.QuranStorage
 import com.zaur.domain.storage.ReciterStorage
 import com.zaur.domain.storage.theme.ThemeStorage
+import com.zaur.features.surah.manager.ReciterManager
+import com.zaur.features.surah.screen.surah_detail.player.SurahPlayer
+import com.zaur.features.surah.viewmodel.QuranAudioViewModel
 
 class FakeThemeStorage() : ThemeStorage {
     override fun getIsDarkTheme(): Boolean {
@@ -113,6 +102,61 @@ class FakeQTextRAqcCloud : QuranTextRepositoryAqc.Cloud {
     }
 }
 
+class FakeReciterManager() : ReciterManager {
+    override fun getReciter(): String? {
+        TODO("Not yet implemented")
+    }
+
+    override fun saveReciter(identifier: String) {
+        TODO("Not yet implemented")
+    }
+
+    override fun getReciterName(): String? {
+        TODO("Not yet implemented")
+    }
+}
+
+class FakeSurahPlayer() : SurahPlayer {
+    override fun onPlayVerse(verse: VerseAudioAqc) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onPlayWholeClicked() {
+        TODO("Not yet implemented")
+    }
+
+    override fun onPlaySingleClicked(ayahNumber: Int, surahNumber: Int) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onAudioEnded() {
+        TODO("Not yet implemented")
+    }
+
+    override fun onPauseClicked() {
+        TODO("Not yet implemented")
+    }
+
+    override fun onStopClicked() {
+        TODO("Not yet implemented")
+    }
+
+    override fun clear() {
+        TODO("Not yet implemented")
+    }
+
+    override fun setQuranAudioVmCallback(callback: QuranAudioViewModel.QuranAudioVmCallback) {
+        TODO("Not yet implemented")
+    }
+
+    override fun setAyahs(ayahs: List<Ayah.Base>) {
+        TODO("Not yet implemented")
+    }
+
+    override fun setCacheAudios(ayahs: List<CacheAudio.Base>) {
+        TODO("Not yet implemented")
+    }
+}
 
 class FakeQAudioRAqcLocal : QuranAudioRepositoryAqc.Local {
     override suspend fun getChapterAudioOfReciterLocal(
@@ -167,69 +211,6 @@ class FakeQTranslationRAqcCloud : QuranTranslationRepositoryAqc.Cloud {
         chapterNumber: Int,
         translator: String,
     ): TranslationAqc.Base {
-        TODO("Not yet implemented")
-    }
-}
-
-
-class FakeQTextRV4 : QuranTextRepositoryV4 {
-    override suspend fun getAllChapters(language: String): List<ChapterV4> {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun getChapter(
-        chapterNumber: Int, language: String,
-    ): ChapterV4 {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun getAllJuzs(): List<JuzV4> {
-        TODO("Not yet implemented")
-    }
-}
-
-class FakeQAudioRV4 : QuranAudioRepositoryV4 {
-    override suspend fun getRecitations(language: String): List<RecitationsV4> {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun getChapterAudioOfReciter(
-        reciterId: Int, chapterNumber: Int,
-    ): ChapterAudioFileV4 {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun getVerseAudioFile(
-        reciterId: Int, verseKey: String,
-    ): VerseAudioFileV4 {
-        TODO("Not yet implemented")
-    }
-}
-
-class FakeQTajweedRV4 : QuranTajweedRepositoryV4 {
-    override suspend fun getUthmanTajweedsForChapter(chapterNumber: Int): List<VerseUthmanTajweedV4> {
-        TODO("Not yet implemented")
-    }
-}
-
-class FakeQTafsirRV4 : QuranTafsirRepositoryV4 {
-    override suspend fun getTafsirForChapter(
-        tafsirId: Int, chapterNumber: Int,
-    ): SingleTafsirsV4 {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun getAvailableTafsirs(language: String): List<TafsirV4> {
-        TODO("Not yet implemented")
-    }
-}
-
-class FakeQTranslationRV4 : QuranTranslationRepositoryV4 {
-    override suspend fun getTranslationForChapter(translationId: Int): SingleTranslationsV4 {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun getAvailableTranslations(language: String): List<TranslationV4> {
         TODO("Not yet implemented")
     }
 }

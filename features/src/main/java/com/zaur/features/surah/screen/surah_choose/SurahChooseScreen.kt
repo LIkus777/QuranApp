@@ -62,7 +62,7 @@ fun SurahChooseScreen(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        val chapters = textState.value.chapters ?: emptyList() // Избегаем повторного ?. вызова
+        val chapters = textState.value.chapters() ?: emptyList() // Избегаем повторного ?. вызова
         itemsIndexed(chapters) { index, chapter ->
             if (index == 0) {
                 Spacer(Modifier.height(20.dp))
@@ -99,7 +99,7 @@ fun SurahChoosePreview() {
                     themeUseCase = ThemeUseCase(FakeThemeStorage())
                 ), surahChooseViewModel = SurahChooseViewModel.Base(
                     observable = SurahChooseObservable.Base(
-                        QuranTextAqcUIState()
+                        QuranTextAqcUIState.Base()
                     ), quranTextUseCaseAqc = QuranTextUseCaseAqc.Base(
                         FakeQuranStorage(),
                         FakeOfflineRepos(),

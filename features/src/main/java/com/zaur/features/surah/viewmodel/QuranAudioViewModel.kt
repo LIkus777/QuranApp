@@ -75,14 +75,14 @@ interface QuranAudioViewModel : QuranAudioObservable.Read {
                 override fun callVerseAudioFile(ayah: Int) {
                     Log.i("TAGGG", "callVerseAudioFile CALLED} ayah $ayah")
                     getAyahAudioByKey(
-                        "${stateManager.getState().value.audioPlayerState.currentSurahNumber}:$ayah",
+                        "${stateManager.getState().value.audioPlayerState.currentSurahNumber()}:$ayah",
                         reciterManager.getReciter().toString()
                     )
                 }
             })
         }
 
-        override fun audioState(): StateFlow<QuranAudioAqcUIState> = observable.audioState()
+        override fun audioState(): StateFlow<QuranAudioAqcUIState.Base> = observable.audioState()
 
         override fun onPlayWholeClicked() {
             surahPlayer.onPlayWholeClicked()
@@ -134,7 +134,7 @@ interface QuranAudioViewModel : QuranAudioObservable.Read {
                     override fun handleSuccess(data: VerseAudioAqc) {
                         Log.i("TAGGG", "getVerseAudioFile: data ${data.audio()} ")
                         viewModelScope.launch {
-                            if (data == observable.state().value.verseAudioFile) {
+                            if (data == observable.state().value.verseAudioFile()) {
                                 val newState = stateManager.getState().value.copy(
                                     audioPlayerState = stateManager.getState().value.audioPlayerState.copy(
                                         restartAudio = true

@@ -28,7 +28,7 @@ interface QuranTextViewModel : QuranTextObservable.Read {
         private val quranTextUseCaseAqc: QuranTextUseCaseAqc,
     ) : BaseViewModel(), QuranTextViewModel {
 
-        override fun textState(): StateFlow<QuranTextAqcUIState> = observable.textState()
+        override fun textState(): StateFlow<QuranTextAqcUIState.Base> = observable.textState()
 
         override fun getFontSizeArabic() = quranTextUseCaseAqc.getFontSizeArabic()
 

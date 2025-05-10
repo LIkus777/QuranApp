@@ -29,26 +29,26 @@ fun SurahDetailEffects(
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
 
-    LaunchedEffect(audioState.cacheAudios) {
-        audioState.cacheAudios?.let {
+    LaunchedEffect(audioState.cacheAudios()) {
+        audioState.cacheAudios().let {
             quranAudioViewModel.setCacheAudios(it)
         }
     }
 
-    LaunchedEffect(audioState.chaptersAudioFile) {
-        audioState.chaptersAudioFile?.ayahs()?.let {
+    LaunchedEffect(audioState.chaptersAudioFile()) {
+        audioState.chaptersAudioFile().ayahs().let {
             quranAudioViewModel.setAyahs(it)
         }
     }
 
-    LaunchedEffect(audioState.verseAudioFile, surahDetailState.audioPlayerState.restartAudio) {
-        if (audioState.verseAudioFile != null || surahDetailState.audioPlayerState.restartAudio) {
-            quranAudioViewModel.onPlayVerse(verse = audioState.verseAudioFile!!)
+    LaunchedEffect(audioState.verseAudioFile(), surahDetailState.audioPlayerState().restartAudio()) {
+        if (audioState.verseAudioFile() != null || surahDetailState.audioPlayerState().restartAudio()) {
+            quranAudioViewModel.onPlayVerse(verse = audioState.verseAudioFile())
         }
     }
 
-    LaunchedEffect(surahDetailState.audioPlayerState.currentAyahInSurah) {
-        val index = surahDetailState.audioPlayerState.currentAyahInSurah - 1
+    LaunchedEffect(surahDetailState.audioPlayerState().currentAyahInSurah()) {
+        val index = surahDetailState.audioPlayerState().currentAyahInSurah() - 1
         if (index >= 0) {
             listState.animateScrollToItem(index)
         }

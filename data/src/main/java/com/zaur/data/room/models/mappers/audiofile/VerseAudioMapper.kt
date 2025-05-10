@@ -3,6 +3,7 @@ package com.zaur.data.room.models.mappers.audiofile
 import com.zaur.data.room.models.SurahEntity
 import com.zaur.data.room.models.VerseAudioEntity
 import com.zaur.data.room.models.mappers.audiofile.SurahMapper
+import com.zaur.domain.al_quran_cloud.models.audiofile.EditionVerse
 import com.zaur.domain.al_quran_cloud.models.audiofile.VerseAudioAqc
 
 interface VerseAudioMapper {
@@ -22,7 +23,7 @@ interface VerseAudioMapper {
                 audio = verse.audio(),
                 audioSecondary = verse.audioSecondary(),
                 text = verse.text(),
-                edition = editionVerseMapper.toData(verse.edition()),
+                edition = editionVerseMapper.toData(verse.edition() as EditionVerse.Base),
                 surahNumber = verse.surah().number(),
                 numberInSurah = verse.numberInSurah(),
                 juz = verse.juz(),

@@ -22,6 +22,7 @@ import com.zaur.di.provides.ProvideAudioDownloader
 import com.zaur.di.provides.ProvideChapterAudioDao
 import com.zaur.di.provides.ProvideChapterDao
 import com.zaur.di.provides.ProvideOfflineRepository
+import com.zaur.di.provides.ProvideOfflineUseCase
 import com.zaur.di.provides.ProvideQuranApiAqc
 import com.zaur.di.provides.ProvideQuranStorage
 import com.zaur.di.provides.ProvideReciterStorage
@@ -29,13 +30,15 @@ import com.zaur.di.provides.ProvideThemeStorage
 import com.zaur.di.provides.ProvideTranslationChapterDao
 import com.zaur.di.provides.ProvideVerseAudioDao
 import com.zaur.domain.al_quran_cloud.repository.OfflineRepository
+import com.zaur.domain.al_quran_cloud.use_case.OfflineUseCase
 import com.zaur.domain.storage.QuranStorage
 import com.zaur.domain.storage.ReciterStorage
 import com.zaur.domain.storage.theme.ThemeStorage
 
-interface DataModule : ProvideQuranApiAqc, ProvideAudioDownloader, ProvideAppDatabase, ProvideChapterDao,
-    ProvideArabicChapterDao, ProvideVerseAudioDao, ProvideChapterAudioDao,
-    ProvideTranslationChapterDao, ProvideReciterStorage, ProvideQuranStorage, ProvideThemeStorage, ProvideOfflineRepository {
+interface DataModule : ProvideOfflineUseCase, ProvideQuranApiAqc, ProvideAudioDownloader,
+    ProvideAppDatabase, ProvideChapterDao, ProvideArabicChapterDao, ProvideVerseAudioDao,
+    ProvideChapterAudioDao, ProvideTranslationChapterDao, ProvideReciterStorage,
+    ProvideQuranStorage, ProvideThemeStorage, ProvideOfflineRepository {
 
     class Base(private val context: Context) : DataModule {
 
@@ -71,5 +74,8 @@ interface DataModule : ProvideQuranApiAqc, ProvideAudioDownloader, ProvideAppDat
         override fun provideReciterStorage(): ReciterStorage = ReciterPreferences(context)
 
         override fun provideOfflineRepository(): OfflineRepository = OfflinePreferences(context)
+
+        override fun provideOfflineUseCase(): OfflineUseCase =
+            OfflineUseCase.Base(provideOfflineRepository())
     }
 }

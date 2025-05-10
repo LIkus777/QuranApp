@@ -11,7 +11,7 @@ interface QuranTranslationViewModelFactory {
 
     class Base(
         private val observable: QuranTranslationObservable.Mutable = QuranTranslationObservable.Base(
-            QuranTranslationAqcUIState()
+            QuranTranslationAqcUIState.Base()
         ),
         private val quranTranslationUseCaseAqc: QuranTranslationUseCaseAqc
     ) : QuranTranslationViewModelFactory{

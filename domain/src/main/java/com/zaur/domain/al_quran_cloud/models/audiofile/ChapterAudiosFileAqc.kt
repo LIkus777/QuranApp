@@ -37,7 +37,7 @@ interface ChapterAudioFile {
     fun revelationType(): String
     fun numberOfAyahs(): Long
     fun ayahs(): List<Ayah.Base>
-    fun edition(): EditionAudio.Base
+    fun edition(): EditionAudio
     fun reciter(): String
 
     fun <T> map(mapper: Mapper<T>): T
@@ -85,9 +85,25 @@ interface ChapterAudioFile {
             revelationType: String,
             numberOfAyahs: Long,
             ayahs: List<Ayah.Base>,
-            edition: EditionAudio.Base,
+            edition: EditionAudio,
             reciter: String,
         ): T
+    }
+
+    object Empty : ChapterAudioFile {
+        override fun number(): Long = 0
+        override fun name(): String = ""
+        override fun englishName(): String = ""
+        override fun englishNameTranslation(): String = ""
+        override fun revelationType(): String = ""
+        override fun numberOfAyahs(): Long = 0
+        override fun ayahs(): List<Ayah.Base> = emptyList()
+        override fun edition(): EditionAudio = EditionAudio.Empty
+        override fun reciter(): String = ""
+        override fun <T> map(mapper: Mapper<T>): T = mapper.map(
+            number(), name(), englishName(), englishNameTranslation(),
+            revelationType(), numberOfAyahs(), ayahs(), edition(), reciter()
+        )
     }
 }
 
@@ -217,4 +233,17 @@ interface EditionAudio {
         ): T
     }
 
+    object Empty : EditionAudio {
+        override fun identifier(): String = ""
+        override fun language(): String = ""
+        override fun name(): String = ""
+        override fun englishName(): String = ""
+        override fun format(): String = ""
+        override fun type(): String = ""
+        override fun direction(): String? = null
+
+        override fun <T> map(mapper: Mapper<T>): T = mapper.map(
+            identifier(), language(), name(), englishName(), format(), type(), direction()
+        )
+    }
 }

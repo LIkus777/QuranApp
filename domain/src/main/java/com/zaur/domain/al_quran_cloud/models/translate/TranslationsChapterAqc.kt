@@ -38,14 +38,14 @@ interface TranslationAqc {
     fun revelationType(): String
     fun numberOfAyahs(): Long
     fun translationAyahs(): List<Ayah.Base>
-    fun edition(): EditionTranslation.Base
+    fun edition(): EditionTranslation
     fun translator(): String
 
     fun <T> map(mapper: Mapper<T>): T
 
     fun withTranslator(newTranslator: String): Base
 
-    class Base(
+    data class Base(
         @SerializedName("number") private val number: Long,
         @SerializedName("name") private val name: String,
         @SerializedName("englishName") private val englishName: String,
@@ -106,6 +106,31 @@ interface TranslationAqc {
             edition: EditionTranslation,
             translator: String,
         ): T
+    }
+
+    object Empty : TranslationAqc {
+        override fun number(): Long = 0
+        override fun name(): String = ""
+        override fun englishName(): String = ""
+        override fun englishNameTranslation(): String = ""
+        override fun revelationType(): String = ""
+        override fun numberOfAyahs(): Long = 0
+        override fun translationAyahs(): List<Ayah.Base> = emptyList()
+        override fun edition(): EditionTranslation = EditionTranslation.Empty
+        override fun translator(): String = ""
+        override fun <T> map(mapper: Mapper<T>): T = mapper.map(
+            number(),
+            name(),
+            englishName(),
+            englishNameTranslation(),
+            revelationType(),
+            numberOfAyahs(),
+            translationAyahs(),
+            edition(),
+            translator()
+        )
+
+        override fun withTranslator(newTranslator: String): Base = throw IllegalStateException()
     }
 }
 
@@ -210,5 +235,19 @@ interface EditionTranslation {
             type: String,
             direction: String,
         ): T
+    }
+
+    object Empty : EditionTranslation {
+        override fun identifier(): String = ""
+        override fun language(): String = ""
+        override fun name(): String = ""
+        override fun englishName(): String = ""
+        override fun format(): String = ""
+        override fun type(): String = ""
+        override fun direction(): String? = null
+
+        override fun <T> map(mapper: Mapper<T>): T = mapper.map(
+            identifier(), language(), name(), englishName(), format(), type(), direction().toString()
+        )
     }
 }

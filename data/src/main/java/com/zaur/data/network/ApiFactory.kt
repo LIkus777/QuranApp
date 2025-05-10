@@ -1,6 +1,6 @@
 package com.zaur.data.network
 
-import com.zaur.data.apiV4.constants.ApiConstants.BASE_URL_ALQURAN_CLOUD
+import com.zaur.data.network.ApiConstants.BASE_URL_ALQURAN_CLOUD
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit

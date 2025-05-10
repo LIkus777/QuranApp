@@ -1,13 +1,14 @@
 package com.zaur.features.surah.viewmodel
 
 import com.zaur.core.BaseViewModel
+import com.zaur.domain.al_quran_cloud.use_case.OfflineUseCase
 import com.zaur.features.surah.screen.surah_detail.SurahDetailStateManager
 import com.zaur.features.surah.ui_state.aqc.SurahDetailScreenState
 import kotlinx.coroutines.flow.StateFlow
 
 interface SurahDetailViewModel {
 
-    fun updateState(state: SurahDetailScreenState)
+    fun updateState(state: SurahDetailScreenState.Base)
     fun getState(): StateFlow<SurahDetailScreenState>
 
     fun setSurahNumber(surahNumber: Int)
@@ -20,14 +21,15 @@ interface SurahDetailViewModel {
     fun fontSizeRussian(fontSize: Float)
     fun selectedReciter(reciter: String)
     fun setAyahInSurahNumber(ayahInSurah: Int)
+    fun setOfflineMode(isOffline: Boolean)
 
     fun clear()
 
     class Base(
-        private val stateManager: SurahDetailStateManager
+        private val stateManager: SurahDetailStateManager,
     ) : BaseViewModel(), SurahDetailViewModel {
 
-        override fun updateState(state: SurahDetailScreenState) {
+        override fun updateState(state: SurahDetailScreenState.Base) {
             stateManager.updateState(state)
         }
 
@@ -71,6 +73,10 @@ interface SurahDetailViewModel {
 
         override fun setAyahInSurahNumber(ayahInSurah: Int) {
             stateManager.setAyahInSurahNumber(ayahInSurah)
+        }
+
+        override fun setOfflineMode(isOffline: Boolean) {
+            stateManager.setOfflineMode(isOffline)
         }
 
         override fun clear() {

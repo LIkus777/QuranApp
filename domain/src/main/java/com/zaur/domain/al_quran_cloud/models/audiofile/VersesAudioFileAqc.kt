@@ -35,8 +35,8 @@ interface VerseAudioAqc {
     fun audio(): String
     fun audioSecondary(): List<String>
     fun text(): String
-    fun edition(): EditionVerse.Base
-    fun surah(): Surah.Base
+    fun edition(): EditionVerse
+    fun surah(): Surah
     fun numberInSurah(): Long
     fun juz(): Long
     fun manzil(): Long
@@ -115,6 +115,28 @@ interface VerseAudioAqc {
             sajda: Boolean,
         ): T
     }
+
+    // Дефолтная реализация с выбрасыванием исключений
+    object Empty : VerseAudioAqc {
+        override fun verseNumber(): Long = 0
+        override fun reciter(): String = ""
+        override fun audio(): String = ""
+        override fun audioSecondary(): List<String> = emptyList()
+        override fun text(): String = ""
+        override fun edition(): EditionVerse = EditionVerse.Empty
+        override fun surah(): Surah = Surah.Empty
+        override fun numberInSurah(): Long = 0
+        override fun juz(): Long = 0
+        override fun manzil(): Long = 0
+        override fun page(): Long = 0
+        override fun ruku(): Long = 0
+        override fun hizbQuarter(): Long = 0
+        override fun sajda(): Boolean = false
+        override fun <T> map(mapper: Mapper<T>): T = mapper.map(
+            verseNumber(), reciter(), audio(), audioSecondary(), text(), edition(), surah(),
+            numberInSurah(), juz(), manzil(), page(), ruku(), hizbQuarter(), sajda()
+        )
+    }
 }
 
 interface EditionVerse {
@@ -162,6 +184,20 @@ interface EditionVerse {
             direction: Any?,
         ): T
     }
+
+    object Empty : EditionVerse {
+        override fun identifier(): String = ""
+        override fun language(): String = ""
+        override fun name(): String = ""
+        override fun englishName(): String = ""
+        override fun format(): String = ""
+        override fun type(): String = ""
+        override fun direction(): String = ""
+
+        override fun <T> map(mapper: Mapper<T>): T = mapper.map(
+            identifier(), language(), name(), englishName(), format(), type(), direction()
+        )
+    }
 }
 
 interface Surah {
@@ -204,5 +240,18 @@ interface Surah {
             numberOfAyahs: Long,
             revelationType: String,
         ): T
+    }
+
+    object Empty : Surah {
+        override fun number(): Long = -1L
+        override fun name(): String = ""
+        override fun englishName(): String = ""
+        override fun englishNameTranslation(): String = ""
+        override fun numberOfAyahs(): Long = 0L
+        override fun revelationType(): String = ""
+
+        override fun <T> map(mapper: Mapper<T>): T = mapper.map(
+            number(), name(), englishName(), englishNameTranslation(), numberOfAyahs(), revelationType()
+        )
     }
 }

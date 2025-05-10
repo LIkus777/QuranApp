@@ -2,21 +2,22 @@ package com.zaur.features.surah.observables
 
 import com.zaur.features.surah.base.Observable
 import com.zaur.features.surah.ui_state.aqc.QuranTextAqcUIState
+import com.zaur.features.surah.ui_state.aqc.QuranTextAqcUIState.Base
 import kotlinx.coroutines.flow.StateFlow
 
-interface QuranTextObservable : Observable.Mutable<QuranTextAqcUIState> {
+interface QuranTextObservable : Observable.Mutable<Base> {
 
-    interface Update : Observable.Update<QuranTextAqcUIState>
+    interface Update : Observable.Update<QuranTextAqcUIState.Base>
 
-    interface Read : Observable.Read<QuranTextAqcUIState> {
-        fun textState(): StateFlow<QuranTextAqcUIState>
+    interface Read : Observable.Read<QuranTextAqcUIState.Base> {
+        fun textState(): StateFlow<QuranTextAqcUIState.Base>
     }
 
     interface Mutable : Update, Read
 
     class Base(
-        private val initial: QuranTextAqcUIState
-    ) : Observable.Abstract<QuranTextAqcUIState>(initial), Mutable {
-        override fun textState(): StateFlow<QuranTextAqcUIState> = state()
+        private val initial: QuranTextAqcUIState.Base,
+    ) : Observable.Abstract<QuranTextAqcUIState.Base>(initial), Mutable {
+        override fun textState(): StateFlow<QuranTextAqcUIState.Base> = state()
     }
 }

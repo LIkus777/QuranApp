@@ -11,7 +11,7 @@ interface SurahChooseViewModelFactory {
 
     class Base(
         private val observable: SurahChooseObservable.Mutable = SurahChooseObservable.Base(
-            QuranTextAqcUIState()
+            QuranTextAqcUIState.Base()
         ), private val quranTextUseCaseAqc: QuranTextUseCaseAqc
     ) : SurahChooseViewModelFactory {
         override fun create(): SurahChooseViewModel {

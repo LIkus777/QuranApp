@@ -36,7 +36,7 @@ fun SreenContent(
     surahName: String,
     onMenuClick: () -> Unit,
 ) {
-    val isLoading = textState.currentArabicText == null || translateState.translations == null
+    val isLoading = textState.currentArabicText() == null || translateState.translations() == null
 
     val isBarsVisible = remember { mutableStateOf(true) }
 
@@ -51,22 +51,21 @@ fun SreenContent(
         AyaColumn(
             isDarkTheme = isDarkTheme,
             chapterNumber = chapterNumber,
-            currentAyahInSurah = surahDetailState.audioPlayerState.currentAyahInSurah,
             isLoading = isLoading,
             textState = textState,
             translateState = translateState,
             colors = colors,
-            surahDetailState.uiPreferences.showArabic,
-            surahDetailState.uiPreferences.showRussian,
-            fontSizeArabic = surahDetailState.uiPreferences.fontSizeArabic,
-            fontSizeRussian = surahDetailState.uiPreferences.fontSizeRussian,
-            soundIsActive = surahDetailState.audioPlayerState.isAudioPlaying,
+            surahDetailState = surahDetailState,
             listState = listState,
             onClickSound = { ayahNumber, ayahNumberInSurah ->
                 surahDetailViewModel.setAyahInSurahNumber(ayahNumberInSurah)
-                Log.i("TAG", "SreenContent: ayahNumber $ayahNumber ayahNumberInSurah $ayahNumberInSurah")
+                Log.i(
+                    "TAG",
+                    "SreenContent: ayahNumber $ayahNumber ayahNumberInSurah $ayahNumberInSurah"
+                )
                 quranAudioViewModel.onPlaySingleClicked(ayahNumberInSurah, chapterNumber)
-            })
+            }
+        )
 
         // TopBar поверх контента
         AnimatedVisibility(
@@ -91,9 +90,10 @@ fun SreenContent(
             Box(
                 modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter
             ) {
+                Log.i("TAG", "ChapterBottomBarComponent: isPlaying ${surahDetailState.audioPlayerState().isAudioPlaying()}") // todo fixme
                 ChapterBottomBarComponent(
                     colors = colors,
-                    isPlaying = surahDetailState.audioPlayerState.isAudioPlaying,
+                    isPlaying = surahDetailState.audioPlayerState().isAudioPlaying(),
                     onClickSettings = { surahDetailViewModel.showSettingsBottomSheet(true) },
                     onClickReciter = { surahDetailViewModel.showTextBottomSheet(true) },
                     onClickPlay = { quranAudioViewModel.onPlayWholeClicked() },

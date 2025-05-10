@@ -1,12 +1,19 @@
 package com.zaur.features.surah.screen.surah_detail.player
 
-import android.util.Log
+
 import com.zaur.domain.al_quran_cloud.models.audiofile.Ayah
 import com.zaur.domain.al_quran_cloud.models.audiofile.CacheAudio
 import com.zaur.domain.al_quran_cloud.models.audiofile.VerseAudioAqc
 import com.zaur.features.surah.base.AudioPlayer
 import com.zaur.features.surah.base.AudioPlayerCallback
 import com.zaur.features.surah.screen.surah_detail.SurahDetailStateManager
+import com.zaur.features.surah.screen.surah_detail.player.AyahList.EmptyAyahList
+import com.zaur.features.surah.screen.surah_detail.player.AyahList.RealAyahList
+import com.zaur.features.surah.screen.surah_detail.player.CacheAyahList.EmptyCacheAyahList
+import com.zaur.features.surah.screen.surah_detail.player.CacheAyahList.RealCacheAyahList
+import com.zaur.features.surah.screen.surah_detail.player.PlayerCommand.PauseCommand
+import com.zaur.features.surah.screen.surah_detail.player.PlayerCommand.PlayWholeChapterCommand
+import com.zaur.features.surah.screen.surah_detail.player.PlayerCommand.ResumeCommand
 import com.zaur.features.surah.viewmodel.QuranAudioViewModel
 
 // Интерфейс для управления плеером
@@ -36,14 +43,13 @@ interface SurahPlayer {
     ) : SurahPlayer {
 
         private var quranAudioVmCallback: QuranAudioViewModel.QuranAudioVmCallback? = null
-        private var ayahs: List<Ayah.Base>? = null
-        private var cacheAyahs: List<CacheAudio.Base>? = null
+        private var ayahs: AyahList = EmptyAyahList
+        private var cacheAyahs: CacheAyahList = EmptyCacheAyahList
         private var currentAyahIndex = 0
 
         private val state = surahDetailStateManager.getState()
 
         init {
-            Log.i("TAG", "SurahPlayer: state $state ")
             audioPlayer.setAudioPlayerCallback(object : AudioPlayerCallback {
                 override fun audioEnded() {
                     onAudioEnded()
@@ -51,11 +57,7 @@ interface SurahPlayer {
 
                 override fun onAyahChanged(mediaId: String?) {
                     val ayahNumberInSurah = mediaId?.toIntOrNull() ?: return
-                    val ayah =
-                        ayahs?.find { it.numberInSurah().toInt() == ayahNumberInSurah } ?: return
-                    Log.d("TAG", "onAyahChanged: ayahNumberInSurah=$ayahNumberInSurah")
-                    Log.d("TAG", "onAyahChanged: number=$ayah.number.toInt()")
-                    Log.d("TAG", "onAyahChanged: numberInSurah=${ayah.numberInSurah().toInt()}")
+                    val ayah = ayahs.findByNumberInSurah(ayahNumberInSurah)
                     audioPlayerStateUpdater.updateCurrentAyah(
                         ayah.numberInSurah().toInt()
                     )
@@ -64,16 +66,15 @@ interface SurahPlayer {
         }
 
         override fun setAyahs(ayahs: List<Ayah.Base>) {
-            this.ayahs = ayahs
+            this.ayahs = RealAyahList(ayahs)
         }
 
         override fun setCacheAudios(ayahs: List<CacheAudio.Base>) {
-            this.cacheAyahs = ayahs
+            this.cacheAyahs = RealCacheAyahList(ayahs)
         }
 
         override fun onPlayVerse(verse: VerseAudioAqc) {
-            Log.i("TAG", "onPlayVerse: VERSE ${verse.audio()}")
-            if (state.value.audioPlayerState.restartAudio) {
+            if (state.value.audioPlayerState.restartAudio()) {
                 audioPlayer.restartAudio()
             } else {
                 audioPlaybackHelper.play(verse)
@@ -82,28 +83,22 @@ interface SurahPlayer {
         }
 
         override fun onPlayWholeClicked() {
-            if (!audioPlayer.isPlaying() && !audioPlayer.isPaused()) {
-                if (/*state.value.audioPlayerState.isOfflineMode*/true) { //todo
-                    val items = playlistBuilder.buildCachePlaylist(cacheAyahs!!)
-                    audioPlayer.playPlaylist(items)
-                    audioPlayerStateUpdater.markWholeChapterPlaying(true, true)
-                } else {
-                    val items = playlistBuilder.buildLocalPlaylist(
-                        ayahs!!,
-                        state.value.audioPlayerState.currentSurahNumber
-                    ) //todo
-                    audioPlayer.playPlaylist(items)
-                    audioPlayerStateUpdater.markWholeChapterPlaying(true, true)
-                }
-            } else {
-                if (audioPlayer.isPlaying()) {
-                    audioPlayer.pauseAudio()
-                    audioPlayerStateUpdater.setPlaying(false)
-                } else {
-                    audioPlayer.resume()
-                    audioPlayerStateUpdater.setPlaying(true)
-                }
+            val command: PlayerCommand = when {
+                !audioPlayer.isPlaying() && !audioPlayer.isPaused() -> PlayWholeChapterCommand(
+                    audioPlayer,
+                    audioPlayerStateUpdater,
+                    playlistBuilder,
+                    ayahs,
+                    cacheAyahs,/*state.value.audioPlayerState.isOfflineMode*/
+                    state.value.audioPlayerState.isOfflineMode(),
+                    state.value.audioPlayerState.currentSurahNumber()
+                )
+
+                audioPlayer.isPlaying() -> PauseCommand(audioPlayer, audioPlayerStateUpdater)
+                else -> ResumeCommand(audioPlayer, audioPlayerStateUpdater)
             }
+
+            command.execute()
         }
 
         override fun onPlaySingleClicked(ayahNumber: Int, surahNumber: Int) {
@@ -112,8 +107,8 @@ interface SurahPlayer {
         }
 
         fun playCurrentAyah() {
-            val currentAyah = ayahs?.getOrNull(currentAyahIndex)
-            if (currentAyah != null) {
+            if (ayahs.isEmpty() == false) {
+                val currentAyah = ayahs.get(currentAyahIndex)
                 audioPlayerStateUpdater.updateCurrentAyahInSurah(
                     currentAyah.numberInSurah().toInt()
                 )
@@ -124,7 +119,7 @@ interface SurahPlayer {
         }
 
         override fun onAudioEnded() {
-            if (!state.value.audioPlayerState.playWholeChapter) {
+            if (!state.value.audioPlayerState.playWholeChapter()) {
                 audioPlayerStateUpdater.stop()
                 return
             }
@@ -147,7 +142,8 @@ interface SurahPlayer {
         override fun clear() {
             audioPlayer.clear()
             currentAyahIndex = 0
-            ayahs = null
+            ayahs = EmptyAyahList
+            cacheAyahs = EmptyCacheAyahList
             quranAudioVmCallback = null
         }
 

@@ -18,15 +18,15 @@ fun ChooseTextDialogComponent(
 ) {
     ChooseTextDialog(
         colors = colors,
-        showTextDialog = state.bottomSheetState.showTextBottomSheet,
+        showTextDialog = state.bottomSheetState().showTextBottomSheet(),
         isDarkTheme = isDarkTheme,
         onThemeChange = { themeViewModel.saveTheme(it) },
-        fontSizeArabic = state.uiPreferences.fontSizeArabic,
+        fontSizeArabic = state.uiPreferencesState().fontSizeArabic(),
         onFontSizeArabicChange = {
             surahDetailViewModel.fontSizeArabic(it)
             quranTextViewModel.saveFontSizeArabic(it)
         },
-        fontSizeRussian = state.uiPreferences.fontSizeRussian,
+        fontSizeRussian = state.uiPreferencesState().fontSizeRussian(),
         onFontSizeRussianChange = {
             surahDetailViewModel.fontSizeRussian(it)
             quranTextViewModel.saveFontSizeRussian(it)

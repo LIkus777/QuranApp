@@ -9,15 +9,15 @@ import com.zaur.presentation.ui.QuranColors
 fun SettingsBottomSheetComponent(
     state: SurahDetailScreenState, colors: QuranColors, viewModel: SurahDetailViewModel
 ) {
-    if (state.bottomSheetState.showSettingsBottomSheet) {
+    if (state.bottomSheetState().showSettingsBottomSheet()) {
         SettingsBottomSheet(
             showSheet = true,
             colors = colors,
-            selectedReciter = state.reciterState.currentReciter,
+            selectedReciter = state.reciterState().currentReciter(),
             showReciterDialog = { viewModel.showReciterDialog(it) },
-            showArabic = state.uiPreferences.showArabic,
+            showArabic = state.uiPreferencesState().showArabic(),
             onShowArabicChange = { viewModel.showArabic(it) },
-            showRussian = state.uiPreferences.showRussian,
+            showRussian = state.uiPreferencesState().showRussian(),
             onShowRussianChange = { viewModel.showRussian(it) },
             onDismiss = { viewModel.showSettingsBottomSheet(false) })
     }

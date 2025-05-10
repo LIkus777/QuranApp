@@ -1,7 +1,6 @@
 package com.zaur.di.provides
 
 import com.zaur.data.al_quran_aqc.api.QuranApiAqc
-import com.zaur.data.apiV4.api.QuranApiV4
 import com.zaur.data.downloader.AudioDownloader
 import com.zaur.data.room.dao.ArabicChapterDao
 import com.zaur.data.room.dao.ChapterAudioDao
@@ -29,20 +28,11 @@ import com.zaur.domain.al_quran_cloud.repository.QuranAudioRepositoryAqc
 import com.zaur.domain.al_quran_cloud.repository.QuranTextRepositoryAqc
 import com.zaur.domain.al_quran_cloud.repository.QuranTranslationRepositoryAqc
 import com.zaur.domain.al_quran_cloud.use_case.MainUseCase
+import com.zaur.domain.al_quran_cloud.use_case.OfflineUseCase
 import com.zaur.domain.al_quran_cloud.use_case.QuranAudioUseCaseAqc
 import com.zaur.domain.al_quran_cloud.use_case.QuranTextUseCaseAqc
 import com.zaur.domain.al_quran_cloud.use_case.QuranTranslationUseCaseAqc
 import com.zaur.domain.al_quran_cloud.use_case.ReciterUseCase
-import com.zaur.domain.apiV4.repository.QuranAudioRepositoryV4
-import com.zaur.domain.apiV4.repository.QuranTafsirRepositoryV4
-import com.zaur.domain.apiV4.repository.QuranTajweedRepositoryV4
-import com.zaur.domain.apiV4.repository.QuranTextRepositoryV4
-import com.zaur.domain.apiV4.repository.QuranTranslationRepositoryV4
-import com.zaur.domain.apiV4.use_case.QuranAudioUseCaseV4
-import com.zaur.domain.apiV4.use_case.QuranTafsirUseCaseV4
-import com.zaur.domain.apiV4.use_case.QuranTajweedUseCaseV4
-import com.zaur.domain.apiV4.use_case.QuranTextUseCaseV4
-import com.zaur.domain.apiV4.use_case.QuranTranslationUseCaseV4
 import com.zaur.domain.storage.QuranStorage
 import com.zaur.domain.storage.ReciterStorage
 import com.zaur.domain.storage.theme.ThemeStorage
@@ -58,6 +48,7 @@ import com.zaur.features.surah.viewmodel.SurahDetailViewModel
 import com.zaur.features.surah.viewmodel.factory.QuranAudioViewModelFactory
 import com.zaur.features.surah.viewmodel.factory.QuranTextViewModelFactory
 import com.zaur.features.surah.viewmodel.factory.QuranTranslationViewModelFactory
+import com.zaur.features.surah.viewmodel.factory.SurahChooseViewModelFactory
 
 interface ProvideChapterAudioMapper {
     fun provideChapterAudioMapper(): ChapterAudioMapper
@@ -125,6 +116,10 @@ interface ProvideQuranAudioViewModelFactory {
 
 interface ProvideTranslationViewModelFactory {
     fun provideQuranTranslationViewModelFactory(): QuranTranslationViewModelFactory
+}
+
+interface ProvideSurahChooseViewModelFactory {
+    fun provideSurahChooseViewModelFactory(): SurahChooseViewModelFactory
 }
 
 interface ProvideSurahDetailViewModel {
@@ -207,6 +202,10 @@ interface ProvideReciterManager {
     fun provideReciterManager(): ReciterManager
 }
 
+interface ProvideOfflineUseCase {
+    fun provideOfflineUseCase(): OfflineUseCase
+}
+
 interface ProvideReciterUseCase {
     fun provideReciterUseCase(): ReciterUseCase
 }
@@ -231,32 +230,8 @@ interface ProvideQuranTranslationUseCaseAqc {
     fun provideQuranTranslationUseCaseAqc(): QuranTranslationUseCaseAqc
 }
 
-interface ProvideQuranAudioUseCaseV4 {
-    fun provideQuranAudioUseCaseV4(): QuranAudioUseCaseV4
-}
-
-interface ProvideQuranTafsirUseCase {
-    fun provideQuranTafsirUseCaseV4(): QuranTafsirUseCaseV4
-}
-
-interface ProvideQuranTajweedUseCase {
-    fun provideQuranTajweedUseCaseV4(): QuranTajweedUseCaseV4
-}
-
-interface ProvideQuranTextUseCase {
-    fun provideQuranTextUseCaseV4(): QuranTextUseCaseV4
-}
-
-interface ProvideQuranTranslationUseCase {
-    fun provideQuranTranslationUseCaseV4(): QuranTranslationUseCaseV4
-}
-
 interface ProvideQuranApiAqc {
     fun provideQuranApiAqc(): QuranApiAqc
-}
-
-interface ProvideQuranApiV4 {
-    fun provideQuranApiV4(): QuranApiV4
 }
 
 interface ProvideQuranAudioRepositoryAqcCloud {
@@ -285,24 +260,4 @@ interface ProvideQuranTranslationRepositoryAqcLocal {
 
 interface ProvideQuranTranslationRepositoryAqcCloud {
     fun provideQuranTranslationRepositoryAqcCloud(): QuranTranslationRepositoryAqc.Cloud
-}
-
-interface ProvideQuranAudioRepositoryV4 {
-    fun provideQuranAudioRepositoryV4(): QuranAudioRepositoryV4
-}
-
-interface ProvideQuranTafsirRepositoryV4 {
-    fun provideQuranTafsirRepositoryV4(): QuranTafsirRepositoryV4
-}
-
-interface ProvideQuranTajweedRepositoryV4 {
-    fun provideQuranTajweedRepositoryV4(): QuranTajweedRepositoryV4
-}
-
-interface ProvideQuranTranslationRepositoryV4 {
-    fun provideQuranTranslationRepositoryV4(): QuranTranslationRepositoryV4
-}
-
-interface ProvideQuranTextRepositoryV4 {
-    fun provideQuranTextRepositoryV4(): QuranTextRepositoryV4
 }

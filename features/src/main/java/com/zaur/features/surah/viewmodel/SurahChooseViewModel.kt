@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.zaur.core.BaseViewModel
 import com.zaur.core.HandleResult
 import com.zaur.domain.al_quran_cloud.models.chapter.ChapterAqc
-import com.zaur.domain.al_quran_cloud.models.chapter.ChaptersAqc
 import com.zaur.domain.al_quran_cloud.use_case.QuranTextUseCaseAqc
 import com.zaur.features.surah.observables.SurahChooseObservable
 import com.zaur.features.surah.ui_state.aqc.QuranTextAqcUIState
@@ -22,7 +21,7 @@ interface SurahChooseViewModel : SurahChooseObservable.Read {
         private val quranTextUseCaseAqc: QuranTextUseCaseAqc
     ) : BaseViewModel(), SurahChooseViewModel {
 
-        override fun textState(): StateFlow<QuranTextAqcUIState> = observable.textState()
+        override fun textState(): StateFlow<QuranTextAqcUIState.Base> = observable.textState()
 
         override fun getAllChapters() {
             Log.d("TAG", "getAllChaptersCloud() CALLED")

@@ -1,10 +1,10 @@
 package com.zaur.features.surah.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.zaur.core.BaseViewModel
 import com.zaur.core.HandleResult
 import com.zaur.domain.al_quran_cloud.models.translate.TranslationAqc
-import com.zaur.domain.al_quran_cloud.models.translate.TranslationsChapterAqc
 import com.zaur.domain.al_quran_cloud.use_case.QuranTranslationUseCaseAqc
 import com.zaur.features.surah.observables.QuranTranslationObservable
 import com.zaur.features.surah.ui_state.aqc.QuranTranslationAqcUIState
@@ -20,7 +20,7 @@ interface QuranTranslationViewModel : QuranTranslationObservable.Read {
         private val quranTranslationUseCaseAqc: QuranTranslationUseCaseAqc
     ) : BaseViewModel(), QuranTranslationViewModel {
 
-        override fun translationState(): StateFlow<QuranTranslationAqcUIState> =
+        override fun translationState(): StateFlow<QuranTranslationAqcUIState.Base> =
             observable.translationState()
 
         override fun getTranslationForChapter(chapterNumber: Int, translator: String) {
@@ -33,6 +33,7 @@ interface QuranTranslationViewModel : QuranTranslationObservable.Read {
                 result.handle(object : HandleResult<TranslationAqc> {
                     override fun handleSuccess(data: TranslationAqc) {
                         viewModelScope.launch {
+                            Log.i("TAG", "getTranslationForChapter: data $data")
                             observable.update(observable.state().value.copy(translations = data))
                         }
                     }

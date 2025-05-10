@@ -39,7 +39,7 @@ interface ArabicChapter {
     fun revelationType(): String
     fun numberOfAyahs(): Long
     fun ayahs(): List<Ayah.Base>
-    fun edition(): EditionArabic.Base
+    fun edition(): EditionArabic
 
     fun <T> map(mapper: Mapper<T>): T
 
@@ -84,8 +84,23 @@ interface ArabicChapter {
             revelationType: String,
             numberOfAyahs: Long,
             ayahs: List<Ayah>,
-            edition: EditionArabic.Base,
+            edition: EditionArabic,
         ): T
+    }
+
+    object Empty : ArabicChapter {
+        override fun number(): Long = 0
+        override fun name(): String = ""
+        override fun englishName(): String = ""
+        override fun englishNameTranslation(): String = ""
+        override fun revelationType(): String = ""
+        override fun numberOfAyahs(): Long = 0
+        override fun ayahs(): List<Ayah.Base> = emptyList()
+        override fun edition(): EditionArabic = EditionArabic.Empty
+        override fun <T> map(mapper: Mapper<T>): T = mapper.map(
+            number(), name(), englishName(), englishNameTranslation(),
+            revelationType(), numberOfAyahs(), ayahs(), edition()
+        )
     }
 }
 
@@ -188,5 +203,19 @@ interface EditionArabic {
             type: String,
             direction: String,
         ): T
+    }
+
+    object Empty : EditionArabic {
+        override fun identifier(): String = ""
+        override fun language(): String = ""
+        override fun name(): String = ""
+        override fun englishName(): String = ""
+        override fun format(): String = ""
+        override fun type(): String = ""
+        override fun direction(): String = ""
+
+        override fun <T> map(mapper: Mapper<T>): T = mapper.map(
+            identifier(), language(), name(), englishName(), format(), type(), direction()
+        )
     }
 }

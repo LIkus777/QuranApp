@@ -11,7 +11,7 @@ interface QuranTextViewModelFactory {
 
     class Base(
         private val observable: QuranTextObservable.Mutable = QuranTextObservable.Base(
-            QuranTextAqcUIState()
+            QuranTextAqcUIState.Base()
         ),
         private val quranTextUseCaseAqc: QuranTextUseCaseAqc
     ) : QuranTextViewModelFactory {

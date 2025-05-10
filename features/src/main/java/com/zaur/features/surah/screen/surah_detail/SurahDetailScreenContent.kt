@@ -4,13 +4,13 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.navigation.NavHostController
+import com.zaur.features.surah.viewmodel.OfflineViewModel
+import com.zaur.features.surah.viewmodel.QuranAudioViewModel
+import com.zaur.features.surah.viewmodel.QuranTextViewModel
+import com.zaur.features.surah.viewmodel.QuranTranslationViewModel
 import com.zaur.features.surah.viewmodel.SurahDetailViewModel
 import com.zaur.features.surah.viewmodel.ThemeViewModel
-import com.zaur.features.surah.viewmodel.factory.QuranAudioViewModelFactory
-import com.zaur.features.surah.viewmodel.factory.QuranTextViewModelFactory
-import com.zaur.features.surah.viewmodel.factory.QuranTranslationViewModelFactory
 import com.zaur.presentation.ui.DarkThemeColors
 import com.zaur.presentation.ui.LightThemeColors
 
@@ -19,22 +19,21 @@ fun SurahDetailScreenContent(
     surahName: String,
     chapterNumber: Int,
     themeViewModel: ThemeViewModel,
+    offlineViewModel: OfflineViewModel,
     surahDetailViewModel: SurahDetailViewModel,
-    quranTextViewModelFactory: QuranTextViewModelFactory,
-    quranAudioViewModelFactory: QuranAudioViewModelFactory,
-    quranTranslationViewModelFactory: QuranTranslationViewModelFactory,
+    quranTextViewModel: QuranTextViewModel,
+    quranAudioViewModel: QuranAudioViewModel,
+    quranTranslationViewModel: QuranTranslationViewModel,
     controller: NavHostController,
     onMenuClick: () -> Unit,
 ) {
-    val quranTextViewModel = remember { quranTextViewModelFactory.create() }
-    val quranAudioViewModel = remember { quranAudioViewModelFactory.create() }
-    val quranTranslationViewModel = remember { quranTranslationViewModelFactory.create() }
-
+    val offlineState by offlineViewModel.offlineState().collectAsState()
     val textState by quranTextViewModel.textState().collectAsState()
     val audioState by quranAudioViewModel.audioState().collectAsState()
     val translateState by quranTranslationViewModel.translationState().collectAsState()
     val surahDetailState by surahDetailViewModel.getState().collectAsState()
     surahDetailViewModel.setSurahNumber(chapterNumber)
+    surahDetailViewModel.setOfflineMode(offlineState.isOffline())
     surahDetailViewModel.fontSizeArabic(quranTextViewModel.getFontSizeArabic())
     surahDetailViewModel.fontSizeRussian(quranTextViewModel.getFontSizeRussian())
     val isDarkTheme = themeViewModel.getIsDarkTheme()
@@ -69,6 +68,7 @@ fun SurahDetailScreenContent(
     )
 
     SettingsBottomSheetComponent(surahDetailState, colors, surahDetailViewModel)
+
     ChooseTextDialogComponent(
         colors,
         surahDetailState,
@@ -77,6 +77,7 @@ fun SurahDetailScreenContent(
         themeViewModel,
         surahDetailViewModel
     )
+
     ChooseReciterDialogComponent(
         surahDetailState, colors, surahDetailViewModel, quranAudioViewModel
     )

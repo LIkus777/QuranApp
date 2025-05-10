@@ -1,6 +1,7 @@
 package com.zaur.data.room.models.mappers.translate
 
 import com.zaur.data.room.models.TranslationEntity
+import com.zaur.domain.al_quran_cloud.models.translate.EditionTranslation
 import com.zaur.domain.al_quran_cloud.models.translate.TranslationAqc
 
 interface TranslationMapper {
@@ -21,7 +22,7 @@ interface TranslationMapper {
                 translation.revelationType(),
                 translation.numberOfAyahs(),
                 translation.translationAyahs().map { translationAyahMapper.toData(it) },
-                editionTranslationMapper.toData(translation.edition()),
+                editionTranslationMapper.toData(translation.edition() as EditionTranslation.Base),
                 translation.translator()
             )
 

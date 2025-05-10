@@ -3,28 +3,26 @@ package com.zaur.features.surah.screen.surah_detail.player
 import android.net.Uri
 import androidx.media3.common.MediaItem
 import com.zaur.data.downloader.AudioDownloader
-import com.zaur.domain.al_quran_cloud.models.audiofile.Ayah
-import com.zaur.domain.al_quran_cloud.models.audiofile.CacheAudio
 
 interface PlaylistBuilder {
 
     fun buildLocalPlaylist(
-        ayahs: List<Ayah.Base>,
+        ayahs: AyahList,
         surahNumber: Int,
     ): List<MediaItem>
 
     fun buildCachePlaylist(
-        ayahs: List<CacheAudio>,
+        ayahs: CacheAyahList,
     ): List<MediaItem>
 
     class Base(
         private val audioDownloader: AudioDownloader,
     ) : PlaylistBuilder {
         override fun buildLocalPlaylist(
-            ayahs: List<Ayah.Base>,
+            ayahs: AyahList,
             surahNumber: Int,
         ): List<MediaItem> {
-            return ayahs.map { ayah ->
+            return ayahs.getList().map { ayah ->
                 val localFile = audioDownloader.getAudioFile(
                     surahNumber.toLong(), ayah.numberInSurah().toLong(), "ar.alafasy"
                 )
@@ -33,11 +31,11 @@ interface PlaylistBuilder {
             }
         }
 
-        override fun buildCachePlaylist(ayahs: List<CacheAudio>): List<MediaItem> {
-            return ayahs.map { cacheAudio ->
+        override fun buildCachePlaylist(ayahs: CacheAyahList): List<MediaItem> {
+            return ayahs.getList().map { cacheAudio ->
                 val uri = Uri.parse("file://${cacheAudio.path()}")
-                MediaItem.Builder().setUri(uri)
-                    .setMediaId(cacheAudio.verseNumber().toString()).build()
+                MediaItem.Builder().setUri(uri).setMediaId(cacheAudio.verseNumber().toString())
+                    .build()
             }
         }
     }

@@ -17,7 +17,7 @@ interface QuranAudioViewModelFactory {
         private val reciterManager: ReciterManager? = null,
         private val stateManager: SurahDetailStateManager,
         private val observable: QuranAudioObservable.Mutable = QuranAudioObservable.Base(
-            QuranAudioAqcUIState()
+            QuranAudioAqcUIState.Base()
         ),
         private val quranAudioUseCaseAqc: QuranAudioUseCaseAqc,
     ) : QuranAudioViewModelFactory {

@@ -1,7 +1,6 @@
 package com.zaur.domain.al_quran_cloud.repository
 
 import com.zaur.domain.al_quran_cloud.models.translate.TranslationAqc
-import com.zaur.domain.al_quran_cloud.models.translate.TranslationsChapterAqc
 import com.zaur.domain.base.repository.BaseQuranTranslationRepository
 
 /**
@@ -9,12 +8,12 @@ import com.zaur.domain.base.repository.BaseQuranTranslationRepository
 * @since 2025-05-12
 */
 
-interface QuranTranslationRepositoryAqc : BaseQuranTranslationRepository {
-    interface Local : QuranTranslationRepositoryAqc {
+interface QuranTranslationRepository : BaseQuranTranslationRepository {
+    interface Local : QuranTranslationRepository {
         suspend fun getTranslationForChapterLocal(chapterNumber: Int, translator: String): TranslationAqc.Base
     }
 
-    interface Cloud : QuranTranslationRepositoryAqc {
+    interface Cloud : QuranTranslationRepository {
         suspend fun getTranslationForChapterCloud(
             chapterNumber: Int,
             translator: String,

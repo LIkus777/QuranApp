@@ -19,6 +19,8 @@ interface SurahDetailViewModel {
     fun setSurahNumber(surahNumber: Int)
     fun showReciterDialog(show: Boolean)
     fun showTextBottomSheet(show: Boolean)
+    fun showSurahMode(show: Boolean)
+    fun showPageMode(show: Boolean)
     fun showSettingsBottomSheet(show: Boolean)
     fun showArabic(show: Boolean)
     fun showRussian(show: Boolean)
@@ -50,6 +52,16 @@ interface SurahDetailViewModel {
 
         override fun showTextBottomSheet(show: Boolean) {
             stateManager.showTextBottomSheet(show)
+        }
+
+        override fun showSurahMode(show: Boolean) {
+            stateManager.showSurahMode(show)
+            stateManager.showPageMode(!show)
+        }
+
+        override fun showPageMode(show: Boolean) {
+            stateManager.showPageMode(show)
+            stateManager.showSurahMode(!show)
         }
 
         override fun showSettingsBottomSheet(show: Boolean) {

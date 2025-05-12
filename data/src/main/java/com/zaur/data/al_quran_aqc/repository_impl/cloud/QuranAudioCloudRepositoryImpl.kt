@@ -5,17 +5,17 @@ import com.zaur.data.downloader.AudioDownloader
 import com.zaur.domain.al_quran_cloud.models.audiofile.CacheAudio
 import com.zaur.domain.al_quran_cloud.models.audiofile.ChapterAudioFile
 import com.zaur.domain.al_quran_cloud.models.audiofile.VerseAudioAqc
-import com.zaur.domain.al_quran_cloud.repository.QuranAudioRepositoryAqc
+import com.zaur.domain.al_quran_cloud.repository.QuranAudioRepository
 
 /**
 * @author Zaur
 * @since 2025-05-12
 */
 
-class QuranAudioCloudRepositoryAqcImpl(
+class QuranAudioCloudRepositoryImpl(
     private val quranApiAqc: QuranApiAqc,
     private val audioDownloader: AudioDownloader,
-) : QuranAudioRepositoryAqc.Cloud {
+) : QuranAudioRepository.Cloud {
 
     override suspend fun downloadToCache(chapterNumber: Int, reciter: String): List<CacheAudio.Base> {
         val cachedAudios: MutableList<CacheAudio.Base> = mutableListOf()

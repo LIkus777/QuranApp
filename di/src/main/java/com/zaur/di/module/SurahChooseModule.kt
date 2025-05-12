@@ -1,13 +1,13 @@
 package com.zaur.di.module
 
-import com.zaur.data.al_quran_aqc.repository_impl.cloud.QuranTextCloudRepositoryAqcImpl
-import com.zaur.data.al_quran_aqc.repository_impl.local.QuranTextLocalRepositoryAqcImpl
+import com.zaur.data.al_quran_aqc.repository_impl.cloud.QuranTextCloudRepositoryImpl
+import com.zaur.data.al_quran_aqc.repository_impl.local.QuranTextLocalRepositoryImpl
 import com.zaur.di.provides.ProvideQuranTextRepositoryAqcCloud
 import com.zaur.di.provides.ProvideQuranTextRepositoryAqcLocal
 import com.zaur.di.provides.ProvideQuranTextUseCaseAqc
 import com.zaur.di.provides.ProvideThemeUseCase
-import com.zaur.domain.al_quran_cloud.repository.QuranTextRepositoryAqc
-import com.zaur.domain.al_quran_cloud.use_case.QuranTextUseCaseAqc
+import com.zaur.domain.al_quran_cloud.repository.QuranTextRepository
+import com.zaur.domain.al_quran_cloud.use_case.QuranTextUseCase
 import com.zaur.domain.storage.theme.ThemeUseCase
 
 /**
@@ -24,8 +24,8 @@ interface SurahChooseModule : ProvideThemeUseCase, ProvideQuranTextUseCaseAqc,
             ThemeUseCase(dataModule.provideThemeStorage())
         }
 
-        private val quranTextUseCaseAqc by lazy {
-            QuranTextUseCaseAqc.Base(
+        private val quranTextUseCase by lazy {
+            QuranTextUseCase.Base(
                 dataModule.provideQuranStorage(),
                 dataModule.provideOfflineRepository(),
                 provideQuranTextRepositoryAqcLocal(),
@@ -34,18 +34,18 @@ interface SurahChooseModule : ProvideThemeUseCase, ProvideQuranTextUseCaseAqc,
         }
 
         override fun provideThemeUseCase(): ThemeUseCase = themeUseCase
-        override fun provideQuranTextUseCaseAqc(): QuranTextUseCaseAqc = quranTextUseCaseAqc
+        override fun provideQuranTextUseCaseAqc(): QuranTextUseCase = quranTextUseCase
 
-        override fun provideQuranTextRepositoryAqcLocal(): QuranTextRepositoryAqc.Local =
-            QuranTextLocalRepositoryAqcImpl(
+        override fun provideQuranTextRepositoryAqcLocal(): QuranTextRepository.Local =
+            QuranTextLocalRepositoryImpl(
                 mapperModule.provideChapterMapper(),
                 mapperModule.provideArabicMapper(),
                 dataModule.provideChapterDao(),
                 dataModule.provideArabicChapterDao()
             )
 
-        override fun provideQuranTextRepositoryAqcCloud(): QuranTextRepositoryAqc.Cloud =
-            QuranTextCloudRepositoryAqcImpl(
+        override fun provideQuranTextRepositoryAqcCloud(): QuranTextRepository.Cloud =
+            QuranTextCloudRepositoryImpl(
                 dataModule.provideQuranApiAqc()
             )
     }

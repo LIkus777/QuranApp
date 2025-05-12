@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -53,24 +54,28 @@ fun SreenContent(
                 isBarsVisible.value = !isBarsVisible.value
             }) {
         // Основной контент на фоне
-        AyaColumn(
-            isDarkTheme = isDarkTheme,
-            chapterNumber = chapterNumber,
-            isLoading = isLoading,
-            textState = textState,
-            translateState = translateState,
-            colors = colors,
-            surahDetailState = surahDetailState,
-            listState = listState,
-            onClickSound = { ayahNumber, ayahNumberInSurah ->
-                surahDetailViewModel.setAyahInSurahNumber(ayahNumberInSurah)
-                Log.i(
-                    "TAG",
-                    "SreenContent: ayahNumber $ayahNumber ayahNumberInSurah $ayahNumberInSurah"
-                )
-                quranAudioViewModel.onPlaySingleClicked(ayahNumberInSurah, chapterNumber)
-            }
-        )
+        if (surahDetailState.uiPreferencesState().showSurahMode()) {
+            AyaColumn(
+                isDarkTheme = isDarkTheme,
+                chapterNumber = chapterNumber,
+                isLoading = isLoading,
+                textState = textState,
+                translateState = translateState,
+                colors = colors,
+                surahDetailState = surahDetailState,
+                listState = listState,
+                onClickSound = { ayahNumber, ayahNumberInSurah ->
+                    surahDetailViewModel.setAyahInSurahNumber(ayahNumberInSurah)
+                    Log.i(
+                        "TAG",
+                        "SreenContent: ayahNumber $ayahNumber ayahNumberInSurah $ayahNumberInSurah"
+                    )
+                    quranAudioViewModel.onPlaySingleClicked(ayahNumberInSurah, chapterNumber)
+                }
+            )
+        } else if (surahDetailState.uiPreferencesState().showPageMode()) {
+            Text("PageMode")
+        }
 
         // TopBar поверх контента
         AnimatedVisibility(

@@ -7,9 +7,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 
 /**
-* @author Zaur
-* @since 2025-05-12
-*/
+ * @author Zaur
+ * @since 2025-05-12
+ */
 
 interface SurahDetailStateObservable : Observable.Mutable<SurahDetailScreenState> {
     interface Update : Observable.Update<SurahDetailScreenState>
@@ -35,6 +35,8 @@ interface SurahDetailStateManager : SurahDetailStateObservable.Mutable {
     fun setSurahNumber(surahNumber: Int)
     fun showReciterDialog(show: Boolean)
     fun showTextBottomSheet(show: Boolean)
+    fun showSurahMode(show: Boolean)
+    fun showPageMode(show: Boolean)
     fun showSettingsBottomSheet(show: Boolean)
     fun showArabic(show: Boolean)
     fun showRussian(show: Boolean)
@@ -84,6 +86,26 @@ interface SurahDetailStateManager : SurahDetailStateObservable.Mutable {
                 it.copy(
                     bottomSheetState = it.bottomSheetState.copy(
                         showTextBottomSheet = show
+                    )
+                )
+            }
+        }
+
+        override fun showSurahMode(show: Boolean) {
+            state.update {
+                it.copy(
+                    uiPreferencesState = it.uiPreferencesState.copy(
+                        showSurahMode = show
+                    )
+                )
+            }
+        }
+
+        override fun showPageMode(show: Boolean) {
+            state.update {
+                it.copy(
+                    uiPreferencesState = it.uiPreferencesState.copy(
+                        showPageMode = show
                     )
                 )
             }

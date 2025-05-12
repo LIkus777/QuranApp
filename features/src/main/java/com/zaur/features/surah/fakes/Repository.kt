@@ -8,9 +8,9 @@ import com.zaur.domain.al_quran_cloud.models.audiofile.VerseAudioAqc
 import com.zaur.domain.al_quran_cloud.models.chapter.ChapterAqc
 import com.zaur.domain.al_quran_cloud.models.translate.TranslationAqc
 import com.zaur.domain.al_quran_cloud.repository.OfflineRepository
-import com.zaur.domain.al_quran_cloud.repository.QuranAudioRepositoryAqc
-import com.zaur.domain.al_quran_cloud.repository.QuranTextRepositoryAqc
-import com.zaur.domain.al_quran_cloud.repository.QuranTranslationRepositoryAqc
+import com.zaur.domain.al_quran_cloud.repository.QuranAudioRepository
+import com.zaur.domain.al_quran_cloud.repository.QuranTextRepository
+import com.zaur.domain.al_quran_cloud.repository.QuranTranslationRepository
 import com.zaur.domain.storage.QuranStorage
 import com.zaur.domain.storage.ReciterStorage
 import com.zaur.domain.storage.theme.ThemeStorage
@@ -87,7 +87,7 @@ class FakeQuranStorage() : QuranStorage {
     }
 }
 
-class FakeQTextRAqcLocal : QuranTextRepositoryAqc.Local {
+class FakeQTextRLocal : QuranTextRepository.Local {
     override suspend fun getAllChaptersLocal(): List<ChapterAqc.Base> {
         TODO("Not yet implemented")
     }
@@ -97,7 +97,7 @@ class FakeQTextRAqcLocal : QuranTextRepositoryAqc.Local {
     }
 }
 
-class FakeQTextRAqcCloud : QuranTextRepositoryAqc.Cloud {
+class FakeQTextRCloud : QuranTextRepository.Cloud {
     override suspend fun getAllChaptersCloud(): List<ChapterAqc.Base> {
         TODO("Not yet implemented")
     }
@@ -163,7 +163,7 @@ class FakeSurahPlayer() : SurahPlayer {
     }
 }
 
-class FakeQAudioRAqcLocal : QuranAudioRepositoryAqc.Local {
+class FakeQAudioRLocal : QuranAudioRepository.Local {
     override suspend fun getChapterAudioOfReciterLocal(
         chapterNumber: Int,
         reciter: String,
@@ -179,7 +179,7 @@ class FakeQAudioRAqcLocal : QuranAudioRepositoryAqc.Local {
     }
 }
 
-class FakeQAudioRAqcCloud : QuranAudioRepositoryAqc.Cloud {
+class FakeQAudioRCloud : QuranAudioRepository.Cloud {
     override suspend fun downloadToCache(
         chapterNumber: Int,
         reciter: String,
@@ -202,7 +202,7 @@ class FakeQAudioRAqcCloud : QuranAudioRepositoryAqc.Cloud {
     }
 }
 
-class FakeQTranslationRAqcLocal : QuranTranslationRepositoryAqc.Local {
+class FakeQTranslationRLocal : QuranTranslationRepository.Local {
     override suspend fun getTranslationForChapterLocal(
         chapterNumber: Int,
         translator: String,
@@ -211,7 +211,7 @@ class FakeQTranslationRAqcLocal : QuranTranslationRepositoryAqc.Local {
     }
 }
 
-class FakeQTranslationRAqcCloud : QuranTranslationRepositoryAqc.Cloud {
+class FakeQTranslationRCloud : QuranTranslationRepository.Cloud {
     override suspend fun getTranslationForChapterCloud(
         chapterNumber: Int,
         translator: String,

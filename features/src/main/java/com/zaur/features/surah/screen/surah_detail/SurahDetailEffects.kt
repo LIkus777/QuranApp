@@ -67,6 +67,11 @@ fun SurahDetailEffects(
         }
     }
 
+    LaunchedEffect(surahDetailState.uiPreferencesState().showSurahMode(), surahDetailState.uiPreferencesState().showPageMode()) {
+        Log.i("TAG", "SurahDetailEffects: ${surahDetailState.uiPreferencesState().showSurahMode()}")
+        Log.i("TAG", "SurahDetailEffects: ${surahDetailState.uiPreferencesState().showPageMode()}")
+    }
+
     LaunchedEffect(chapterNumber) {
         val reciter = quranAudioViewModel.getReciterName()
         surahDetailViewModel.selectedReciter(reciter.toString())

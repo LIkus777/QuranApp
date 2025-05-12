@@ -4,15 +4,14 @@ import com.zaur.domain.al_quran_cloud.models.audiofile.CacheAudio
 import com.zaur.domain.al_quran_cloud.models.audiofile.ChapterAudioFile
 import com.zaur.domain.al_quran_cloud.models.audiofile.VerseAudioAqc
 import com.zaur.domain.al_quran_cloud.repository.OfflineRepository
-import com.zaur.domain.al_quran_cloud.repository.QuranAudioRepositoryAqc
-import java.io.File
+import com.zaur.domain.al_quran_cloud.repository.QuranAudioRepository
 
 /**
 * @author Zaur
 * @since 2025-05-12
 */
 
-interface QuranAudioUseCaseAqc {
+interface QuranAudioUseCase {
 
     suspend fun downloadToCache(chapterNumber: Int, reciter: String): List<CacheAudio.Base>
 
@@ -25,19 +24,19 @@ interface QuranAudioUseCaseAqc {
 
     class Base(
         private val offlineRepository: OfflineRepository,
-        private val quranAudioRepositoryAqcLocal: QuranAudioRepositoryAqc.Local,
-        private val quranAudioRepositoryAqcCloud: QuranAudioRepositoryAqc.Cloud,
-    ) : QuranAudioUseCaseAqc {
+        private val quranAudioRepositoryLocal: QuranAudioRepository.Local,
+        private val quranAudioRepositoryCloud: QuranAudioRepository.Cloud,
+    ) : QuranAudioUseCase {
         override suspend fun downloadToCache(chapterNumber: Int, reciter: String): List<CacheAudio.Base> =
-            quranAudioRepositoryAqcCloud.downloadToCache(chapterNumber, reciter)
+            quranAudioRepositoryCloud.downloadToCache(chapterNumber, reciter)
 
         override suspend fun getChapterAudioOfReciter(
             chapterNumber: Int,
             reciter: String,
         ): ChapterAudioFile = if (offlineRepository.isOffline()) {
-            quranAudioRepositoryAqcLocal.getChapterAudioOfReciterLocal(chapterNumber, reciter)
+            quranAudioRepositoryLocal.getChapterAudioOfReciterLocal(chapterNumber, reciter)
         } else {
-            quranAudioRepositoryAqcCloud.getChapterAudioOfReciterCloud(chapterNumber, reciter)
+            quranAudioRepositoryCloud.getChapterAudioOfReciterCloud(chapterNumber, reciter)
         }
 
 
@@ -45,9 +44,9 @@ interface QuranAudioUseCaseAqc {
             verseKey: String,
             reciter: String,
         ): VerseAudioAqc = if (offlineRepository.isOffline()) {
-            quranAudioRepositoryAqcLocal.getAyahAudioByKeyLocal(verseKey, reciter)
+            quranAudioRepositoryLocal.getAyahAudioByKeyLocal(verseKey, reciter)
         } else {
-            quranAudioRepositoryAqcCloud.getAyahAudioByKeyCloud(verseKey, reciter)
+            quranAudioRepositoryCloud.getAyahAudioByKeyCloud(verseKey, reciter)
         }
     }
 }

@@ -8,7 +8,7 @@ import com.zaur.domain.al_quran_cloud.models.audiofile.Ayah
 import com.zaur.domain.al_quran_cloud.models.audiofile.CacheAudio
 import com.zaur.domain.al_quran_cloud.models.audiofile.ChapterAudioFile
 import com.zaur.domain.al_quran_cloud.models.audiofile.VerseAudioAqc
-import com.zaur.domain.al_quran_cloud.use_case.QuranAudioUseCaseAqc
+import com.zaur.domain.al_quran_cloud.use_case.QuranAudioUseCase
 import com.zaur.features.surah.manager.ReciterManager
 import com.zaur.features.surah.observables.QuranAudioObservable
 import com.zaur.features.surah.screen.surah_detail.SurahDetailStateManager
@@ -51,7 +51,7 @@ interface QuranAudioViewModel : QuranAudioObservable.Read {
         private val reciterManager: ReciterManager,
         private val stateManager: SurahDetailStateManager,
         private val observable: QuranAudioObservable.Mutable,
-        private val quranAudioUseCaseAqc: QuranAudioUseCaseAqc,
+        private val quranAudioUseCase: QuranAudioUseCase,
     ) : BaseViewModel(), QuranAudioViewModel {
 
         override fun getReciter(): String? = reciterManager.getReciter()
@@ -63,7 +63,7 @@ interface QuranAudioViewModel : QuranAudioObservable.Read {
         override fun downloadToCache(chapterNumber: Int, reciter: String) {
             viewModelScope.launch(Dispatchers.IO) {
                 val result = launchSafely {
-                    quranAudioUseCaseAqc.downloadToCache(chapterNumber, reciter)
+                    quranAudioUseCase.downloadToCache(chapterNumber, reciter)
                 }
                 result.handle(object : HandleResult<List<CacheAudio.Base>> {
                     override fun handleSuccess(data: List<CacheAudio.Base>) {
@@ -108,7 +108,7 @@ interface QuranAudioViewModel : QuranAudioObservable.Read {
         override fun getChaptersAudioOfReciter(chapterNumber: Int, reciter: String) {
             viewModelScope.launch(Dispatchers.IO) {
                 val result = launchSafely {
-                    quranAudioUseCaseAqc.getChapterAudioOfReciter(
+                    quranAudioUseCase.getChapterAudioOfReciter(
                         chapterNumber, reciter
                     )
                 }
@@ -134,7 +134,7 @@ interface QuranAudioViewModel : QuranAudioObservable.Read {
             //todo
             viewModelScope.launch(Dispatchers.IO) {
                 val result =
-                    launchSafely { quranAudioUseCaseAqc.getAyahAudioByKey(verseKey, reciter) }
+                    launchSafely { quranAudioUseCase.getAyahAudioByKey(verseKey, reciter) }
                 result.handle(object : HandleResult<VerseAudioAqc> {
                     override fun handleSuccess(data: VerseAudioAqc) {
                         Log.i("TAGGG", "getVerseAudioFile: data ${data.audio()} ")

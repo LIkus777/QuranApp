@@ -3,7 +3,7 @@ package com.zaur.domain.al_quran_cloud.use_case
 import com.zaur.domain.al_quran_cloud.models.arabic.ArabicChapter
 import com.zaur.domain.al_quran_cloud.models.chapter.ChapterAqc
 import com.zaur.domain.al_quran_cloud.repository.OfflineRepository
-import com.zaur.domain.al_quran_cloud.repository.QuranTextRepositoryAqc
+import com.zaur.domain.al_quran_cloud.repository.QuranTextRepository
 import com.zaur.domain.storage.QuranStorage
 
 /**
@@ -11,7 +11,7 @@ import com.zaur.domain.storage.QuranStorage
 * @since 2025-05-12
 */
 
-interface QuranTextUseCaseAqc {
+interface QuranTextUseCase {
 
     suspend fun getAllChapters(): List<ChapterAqc.Base>
     suspend fun getArabicChapter(chapterNumber: Int): ArabicChapter.Base
@@ -29,23 +29,23 @@ interface QuranTextUseCaseAqc {
     class Base(
         private val quranStorage: QuranStorage,
         private val offlineRepository: OfflineRepository,
-        private val quranTextRepositoryAqcLocal: QuranTextRepositoryAqc.Local,
-        private val quranTextRepositoryAqcCloud: QuranTextRepositoryAqc.Cloud,
-    ) : QuranTextUseCaseAqc {
+        private val quranTextRepositoryLocal: QuranTextRepository.Local,
+        private val quranTextRepositoryCloud: QuranTextRepository.Cloud,
+    ) : QuranTextUseCase {
 
         override suspend fun getAllChapters(): List<ChapterAqc.Base> {
             return if (offlineRepository.isOffline()) {
-                quranTextRepositoryAqcLocal.getAllChaptersLocal()
+                quranTextRepositoryLocal.getAllChaptersLocal()
             } else {
-                quranTextRepositoryAqcCloud.getAllChaptersCloud()
+                quranTextRepositoryCloud.getAllChaptersCloud()
             }
         }
 
         override suspend fun getArabicChapter(chapterNumber: Int): ArabicChapter.Base {
             return if (offlineRepository.isOffline()) {
-                quranTextRepositoryAqcLocal.getArabicChapterLocal(chapterNumber)
+                quranTextRepositoryLocal.getArabicChapterLocal(chapterNumber)
             } else {
-                quranTextRepositoryAqcCloud.getArabicChapterCloud(chapterNumber)
+                quranTextRepositoryCloud.getArabicChapterCloud(chapterNumber)
             }
         }
 

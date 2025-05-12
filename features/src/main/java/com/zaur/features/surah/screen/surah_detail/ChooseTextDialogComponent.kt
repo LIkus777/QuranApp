@@ -17,6 +17,7 @@ fun ChooseTextDialogComponent(
     colors: QuranColors,
     state: SurahDetailScreenState,
     isDarkTheme: Boolean,
+    isSurahMode: Boolean,
     quranTextViewModel: QuranTextViewModel,
     themeViewModel: ThemeViewModel,
     surahDetailViewModel: SurahDetailViewModel,
@@ -25,6 +26,7 @@ fun ChooseTextDialogComponent(
         colors = colors,
         showTextDialog = state.bottomSheetState().showTextBottomSheet(),
         isDarkTheme = isDarkTheme,
+        isSurahMode = isSurahMode,
         onThemeChange = { themeViewModel.saveTheme(it) },
         fontSizeArabic = state.uiPreferencesState().fontSizeArabic(),
         onFontSizeArabicChange = {
@@ -36,5 +38,7 @@ fun ChooseTextDialogComponent(
             surahDetailViewModel.fontSizeRussian(it)
             quranTextViewModel.saveFontSizeRussian(it)
         },
+        onPageModeClicked = { surahDetailViewModel.showPageMode(true) },
+        onSurahModeClicked = { surahDetailViewModel.showSurahMode(true) } ,
         onDismiss = { surahDetailViewModel.showTextBottomSheet(false) })
 }

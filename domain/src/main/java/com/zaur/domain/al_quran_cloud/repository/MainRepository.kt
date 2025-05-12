@@ -1,14 +1,10 @@
 package com.zaur.domain.al_quran_cloud.repository
 
 import com.zaur.domain.al_quran_cloud.models.arabic.ArabicChapter
-import com.zaur.domain.al_quran_cloud.models.arabic.ArabicChaptersAqc
 import com.zaur.domain.al_quran_cloud.models.audiofile.ChapterAudioFile
-import com.zaur.domain.al_quran_cloud.models.audiofile.ChapterAudiosFileAqc
 import com.zaur.domain.al_quran_cloud.models.audiofile.VerseAudioAqc
 import com.zaur.domain.al_quran_cloud.models.chapter.ChapterAqc
-import com.zaur.domain.al_quran_cloud.models.chapter.ChaptersAqc
 import com.zaur.domain.al_quran_cloud.models.translate.TranslationAqc
-import com.zaur.domain.al_quran_cloud.models.translate.TranslationsChapterAqc
 
 /**
 * @author Zaur

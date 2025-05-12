@@ -42,6 +42,7 @@ fun SurahDetailScreenContent(
     surahDetailViewModel.fontSizeArabic(quranTextViewModel.getFontSizeArabic())
     surahDetailViewModel.fontSizeRussian(quranTextViewModel.getFontSizeRussian())
     val isDarkTheme = themeViewModel.getIsDarkTheme()
+    val isSurahMode = surahDetailState.uiPreferencesState().showSurahMode()
 
     val listState = rememberLazyListState()
     val colors = if (isDarkTheme) DarkThemeColors else LightThemeColors
@@ -78,6 +79,7 @@ fun SurahDetailScreenContent(
         colors,
         surahDetailState,
         isDarkTheme,
+        isSurahMode,
         quranTextViewModel,
         themeViewModel,
         surahDetailViewModel

@@ -7,6 +7,6 @@ import com.zaur.domain.base.repository.BaseQuranTajweedRepository
 * @since 2025-05-12
 */
 
-interface QuranTajweedRepositoryAqc : BaseQuranTajweedRepository {
+interface QuranTajweedRepository : BaseQuranTajweedRepository {
     //todo
 }

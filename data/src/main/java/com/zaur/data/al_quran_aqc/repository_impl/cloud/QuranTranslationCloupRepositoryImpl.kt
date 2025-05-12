@@ -2,17 +2,16 @@ package com.zaur.data.al_quran_aqc.repository_impl.cloud
 
 import com.zaur.data.al_quran_aqc.api.QuranApiAqc
 import com.zaur.domain.al_quran_cloud.models.translate.TranslationAqc
-import com.zaur.domain.al_quran_cloud.models.translate.TranslationsChapterAqc
-import com.zaur.domain.al_quran_cloud.repository.QuranTranslationRepositoryAqc
+import com.zaur.domain.al_quran_cloud.repository.QuranTranslationRepository
 
 /**
 * @author Zaur
 * @since 2025-05-12
 */
 
-class QuranTranslationCloupRepositoryAqcImpl(
+class QuranTranslationCloupRepositoryImpl(
     private val quranApiAqc: QuranApiAqc,
-) : QuranTranslationRepositoryAqc.Cloud {
+) : QuranTranslationRepository.Cloud {
     override suspend fun getTranslationForChapterCloud(
         chapterNumber: Int,
         translator: String,

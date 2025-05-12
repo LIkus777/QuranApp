@@ -20,11 +20,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.zaur.domain.al_quran_cloud.use_case.QuranTextUseCaseAqc
+import com.zaur.domain.al_quran_cloud.use_case.QuranTextUseCase
 import com.zaur.domain.storage.theme.ThemeUseCase
 import com.zaur.features.surah.fakes.FakeOfflineRepos
-import com.zaur.features.surah.fakes.FakeQTextRAqcCloud
-import com.zaur.features.surah.fakes.FakeQTextRAqcLocal
+import com.zaur.features.surah.fakes.FakeQTextRCloud
+import com.zaur.features.surah.fakes.FakeQTextRLocal
 import com.zaur.features.surah.fakes.FakeQuranStorage
 import com.zaur.features.surah.fakes.FakeThemeStorage
 import com.zaur.features.surah.observables.SurahChooseObservable
@@ -105,11 +105,11 @@ fun SurahChoosePreview() {
                 ), surahChooseViewModel = SurahChooseViewModel.Base(
                     observable = SurahChooseObservable.Base(
                         QuranTextAqcUIState.Base()
-                    ), quranTextUseCaseAqc = QuranTextUseCaseAqc.Base(
+                    ), quranTextUseCase = QuranTextUseCase.Base(
                         FakeQuranStorage(),
                         FakeOfflineRepos(),
-                        FakeQTextRAqcLocal(),
-                        FakeQTextRAqcCloud()
+                        FakeQTextRLocal(),
+                        FakeQTextRCloud()
                     )
                 ), navController = fakeNavController
             )

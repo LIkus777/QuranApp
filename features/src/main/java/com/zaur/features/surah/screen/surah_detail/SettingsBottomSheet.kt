@@ -2,15 +2,17 @@ package com.zaur.features.surah.screen.surah_detail
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -24,9 +26,9 @@ import com.zaur.presentation.ui.LightThemeColors
 import com.zaur.presentation.ui.QuranColors
 
 /**
-* @author Zaur
-* @since 2025-05-12
-*/
+ * @author Zaur
+ * @since 2025-05-12
+ */
 
 @Preview(showBackground = true)
 @Composable
@@ -39,9 +41,8 @@ fun SettingsBottomSheet(
     onShowArabicChange: (Boolean) -> Unit = {},
     showRussian: Boolean = true,
     onShowRussianChange: (Boolean) -> Unit = {},
-    onDismiss: () -> Unit = {}
+    onDismiss: () -> Unit = {},
 ) {
-
     CustomBottomSheet(
         colors = colors,
         isVisible = showSheet,
@@ -53,31 +54,56 @@ fun SettingsBottomSheet(
                 .wrapContentHeight()
                 .clip(RoundedCornerShape(16.dp))
                 .background(colors.boxBackground)
-                .padding(16.dp)
+                .padding(20.dp)
         ) {
             Column(
-                modifier = Modifier
-                    .align(Alignment.Center)
+                modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.Start
             ) {
-                Text("Настройки", fontSize = 20.sp, fontWeight = FontWeight.Bold)
+                Text(
+                    "Настройки",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = colors.textPrimary
+                )
 
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Text(
-                    "Чтец: $selectedReciter",
+                    "Чтец: ${selectedReciter ?: "не выбран"}",
                     fontSize = 16.sp,
+                    fontWeight = FontWeight.Medium,
+                    color = colors.textPrimary,
                     modifier = Modifier
                         .clickable { showReciterDialog(true) }
-                        .padding(top = 8.dp, bottom = 8.dp))
+                        .background(
+                            colors.cardBackground, shape = RoundedCornerShape(12.dp)
+                        )
+                        .padding(vertical = 12.dp, horizontal = 16.dp))
 
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(24.dp))
 
-                Column {
-                    Button(onClick = { onShowArabicChange(!showArabic) }) {
+                Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    Button(
+                        onClick = { onShowArabicChange(!showArabic) },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = colors.buttonPrimary,
+                            contentColor = colors.textOnButton
+                        ),
+                        shape = RoundedCornerShape(12.dp),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
                         Text(if (showArabic) "Скрыть арабский" else "Показать арабский")
                     }
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Button(onClick = { onShowRussianChange(!showRussian) }) {
+
+                    Button(
+                        onClick = { onShowRussianChange(!showRussian) },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = colors.buttonPrimary,
+                            contentColor = colors.textOnButton
+                        ),
+                        shape = RoundedCornerShape(12.dp),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
                         Text(if (showRussian) "Скрыть русский" else "Показать русский")
                     }
                 }

@@ -1,6 +1,6 @@
 package com.zaur.features.surah.viewmodel.factory
 
-import com.zaur.domain.al_quran_cloud.use_case.QuranTextUseCaseAqc
+import com.zaur.domain.al_quran_cloud.use_case.QuranTextUseCase
 import com.zaur.features.surah.observables.QuranTextObservable
 import com.zaur.features.surah.ui_state.aqc.QuranTextAqcUIState
 import com.zaur.features.surah.viewmodel.QuranTextViewModel
@@ -18,10 +18,10 @@ interface QuranTextViewModelFactory {
         private val observable: QuranTextObservable.Mutable = QuranTextObservable.Base(
             QuranTextAqcUIState.Base()
         ),
-        private val quranTextUseCaseAqc: QuranTextUseCaseAqc
+        private val quranTextUseCase: QuranTextUseCase
     ) : QuranTextViewModelFactory {
         override fun create(): QuranTextViewModel {
-            return QuranTextViewModel.Base(observable, quranTextUseCaseAqc)
+            return QuranTextViewModel.Base(observable, quranTextUseCase)
         }
     }
 

@@ -6,19 +6,19 @@ import com.zaur.data.room.models.mappers.audiofile.ChapterAudioMapper
 import com.zaur.data.room.models.mappers.audiofile.VerseAudioMapper
 import com.zaur.domain.al_quran_cloud.models.audiofile.ChapterAudioFile
 import com.zaur.domain.al_quran_cloud.models.audiofile.VerseAudioAqc
-import com.zaur.domain.al_quran_cloud.repository.QuranAudioRepositoryAqc
+import com.zaur.domain.al_quran_cloud.repository.QuranAudioRepository
 
 /**
 * @author Zaur
 * @since 2025-05-12
 */
 
-class QuranAudioLocalRepositoryAqcImpl(
+class QuranAudioLocalRepositoryImpl(
     private val chapterAudioDao: ChapterAudioDao,
     private val verseAudioDao: VerseAudioDao,
     private val chapterAudioMapper: ChapterAudioMapper,
     private val verseMapper: VerseAudioMapper,
-) : QuranAudioRepositoryAqc.Local {
+) : QuranAudioRepository.Local {
     override suspend fun getChapterAudioOfReciterLocal(
         chapterNumber: Int, reciter: String,
     ): ChapterAudioFile.Base = chapterAudioMapper.fromData(

@@ -57,17 +57,23 @@ interface UiPreferencesState {
     fun showRussian(): Boolean
     fun fontSizeArabic(): Float
     fun fontSizeRussian(): Float
+    fun showSurahMode(): Boolean
+    fun showPageMode(): Boolean
 
     data class Base(
         private val showArabic: Boolean = true,
         private val showRussian: Boolean = true,
         private val fontSizeArabic: Float = 24f,
         private val fontSizeRussian: Float = 18f,
+        private val showSurahMode: Boolean = true,
+        private val showPageMode: Boolean = false,
     ) : UiPreferencesState {
         override fun showArabic() = showArabic
         override fun showRussian() = showRussian
         override fun fontSizeArabic() = fontSizeArabic
         override fun fontSizeRussian() = fontSizeRussian
+        override fun showSurahMode(): Boolean = showSurahMode
+        override fun showPageMode(): Boolean = showPageMode
     }
 }
 

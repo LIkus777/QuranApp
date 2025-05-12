@@ -6,7 +6,7 @@ import com.zaur.core.BaseViewModel
 import com.zaur.core.HandleResult
 import com.zaur.domain.al_quran_cloud.models.arabic.ArabicChapter
 import com.zaur.domain.al_quran_cloud.models.chapter.ChapterAqc
-import com.zaur.domain.al_quran_cloud.use_case.QuranTextUseCaseAqc
+import com.zaur.domain.al_quran_cloud.use_case.QuranTextUseCase
 import com.zaur.features.surah.observables.QuranTextObservable
 import com.zaur.features.surah.ui_state.aqc.QuranTextAqcUIState
 import kotlinx.coroutines.Dispatchers
@@ -30,27 +30,27 @@ interface QuranTextViewModel : QuranTextObservable.Read {
 
     class Base(
         private val observable: QuranTextObservable.Mutable,
-        private val quranTextUseCaseAqc: QuranTextUseCaseAqc,
+        private val quranTextUseCase: QuranTextUseCase,
     ) : BaseViewModel(), QuranTextViewModel {
 
         override fun textState(): StateFlow<QuranTextAqcUIState.Base> = observable.textState()
 
-        override fun getFontSizeArabic() = quranTextUseCaseAqc.getFontSizeArabic()
+        override fun getFontSizeArabic() = quranTextUseCase.getFontSizeArabic()
 
-        override fun getFontSizeRussian() = quranTextUseCaseAqc.getFontSizeRussian()
+        override fun getFontSizeRussian() = quranTextUseCase.getFontSizeRussian()
 
         override fun saveFontSizeArabic(size: Float) {
-            quranTextUseCaseAqc.saveFontSizeArabic(size)
+            quranTextUseCase.saveFontSizeArabic(size)
         }
 
         override fun saveFontSizeRussian(size: Float) {
-            quranTextUseCaseAqc.saveFontSizeRussian(size)
+            quranTextUseCase.saveFontSizeRussian(size)
         }
 
         override fun getAllChapters() {
             viewModelScope.launch(Dispatchers.IO) {
                 val result =
-                    launchSafely<List<ChapterAqc.Base>> { quranTextUseCaseAqc.getAllChapters() }
+                    launchSafely<List<ChapterAqc.Base>> { quranTextUseCase.getAllChapters() }
                 result.handle(object : HandleResult<List<ChapterAqc.Base>> {
                     override fun handleSuccess(data: List<ChapterAqc.Base>) {
                         viewModelScope.launch {
@@ -64,7 +64,7 @@ interface QuranTextViewModel : QuranTextObservable.Read {
 
         override fun getArabicChapter(chapterNumber: Int) {
             viewModelScope.launch(Dispatchers.IO) {
-                val result = launchSafely { quranTextUseCaseAqc.getArabicChapter(chapterNumber) }
+                val result = launchSafely { quranTextUseCase.getArabicChapter(chapterNumber) }
                 result.handle(object : HandleResult<ArabicChapter.Base> {
                     override fun handleSuccess(data: ArabicChapter.Base) {
                         viewModelScope.launch {

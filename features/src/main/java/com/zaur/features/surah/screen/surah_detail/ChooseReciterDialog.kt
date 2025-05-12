@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -20,7 +21,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -31,9 +32,9 @@ import com.zaur.presentation.ui.LightThemeColors
 import com.zaur.presentation.ui.QuranColors
 
 /**
-* @author Zaur
-* @since 2025-05-12
-*/
+ * @author Zaur
+ * @since 2025-05-12
+ */
 
 @Preview(showBackground = true)
 @Composable
@@ -46,50 +47,54 @@ fun ChooseReciterDialog(
         var selectedItem by remember { mutableStateOf<String>("") }
 
         Dialog(onDismissRequest = {
-            onDismiss("") // Разрешаем закрытие, если чтец уже был выбран
+            onDismiss("") // Закрытие без выбора
         }) {
             Box(
                 modifier = Modifier
                     .wrapContentSize()
-                    .background(Color.White, shape = RoundedCornerShape(16.dp))
+                    .clip(RoundedCornerShape(16.dp))
+                    .background(colors.boxBackground)
                     .padding(16.dp)
             ) {
                 Column(
                     modifier = Modifier.verticalScroll(rememberScrollState()),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text("Выберите чтеца", fontSize = 20.sp, fontWeight = FontWeight.Bold)
+                    Text(
+                        "Выберите чтеца",
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = colors.textPrimary
+                    )
 
                     Spacer(modifier = Modifier.height(10.dp))
 
                     ReciterList.reciters.toList().forEachIndexed { index, (identifier, name) ->
                         val isSelected = selectedItem == identifier
-                        Box(contentAlignment = Alignment.Center, modifier = Modifier
-                            .clickable {
-                                selectedItem = identifier
-                                onDismiss(identifier)
-                            }
-                            .padding(9.dp)
-                            .background(
-                                if (isSelected) colors.buttonPrimary else colors.buttonDisabled,
-                                shape = RoundedCornerShape(16.dp)
-                            )
-                            .fillMaxWidth()) {
+                        Box(
+                            contentAlignment = Alignment.Center,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clip(RoundedCornerShape(12.dp))
+                                .clickable {
+                                    selectedItem = identifier
+                                    onDismiss(identifier)
+                                }
+                                .background(
+                                    if (isSelected) colors.buttonPrimary else colors.cardBackground
+                                )
+                                .padding(vertical = 12.dp, horizontal = 16.dp)) {
                             Text(
-                                name,
-                                modifier = Modifier.padding(16.dp),
-                                color = if (isSelected) colors.textOnButton else colors.textOnCard,
-                                fontWeight = FontWeight.Bold
+                                text = name,
+                                color = if (isSelected) colors.textOnButton else colors.textPrimary,
+                                fontWeight = FontWeight.Medium
                             )
                         }
 
-                        if (index != ReciterList.reciters.toList().lastIndex) {
-                            Box(
-                                modifier = Modifier
-                                    .height(1.dp)
-                                    .fillMaxWidth()
-                                    .background(colors.divider)
-                            )
+                        if (index != ReciterList.reciters.size - 1) {
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Divider(color = colors.divider, thickness = 1.dp)
+                            Spacer(modifier = Modifier.height(8.dp))
                         }
                     }
                 }

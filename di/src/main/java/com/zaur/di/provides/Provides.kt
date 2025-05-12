@@ -24,14 +24,14 @@ import com.zaur.data.room.models.mappers.translate.TranslationAyahMapper
 import com.zaur.data.room.models.mappers.translate.TranslationMapper
 import com.zaur.domain.al_quran_cloud.repository.MainRepository
 import com.zaur.domain.al_quran_cloud.repository.OfflineRepository
-import com.zaur.domain.al_quran_cloud.repository.QuranAudioRepositoryAqc
-import com.zaur.domain.al_quran_cloud.repository.QuranTextRepositoryAqc
-import com.zaur.domain.al_quran_cloud.repository.QuranTranslationRepositoryAqc
+import com.zaur.domain.al_quran_cloud.repository.QuranAudioRepository
+import com.zaur.domain.al_quran_cloud.repository.QuranTextRepository
+import com.zaur.domain.al_quran_cloud.repository.QuranTranslationRepository
 import com.zaur.domain.al_quran_cloud.use_case.MainUseCase
 import com.zaur.domain.al_quran_cloud.use_case.OfflineUseCase
-import com.zaur.domain.al_quran_cloud.use_case.QuranAudioUseCaseAqc
-import com.zaur.domain.al_quran_cloud.use_case.QuranTextUseCaseAqc
-import com.zaur.domain.al_quran_cloud.use_case.QuranTranslationUseCaseAqc
+import com.zaur.domain.al_quran_cloud.use_case.QuranAudioUseCase
+import com.zaur.domain.al_quran_cloud.use_case.QuranTextUseCase
+import com.zaur.domain.al_quran_cloud.use_case.QuranTranslationUseCase
 import com.zaur.domain.al_quran_cloud.use_case.ReciterUseCase
 import com.zaur.domain.storage.QuranStorage
 import com.zaur.domain.storage.ReciterStorage
@@ -224,15 +224,15 @@ interface ProvideMainUseCase {
 }
 
 interface ProvideQuranAudioUseCaseAqc {
-    fun provideQuranAudioUseCaseAqc(): QuranAudioUseCaseAqc
+    fun provideQuranAudioUseCaseAqc(): QuranAudioUseCase
 }
 
 interface ProvideQuranTextUseCaseAqc {
-    fun provideQuranTextUseCaseAqc(): QuranTextUseCaseAqc
+    fun provideQuranTextUseCaseAqc(): QuranTextUseCase
 }
 
 interface ProvideQuranTranslationUseCaseAqc {
-    fun provideQuranTranslationUseCaseAqc(): QuranTranslationUseCaseAqc
+    fun provideQuranTranslationUseCaseAqc(): QuranTranslationUseCase
 }
 
 interface ProvideQuranApiAqc {
@@ -240,11 +240,11 @@ interface ProvideQuranApiAqc {
 }
 
 interface ProvideQuranAudioRepositoryAqcCloud {
-    fun provideQuranAudioRepositoryAqcCloud(): QuranAudioRepositoryAqc.Cloud
+    fun provideQuranAudioRepositoryAqcCloud(): QuranAudioRepository.Cloud
 }
 
 interface ProvideQuranAudioRepositoryAqcLocal {
-    fun provideQuranAudioRepositoryAqcLocal(): QuranAudioRepositoryAqc.Local
+    fun provideQuranAudioRepositoryAqcLocal(): QuranAudioRepository.Local
 }
 
 interface ProvideOfflineRepository {
@@ -252,17 +252,17 @@ interface ProvideOfflineRepository {
 }
 
 interface ProvideQuranTextRepositoryAqcLocal {
-    fun provideQuranTextRepositoryAqcLocal(): QuranTextRepositoryAqc.Local
+    fun provideQuranTextRepositoryAqcLocal(): QuranTextRepository.Local
 }
 
 interface ProvideQuranTextRepositoryAqcCloud {
-    fun provideQuranTextRepositoryAqcCloud(): QuranTextRepositoryAqc.Cloud
+    fun provideQuranTextRepositoryAqcCloud(): QuranTextRepository.Cloud
 }
 
 interface ProvideQuranTranslationRepositoryAqcLocal {
-    fun provideQuranTranslationRepositoryAqcLocal(): QuranTranslationRepositoryAqc.Local
+    fun provideQuranTranslationRepositoryAqcLocal(): QuranTranslationRepository.Local
 }
 
 interface ProvideQuranTranslationRepositoryAqcCloud {
-    fun provideQuranTranslationRepositoryAqcCloud(): QuranTranslationRepositoryAqc.Cloud
+    fun provideQuranTranslationRepositoryAqcCloud(): QuranTranslationRepository.Cloud
 }

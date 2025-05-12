@@ -4,15 +4,14 @@ import com.zaur.domain.al_quran_cloud.models.audiofile.CacheAudio
 import com.zaur.domain.al_quran_cloud.models.audiofile.ChapterAudioFile
 import com.zaur.domain.al_quran_cloud.models.audiofile.VerseAudioAqc
 import com.zaur.domain.base.repository.BaseQuranAudioRepository
-import java.io.File
 
 /**
 * @author Zaur
 * @since 2025-05-12
 */
 
-interface QuranAudioRepositoryAqc : BaseQuranAudioRepository {
-    interface Local : QuranAudioRepositoryAqc {
+interface QuranAudioRepository : BaseQuranAudioRepository {
+    interface Local : QuranAudioRepository {
         suspend fun getChapterAudioOfReciterLocal(
             chapterNumber: Int,
             reciter: String,
@@ -21,7 +20,7 @@ interface QuranAudioRepositoryAqc : BaseQuranAudioRepository {
         suspend fun getAyahAudioByKeyLocal(verseKey: String, reciter: String): VerseAudioAqc.Base
     }
 
-    interface Cloud : QuranAudioRepositoryAqc {
+    interface Cloud : QuranAudioRepository {
         suspend fun downloadToCache(chapterNumber: Int, reciter: String): List<CacheAudio.Base>
 
         suspend fun getChapterAudioOfReciterCloud(

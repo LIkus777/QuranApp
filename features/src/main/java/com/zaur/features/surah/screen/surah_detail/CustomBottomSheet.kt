@@ -46,6 +46,11 @@ import com.zaur.presentation.ui.QuranColors
 import com.zaur.presentation.ui.getNavBarHeightInPx
 import kotlinx.coroutines.launch
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 @Preview(showBackground = true)
 @Composable
 fun CustomBottomSheet(
@@ -161,7 +166,7 @@ fun CustomBottomSheet(
                     modifier = Modifier
                         .align(Alignment.BottomStart)
                         .offset(y = (23).dp)
-                        .padding(start = 18.7.dp)
+                        .padding(start = 18.48.dp)
                         .size(24.dp)
                         .background(
                             color = colors.boxBackground,

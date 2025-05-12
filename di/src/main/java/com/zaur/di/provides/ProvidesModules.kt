@@ -6,6 +6,11 @@ import com.zaur.di.module.MapperModule
 import com.zaur.di.module.SurahChooseModule
 import com.zaur.di.module.SurahDetailModule
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 interface ProvidesModules : ProvideMainScreenModule, ProvideSurahChooseModule,
     ProvideSurahDetailModule, ProvideDatabaseModule, ProvideMapperModule
 

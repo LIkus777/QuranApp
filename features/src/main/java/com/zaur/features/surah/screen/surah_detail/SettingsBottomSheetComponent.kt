@@ -5,6 +5,11 @@ import com.zaur.features.surah.ui_state.aqc.SurahDetailScreenState
 import com.zaur.features.surah.viewmodel.SurahDetailViewModel
 import com.zaur.presentation.ui.QuranColors
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 @Composable
 fun SettingsBottomSheetComponent(
     state: SurahDetailScreenState, colors: QuranColors, viewModel: SurahDetailViewModel

@@ -6,6 +6,11 @@ import com.zaur.domain.al_quran_cloud.models.edition.Languages
 import com.zaur.domain.al_quran_cloud.models.edition.Types
 import com.zaur.domain.al_quran_cloud.repository.EditionRepository
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 class EditionCloudRepositoryImpl(
     private val quranApiAqc: QuranApiAqc,
 ) : EditionRepository {

@@ -22,6 +22,11 @@ import androidx.compose.ui.unit.dp
 import com.zaur.presentation.ui.LightThemeColors
 import com.zaur.presentation.ui.QuranColors
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 @Preview(showBackground = true)
 @Composable
 fun ChooseTextDialog(

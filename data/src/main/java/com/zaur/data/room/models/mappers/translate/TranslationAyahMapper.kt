@@ -3,6 +3,11 @@ package com.zaur.data.room.models.mappers.translate
 import com.zaur.data.room.models.TranslationAyahEntity
 import com.zaur.domain.al_quran_cloud.models.translate.Ayah
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 interface TranslationAyahMapper {
 
     fun toData(ayah: Ayah.Base): TranslationAyahEntity.Base

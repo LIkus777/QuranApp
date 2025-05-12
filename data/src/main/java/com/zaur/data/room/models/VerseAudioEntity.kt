@@ -16,6 +16,11 @@ import com.zaur.domain.al_quran_cloud.models.audiofile.Surah
 import com.zaur.domain.al_quran_cloud.models.audiofile.VerseAudioAqc
 import com.zaur.domain.base.SajdaAdapter
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 interface VerseAudioWithSurah {
 
     fun <T> map(mapper: Mapper<T>): T

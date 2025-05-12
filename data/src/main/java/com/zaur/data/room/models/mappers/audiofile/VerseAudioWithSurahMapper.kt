@@ -6,6 +6,11 @@ import com.zaur.data.room.models.VerseAudioWithSurah
 import com.zaur.data.room.models.mappers.audiofile.SurahMapper
 import com.zaur.domain.al_quran_cloud.models.audiofile.VerseAudioAqc
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 interface VerseAudioWithSurahMapper {
     fun toData(verse: VerseAudioAqc.Base): VerseAudioWithSurah.Base
     fun fromData(data: VerseAudioWithSurah.Base): VerseAudioAqc.Base

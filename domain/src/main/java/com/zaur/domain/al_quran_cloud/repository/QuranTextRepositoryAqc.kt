@@ -6,6 +6,11 @@ import com.zaur.domain.al_quran_cloud.models.chapter.ChapterAqc
 import com.zaur.domain.al_quran_cloud.models.chapter.ChaptersAqc
 import com.zaur.domain.base.repository.BaseQuranTextRepository
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 interface QuranTextRepositoryAqc : BaseQuranTextRepository {
     interface Local : QuranTextRepositoryAqc {
         suspend fun getAllChaptersLocal(): List<ChapterAqc.Base>

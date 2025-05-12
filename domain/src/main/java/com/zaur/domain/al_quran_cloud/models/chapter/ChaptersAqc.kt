@@ -2,6 +2,11 @@ package com.zaur.domain.al_quran_cloud.models.chapter
 
 import com.google.gson.annotations.SerializedName
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 interface ChaptersAqc {
 
     fun chapters(): List<ChapterAqc.Base>

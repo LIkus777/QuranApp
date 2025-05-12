@@ -50,6 +50,11 @@ import com.zaur.features.surah.viewmodel.ThemeViewModel
 import com.zaur.presentation.ui.QuranAppTheme
 import kotlinx.coroutines.launch
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 @Composable
 fun SurahDetailScreen(
     surahName: String,

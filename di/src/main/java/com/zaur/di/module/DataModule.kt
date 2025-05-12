@@ -35,6 +35,11 @@ import com.zaur.domain.storage.QuranStorage
 import com.zaur.domain.storage.ReciterStorage
 import com.zaur.domain.storage.theme.ThemeStorage
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 interface DataModule : ProvideOfflineUseCase, ProvideQuranApiAqc, ProvideAudioDownloader,
     ProvideAppDatabase, ProvideChapterDao, ProvideArabicChapterDao, ProvideVerseAudioDao,
     ProvideChapterAudioDao, ProvideTranslationChapterDao, ProvideReciterStorage,

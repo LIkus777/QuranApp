@@ -4,6 +4,11 @@ import android.net.Uri
 import androidx.media3.common.MediaItem
 import com.zaur.data.downloader.AudioDownloader
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 interface PlaylistBuilder {
 
     fun buildLocalPlaylist(

@@ -3,6 +3,11 @@ package com.zaur.data.room.models.mappers.audiofile
 import com.zaur.data.room.models.EditionVerseEntity
 import com.zaur.domain.al_quran_cloud.models.audiofile.EditionVerse
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 interface EditionVerseMapper {
 
     fun toData(edition: EditionVerse.Base): EditionVerseEntity.Base

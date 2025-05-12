@@ -7,6 +7,11 @@ import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 abstract class BaseViewModel(
     private val savedStateHandle: SavedStateHandle? = null
 ) : ViewModel() {

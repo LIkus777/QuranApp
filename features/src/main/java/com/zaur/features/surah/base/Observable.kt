@@ -4,6 +4,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 interface Observable {
 
     interface Update<T> {

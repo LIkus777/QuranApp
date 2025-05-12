@@ -7,6 +7,11 @@ import com.zaur.features.surah.viewmodel.SurahDetailViewModel
 import com.zaur.features.surah.viewmodel.ThemeViewModel
 import com.zaur.presentation.ui.QuranColors
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 @Composable
 fun ChooseTextDialogComponent(
     colors: QuranColors,

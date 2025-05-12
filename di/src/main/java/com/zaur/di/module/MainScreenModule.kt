@@ -14,6 +14,11 @@ import com.zaur.domain.al_quran_cloud.use_case.ReciterUseCase
 import com.zaur.domain.storage.theme.ThemeUseCase
 import com.zaur.features.surah.manager.ReciterManager
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 interface MainScreenModule : ProvideReciterUseCase, ProvideReciterManager,
     ProvideMainRepositorySave, ProvideMainRepositoryLoad, ProvideThemeUseCase, ProvideMainUseCase {
 

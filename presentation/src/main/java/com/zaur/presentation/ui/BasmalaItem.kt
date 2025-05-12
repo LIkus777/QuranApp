@@ -20,6 +20,11 @@ import androidx.compose.ui.unit.sp
 import com.zaur.presentation.R
 import com.zaur.presentation.ui.fonts.NotoFontMedium
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 @Preview(showBackground = true)
 @Composable
 fun BasmalaItem(colors: QuranColors = LightThemeColors) {

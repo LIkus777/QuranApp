@@ -2,6 +2,11 @@ package com.zaur.domain.al_quran_cloud.use_case
 
 import com.zaur.domain.storage.ReciterStorage
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 interface ReciterUseCase {
 
     fun getReciter(): String?

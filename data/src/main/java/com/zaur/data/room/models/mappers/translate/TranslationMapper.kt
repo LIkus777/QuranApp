@@ -4,6 +4,11 @@ import com.zaur.data.room.models.TranslationEntity
 import com.zaur.domain.al_quran_cloud.models.translate.EditionTranslation
 import com.zaur.domain.al_quran_cloud.models.translate.TranslationAqc
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 interface TranslationMapper {
 
     fun toData(translation: TranslationAqc.Base): TranslationEntity.Base

@@ -7,6 +7,11 @@ import com.zaur.domain.al_quran_cloud.repository.OfflineRepository
 import com.zaur.domain.al_quran_cloud.repository.QuranAudioRepositoryAqc
 import java.io.File
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 interface QuranAudioUseCaseAqc {
 
     suspend fun downloadToCache(chapterNumber: Int, reciter: String): List<CacheAudio.Base>

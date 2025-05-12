@@ -6,6 +6,11 @@ import com.zaur.features.surah.observables.MainObservable
 import com.zaur.features.surah.ui_state.main.MainState
 import com.zaur.features.surah.viewmodel.MainViewModel
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 interface MainViewModelFactory {
 
     fun create(): MainViewModel

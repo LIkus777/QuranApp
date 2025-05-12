@@ -16,6 +16,11 @@ import com.zaur.data.room.models.SurahEntity
 import com.zaur.data.room.models.TranslationEntity
 import com.zaur.data.room.models.VerseAudioEntity
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 @Database(
     entities = [ArabicChapterEntity.Base::class, VerseAudioEntity.Base::class, ChapterAudioEntity.Base::class, ChapterEntity.Base::class, TranslationEntity.Base::class, SurahEntity.Base::class],
     version = 3,

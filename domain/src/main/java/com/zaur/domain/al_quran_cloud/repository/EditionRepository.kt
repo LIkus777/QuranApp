@@ -4,6 +4,11 @@ import com.zaur.domain.al_quran_cloud.models.edition.Editions
 import com.zaur.domain.al_quran_cloud.models.edition.Languages
 import com.zaur.domain.al_quran_cloud.models.edition.Types
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 interface EditionRepository {
 
     suspend fun getAllTypes(): Types

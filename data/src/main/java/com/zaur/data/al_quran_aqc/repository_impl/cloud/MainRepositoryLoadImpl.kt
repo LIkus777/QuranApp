@@ -10,6 +10,11 @@ import com.zaur.domain.al_quran_cloud.models.chapter.ChapterAqc
 import com.zaur.domain.al_quran_cloud.models.translate.TranslationAqc
 import com.zaur.domain.al_quran_cloud.repository.MainRepository
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 class MainRepositoryLoadImpl(
     private val quranApiAqc: QuranApiAqc,
 ) : MainRepository.Load {

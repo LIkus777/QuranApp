@@ -10,6 +10,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 @Composable
 fun ListenModeDialog(
     onDismiss: () -> Unit,

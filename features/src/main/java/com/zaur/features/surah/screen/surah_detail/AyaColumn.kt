@@ -18,6 +18,11 @@ import com.zaur.presentation.ui.AyahItem
 import com.zaur.presentation.ui.BasmalaItem
 import com.zaur.presentation.ui.QuranColors
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 @Composable
 fun AyaColumn(
     isDarkTheme: Boolean,

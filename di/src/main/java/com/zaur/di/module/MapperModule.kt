@@ -29,6 +29,11 @@ import com.zaur.di.provides.ProvideTranslationMapper
 import com.zaur.di.provides.ProvideVerseAudioMapper
 import com.zaur.di.provides.ProvideVerseAudioWithSurahMapper
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 interface MapperModule : ProvideTranslationMapper, ProvideTranslationAyahMapper,
     ProvideEditionTranslationMapper, ProvideChapterMapper, ProvideVerseAudioWithSurahMapper,
     ProvideVerseAudioMapper, ProvideSurahMapper, ProvideEditionVerseMapper,

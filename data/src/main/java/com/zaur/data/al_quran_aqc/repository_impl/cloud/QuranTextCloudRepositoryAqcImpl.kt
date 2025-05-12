@@ -5,6 +5,11 @@ import com.zaur.domain.al_quran_cloud.models.arabic.ArabicChapter
 import com.zaur.domain.al_quran_cloud.models.chapter.ChapterAqc
 import com.zaur.domain.al_quran_cloud.repository.QuranTextRepositoryAqc
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 class QuranTextCloudRepositoryAqcImpl(
     private val quranApiAqc: QuranApiAqc,
 ) : QuranTextRepositoryAqc.Cloud {

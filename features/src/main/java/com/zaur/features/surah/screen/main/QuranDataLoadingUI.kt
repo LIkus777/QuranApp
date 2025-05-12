@@ -16,6 +16,11 @@ import androidx.navigation.NavHostController
 import com.zaur.features.surah.ui_state.main.MainState
 import com.zaur.navigation.Screen
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 @Composable
 fun QuranDataLoadingUI(mainState: MainState, navController: NavHostController) {
     Column(

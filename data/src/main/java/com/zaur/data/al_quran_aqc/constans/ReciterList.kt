@@ -1,5 +1,10 @@
 package com.zaur.data.al_quran_aqc.constans
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 object ReciterList {
     val reciters = mapOf(
         "ar.abdulbasitmurattal" to "Abdul Basit",

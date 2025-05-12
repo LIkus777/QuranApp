@@ -5,6 +5,11 @@ import com.zaur.features.surah.observables.SurahChooseObservable
 import com.zaur.features.surah.ui_state.aqc.QuranTextAqcUIState
 import com.zaur.features.surah.viewmodel.SurahChooseViewModel
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 interface SurahChooseViewModelFactory {
 
     fun create(): SurahChooseViewModel

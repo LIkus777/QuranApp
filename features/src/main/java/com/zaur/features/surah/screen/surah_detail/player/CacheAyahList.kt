@@ -2,6 +2,11 @@ package com.zaur.features.surah.screen.surah_detail.player
 
 import com.zaur.domain.al_quran_cloud.models.audiofile.CacheAudio
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 interface CacheAyahList {
     fun isEmpty(): Boolean
     fun toPlaylist(): List<String>

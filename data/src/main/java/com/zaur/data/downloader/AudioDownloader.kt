@@ -17,6 +17,11 @@ import java.io.FileOutputStream
 import java.net.HttpURLConnection
 import java.net.URL
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 interface AudioDownloader {
 
     fun getDownloadDirectory(): File?

@@ -13,6 +13,11 @@ import com.zaur.data.room.models.SurahEntity
 import com.zaur.data.room.models.TranslationAyahEntity
 import com.zaur.domain.al_quran_cloud.models.chapter.RevelationType
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 class GenericConverters {
 
     private val gson = Gson()

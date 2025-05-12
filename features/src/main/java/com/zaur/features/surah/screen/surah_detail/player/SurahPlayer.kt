@@ -16,6 +16,11 @@ import com.zaur.features.surah.screen.surah_detail.player.PlayerCommand.PlayWhol
 import com.zaur.features.surah.screen.surah_detail.player.PlayerCommand.ResumeCommand
 import com.zaur.features.surah.viewmodel.QuranAudioViewModel
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 // Интерфейс для управления плеером
 interface SurahPlayer {
 

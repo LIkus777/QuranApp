@@ -6,6 +6,11 @@ import androidx.compose.ui.Modifier
 import com.zaur.presentation.ui.ChapterBottomBar
 import com.zaur.presentation.ui.QuranColors
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 @Composable
 fun ChapterBottomBarComponent(
     modifier: Modifier,

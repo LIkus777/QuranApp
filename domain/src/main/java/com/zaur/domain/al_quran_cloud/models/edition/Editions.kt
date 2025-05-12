@@ -2,6 +2,11 @@ package com.zaur.domain.al_quran_cloud.models.edition
 
 import com.google.gson.annotations.SerializedName
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 interface Editions {
 
     fun <T> map(mapper: Mapper<T>): T

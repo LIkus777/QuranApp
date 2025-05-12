@@ -4,6 +4,11 @@ import com.zaur.domain.al_quran_cloud.models.audiofile.CacheAudio
 import com.zaur.domain.al_quran_cloud.models.audiofile.ChapterAudioFile
 import com.zaur.domain.al_quran_cloud.models.audiofile.VerseAudioAqc
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 interface QuranAudioAqcUIState {
     fun isLoading(): Boolean
     fun chaptersAudioFile(): ChapterAudioFile

@@ -6,6 +6,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 interface SurahDetailStateObservable : Observable.Mutable<SurahDetailScreenState> {
     interface Update : Observable.Update<SurahDetailScreenState>
 

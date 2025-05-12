@@ -6,6 +6,11 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.zaur.data.room.models.ChapterAudioEntity
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 @Dao
 interface ChapterAudioDao {
 

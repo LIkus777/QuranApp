@@ -1,5 +1,10 @@
 package com.zaur.domain.al_quran_cloud.models.audiofile
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 interface CacheAudio {
 
     fun chapterNumber(): Int

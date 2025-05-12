@@ -6,6 +6,11 @@ import com.zaur.features.surah.viewmodel.QuranAudioViewModel
 import com.zaur.features.surah.viewmodel.SurahDetailViewModel
 import com.zaur.presentation.ui.QuranColors
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 @Composable
 fun ChooseReciterDialogComponent(
     state: SurahDetailScreenState,

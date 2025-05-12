@@ -4,6 +4,11 @@ import com.zaur.features.surah.base.Observable
 import com.zaur.features.surah.ui_state.main.MainState
 import kotlinx.coroutines.flow.StateFlow
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 interface MainObservable : Observable.Mutable<MainState> {
 
     interface Update : Observable.Update<MainState>

@@ -14,6 +14,11 @@ import com.zaur.features.surah.viewmodel.ThemeViewModel
 import com.zaur.presentation.ui.DarkThemeColors
 import com.zaur.presentation.ui.LightThemeColors
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 @Composable
 fun SurahDetailScreenContent(
     surahName: String,

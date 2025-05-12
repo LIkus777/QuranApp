@@ -4,6 +4,11 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import com.zaur.presentation.R
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 val QuranFontHafsRegular = FontFamily(
     Font(R.font.hafs_18)
 )

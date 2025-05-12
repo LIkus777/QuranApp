@@ -10,6 +10,11 @@ import com.zaur.domain.al_quran_cloud.models.chapter.ChaptersAqc
 import com.zaur.domain.al_quran_cloud.models.translate.TranslationAqc
 import com.zaur.domain.al_quran_cloud.models.translate.TranslationsChapterAqc
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 interface MainRepository {
     interface Load {
         suspend fun loadChapters(): List<ChapterAqc.Base>

@@ -3,6 +3,11 @@ package com.zaur.features.surah.manager
 import com.zaur.data.al_quran_aqc.constans.ReciterList
 import com.zaur.domain.al_quran_cloud.use_case.ReciterUseCase
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 interface ReciterManager {
 
     fun getReciter(): String?

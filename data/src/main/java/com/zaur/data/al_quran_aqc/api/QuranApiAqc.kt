@@ -11,6 +11,11 @@ import com.zaur.domain.al_quran_cloud.models.translate.TranslationsChapterAqc
 import retrofit2.http.GET
 import retrofit2.http.Path
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 interface QuranApiAqc {
 
     @GET("/surah")

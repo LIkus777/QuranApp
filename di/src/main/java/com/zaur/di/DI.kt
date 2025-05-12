@@ -8,6 +8,11 @@ import com.zaur.di.module.SurahChooseModule
 import com.zaur.di.module.SurahDetailModule
 import com.zaur.di.provides.ProvidesModules
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 
 interface DI : ProvidesModules {
 

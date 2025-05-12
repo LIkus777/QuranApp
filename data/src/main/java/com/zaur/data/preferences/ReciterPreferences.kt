@@ -4,6 +4,11 @@ import android.content.Context
 import com.zaur.core.ReciterSharedPrefKeys
 import com.zaur.domain.storage.ReciterStorage
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 class ReciterPreferences(context: Context) : ReciterStorage {
     private val sharedPreferences =
         context.getSharedPreferences(ReciterSharedPrefKeys.RECITER_PREFS, Context.MODE_PRIVATE)

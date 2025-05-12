@@ -22,6 +22,11 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 class MainRepositorySaveImpl(
     private val audioDownloader: AudioDownloader,
     private val chapterMapper: ChapterMapper,

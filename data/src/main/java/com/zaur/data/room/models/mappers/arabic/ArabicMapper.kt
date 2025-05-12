@@ -3,6 +3,11 @@ package com.zaur.data.room.models.mappers.arabic
 import com.zaur.data.room.models.ArabicChapterEntity
 import com.zaur.domain.al_quran_cloud.models.arabic.ArabicChapter
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 interface ArabicMapper {
 
     fun toData(arabicChapter: ArabicChapter.Base): ArabicChapterEntity.Base

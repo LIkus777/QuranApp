@@ -3,6 +3,11 @@ package com.zaur.quranapp
 import android.app.Application
 import com.zaur.di.DI
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 class App() : Application() {
 
     private lateinit var diModule: DI

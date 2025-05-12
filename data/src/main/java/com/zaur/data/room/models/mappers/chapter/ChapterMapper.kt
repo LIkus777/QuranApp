@@ -3,6 +3,11 @@ package com.zaur.data.room.models.mappers.chapter
 import com.zaur.data.room.models.ChapterEntity
 import com.zaur.domain.al_quran_cloud.models.chapter.ChapterAqc
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 interface ChapterMapper {
     fun toData(chapterAqc: ChapterAqc.Base): ChapterEntity.Base
     fun fromData(chapterEntity: ChapterEntity.Base): ChapterAqc.Base

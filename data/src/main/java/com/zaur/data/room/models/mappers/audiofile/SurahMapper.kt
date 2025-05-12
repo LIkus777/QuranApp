@@ -3,6 +3,11 @@ package com.zaur.data.room.models.mappers.audiofile
 import com.zaur.data.room.models.SurahEntity
 import com.zaur.domain.al_quran_cloud.models.audiofile.Surah
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 interface SurahMapper {
 
     fun toData(surah: Surah.Base): SurahEntity.Base

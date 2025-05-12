@@ -4,6 +4,11 @@ import com.zaur.data.room.models.ChapterAudioEntity
 import com.zaur.data.room.models.mappers.audiofile.EditionAudioMapper
 import com.zaur.domain.al_quran_cloud.models.audiofile.ChapterAudioFile
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 interface ChapterAudioMapper {
 
     fun toData(chapterAudioFile: ChapterAudioFile.Base): ChapterAudioEntity.Base

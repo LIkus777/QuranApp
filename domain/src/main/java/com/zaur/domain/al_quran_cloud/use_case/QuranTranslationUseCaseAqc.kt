@@ -4,6 +4,11 @@ import com.zaur.domain.al_quran_cloud.models.translate.TranslationAqc
 import com.zaur.domain.al_quran_cloud.repository.OfflineRepository
 import com.zaur.domain.al_quran_cloud.repository.QuranTranslationRepositoryAqc
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 interface QuranTranslationUseCaseAqc {
 
     suspend fun getTranslationForChapter(

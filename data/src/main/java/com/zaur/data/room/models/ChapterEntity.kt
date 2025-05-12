@@ -8,6 +8,11 @@ import com.zaur.data.room.converters.GenericConverters
 import com.zaur.domain.al_quran_cloud.models.chapter.ChapterAqc
 import com.zaur.domain.al_quran_cloud.models.chapter.RevelationType
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 interface ChapterEntity {
 
     fun <T> map(mapper: Mapper<T>): T

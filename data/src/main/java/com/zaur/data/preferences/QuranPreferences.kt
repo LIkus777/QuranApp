@@ -4,6 +4,11 @@ import android.content.Context
 import com.zaur.core.QuranSharedPrefKeys
 import com.zaur.domain.storage.QuranStorage
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 class QuranPreferences(context: Context) : QuranStorage {
     private val sharedPreferences =
         context.getSharedPreferences(QuranSharedPrefKeys.QURAN_PREFS, Context.MODE_PRIVATE)

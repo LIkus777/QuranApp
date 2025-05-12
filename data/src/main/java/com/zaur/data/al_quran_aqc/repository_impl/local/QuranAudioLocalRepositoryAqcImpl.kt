@@ -8,6 +8,11 @@ import com.zaur.domain.al_quran_cloud.models.audiofile.ChapterAudioFile
 import com.zaur.domain.al_quran_cloud.models.audiofile.VerseAudioAqc
 import com.zaur.domain.al_quran_cloud.repository.QuranAudioRepositoryAqc
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 class QuranAudioLocalRepositoryAqcImpl(
     private val chapterAudioDao: ChapterAudioDao,
     private val verseAudioDao: VerseAudioDao,

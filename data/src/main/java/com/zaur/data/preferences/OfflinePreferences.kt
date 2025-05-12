@@ -4,6 +4,11 @@ import android.content.Context
 import com.zaur.core.OfflineSharedPrefKeys
 import com.zaur.domain.al_quran_cloud.repository.OfflineRepository
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 class OfflinePreferences(
     context: Context,
 ) : OfflineRepository {

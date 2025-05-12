@@ -5,6 +5,11 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 @Composable
 fun QuranNavGraph(
     navController: NavHostController,

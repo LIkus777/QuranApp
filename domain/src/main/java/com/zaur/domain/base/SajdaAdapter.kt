@@ -4,6 +4,11 @@ import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import java.lang.reflect.Type
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 class SajdaAdapter : JsonDeserializer<Boolean?> {
     override fun deserialize(
         json: com.google.gson.JsonElement?,

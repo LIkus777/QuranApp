@@ -23,6 +23,11 @@ import androidx.compose.ui.unit.sp
 import com.zaur.presentation.ui.LightThemeColors
 import com.zaur.presentation.ui.QuranColors
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 @Preview(showBackground = true)
 @Composable
 fun SettingsBottomSheet(

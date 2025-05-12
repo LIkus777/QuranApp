@@ -6,6 +6,11 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.zaur.data.room.models.ChapterEntity
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 @Dao
 interface ChapterDao {
 

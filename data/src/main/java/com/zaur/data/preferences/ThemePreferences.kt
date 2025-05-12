@@ -4,6 +4,11 @@ import android.content.Context
 import com.zaur.core.ThemeSharedPrefKeys
 import com.zaur.domain.storage.theme.ThemeStorage
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 class ThemePreferences(private val context: Context) : ThemeStorage {
     private val sharedPreferences =
         context.getSharedPreferences(ThemeSharedPrefKeys.THEME_PREFS, Context.MODE_PRIVATE)

@@ -1,10 +1,10 @@
 package com.zaur.presentation.ui
 
-import android.util.Log
+import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,11 +15,16 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -31,6 +36,11 @@ import androidx.core.text.BidiFormatter
 import com.zaur.presentation.R
 import com.zaur.presentation.ui.fonts.NotoFontMedium
 import com.zaur.presentation.ui.fonts.OpenSansFontLight
+
+/**
+ * @author Zaur
+ * @since 2025-05-12
+ */
 
 @Preview(showBackground = true)
 @Composable
@@ -50,13 +60,15 @@ fun AyahItem(
     onClickSound: (Int, Int) -> Unit = { _, _ -> },
 ) {
     val arabicTextFormatted = BidiFormatter.getInstance().unicodeWrap(arabicText)
-    val backgroundColor =
-        if (isCurrent && soundIsActive) colors.currentCard else Color.Unspecified
+    val backgroundColor = if (isCurrent && soundIsActive) colors.currentCard else Color.Unspecified
     val soundIconColor = when {
         isCurrent && soundIsActive -> colors.border
         isDarkTheme -> Color.White
         else -> Color.Unspecified
     }
+
+    // Создаём interactionSource
+    val interactionSource = remember { MutableInteractionSource() }
 
     Column(
         modifier = Modifier
@@ -87,16 +99,26 @@ fun AyahItem(
                         .padding(horizontal = 8.dp)
                 )
                 Spacer(modifier = Modifier.weight(1f))
-                Icon(
-                    painter = painterResource(R.drawable.volume),
-                    contentDescription = "Звук",
-                    tint = soundIconColor,
+
+                Box(
                     modifier = Modifier
-                        .size(24.dp)
-                        .clickable(onClick = {
-                            onClickSound(ayahNumber, currentAyahInSurah)
-                        })
-                )
+                        .size(40.dp) // Увеличиваем область для ripple эффекта
+                        .clip(CircleShape) // Делаем иконку круглой
+                        .clickable(
+                            interactionSource = interactionSource, // Указываем interactionSource
+                            indication = LocalIndication.current, // Используем текущий ripple эффект из темы
+                            onClick = {
+                                onClickSound(ayahNumber, currentAyahInSurah)
+                            }
+                        )
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.volume),
+                        contentDescription = "Звук",
+                        tint = soundIconColor,
+                        modifier = Modifier.align(Alignment.Center)
+                    )
+                }
             }
         }
 

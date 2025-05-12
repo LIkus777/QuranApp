@@ -3,6 +3,11 @@ package com.zaur.data.network
 import retrofit2.HttpException
 import kotlinx.coroutines.delay
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 suspend fun <T> retryWithBackoff(
     maxAttempts: Int = 10,
     initialDelay: Long = 500,

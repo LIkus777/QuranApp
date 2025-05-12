@@ -2,6 +2,11 @@ package com.zaur.presentation.ui
 
 import androidx.compose.ui.graphics.Color
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 // Основные цвета
 val PrimaryGreen = Color(0xFF2E7D68) // Умиротворяющий зелёный
 val Gold = Color(0xFFC9A74B) // Мягкий золотой

@@ -6,6 +6,11 @@ import com.zaur.features.surah.observables.OfflineObservable
 import com.zaur.features.surah.ui_state.offline.OfflineUIState
 import kotlinx.coroutines.flow.StateFlow
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 interface OfflineViewModel : OfflineObservable.Read {
 
     fun isOffline(): Boolean

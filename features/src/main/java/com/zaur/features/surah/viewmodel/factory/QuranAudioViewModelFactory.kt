@@ -8,6 +8,11 @@ import com.zaur.features.surah.screen.surah_detail.player.SurahPlayer
 import com.zaur.features.surah.ui_state.aqc.QuranAudioAqcUIState
 import com.zaur.features.surah.viewmodel.QuranAudioViewModel
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 interface QuranAudioViewModelFactory {
 
     fun create(): QuranAudioViewModel

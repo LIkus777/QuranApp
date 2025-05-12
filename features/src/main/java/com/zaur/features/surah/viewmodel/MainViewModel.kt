@@ -11,6 +11,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 interface MainViewModel : MainObservable.Read {
 
     fun getReciter(): String?

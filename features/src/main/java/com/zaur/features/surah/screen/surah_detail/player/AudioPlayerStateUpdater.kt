@@ -2,6 +2,11 @@ package com.zaur.features.surah.screen.surah_detail.player
 
 import com.zaur.features.surah.screen.surah_detail.SurahDetailStateManager
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 interface AudioPlayerStateUpdater {
 
     fun stop()

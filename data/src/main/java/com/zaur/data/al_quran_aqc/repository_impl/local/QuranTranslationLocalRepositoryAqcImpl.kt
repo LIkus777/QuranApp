@@ -5,6 +5,11 @@ import com.zaur.data.room.models.mappers.translate.TranslationMapper
 import com.zaur.domain.al_quran_cloud.models.translate.TranslationAqc
 import com.zaur.domain.al_quran_cloud.repository.QuranTranslationRepositoryAqc
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 class QuranTranslationLocalRepositoryAqcImpl(
     private val translationChapterDao: TranslationChapterDao,
     private val translationMapper: TranslationMapper,

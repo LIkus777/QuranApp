@@ -4,6 +4,11 @@ import com.google.gson.annotations.JsonAdapter
 import com.google.gson.annotations.SerializedName
 import com.zaur.domain.base.SajdaAdapter
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 interface ChapterAudiosFileAqc {
 
     fun chapterAudio(): ChapterAudioFile.Base

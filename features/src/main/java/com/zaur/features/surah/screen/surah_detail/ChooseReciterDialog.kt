@@ -30,6 +30,11 @@ import com.zaur.data.al_quran_aqc.constans.ReciterList
 import com.zaur.presentation.ui.LightThemeColors
 import com.zaur.presentation.ui.QuranColors
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 @Preview(showBackground = true)
 @Composable
 fun ChooseReciterDialog(

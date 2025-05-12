@@ -11,6 +11,11 @@ import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
 import java.io.File
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 interface AudioPlayerCallback {
     fun audioEnded()
     fun onAyahChanged(mediaId: String?)

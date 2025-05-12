@@ -11,6 +11,11 @@ import com.zaur.domain.al_quran_cloud.models.translate.EditionTranslation
 import com.zaur.domain.al_quran_cloud.models.translate.TranslationAqc
 import com.zaur.domain.base.SajdaAdapter
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 interface TranslationEntity {
 
     fun <T> map(mapper: Mapper<T>): T

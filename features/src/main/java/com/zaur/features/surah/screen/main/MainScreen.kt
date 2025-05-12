@@ -30,6 +30,11 @@ import com.zaur.navigation.Screen
 import com.zaur.presentation.ui.DarkThemeColors
 import com.zaur.presentation.ui.LightThemeColors
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 @Composable
 fun MainScreen(
     navController: NavHostController,

@@ -5,6 +5,11 @@ import com.zaur.features.surah.ui_state.aqc.QuranTextAqcUIState
 import com.zaur.features.surah.ui_state.aqc.QuranTextAqcUIState.Base
 import kotlinx.coroutines.flow.StateFlow
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 interface QuranTextObservable : Observable.Mutable<Base> {
 
     interface Update : Observable.Update<QuranTextAqcUIState.Base>

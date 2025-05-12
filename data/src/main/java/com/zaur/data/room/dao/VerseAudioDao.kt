@@ -8,6 +8,11 @@ import androidx.room.Transaction
 import com.zaur.data.room.models.VerseAudioEntity
 import com.zaur.data.room.models.VerseAudioWithSurah
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 @Dao
 interface VerseAudioDao {
 

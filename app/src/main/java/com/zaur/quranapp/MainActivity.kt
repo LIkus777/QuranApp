@@ -19,6 +19,11 @@ import com.zaur.features.surah.viewmodel.factory.MainViewModelFactory
 import com.zaur.navigation.QuranNavGraph
 import com.zaur.presentation.ui.QuranAppTheme
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 class MainActivity : ComponentActivity() {
 
     private val di by lazy { (application as App).diModule() }

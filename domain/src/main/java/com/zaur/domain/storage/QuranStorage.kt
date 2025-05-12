@@ -1,5 +1,10 @@
 package com.zaur.domain.storage
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 interface QuranStorage {
     fun getFontSizeArabic(): Float
     fun getFontSizeRussian(): Float

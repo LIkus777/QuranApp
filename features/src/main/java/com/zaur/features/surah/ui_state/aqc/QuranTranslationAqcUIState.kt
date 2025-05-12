@@ -2,6 +2,11 @@ package com.zaur.features.surah.ui_state.aqc
 
 import com.zaur.domain.al_quran_cloud.models.translate.TranslationAqc
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 interface QuranTranslationAqcUIState {
 
     fun isLoading(): Boolean

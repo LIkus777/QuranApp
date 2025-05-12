@@ -2,6 +2,11 @@ package com.zaur.di.provides
 
 import androidx.lifecycle.ViewModel
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 interface ProvideViewModel {
 
     fun <T : ViewModel> viewModel(clasz: Class<T>): T

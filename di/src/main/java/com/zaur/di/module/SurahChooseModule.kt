@@ -10,6 +10,11 @@ import com.zaur.domain.al_quran_cloud.repository.QuranTextRepositoryAqc
 import com.zaur.domain.al_quran_cloud.use_case.QuranTextUseCaseAqc
 import com.zaur.domain.storage.theme.ThemeUseCase
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 interface SurahChooseModule : ProvideThemeUseCase, ProvideQuranTextUseCaseAqc,
     ProvideQuranTextRepositoryAqcLocal, ProvideQuranTextRepositoryAqcCloud {
 

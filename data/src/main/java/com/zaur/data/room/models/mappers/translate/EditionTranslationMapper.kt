@@ -3,6 +3,11 @@ package com.zaur.data.room.models.mappers.translate
 import com.zaur.data.room.models.EditionTranslationEntity
 import com.zaur.domain.al_quran_cloud.models.translate.EditionTranslation
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 interface EditionTranslationMapper {
 
     fun toData(edition: EditionTranslation.Base): EditionTranslationEntity.Base

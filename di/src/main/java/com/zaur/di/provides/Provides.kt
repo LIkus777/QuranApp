@@ -50,6 +50,11 @@ import com.zaur.features.surah.viewmodel.factory.QuranTextViewModelFactory
 import com.zaur.features.surah.viewmodel.factory.QuranTranslationViewModelFactory
 import com.zaur.features.surah.viewmodel.factory.SurahChooseViewModelFactory
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 interface ProvideChapterAudioMapper {
     fun provideChapterAudioMapper(): ChapterAudioMapper
 }

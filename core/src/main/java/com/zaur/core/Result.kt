@@ -2,6 +2,11 @@ package com.zaur.core
 
 import android.util.Log
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 sealed class Result<T> {
     abstract fun handle(handleResult: HandleResult<T>)
 

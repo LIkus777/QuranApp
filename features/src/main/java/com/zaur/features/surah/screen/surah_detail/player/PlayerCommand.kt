@@ -4,6 +4,11 @@ import com.zaur.domain.al_quran_cloud.models.audiofile.Ayah
 import com.zaur.domain.al_quran_cloud.models.audiofile.CacheAudio
 import com.zaur.features.surah.base.AudioPlayer
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 interface PlayerCommand {
     fun execute()
 

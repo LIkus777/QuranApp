@@ -6,6 +6,11 @@ import com.zaur.features.surah.screen.surah_detail.SurahDetailStateManager
 import com.zaur.features.surah.ui_state.aqc.SurahDetailScreenState
 import kotlinx.coroutines.flow.StateFlow
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 interface SurahDetailViewModel {
 
     fun updateState(state: SurahDetailScreenState.Base)

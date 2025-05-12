@@ -18,6 +18,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 interface QuranAudioViewModel : QuranAudioObservable.Read {
 
     fun getReciter(): String?
@@ -134,7 +139,7 @@ interface QuranAudioViewModel : QuranAudioObservable.Read {
                     override fun handleSuccess(data: VerseAudioAqc) {
                         Log.i("TAGGG", "getVerseAudioFile: data ${data.audio()} ")
                         viewModelScope.launch {
-                            if (data == observable.state().value.verseAudioFile()) {
+                            if (data.audio() == observable.state().value.verseAudioFile().audio()) {
                                 val newState = stateManager.getState().value.copy(
                                     audioPlayerState = stateManager.getState().value.audioPlayerState.copy(
                                         restartAudio = true

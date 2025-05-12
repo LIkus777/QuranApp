@@ -8,6 +8,11 @@ import com.google.gson.annotations.SerializedName
 import com.zaur.data.room.converters.GenericConverters
 import com.zaur.domain.base.SajdaAdapter
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 interface ChapterAudioEntity {
 
     fun <T> map(mapper: Mapper<T>): T

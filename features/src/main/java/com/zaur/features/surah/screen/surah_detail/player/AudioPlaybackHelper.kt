@@ -4,6 +4,11 @@ import com.zaur.data.downloader.AudioDownloader
 import com.zaur.domain.al_quran_cloud.models.audiofile.VerseAudioAqc
 import com.zaur.features.surah.base.AudioPlayer
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 interface AudioPlaybackHelper {
 
     fun play(verse: VerseAudioAqc)

@@ -5,6 +5,11 @@ import com.zaur.features.surah.observables.QuranTranslationObservable
 import com.zaur.features.surah.ui_state.aqc.QuranTranslationAqcUIState
 import com.zaur.features.surah.viewmodel.QuranTranslationViewModel
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 interface QuranTranslationViewModelFactory {
 
     fun create(): QuranTranslationViewModel

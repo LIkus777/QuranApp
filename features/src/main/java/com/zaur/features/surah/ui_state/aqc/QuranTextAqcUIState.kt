@@ -3,6 +3,11 @@ package com.zaur.features.surah.ui_state.aqc
 import com.zaur.domain.al_quran_cloud.models.arabic.ArabicChapter
 import com.zaur.domain.al_quran_cloud.models.chapter.ChapterAqc
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 interface QuranTextAqcUIState {
     fun isLoading(): Boolean
     fun chapters(): List<ChapterAqc>

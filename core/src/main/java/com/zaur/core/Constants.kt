@@ -1,5 +1,10 @@
 package com.zaur.core
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 object QuranSharedPrefKeys {
     const val ARABIC_FONT_SIZE = "ARABIC_FONT_SIZE"
     const val RUSSIAN_FONT_SIZE = "RUSSIAN_FONT_SIZE"

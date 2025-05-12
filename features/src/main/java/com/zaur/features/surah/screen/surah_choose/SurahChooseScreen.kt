@@ -37,6 +37,11 @@ import com.zaur.presentation.ui.LightThemeColors
 import com.zaur.presentation.ui.ModernSurahText
 import com.zaur.presentation.ui.QuranAppTheme
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 @Composable
 fun SurahChooseScreen(
     themeViewModel: ThemeViewModel,

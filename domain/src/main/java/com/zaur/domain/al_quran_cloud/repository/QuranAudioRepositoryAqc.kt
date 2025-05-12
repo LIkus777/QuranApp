@@ -6,6 +6,11 @@ import com.zaur.domain.al_quran_cloud.models.audiofile.VerseAudioAqc
 import com.zaur.domain.base.repository.BaseQuranAudioRepository
 import java.io.File
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 interface QuranAudioRepositoryAqc : BaseQuranAudioRepository {
     interface Local : QuranAudioRepositoryAqc {
         suspend fun getChapterAudioOfReciterLocal(

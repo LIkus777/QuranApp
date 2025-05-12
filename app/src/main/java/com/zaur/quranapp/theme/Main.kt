@@ -8,6 +8,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 @Composable
 fun QuranApp() {
     QuranAppTheme {

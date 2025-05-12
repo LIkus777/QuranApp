@@ -37,6 +37,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.zaur.presentation.R
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 fun getNavBarHeightInPx(context: Context): Int {
     // Получение высоты навигационной панели через ресурсы
     val resourceId = context.resources.getIdentifier("navigation_bar_height", "dimen", "android")

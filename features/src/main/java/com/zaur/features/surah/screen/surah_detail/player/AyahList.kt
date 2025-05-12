@@ -2,6 +2,11 @@ package com.zaur.features.surah.screen.surah_detail.player
 
 import com.zaur.domain.al_quran_cloud.models.audiofile.Ayah
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 interface AyahList {
     fun isEmpty(): Boolean
     fun get(index: Int): Ayah.Base

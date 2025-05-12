@@ -6,6 +6,11 @@ import com.zaur.features.surah.observables.ThemeObservable
 import com.zaur.features.surah.ui_state.theme.ThemeUIState
 import kotlinx.coroutines.flow.StateFlow
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 interface ThemeViewModel : ThemeObservable.Read {
 
     fun saveTheme(isDark: Boolean)

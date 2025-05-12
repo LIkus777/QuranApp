@@ -5,6 +5,11 @@ import com.zaur.core.BaseViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 interface QuranTafsirViewModel {/*
     class Base(
         private val savedStateHandle: SavedStateHandle,

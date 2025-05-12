@@ -3,6 +3,11 @@ package com.zaur.data.room.models.mappers.arabic
 import com.zaur.data.room.models.ArabicAyahEntity
 import com.zaur.domain.al_quran_cloud.models.arabic.Ayah
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 interface ArabicAyahMapper {
 
     fun toData(ayah: Ayah.Base): ArabicAyahEntity

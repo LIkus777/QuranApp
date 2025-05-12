@@ -3,6 +3,11 @@ package com.zaur.data.room.models.mappers.audiofile
 import com.zaur.data.room.models.AyahAudioEntity
 import com.zaur.domain.al_quran_cloud.models.audiofile.Ayah
 
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
+
 interface AyahAudioMapper {
 
     fun toData(ayah: Ayah.Base): AyahAudioEntity.Base

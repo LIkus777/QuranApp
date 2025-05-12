@@ -7,6 +7,7 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import com.zaur.domain.al_quran_cloud.models.audiofile.VerseAudioAqc
 import com.zaur.features.surah.ui_state.aqc.QuranAudioAqcUIState
 import com.zaur.features.surah.ui_state.aqc.QuranTextAqcUIState
 import com.zaur.features.surah.ui_state.aqc.SurahDetailScreenState
@@ -14,6 +15,11 @@ import com.zaur.features.surah.viewmodel.QuranAudioViewModel
 import com.zaur.features.surah.viewmodel.QuranTextViewModel
 import com.zaur.features.surah.viewmodel.QuranTranslationViewModel
 import com.zaur.features.surah.viewmodel.SurahDetailViewModel
+
+/**
+* @author Zaur
+* @since 2025-05-12
+*/
 
 @Composable
 fun SurahDetailEffects(
@@ -42,8 +48,15 @@ fun SurahDetailEffects(
     }
 
     LaunchedEffect(audioState.verseAudioFile(), surahDetailState.audioPlayerState().restartAudio()) {
-        if (audioState.verseAudioFile() != null || surahDetailState.audioPlayerState().restartAudio()) {
+        if (audioState.verseAudioFile() !is VerseAudioAqc.Empty || surahDetailState.audioPlayerState().restartAudio() == true) {
             quranAudioViewModel.onPlayVerse(verse = audioState.verseAudioFile())
+        }
+    }
+
+    LaunchedEffect(surahDetailState.audioPlayerState().currentAyahInSurah()) {
+        val index = surahDetailState.audioPlayerState().currentAyahInSurah()
+        if (index >= 0) {
+            listState.animateScrollToItem(index)
         }
     }
 

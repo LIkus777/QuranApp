@@ -6,7 +6,7 @@ import com.zaur.domain.al_quran_cloud.models.audiofile.CacheAudio
 import com.zaur.domain.al_quran_cloud.models.audiofile.VerseAudioAqc
 import com.zaur.features.surah.base.AudioPlayer
 import com.zaur.features.surah.base.AudioPlayerCallback
-import com.zaur.features.surah.screen.surah_detail.SurahDetailStateManager
+import com.zaur.features.surah.manager.SurahDetailStateManager
 import com.zaur.features.surah.screen.surah_detail.player.AyahList.EmptyAyahList
 import com.zaur.features.surah.screen.surah_detail.player.AyahList.RealAyahList
 import com.zaur.features.surah.screen.surah_detail.player.CacheAyahList.EmptyCacheAyahList

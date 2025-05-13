@@ -24,10 +24,8 @@ import com.zaur.features.surah.viewmodel.SurahDetailViewModel
 @Composable
 fun SurahDetailEffects(
     chapterNumber: Int,
-    textState: QuranTextAqcUIState,
     audioState: QuranAudioAqcUIState,
     surahDetailState: SurahDetailScreenState,
-    listState: LazyListState,
     quranAudioViewModel: QuranAudioViewModel,
     quranTextViewModel: QuranTextViewModel,
     quranTranslationViewModel: QuranTranslationViewModel,
@@ -51,25 +49,6 @@ fun SurahDetailEffects(
         if (audioState.verseAudioFile() !is VerseAudioAqc.Empty || surahDetailState.audioPlayerState().restartAudio() == true) {
             quranAudioViewModel.onPlayVerse(verse = audioState.verseAudioFile())
         }
-    }
-
-    LaunchedEffect(surahDetailState.audioPlayerState().currentAyahInSurah()) {
-        val index = surahDetailState.audioPlayerState().currentAyahInSurah()
-        if (index >= 0) {
-            listState.animateScrollToItem(index)
-        }
-    }
-
-    LaunchedEffect(surahDetailState.audioPlayerState().currentAyahInSurah()) {
-        val index = surahDetailState.audioPlayerState().currentAyahInSurah() - 1
-        if (index >= 0) {
-            listState.animateScrollToItem(index)
-        }
-    }
-
-    LaunchedEffect(surahDetailState.uiPreferencesState().showSurahMode(), surahDetailState.uiPreferencesState().showPageMode()) {
-        Log.i("TAG", "SurahDetailEffects: ${surahDetailState.uiPreferencesState().showSurahMode()}")
-        Log.i("TAG", "SurahDetailEffects: ${surahDetailState.uiPreferencesState().showPageMode()}")
     }
 
     LaunchedEffect(chapterNumber) {

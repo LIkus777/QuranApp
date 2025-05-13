@@ -3,14 +3,15 @@ package com.zaur.features.surah.screen.surah_detail
 import androidx.compose.runtime.Composable
 import com.zaur.features.surah.ui_state.aqc.SurahDetailScreenState
 import com.zaur.features.surah.viewmodel.QuranTextViewModel
+import com.zaur.features.surah.viewmodel.ScreenContentViewModel
 import com.zaur.features.surah.viewmodel.SurahDetailViewModel
 import com.zaur.features.surah.viewmodel.ThemeViewModel
 import com.zaur.presentation.ui.QuranColors
 
 /**
-* @author Zaur
-* @since 2025-05-12
-*/
+ * @author Zaur
+ * @since 2025-05-12
+ */
 
 @Composable
 fun ChooseTextDialogComponent(
@@ -18,6 +19,7 @@ fun ChooseTextDialogComponent(
     state: SurahDetailScreenState,
     isDarkTheme: Boolean,
     isSurahMode: Boolean,
+    screenContentViewModel: ScreenContentViewModel,
     quranTextViewModel: QuranTextViewModel,
     themeViewModel: ThemeViewModel,
     surahDetailViewModel: SurahDetailViewModel,
@@ -38,7 +40,13 @@ fun ChooseTextDialogComponent(
             surahDetailViewModel.fontSizeRussian(it)
             quranTextViewModel.saveFontSizeRussian(it)
         },
-        onPageModeClicked = { surahDetailViewModel.showPageMode(true) },
-        onSurahModeClicked = { surahDetailViewModel.showSurahMode(true) } ,
+        onPageModeClicked = {
+            surahDetailViewModel.showPageMode(true)
+            screenContentViewModel.fetchSurahMode()
+        },
+        onSurahModeClicked = {
+            surahDetailViewModel.showSurahMode(true)
+            screenContentViewModel.fetchSurahMode()
+        },
         onDismiss = { surahDetailViewModel.showTextBottomSheet(false) })
 }

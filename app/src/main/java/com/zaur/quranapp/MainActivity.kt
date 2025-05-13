@@ -66,6 +66,7 @@ class MainActivity : ComponentActivity() {
                         val quranAudioViewModel = remember { surahDetailModule.provideQuranAudioViewModelFactory().create() }
                         val surahChooseViewModel = remember { surahDetailModule.provideSurahChooseViewModelFactory().create() }
                         val quranTranslationViewModel = remember { surahDetailModule.provideQuranTranslationViewModelFactory().create() }
+                        val screenContentViewModel = remember { surahDetailModule.provideScreenContentViewModelFactory().create() }
                         SurahDetailScreen(
                             surahName,
                             surahNumber,
@@ -76,6 +77,7 @@ class MainActivity : ComponentActivity() {
                             quranTextViewModel = quranTextViewModel,
                             quranAudioViewModel = quranAudioViewModel,
                             quranTranslationViewModel = quranTranslationViewModel,
+                            screenContentViewModel = screenContentViewModel,
                             controller,
                         )
                     })

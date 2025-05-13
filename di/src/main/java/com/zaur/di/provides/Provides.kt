@@ -39,7 +39,7 @@ import com.zaur.domain.storage.theme.ThemeStorage
 import com.zaur.domain.storage.theme.ThemeUseCase
 import com.zaur.features.surah.base.AudioPlayer
 import com.zaur.features.surah.manager.ReciterManager
-import com.zaur.features.surah.screen.surah_detail.SurahDetailStateManager
+import com.zaur.features.surah.manager.SurahDetailStateManager
 import com.zaur.features.surah.screen.surah_detail.player.AudioPlaybackHelper
 import com.zaur.features.surah.screen.surah_detail.player.AudioPlayerStateUpdater
 import com.zaur.features.surah.screen.surah_detail.player.PlaylistBuilder
@@ -48,6 +48,7 @@ import com.zaur.features.surah.viewmodel.SurahDetailViewModel
 import com.zaur.features.surah.viewmodel.factory.QuranAudioViewModelFactory
 import com.zaur.features.surah.viewmodel.factory.QuranTextViewModelFactory
 import com.zaur.features.surah.viewmodel.factory.QuranTranslationViewModelFactory
+import com.zaur.features.surah.viewmodel.factory.ScreenContentViewModelFactory
 import com.zaur.features.surah.viewmodel.factory.SurahChooseViewModelFactory
 
 /**
@@ -117,6 +118,10 @@ interface ProvideQuranTextViewModelFactory {
 
 interface ProvideQuranAudioViewModelFactory {
     fun provideQuranAudioViewModelFactory(): QuranAudioViewModelFactory
+}
+
+interface ProvideScreenContentViewModelFactory {
+    fun provideScreenContentViewModelFactory(): ScreenContentViewModelFactory
 }
 
 interface ProvideTranslationViewModelFactory {

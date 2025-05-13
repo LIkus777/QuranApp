@@ -32,6 +32,7 @@ import com.zaur.features.surah.fakes.FakeQuranStorage
 import com.zaur.features.surah.fakes.FakeReciterManager
 import com.zaur.features.surah.fakes.FakeSurahPlayer
 import com.zaur.features.surah.fakes.FakeThemeStorage
+import com.zaur.features.surah.manager.SurahDetailStateManager
 import com.zaur.features.surah.observables.QuranAudioObservable
 import com.zaur.features.surah.observables.QuranTextObservable
 import com.zaur.features.surah.observables.QuranTranslationObservable
@@ -44,6 +45,7 @@ import com.zaur.features.surah.viewmodel.OfflineViewModel
 import com.zaur.features.surah.viewmodel.QuranAudioViewModel
 import com.zaur.features.surah.viewmodel.QuranTextViewModel
 import com.zaur.features.surah.viewmodel.QuranTranslationViewModel
+import com.zaur.features.surah.viewmodel.ScreenContentViewModel
 import com.zaur.features.surah.viewmodel.SurahChooseViewModel
 import com.zaur.features.surah.viewmodel.SurahDetailViewModel
 import com.zaur.features.surah.viewmodel.ThemeViewModel
@@ -66,6 +68,7 @@ fun SurahDetailScreen(
     quranTextViewModel: QuranTextViewModel,
     quranAudioViewModel: QuranAudioViewModel,
     quranTranslationViewModel: QuranTranslationViewModel,
+    screenContentViewModel: ScreenContentViewModel,
     controller: NavHostController,
 ) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
@@ -91,6 +94,7 @@ fun SurahDetailScreen(
             quranTextViewModel,
             quranAudioViewModel,
             quranTranslationViewModel,
+            screenContentViewModel,
             controller,
             onMenuClick = {
                 scope.launch { drawerState.open() }
@@ -131,6 +135,7 @@ fun SurahDetailScreenPreview() {
     val offlineViewModel = OfflineViewModel.Base(
         offlineUseCase = OfflineUseCase.Base(FakeOfflineRepos())
     )
+/*
     QuranAppTheme {
         Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
             SurahDetailScreen(
@@ -168,4 +173,5 @@ fun SurahDetailScreenPreview() {
             )
         }
     }
+*/
 }

@@ -24,6 +24,7 @@ import com.zaur.di.provides.ProvideQuranTranslationRepositoryAqcLocal
 import com.zaur.di.provides.ProvideQuranTranslationUseCaseAqc
 import com.zaur.di.provides.ProvideReciterManager
 import com.zaur.di.provides.ProvideReciterUseCase
+import com.zaur.di.provides.ProvideScreenContentViewModelFactory
 import com.zaur.di.provides.ProvideSurahChooseViewModelFactory
 import com.zaur.di.provides.ProvideSurahDetailStateManager
 import com.zaur.di.provides.ProvideSurahDetailViewModel
@@ -40,7 +41,7 @@ import com.zaur.domain.al_quran_cloud.use_case.ReciterUseCase
 import com.zaur.domain.storage.theme.ThemeUseCase
 import com.zaur.features.surah.base.AudioPlayer
 import com.zaur.features.surah.manager.ReciterManager
-import com.zaur.features.surah.screen.surah_detail.SurahDetailStateManager
+import com.zaur.features.surah.manager.SurahDetailStateManager
 import com.zaur.features.surah.screen.surah_detail.player.AudioPlaybackHelper
 import com.zaur.features.surah.screen.surah_detail.player.AudioPlayerStateUpdater
 import com.zaur.features.surah.screen.surah_detail.player.PlaylistBuilder
@@ -49,6 +50,7 @@ import com.zaur.features.surah.viewmodel.SurahDetailViewModel
 import com.zaur.features.surah.viewmodel.factory.QuranAudioViewModelFactory
 import com.zaur.features.surah.viewmodel.factory.QuranTextViewModelFactory
 import com.zaur.features.surah.viewmodel.factory.QuranTranslationViewModelFactory
+import com.zaur.features.surah.viewmodel.factory.ScreenContentViewModelFactory
 import com.zaur.features.surah.viewmodel.factory.SurahChooseViewModelFactory
 
 /**
@@ -56,7 +58,7 @@ import com.zaur.features.surah.viewmodel.factory.SurahChooseViewModelFactory
 * @since 2025-05-12
 */
 
-interface SurahDetailModule : ProvideReciterUseCase, ProvideReciterManager, ProvideThemeUseCase, ProvideSurahChooseViewModelFactory,
+interface SurahDetailModule : ProvideReciterUseCase, ProvideReciterManager, ProvideThemeUseCase, ProvideScreenContentViewModelFactory, ProvideSurahChooseViewModelFactory,
     ProvideTranslationViewModelFactory, ProvideQuranAudioViewModelFactory,
     ProvideQuranTextViewModelFactory, ProvideSurahDetailViewModel, ProvideSurahPlayer,
     ProvideSurahDetailStateManager, ProvideAudioPlayer, ProvidePlaylistBuilder,
@@ -218,6 +220,9 @@ interface SurahDetailModule : ProvideReciterUseCase, ProvideReciterManager, Prov
 
         override fun provideSurahChooseViewModelFactory(): SurahChooseViewModelFactory =
             SurahChooseViewModelFactory.Base(quranTextUseCase = provideQuranTextUseCaseAqc())
+
+        override fun provideScreenContentViewModelFactory(): ScreenContentViewModelFactory =
+            ScreenContentViewModelFactory.Base(provideSurahDetailStateManager())
     }
 
 }

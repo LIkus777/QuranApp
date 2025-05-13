@@ -1,6 +1,6 @@
 package com.zaur.features.surah.screen.surah_detail.player
 
-import com.zaur.features.surah.screen.surah_detail.SurahDetailStateManager
+import com.zaur.features.surah.manager.SurahDetailStateManager
 
 /**
 * @author Zaur

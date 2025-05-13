@@ -9,6 +9,7 @@ import com.zaur.features.surah.viewmodel.OfflineViewModel
 import com.zaur.features.surah.viewmodel.QuranAudioViewModel
 import com.zaur.features.surah.viewmodel.QuranTextViewModel
 import com.zaur.features.surah.viewmodel.QuranTranslationViewModel
+import com.zaur.features.surah.viewmodel.ScreenContentViewModel
 import com.zaur.features.surah.viewmodel.SurahDetailViewModel
 import com.zaur.features.surah.viewmodel.ThemeViewModel
 import com.zaur.presentation.ui.DarkThemeColors
@@ -29,6 +30,7 @@ fun SurahDetailScreenContent(
     quranTextViewModel: QuranTextViewModel,
     quranAudioViewModel: QuranAudioViewModel,
     quranTranslationViewModel: QuranTranslationViewModel,
+    screenContentViewModel: ScreenContentViewModel,
     controller: NavHostController,
     onMenuClick: () -> Unit,
 ) {
@@ -49,10 +51,8 @@ fun SurahDetailScreenContent(
 
     SurahDetailEffects(
         chapterNumber = chapterNumber,
-        textState = textState,
         audioState = audioState,
         surahDetailState = surahDetailState,
-        listState = listState,
         quranAudioViewModel = quranAudioViewModel,
         quranTextViewModel = quranTextViewModel,
         quranTranslationViewModel = quranTranslationViewModel,
@@ -66,6 +66,7 @@ fun SurahDetailScreenContent(
         translateState,
         surahDetailState,
         listState,
+        screenContentViewModel,
         surahDetailViewModel,
         quranAudioViewModel,
         colors,
@@ -80,6 +81,7 @@ fun SurahDetailScreenContent(
         surahDetailState,
         isDarkTheme,
         isSurahMode,
+        screenContentViewModel,
         quranTextViewModel,
         themeViewModel,
         surahDetailViewModel

@@ -18,7 +18,7 @@ interface SurahDetailScreenState {
         val uiPreferencesState: UiPreferencesState.Base = UiPreferencesState.Base(),
         val bottomSheetState: BottomSheetState.Base = BottomSheetState.Base(),
     ) : SurahDetailScreenState {
-        override fun audioPlayerState(): AudioPlayerState .Base= audioPlayerState
+        override fun audioPlayerState(): AudioPlayerState.Base = audioPlayerState
         override fun reciterState(): ReciterState.Base = reciterState
         override fun uiPreferencesState(): UiPreferencesState.Base = uiPreferencesState
         override fun bottomSheetState(): BottomSheetState.Base = bottomSheetState

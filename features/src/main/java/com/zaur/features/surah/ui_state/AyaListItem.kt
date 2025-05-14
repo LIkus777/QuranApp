@@ -7,13 +7,15 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.zaur.domain.al_quran_cloud.models.arabic.Ayah
 import com.zaur.presentation.ui.AyahItem
 import com.zaur.presentation.ui.BasmalaItem
 import com.zaur.presentation.ui.QuranColors
-
+import kotlinx.coroutines.flow.distinctUntilChanged
 
 /**
  * @author Zaur
@@ -23,11 +25,6 @@ import com.zaur.presentation.ui.QuranColors
 interface AyaListItem {
     @Composable
     fun Render(): Unit = Unit
-
-    @Composable
-    fun Render(
-        colors: QuranColors,
-    ): Unit = Unit
 
     @Composable
     fun Render(
@@ -42,6 +39,7 @@ interface AyaListItem {
         ayats: List<Ayah.Base>,
         isDarkTheme: Boolean,
         colors: QuranColors,
+        onFirstVisibleItemChanged: (Int) -> Unit,
         onClickSound: (Int, Int) -> Unit,
         translations: List<com.zaur.domain.al_quran_cloud.models.translate.Ayah.Base>,
     ): Unit = Unit
@@ -70,9 +68,22 @@ interface AyaListItem {
             ayats: List<Ayah.Base>,
             isDarkTheme: Boolean,
             colors: QuranColors,
+            onFirstVisibleItemChanged: (Int) -> Unit,
             onClickSound: (Int, Int) -> Unit,
             translations: List<com.zaur.domain.al_quran_cloud.models.translate.Ayah.Base>,
         ) {
+            // Отслеживаем верхний видимый аят и передаём его page
+            LaunchedEffect(listState) {
+                snapshotFlow { listState.firstVisibleItemIndex }
+                    .distinctUntilChanged()
+                    .collect { index ->
+                        val pageNumber = ayats.getOrNull(index)?.page()?.toInt()
+                        if (pageNumber != null) {
+                            onFirstVisibleItemChanged(pageNumber)
+                        }
+                    }
+            }
+
             LazyColumn(
                 state = listState, modifier = Modifier.fillMaxSize()
             ) {
@@ -84,13 +95,12 @@ interface AyaListItem {
 
                 itemsIndexed(
                     items = ayats,
-                    key = { index, aya -> aya.number() } // или любой другой уникальный параметр
+                    key = { index, aya -> aya.number() }
                 ) { index, aya ->
                     val translationText =
                         if (index < translations.size) translations[index].text() else "Перевод отсутствует"
-                    val arabicText = if (index == 0 && chapterNumber != 9) aya.text()
-                        .removePrefix("بِسۡمِ ٱللَّهِ ٱلرَّحۡمَـٰنِ ٱلرَّحِیمِ")
-                        .trimStart(' ', '،', '\n')
+                    val arabicText = if (index == 0 && chapterNumber != 9)
+                        aya.text().removePrefix("بِسۡمِ ٱللَّهِ ٱلرَّحۡمَـٰنِ ٱلرَّحِیمِ").trimStart(' ', '،', '\n')
                     else aya.text()
 
                     AyahItem(
@@ -107,30 +117,11 @@ interface AyaListItem {
                         showArabic = showArabic,
                         showRussian = showRussian,
                         onClickSound = { number, numberInSurah ->
-                            onClickSound(
-                                number, numberInSurah
-                            )
-                        })
-
+                            onClickSound(number, numberInSurah)
+                        }
+                    )
                 }
             }
         }
     }
 }
-
-data class AyahRenderParams(
-    private val ayaNumber: Int,
-    private val chapterNumber: Int,
-    private val isCurrent: Boolean,
-    private val soundIsActive: Boolean,
-    private val showArabic: Boolean,
-    private val showRussian: Boolean,
-    private val fontSizeArabic: Float,
-    private val fontSizeRussian: Float,
-    private val listState: LazyListState,
-    private val ayats: List<Ayah.Base>,
-    private val isDarkTheme: Boolean,
-    private val colors: QuranColors,
-    private val onClickSound: (Int, Int) -> Unit,
-    private val translations: List<com.zaur.domain.al_quran_cloud.models.translate.Ayah.Base>,
-)

@@ -22,7 +22,7 @@ interface AudioPlayerStateUpdater {
         private val surahDetailStateManager: SurahDetailStateManager, //todo
     ) : AudioPlayerStateUpdater {
 
-        private val state = surahDetailStateManager.getState()
+        private val state = surahDetailStateManager.surahDetailState()
 
         override fun setPlaying(playing: Boolean) {
             surahDetailStateManager.updateState(

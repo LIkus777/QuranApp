@@ -3,7 +3,7 @@ package com.zaur.di.module
 import android.content.Context
 import com.zaur.data.al_quran_aqc.repository_impl.cloud.QuranAudioCloudRepositoryImpl
 import com.zaur.data.al_quran_aqc.repository_impl.cloud.QuranTextCloudRepositoryImpl
-import com.zaur.data.al_quran_aqc.repository_impl.cloud.QuranTranslationCloupRepositoryImpl
+import com.zaur.data.al_quran_aqc.repository_impl.cloud.QuranTranslationCloudRepositoryImpl
 import com.zaur.data.al_quran_aqc.repository_impl.local.QuranAudioLocalRepositoryImpl
 import com.zaur.data.al_quran_aqc.repository_impl.local.QuranTextLocalRepositoryImpl
 import com.zaur.data.al_quran_aqc.repository_impl.local.QuranTranslationLocalRepositoryImpl
@@ -150,7 +150,7 @@ interface SurahDetailModule : ProvideReciterUseCase, ProvideReciterManager, Prov
             )
 
         override fun provideQuranTranslationRepositoryAqcCloud(): QuranTranslationRepository.Cloud =
-            QuranTranslationCloupRepositoryImpl(dataModule.provideQuranApiAqc())
+            QuranTranslationCloudRepositoryImpl(dataModule.provideQuranApiAqc())
 
         override fun provideQuranAudioRepositoryAqcLocal(): QuranAudioRepository.Local =
             QuranAudioLocalRepositoryImpl(

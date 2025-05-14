@@ -1,5 +1,6 @@
 package com.zaur.domain.al_quran_cloud.models.page
 
+import com.google.gson.annotations.SerializedName
 
 /**
  * @author Zaur
@@ -9,16 +10,16 @@ package com.zaur.domain.al_quran_cloud.models.page
 interface QuranPageAqc {
     fun code(): Long
     fun status(): String
-    fun data(): QuranPage
+    fun page(): QuranPage
 
     data class Base(
-        private val code: Long,
-        private val status: String,
-        private val data: QuranPage,
+        @SerializedName("code") private val code: Long,
+        @SerializedName("status") private val status: String,
+        @SerializedName("data") private val page: QuranPage,
     ) : QuranPageAqc {
         override fun code() = code
         override fun status() = status
-        override fun data() = data
+        override fun page() = page
     }
 }
 
@@ -29,10 +30,10 @@ interface QuranPage {
     fun edition(): Edition
 
     data class Base(
-        private val number: Long,
-        private val ayahs: List<Ayah>,
-        private val surahs: Map<String, Surah>,
-        private val edition: Edition,
+        @SerializedName("number") private val number: Long,
+        @SerializedName("ayahs") private val ayahs: List<Ayah>,
+        @SerializedName("surahs") private val surahs: Map<String, Surah>,
+        @SerializedName("edition") private val edition: Edition,
     ) : QuranPage {
         override fun number() = number
         override fun ayahs() = ayahs
@@ -54,16 +55,16 @@ interface Ayah {
     fun sajda(): Boolean
 
     data class Base(
-        private val number: Long,
-        private val text: String,
-        private val surah: Surah,
-        private val numberInSurah: Long,
-        private val juz: Long,
-        private val manzil: Long,
-        private val page: Long,
-        private val ruku: Long,
-        private val hizbQuarter: Long,
-        private val sajda: Boolean,
+        @SerializedName("number") private val number: Long,
+        @SerializedName("text") private val text: String,
+        @SerializedName("surah") private val surah: Surah,
+        @SerializedName("numberInSurah") private val numberInSurah: Long,
+        @SerializedName("juz") private val juz: Long,
+        @SerializedName("manzil") private val manzil: Long,
+        @SerializedName("page") private val page: Long,
+        @SerializedName("ruku") private val ruku: Long,
+        @SerializedName("hizbQuarter") private val hizbQuarter: Long,
+        @SerializedName("sajda") private val sajda: Boolean,
     ) : Ayah {
         override fun number() = number
         override fun text() = text
@@ -87,12 +88,12 @@ interface Surah {
     fun numberOfAyahs(): Long
 
     data class Base(
-        private val number: Long,
-        private val name: String,
-        private val englishName: String,
-        private val englishNameTranslation: String,
-        private val revelationType: String,
-        private val numberOfAyahs: Long,
+        @SerializedName("number") private val number: Long,
+        @SerializedName("name") private val name: String,
+        @SerializedName("englishName") private val englishName: String,
+        @SerializedName("englishNameTranslation") private val englishNameTranslation: String,
+        @SerializedName("revelationType") private val revelationType: String,
+        @SerializedName("numberOfAyahs") private val numberOfAyahs: Long,
     ) : Surah {
         override fun number() = number
         override fun name() = name
@@ -113,13 +114,13 @@ interface Edition {
     fun direction(): String
 
     data class Base(
-        private val identifier: String,
-        private val language: String,
-        private val name: String,
-        private val englishName: String,
-        private val format: String,
-        private val type: String,
-        private val direction: String,
+        @SerializedName("identifier") private val identifier: String,
+        @SerializedName("language") private val language: String,
+        @SerializedName("name") private val name: String,
+        @SerializedName("englishName") private val englishName: String,
+        @SerializedName("format") private val format: String,
+        @SerializedName("type") private val type: String,
+        @SerializedName("direction") private val direction: String,
     ) : Edition {
         override fun identifier() = identifier
         override fun language() = language

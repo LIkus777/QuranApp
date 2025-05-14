@@ -9,7 +9,7 @@ import com.zaur.domain.al_quran_cloud.repository.QuranTranslationRepository
 * @since 2025-05-12
 */
 
-class QuranTranslationCloupRepositoryImpl(
+class QuranTranslationCloudRepositoryImpl(
     private val quranApiAqc: QuranApiAqc,
 ) : QuranTranslationRepository.Cloud {
     override suspend fun getTranslationForChapterCloud(

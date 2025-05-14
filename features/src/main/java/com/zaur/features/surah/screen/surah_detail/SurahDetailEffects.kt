@@ -12,6 +12,7 @@ import com.zaur.features.surah.ui_state.aqc.QuranAudioAqcUIState
 import com.zaur.features.surah.ui_state.aqc.QuranTextAqcUIState
 import com.zaur.features.surah.ui_state.aqc.SurahDetailScreenState
 import com.zaur.features.surah.viewmodel.QuranAudioViewModel
+import com.zaur.features.surah.viewmodel.QuranPageViewModel
 import com.zaur.features.surah.viewmodel.QuranTextViewModel
 import com.zaur.features.surah.viewmodel.QuranTranslationViewModel
 import com.zaur.features.surah.viewmodel.SurahDetailViewModel
@@ -23,6 +24,7 @@ import com.zaur.features.surah.viewmodel.SurahDetailViewModel
 
 @Composable
 fun SurahDetailEffects(
+    pageNumber: Int,
     chapterNumber: Int,
     audioState: QuranAudioAqcUIState,
     surahDetailState: SurahDetailScreenState,
@@ -30,6 +32,7 @@ fun SurahDetailEffects(
     quranTextViewModel: QuranTextViewModel,
     quranTranslationViewModel: QuranTranslationViewModel,
     surahDetailViewModel: SurahDetailViewModel,
+    quranPageViewModel: QuranPageViewModel
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
 
@@ -57,6 +60,8 @@ fun SurahDetailEffects(
         if (reciter.isNullOrEmpty()) {
             surahDetailViewModel.showReciterDialog(true)
         }
+        quranPageViewModel.getUthmaniPage(pageNumber)
+        quranPageViewModel.getTranslatedPage(pageNumber, "ru.kuliev") //todo
         quranTextViewModel.getArabicChapter(chapterNumber)
         quranTranslationViewModel.getTranslationForChapter(chapterNumber, "ru.kuliev") //todo
         quranAudioViewModel.downloadToCache(

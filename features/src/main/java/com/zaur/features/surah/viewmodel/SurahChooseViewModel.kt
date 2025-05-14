@@ -36,7 +36,7 @@ interface SurahChooseViewModel : SurahChooseObservable.Read {
                     override fun handleSuccess(data: List<ChapterAqc>) {
                         viewModelScope.launch {
                             Log.i("TAGGG", "handleSuccess: getAllChapters data $data")
-                            observable.update(observable.state().value.copy(chapters = data))
+                            observable.update(observable.textState().value.copy(chapters = data))
                         }
                     }
                 })

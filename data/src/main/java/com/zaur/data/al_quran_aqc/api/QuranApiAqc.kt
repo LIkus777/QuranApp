@@ -7,14 +7,15 @@ import com.zaur.domain.al_quran_cloud.models.chapter.ChaptersAqc
 import com.zaur.domain.al_quran_cloud.models.edition.Editions
 import com.zaur.domain.al_quran_cloud.models.edition.Languages
 import com.zaur.domain.al_quran_cloud.models.edition.Types
+import com.zaur.domain.al_quran_cloud.models.page.QuranPageAqc
 import com.zaur.domain.al_quran_cloud.models.translate.TranslationsChapterAqc
 import retrofit2.http.GET
 import retrofit2.http.Path
 
 /**
-* @author Zaur
-* @since 2025-05-12
-*/
+ * @author Zaur
+ * @since 2025-05-12
+ */
 
 interface QuranApiAqc {
 
@@ -61,5 +62,14 @@ interface QuranApiAqc {
         @Path("language") language: String,
         @Path("type") type: String,
     ): Editions.Base
+
+    @GET("/page/{page}/quran-uthmani")
+    suspend fun getUthmaniPage(@Path("page") page: Int): QuranPageAqc.Base
+
+    @GET("/page/{page}/{translator}")
+    suspend fun getTranslatedPage(
+        @Path("page") page: Int,
+        @Path("translator") translator: String,
+    ): QuranPageAqc.Base
 
 }

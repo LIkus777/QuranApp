@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.currentComposer
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -15,10 +16,12 @@ import com.zaur.domain.al_quran_cloud.models.arabic.ArabicChapter
 import com.zaur.domain.al_quran_cloud.models.translate.TranslationAqc
 import com.zaur.features.surah.ui_state.AnimatedMenuUiState
 import com.zaur.features.surah.ui_state.SurahDetailUiState
+import com.zaur.features.surah.ui_state.aqc.QuranPageAqcUIState
 import com.zaur.features.surah.ui_state.aqc.QuranTextAqcUIState
 import com.zaur.features.surah.ui_state.aqc.QuranTranslationAqcUIState
 import com.zaur.features.surah.ui_state.aqc.SurahDetailScreenState
 import com.zaur.features.surah.viewmodel.QuranAudioViewModel
+import com.zaur.features.surah.viewmodel.QuranTextViewModel
 import com.zaur.features.surah.viewmodel.ScreenContentViewModel
 import com.zaur.features.surah.viewmodel.SurahDetailViewModel
 import com.zaur.presentation.ui.QuranColors
@@ -32,10 +35,12 @@ import com.zaur.presentation.ui.QuranColors
 fun SreenContent(
     isDarkTheme: Boolean,
     chapterNumber: Int,
+    pageState: QuranPageAqcUIState.Base,
     textState: QuranTextAqcUIState,
     translateState: QuranTranslationAqcUIState,
     surahDetailState: SurahDetailScreenState,
     listState: LazyListState,
+    quranTextViewModel: QuranTextViewModel,
     screenContentViewModel: ScreenContentViewModel,
     surahDetailViewModel: SurahDetailViewModel,
     quranAudioViewModel: QuranAudioViewModel,
@@ -75,6 +80,9 @@ fun SreenContent(
                 translations = translateState.translations().translationAyahs(),
                 ayats = textState.currentArabicText().ayahs(),
                 listState = listState,
+                onFirstVisibleItemChanged = { index ->
+                    quranTextViewModel.saveLastReadPosition(chapterNumber, index)
+                },
                 onClickSound = { ayahNumber, ayahNumberInSurah ->
                     surahDetailViewModel.setAyahInSurahNumber(ayahNumberInSurah)
                     Log.i(
@@ -84,7 +92,28 @@ fun SreenContent(
                     quranAudioViewModel.onPlaySingleClicked(ayahNumberInSurah, chapterNumber)
                 })
 
-            is SurahDetailUiState.PageModeState -> surahMode.value.Render()
+            is SurahDetailUiState.PageModeState -> surahMode.value.Render(
+                colors = colors,
+                isDarkTheme = isDarkTheme,
+                currentAyahNumber = surahDetailState.audioPlayerState().currentAyahInSurah(),
+                arabicText = pageState.uthmaniPage().page(),
+                translatedText = pageState.translatedPage().page(),
+                fontSizeArabic = surahDetailState.uiPreferencesState().fontSizeArabic(),
+                fontSizeRussian = surahDetailState.uiPreferencesState().fontSizeRussian(),
+                showArabic = surahDetailState.uiPreferencesState().showArabic(),
+                showRussian = surahDetailState.uiPreferencesState().showRussian(),
+                soundIsActive = surahDetailState.audioPlayerState().isAudioPlaying(),
+                onClickPreviousPage = {},
+                onClickNextPage = {},
+                onClickSound = { ayahNumber, ayahNumberInSurah ->
+                    surahDetailViewModel.setAyahInSurahNumber(ayahNumberInSurah)
+                    Log.i(
+                        "TAG",
+                        "SreenContent: ayahNumber $ayahNumber ayahNumberInSurah $ayahNumberInSurah"
+                    )
+                    quranAudioViewModel.onPlaySingleClicked(ayahNumberInSurah, chapterNumber)
+                }
+            )
         }
 
         // TopBar поверх контента

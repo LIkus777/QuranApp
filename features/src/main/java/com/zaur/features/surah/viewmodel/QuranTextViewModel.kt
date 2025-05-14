@@ -14,9 +14,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 /**
-* @author Zaur
-* @since 2025-05-12
-*/
+ * @author Zaur
+ * @since 2025-05-12
+ */
 
 interface QuranTextViewModel : QuranTextObservable.Read {
 
@@ -27,6 +27,9 @@ interface QuranTextViewModel : QuranTextObservable.Read {
 
     fun getAllChapters()
     fun getArabicChapter(chapterNumber: Int)
+
+    fun getLastReadPosition(): Pair<Int, Int>
+    fun saveLastReadPosition(chapterNumber: Int, ayahNumber: Int)
 
     class Base(
         private val observable: QuranTextObservable.Mutable,
@@ -55,7 +58,7 @@ interface QuranTextViewModel : QuranTextObservable.Read {
                     override fun handleSuccess(data: List<ChapterAqc.Base>) {
                         viewModelScope.launch {
                             Log.i("TAG", "handleSuccess: getAllChapters data $data")
-                            observable.update(observable.state().value.copy(chapters = data))
+                            observable.update(observable.textState().value.copy(chapters = data))
                         }
                     }
                 })
@@ -68,12 +71,17 @@ interface QuranTextViewModel : QuranTextObservable.Read {
                 result.handle(object : HandleResult<ArabicChapter.Base> {
                     override fun handleSuccess(data: ArabicChapter.Base) {
                         viewModelScope.launch {
-                            observable.update(observable.state().value.copy(currentArabicText = data))
+                            observable.update(observable.textState().value.copy(currentArabicText = data))
                         }
                     }
                 })
             }
         }
+
+        override fun getLastReadPosition(): Pair<Int, Int> = quranTextUseCase.getLastReadPosition()
+
+        override fun saveLastReadPosition(chapterNumber: Int, ayahNumber: Int) =
+            quranTextUseCase.saveLastReadPosition(chapterNumber, ayahNumber)
 
     }
 }

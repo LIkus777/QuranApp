@@ -1,6 +1,5 @@
 package com.zaur.features.surah.viewmodel
 
-import android.util.Log
 import com.zaur.core.BaseViewModel
 import com.zaur.features.surah.manager.SurahDetailStateManager
 import com.zaur.features.surah.observables.AnimatedMenuObservable
@@ -31,15 +30,13 @@ interface ScreenContentViewModel {
     ) : BaseViewModel(), ScreenContentViewModel {
 
         init {
-            fetchSurahMode() //fixme
+            fetchSurahMode()
         }
 
         override fun surahMode(): StateFlow<SurahDetailUiState> = surahModeObservable.surahMode()
 
         override fun animatedMenu(): StateFlow<AnimatedMenuUiState> =
             animatedMenuObservable.animatedMenu()
-
-        private val surahDetailState = surahDetailStateManager.getState()
 
         override fun fetchAyaListItem(isLoading: Boolean, chapterNumber: Int): AyaListItem {
             return if (isLoading) {
@@ -50,9 +47,8 @@ interface ScreenContentViewModel {
         }
 
         override fun fetchSurahMode() { //todo сделать сохранение и вынимание в prefs и пофиксить креш
-            Log.i("TAG", "fetchSurahMode: value - ${surahDetailState.value.uiPreferencesState}")
             val isSurahMode =
-                surahDetailState.value.uiPreferencesState.showSurahMode() == true
+                surahDetailStateManager.surahDetailState().value.uiPreferencesState.showSurahMode() == true
             if (isSurahMode) {
                 surahModeObservable.update(
                     SurahDetailUiState.SurahModeState

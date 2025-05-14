@@ -52,7 +52,7 @@ interface SurahPlayer {
         private var cacheAyahs: CacheAyahList = EmptyCacheAyahList
         private var currentAyahIndex = 0
 
-        private val state = surahDetailStateManager.getState()
+        private val state = surahDetailStateManager.surahDetailState()
 
         init {
             audioPlayer.setAudioPlayerCallback(object : AudioPlayerCallback {

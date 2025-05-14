@@ -39,7 +39,7 @@ interface QuranTranslationViewModel : QuranTranslationObservable.Read {
                     override fun handleSuccess(data: TranslationAqc) {
                         viewModelScope.launch {
                             Log.i("TAG", "getTranslationForChapter: data $data")
-                            observable.update(observable.state().value.copy(translations = data))
+                            observable.update(observable.translationState().value.copy(translations = data))
                         }
                     }
                 })

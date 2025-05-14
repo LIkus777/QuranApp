@@ -7,6 +7,7 @@ import androidx.compose.runtime.getValue
 import androidx.navigation.NavHostController
 import com.zaur.features.surah.viewmodel.OfflineViewModel
 import com.zaur.features.surah.viewmodel.QuranAudioViewModel
+import com.zaur.features.surah.viewmodel.QuranPageViewModel
 import com.zaur.features.surah.viewmodel.QuranTextViewModel
 import com.zaur.features.surah.viewmodel.QuranTranslationViewModel
 import com.zaur.features.surah.viewmodel.ScreenContentViewModel
@@ -16,9 +17,9 @@ import com.zaur.presentation.ui.DarkThemeColors
 import com.zaur.presentation.ui.LightThemeColors
 
 /**
-* @author Zaur
-* @since 2025-05-12
-*/
+ * @author Zaur
+ * @since 2025-05-12
+ */
 
 @Composable
 fun SurahDetailScreenContent(
@@ -31,6 +32,7 @@ fun SurahDetailScreenContent(
     quranAudioViewModel: QuranAudioViewModel,
     quranTranslationViewModel: QuranTranslationViewModel,
     screenContentViewModel: ScreenContentViewModel,
+    quranPageViewModel: QuranPageViewModel,
     controller: NavHostController,
     onMenuClick: () -> Unit,
 ) {
@@ -38,7 +40,8 @@ fun SurahDetailScreenContent(
     val textState by quranTextViewModel.textState().collectAsState()
     val audioState by quranAudioViewModel.audioState().collectAsState()
     val translateState by quranTranslationViewModel.translationState().collectAsState()
-    val surahDetailState by surahDetailViewModel.getState().collectAsState()
+    val surahDetailState by surahDetailViewModel.surahDetailState().collectAsState()
+    val pageState by quranPageViewModel.pageState().collectAsState()
     surahDetailViewModel.setSurahNumber(chapterNumber)
     surahDetailViewModel.setOfflineMode(offlineState.isOffline())
     surahDetailViewModel.fontSizeArabic(quranTextViewModel.getFontSizeArabic())
@@ -50,22 +53,26 @@ fun SurahDetailScreenContent(
     val colors = if (isDarkTheme) DarkThemeColors else LightThemeColors
 
     SurahDetailEffects(
+        pageNumber =  quranTextViewModel.getLastReadPosition().second,
         chapterNumber = chapterNumber,
         audioState = audioState,
         surahDetailState = surahDetailState,
         quranAudioViewModel = quranAudioViewModel,
         quranTextViewModel = quranTextViewModel,
         quranTranslationViewModel = quranTranslationViewModel,
-        surahDetailViewModel = surahDetailViewModel
+        surahDetailViewModel = surahDetailViewModel,
+        quranPageViewModel = quranPageViewModel
     )
 
     SreenContent(
         isDarkTheme,
         chapterNumber,
+        pageState,
         textState,
         translateState,
         surahDetailState,
         listState,
+        quranTextViewModel,
         screenContentViewModel,
         surahDetailViewModel,
         quranAudioViewModel,

@@ -8,16 +8,19 @@ import com.zaur.domain.al_quran_cloud.models.audiofile.VerseAudioAqc
 import com.zaur.domain.al_quran_cloud.repository.QuranAudioRepository
 
 /**
-* @author Zaur
-* @since 2025-05-12
-*/
+ * @author Zaur
+ * @since 2025-05-12
+ */
 
 class QuranAudioCloudRepositoryImpl(
     private val quranApiAqc: QuranApiAqc,
     private val audioDownloader: AudioDownloader,
 ) : QuranAudioRepository.Cloud {
 
-    override suspend fun downloadToCache(chapterNumber: Int, reciter: String): List<CacheAudio.Base> {
+    override suspend fun downloadToCache(
+        chapterNumber: Int,
+        reciter: String,
+    ): List<CacheAudio.Base> {
         val cachedAudios: MutableList<CacheAudio.Base> = mutableListOf()
         val surahAudio = getChapterAudioOfReciterCloud(chapterNumber, reciter)
 
@@ -46,7 +49,5 @@ class QuranAudioCloudRepositoryImpl(
     override suspend fun getAyahAudioByKeyCloud(
         verseKey: String,
         reciter: String,
-    ): VerseAudioAqc.Base {
-        return quranApiAqc.getAyahAudioByKey(verseKey, reciter).verseAudio()
-    }
+    ): VerseAudioAqc.Base = quranApiAqc.getAyahAudioByKey(verseKey, reciter).verseAudio()
 }

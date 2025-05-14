@@ -25,6 +25,7 @@ fun AyaColumn(
     ayats: List<Ayah.Base>,
     isDarkTheme: Boolean,
     colors: QuranColors,
+    onFirstVisibleItemChanged: (Int) -> Unit,
     onClickSound: (Int, Int) -> Unit,
     translations: List<com.zaur.domain.al_quran_cloud.models.translate.Ayah.Base>,
 ) {
@@ -42,6 +43,7 @@ fun AyaColumn(
             ayats,
             isDarkTheme,
             colors,
+            onFirstVisibleItemChanged,
             onClickSound,
             translations
         )

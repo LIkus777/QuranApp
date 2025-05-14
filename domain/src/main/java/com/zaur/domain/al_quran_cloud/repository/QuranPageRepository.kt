@@ -9,6 +9,13 @@ import com.zaur.domain.al_quran_cloud.models.page.QuranPageAqc
  */
 
 interface QuranPageRepository {
-    suspend fun getUthmaniPage(page: Int): QuranPageAqc
-    suspend fun getTranslatedPage(page: Int): QuranPageAqc
+    interface Cloud {
+        suspend fun getUthmaniPage(page: Int): QuranPageAqc
+        suspend fun getTranslatedPage(page: Int, translator: String): QuranPageAqc
+    }
+
+    interface Local {
+        suspend fun getUthmaniPage(page: Int): QuranPageAqc
+        suspend fun getTranslatedPage(page: Int, translator: String): QuranPageAqc
+    }
 }

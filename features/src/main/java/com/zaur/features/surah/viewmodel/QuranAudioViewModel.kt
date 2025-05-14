@@ -68,7 +68,7 @@ interface QuranAudioViewModel : QuranAudioObservable.Read {
                 result.handle(object : HandleResult<List<CacheAudio.Base>> {
                     override fun handleSuccess(data: List<CacheAudio.Base>) {
                         viewModelScope.launch {
-                            observable.update(observable.state().value.copy(cacheAudios = data))
+                            observable.update(observable.audioState().value.copy(cacheAudios = data))
                         }
                     }
                 })
@@ -80,7 +80,7 @@ interface QuranAudioViewModel : QuranAudioObservable.Read {
                 override fun callVerseAudioFile(ayah: Int) {
                     Log.i("TAGGG", "callVerseAudioFile CALLED} ayah $ayah")
                     getAyahAudioByKey(
-                        "${stateManager.getState().value.audioPlayerState.currentSurahNumber()}:$ayah",
+                        "${stateManager.surahDetailState().value.audioPlayerState.currentSurahNumber()}:$ayah",
                         reciterManager.getReciter().toString()
                     )
                 }
@@ -115,7 +115,7 @@ interface QuranAudioViewModel : QuranAudioObservable.Read {
                 result.handle(object : HandleResult<ChapterAudioFile> {
                     override fun handleSuccess(data: ChapterAudioFile) {
                         viewModelScope.launch {
-                            observable.update(observable.state().value.copy(chaptersAudioFile = data))
+                            observable.update(observable.audioState().value.copy(chaptersAudioFile = data))
                         }
                     }
                 })
@@ -139,14 +139,14 @@ interface QuranAudioViewModel : QuranAudioObservable.Read {
                     override fun handleSuccess(data: VerseAudioAqc) {
                         Log.i("TAGGG", "getVerseAudioFile: data ${data.audio()} ")
                         viewModelScope.launch {
-                            if (data.audio() == observable.state().value.verseAudioFile().audio()) {
-                                val newState = stateManager.getState().value.copy(
-                                    audioPlayerState = stateManager.getState().value.audioPlayerState.copy(
+                            if (data.audio() == observable.audioState().value.verseAudioFile().audio()) {
+                                val newState = stateManager.surahDetailState().value.copy(
+                                    audioPlayerState = stateManager.surahDetailState().value.audioPlayerState.copy(
                                         restartAudio = true
                                     )
                                 )
                                 stateManager.updateState(newState)
-                            } else observable.update(observable.state().value.copy(verseAudioFile = data))
+                            } else observable.update(observable.audioState().value.copy(verseAudioFile = data))
                         }
                     }
 

@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.StateFlow
 interface SurahDetailViewModel {
 
     fun updateState(state: SurahDetailScreenState.Base)
-    fun getState(): StateFlow<SurahDetailScreenState>
+    fun surahDetailState(): StateFlow<SurahDetailScreenState>
 
     fun setSurahNumber(surahNumber: Int)
     fun showReciterDialog(show: Boolean)
@@ -39,7 +39,7 @@ interface SurahDetailViewModel {
             stateManager.updateState(state)
         }
 
-        override fun getState(): StateFlow<SurahDetailScreenState> = stateManager.getState()
+        override fun surahDetailState(): StateFlow<SurahDetailScreenState> = stateManager.surahDetailState()
 
         override fun setSurahNumber(surahNumber: Int) {
             stateManager.setSurahNumber(surahNumber)

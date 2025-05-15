@@ -115,6 +115,9 @@ interface QuranAudioViewModel : QuranAudioObservable.Read {
                 result.handle(object : HandleResult<ChapterAudioFile> {
                     override fun handleSuccess(data: ChapterAudioFile) {
                         viewModelScope.launch {
+                            data.ayahs().forEach {
+                                Log.d("TAG", "getChaptersAudioOfReciter: data - $it")
+                            }
                             observable.update(observable.audioState().value.copy(chaptersAudioFile = data))
                         }
                     }

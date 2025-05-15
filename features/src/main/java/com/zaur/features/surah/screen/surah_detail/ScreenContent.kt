@@ -1,0 +1,132 @@
+package com.zaur.features.surah.screen.surah_detail
+
+import android.util.Log
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
+import com.zaur.domain.al_quran_cloud.models.arabic.ArabicChapter
+import com.zaur.domain.al_quran_cloud.models.translate.TranslationAqc
+import com.zaur.features.surah.ui_state.AnimatedMenuUiState
+import com.zaur.features.surah.ui_state.SurahDetailUiState
+import com.zaur.presentation.ui.QuranColors
+
+/**
+ * @author Zaur
+ * @since 2025-05-12
+ */
+
+@Composable
+fun ScreenContent(
+    chapterNumber: Int,
+    listState: LazyListState,
+    deps: SurahDetailDependencies,
+    uiData: SurahDetailUiData,
+    colors: QuranColors,
+    surahName: String,
+    onMenuClick: () -> Unit,
+) {
+    with(uiData) {
+        with(deps) {
+            val isLoading =
+                textState().currentArabicText() == ArabicChapter.Empty || translateState().translations() == TranslationAqc.Empty
+
+            val isBarsVisible = remember { mutableStateOf(true) }
+
+            val surahMode = screenContentViewModel().surahMode().collectAsState()
+            val animatedMenu = screenContentViewModel().animatedMenu().collectAsState()
+
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .clickable(
+                        indication = null,
+                        interactionSource = remember { MutableInteractionSource() }) {
+                        isBarsVisible.value = !isBarsVisible.value
+                    }) {
+
+                // Основной контент на фоне
+                when (surahMode.value) {
+                    is SurahDetailUiState.SurahModeState -> surahMode.value.Render(
+                        state = screenContentViewModel().fetchAyaListItem(
+                            isLoading, chapterNumber
+                        ), //todo
+                        colors = colors,
+                        isDarkTheme = isDarkTheme(),
+                        chapterNumber = chapterNumber,
+                        soundIsActive = surahDetailState().audioPlayerState().isAudioPlaying(),
+                        ayaNumber = surahDetailState().audioPlayerState().currentAyahInSurah(),
+                        fontSizeArabic = surahDetailState().uiPreferencesState().fontSizeArabic(),
+                        fontSizeRussian = surahDetailState().uiPreferencesState().fontSizeRussian(),
+                        showArabic = surahDetailState().uiPreferencesState().showArabic(),
+                        showRussian = surahDetailState().uiPreferencesState().showRussian(),
+                        translations = translateState().translations().translationAyahs(),
+                        ayats = textState().currentArabicText().ayahs(),
+                        listState = listState,
+                        onAyahItemChanged = { index ->
+                            quranTextViewModel().saveLastReadAyahPosition(chapterNumber, index)
+                        },
+                        onPageItemChanged = { page ->
+                            quranPageViewModel().saveLastReadPagePosition(page)
+                        },
+                        onClickSound = { ayahNumber, ayahNumberInSurah ->
+                            surahDetailViewModel().setAyahInSurahNumber(ayahNumberInSurah)
+                            Log.i(
+                                "TAG",
+                                "SreenContent: ayahNumber $ayahNumber ayahNumberInSurah $ayahNumberInSurah"
+                            )
+                            quranAudioViewModel().onPlaySingleClicked(
+                                ayahNumberInSurah, chapterNumber
+                            )
+                        })
+
+                    is SurahDetailUiState.PageModeState -> surahMode.value.Render(
+                        colors = colors,
+                        isDarkTheme = isDarkTheme(),
+                        chapterNumber = chapterNumber,
+                        currentAyahNumber = surahDetailState().audioPlayerState()
+                            .currentAyahInSurah(),
+                        arabicText = pageState().uthmaniPage(),
+                        translatedText = pageState().translatedPage(),
+                        fontSizeArabic = surahDetailState().uiPreferencesState().fontSizeArabic(),
+                        fontSizeRussian = surahDetailState().uiPreferencesState().fontSizeRussian(),
+                        showArabic = surahDetailState().uiPreferencesState().showArabic(),
+                        showRussian = surahDetailState().uiPreferencesState().showRussian(),
+                        soundIsActive = surahDetailState().audioPlayerState().isAudioPlaying(),
+                        onClickPreviousPage = {},
+                        onClickNextPage = {},
+                        onClickSound = { ayahNumber, ayahNumberInSurah ->
+                            surahDetailViewModel().setAyahInSurahNumber(ayahNumberInSurah)
+                            Log.i(
+                                "TAG",
+                                "SreenContent: ayahNumber $ayahNumber ayahNumberInSurah $ayahNumberInSurah"
+                            )
+                            quranAudioViewModel().onPlaySingleClicked(
+                                ayahNumberInSurah, chapterNumber
+                            )
+                        })
+                }
+
+                // TopBar поверх контента
+                when (animatedMenu.value) {
+                    is AnimatedMenuUiState.Animate -> animatedMenu.value.Render(
+                        isPlaying = surahDetailState().audioPlayerState().isAudioPlaying(),
+                        surahName = surahName,
+                        isBarsVisible = isBarsVisible.value,
+                        colors = colors,
+                        onMenuClick = onMenuClick,
+                        onClickSettings = { surahDetailViewModel().showSettingsBottomSheet(true) },
+                        onClickReciter = { surahDetailViewModel().showTextBottomSheet(true) },
+                        onClickPlay = { quranAudioViewModel().onPlayWholeClicked() },
+                    )
+                }
+            }
+        }
+    }
+}

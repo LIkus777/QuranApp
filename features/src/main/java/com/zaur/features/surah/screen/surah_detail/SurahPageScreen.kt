@@ -29,6 +29,8 @@ import com.zaur.presentation.ui.QuranColors
 @Composable
 fun SurahPageScreen(
     arabicText: QuranPage,
+    translations: QuranPage,
+    chapterNumber: Int,
     currentAyahNumber: Int,
     showArabic: Boolean,
     showRussian: Boolean,
@@ -37,7 +39,6 @@ fun SurahPageScreen(
     isDarkTheme: Boolean,
     colors: QuranColors,
     soundIsActive: Boolean,
-    translations: QuranPage,
     onClickSound: (ayahNumber: Int, ayahInSurah: Int) -> Unit,
     onClickPreviousPage: () -> Unit,
     onClickNextPage: () -> Unit,
@@ -59,22 +60,21 @@ fun SurahPageScreen(
             }
 
             itemsIndexed(
-                items = arabicText.ayahs(), key = { _, ayah -> ayah.number() }) { index, ayah ->
-                val translationText = translations.ayahs().getOrNull(index)?.text() ?: "Перевод отсутствует"
-                val arabicText = if (index == 0 && firstSurah?.number() != 9L) {
-                    ayah.text().removePrefix("بِسۡمِ ٱللَّهِ ٱلرَّحۡمَـٰنِ ٱلرَّحِیمِ")
-                        .trimStart(' ', '،', '\n')
-                } else {
-                    ayah.text()
-                }
+                items = arabicText.ayahs(), key = { index, aya -> aya.number() }) { index, aya ->
+                val translationText =
+                    if (index < translations.ayahs().size) translations.ayahs().getOrNull(index)
+                        ?.text() else "Перевод отсутствует"
+                val arabicText =
+                    if (index == 0 && aya.surah().number() != 9L) aya.text().removeBasmala()
+                    else aya.text()
 
                 AyahItem(
                     isDarkTheme = isDarkTheme,
-                    ayahNumber = ayah.number().toInt(),
-                    currentAyahInSurah = ayah.numberInSurah().toInt(),
-                    isCurrent = currentAyahNumber == ayah.number().toInt(),
+                    ayahNumber = aya.number().toInt(),
+                    currentAyahInSurah = aya.numberInSurah().toInt(),
+                    isCurrent = currentAyahNumber == aya.number().toInt(),
                     arabicText = arabicText,
-                    translation = translationText,
+                    translation = translationText.toString(),
                     colors = colors,
                     fontSizeArabic = fontSizeArabic,
                     fontSizeRussian = fontSizeRussian,
@@ -109,4 +109,20 @@ fun SurahPageScreen(
             }
         }
     }
+}
+
+fun String.removeBasmala(): String {
+    // Это разные варианты басмалы (разные касыры, сукуны, татвилы, орфография)
+    val variants = listOf(
+        "بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ",
+        "بِسۡمِ ٱللَّهِ ٱلرَّحۡمَـٰنِ ٱلرَّحِیمِ",
+        "بسم الله الرحمن الرحيم",
+    )
+    val cleaned = this.trimStart(' ', '،', '\n')
+    for (variant in variants) {
+        if (cleaned.startsWith(variant)) {
+            return cleaned.removePrefix(variant).trimStart(' ', '،', '\n')
+        }
+    }
+    return this
 }

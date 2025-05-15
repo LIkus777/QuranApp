@@ -15,11 +15,17 @@ interface QuranPageAqc {
     data class Base(
         @SerializedName("code") private val code: Long,
         @SerializedName("status") private val status: String,
-        @SerializedName("data") private val page: QuranPage,
+        @SerializedName("data") private val page: QuranPage.Base,
     ) : QuranPageAqc {
         override fun code() = code
         override fun status() = status
         override fun page() = page
+    }
+
+    object Empty : QuranPageAqc {
+        override fun code(): Long = 0L
+        override fun status(): String = ""
+        override fun page(): QuranPage = QuranPage.Empty
     }
 }
 
@@ -31,14 +37,21 @@ interface QuranPage {
 
     data class Base(
         @SerializedName("number") private val number: Long,
-        @SerializedName("ayahs") private val ayahs: List<Ayah>,
-        @SerializedName("surahs") private val surahs: Map<String, Surah>,
-        @SerializedName("edition") private val edition: Edition,
+        @SerializedName("ayahs") private val ayahs: List<Ayah.Base>,
+        @SerializedName("surahs") private val surahs: Map<String, Surah.Base>,
+        @SerializedName("edition") private val edition: Edition.Base,
     ) : QuranPage {
         override fun number() = number
         override fun ayahs() = ayahs
         override fun surahs() = surahs
         override fun edition() = edition
+    }
+
+    object Empty : QuranPage {
+        override fun number(): Long = 0L
+        override fun ayahs(): List<Ayah> = emptyList()
+        override fun surahs(): Map<String, Surah> = emptyMap()
+        override fun edition(): Edition = Edition.Empty
     }
 }
 
@@ -57,7 +70,7 @@ interface Ayah {
     data class Base(
         @SerializedName("number") private val number: Long,
         @SerializedName("text") private val text: String,
-        @SerializedName("surah") private val surah: Surah,
+        @SerializedName("surah") private val surah: Surah.Base,
         @SerializedName("numberInSurah") private val numberInSurah: Long,
         @SerializedName("juz") private val juz: Long,
         @SerializedName("manzil") private val manzil: Long,
@@ -76,6 +89,19 @@ interface Ayah {
         override fun ruku() = ruku
         override fun hizbQuarter() = hizbQuarter
         override fun sajda() = sajda
+    }
+
+    object Empty : Ayah {
+        override fun number(): Long = 0L
+        override fun text(): String = ""
+        override fun surah(): Surah = Surah.Empty
+        override fun numberInSurah(): Long = 0L
+        override fun juz(): Long = 0L
+        override fun manzil(): Long = 0L
+        override fun page(): Long = 0L
+        override fun ruku(): Long = 0L
+        override fun hizbQuarter(): Long = 0L
+        override fun sajda(): Boolean = false
     }
 }
 
@@ -101,6 +127,15 @@ interface Surah {
         override fun englishNameTranslation() = englishNameTranslation
         override fun revelationType() = revelationType
         override fun numberOfAyahs() = numberOfAyahs
+    }
+
+    object Empty : Surah {
+        override fun number(): Long = 0L
+        override fun name(): String = ""
+        override fun englishName(): String = ""
+        override fun englishNameTranslation(): String = ""
+        override fun revelationType(): String = ""
+        override fun numberOfAyahs(): Long = 0L
     }
 }
 
@@ -129,5 +164,15 @@ interface Edition {
         override fun format() = format
         override fun type() = type
         override fun direction() = direction
+    }
+
+    object Empty : Edition {
+        override fun identifier(): String = ""
+        override fun language(): String = ""
+        override fun name(): String = ""
+        override fun englishName(): String = ""
+        override fun format(): String = ""
+        override fun type(): String = ""
+        override fun direction(): String = ""
     }
 }

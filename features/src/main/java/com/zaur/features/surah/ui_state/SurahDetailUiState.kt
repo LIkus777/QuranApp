@@ -1,5 +1,6 @@
 package com.zaur.features.surah.ui_state
 
+import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyListState
@@ -27,6 +28,8 @@ interface SurahDetailUiState {
     @Composable
     fun Render(
         arabicText: QuranPage,
+        translatedText: QuranPage,
+        chapterNumber: Int,
         currentAyahNumber: Int,
         showArabic: Boolean,
         showRussian: Boolean,
@@ -35,7 +38,6 @@ interface SurahDetailUiState {
         isDarkTheme: Boolean,
         colors: QuranColors,
         soundIsActive: Boolean,
-        translatedText: QuranPage,
         onClickPreviousPage: () -> Unit,
         onClickNextPage: () -> Unit,
         onClickSound: (Int, Int) -> Unit,
@@ -55,7 +57,8 @@ interface SurahDetailUiState {
         ayats: List<Ayah.Base>,
         isDarkTheme: Boolean,
         colors: QuranColors,
-        onFirstVisibleItemChanged: (Int) -> Unit,
+        onAyahItemChanged: (Int) -> Unit,
+        onPageItemChanged: (Int) -> Unit,
         onClickSound: (Int, Int) -> Unit,
         translations: List<com.zaur.domain.al_quran_cloud.models.translate.Ayah.Base>,
     ) = Unit
@@ -75,9 +78,10 @@ interface SurahDetailUiState {
             ayats: List<Ayah.Base>,
             isDarkTheme: Boolean,
             colors: QuranColors,
-            onFirstVisibleItemChanged: (Int) -> Unit,
+            onAyahItemChanged: (Int) -> Unit,
+            onPageItemChanged: (Int) -> Unit,
             onClickSound: (Int, Int) -> Unit,
-            translations: List<com.zaur.domain.al_quran_cloud.models.translate.Ayah.Base>,
+            translations: List<com.zaur.domain.al_quran_cloud.models.translate.Ayah.Base>
         ) {
             AyaColumn(
                 state = state,
@@ -92,7 +96,8 @@ interface SurahDetailUiState {
                 ayats = ayats,
                 isDarkTheme = isDarkTheme,
                 colors = colors,
-                onFirstVisibleItemChanged,
+                onAyahItemChanged,
+                onPageItemChanged,
                 onClickSound = onClickSound,
                 translations = translations
             )
@@ -103,6 +108,8 @@ interface SurahDetailUiState {
         @Composable
         override fun Render(
             arabicText: QuranPage,
+            translatedText: QuranPage,
+            chapterNumber: Int,
             currentAyahNumber: Int,
             showArabic: Boolean,
             showRussian: Boolean,
@@ -111,13 +118,16 @@ interface SurahDetailUiState {
             isDarkTheme: Boolean,
             colors: QuranColors,
             soundIsActive: Boolean,
-            translatedText: QuranPage,
             onClickPreviousPage: () -> Unit,
             onClickNextPage: () -> Unit,
             onClickSound: (Int, Int) -> Unit,
         ) {
+            Log.i("TAG", "Render: arabicText - $arabicText")
+            Log.i("TAG", "Render: translatedText - $translatedText")
             SurahPageScreen(
                 arabicText = arabicText,
+                translations = translatedText,
+                chapterNumber = chapterNumber,
                 currentAyahNumber = currentAyahNumber,
                 showArabic = showArabic,
                 showRussian = showRussian,
@@ -126,7 +136,6 @@ interface SurahDetailUiState {
                 isDarkTheme = isDarkTheme,
                 colors = colors,
                 soundIsActive = soundIsActive,
-                translations = translatedText,
                 onClickSound = onClickSound,
                 onClickPreviousPage = onClickPreviousPage,
                 onClickNextPage = onClickNextPage,

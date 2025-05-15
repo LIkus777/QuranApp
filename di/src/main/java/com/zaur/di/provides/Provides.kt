@@ -25,11 +25,13 @@ import com.zaur.data.room.models.mappers.translate.TranslationMapper
 import com.zaur.domain.al_quran_cloud.repository.MainRepository
 import com.zaur.domain.al_quran_cloud.repository.OfflineRepository
 import com.zaur.domain.al_quran_cloud.repository.QuranAudioRepository
+import com.zaur.domain.al_quran_cloud.repository.QuranPageRepository
 import com.zaur.domain.al_quran_cloud.repository.QuranTextRepository
 import com.zaur.domain.al_quran_cloud.repository.QuranTranslationRepository
 import com.zaur.domain.al_quran_cloud.use_case.MainUseCase
 import com.zaur.domain.al_quran_cloud.use_case.OfflineUseCase
 import com.zaur.domain.al_quran_cloud.use_case.QuranAudioUseCase
+import com.zaur.domain.al_quran_cloud.use_case.QuranPageUseCase
 import com.zaur.domain.al_quran_cloud.use_case.QuranTextUseCase
 import com.zaur.domain.al_quran_cloud.use_case.QuranTranslationUseCase
 import com.zaur.domain.al_quran_cloud.use_case.ReciterUseCase
@@ -46,6 +48,7 @@ import com.zaur.features.surah.screen.surah_detail.player.PlaylistBuilder
 import com.zaur.features.surah.screen.surah_detail.player.SurahPlayer
 import com.zaur.features.surah.viewmodel.SurahDetailViewModel
 import com.zaur.features.surah.viewmodel.factory.QuranAudioViewModelFactory
+import com.zaur.features.surah.viewmodel.factory.QuranPageViewModelFactory
 import com.zaur.features.surah.viewmodel.factory.QuranTextViewModelFactory
 import com.zaur.features.surah.viewmodel.factory.QuranTranslationViewModelFactory
 import com.zaur.features.surah.viewmodel.factory.ScreenContentViewModelFactory
@@ -110,6 +113,22 @@ interface ProvideTranslationAyahMapper {
 
 interface ProvideTranslationMapper {
     fun provideTranslationMapper(): TranslationMapper
+}
+
+interface ProvideQuranPageRepositopryCloud {
+    fun provideQuranPageRepositoryCloud(): QuranPageRepository.Cloud
+}
+
+interface ProvideQuranPageRepositopryLocal {
+    fun provideQuranPageRepositoryLocal(): QuranPageRepository.Local
+}
+
+interface ProvidePageUseCase {
+    fun providePageUseCase(): QuranPageUseCase
+}
+
+interface ProvideQuranPageViewModelFactory {
+    fun provideQuranPageViewModelFactory(): QuranPageViewModelFactory
 }
 
 interface ProvideQuranTextViewModelFactory {

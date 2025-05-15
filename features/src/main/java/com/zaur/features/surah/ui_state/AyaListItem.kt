@@ -12,6 +12,7 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.zaur.domain.al_quran_cloud.models.arabic.Ayah
+import com.zaur.features.surah.screen.surah_detail.removeBasmala
 import com.zaur.presentation.ui.AyahItem
 import com.zaur.presentation.ui.BasmalaItem
 import com.zaur.presentation.ui.QuranColors
@@ -39,7 +40,8 @@ interface AyaListItem {
         ayats: List<Ayah.Base>,
         isDarkTheme: Boolean,
         colors: QuranColors,
-        onFirstVisibleItemChanged: (Int) -> Unit,
+        onAyahItemChanged: (Int) -> Unit,
+        onPageItemChanged: (Int) -> Unit,
         onClickSound: (Int, Int) -> Unit,
         translations: List<com.zaur.domain.al_quran_cloud.models.translate.Ayah.Base>,
     ): Unit = Unit
@@ -68,18 +70,22 @@ interface AyaListItem {
             ayats: List<Ayah.Base>,
             isDarkTheme: Boolean,
             colors: QuranColors,
-            onFirstVisibleItemChanged: (Int) -> Unit,
+            onAyahItemChanged: (Int) -> Unit,
+            onPageItemChanged: (Int) -> Unit,
             onClickSound: (Int, Int) -> Unit,
-            translations: List<com.zaur.domain.al_quran_cloud.models.translate.Ayah.Base>,
+            translations: List<com.zaur.domain.al_quran_cloud.models.translate.Ayah.Base>
         ) {
             // Отслеживаем верхний видимый аят и передаём его page
             LaunchedEffect(listState) {
-                snapshotFlow { listState.firstVisibleItemIndex }
-                    .distinctUntilChanged()
+                snapshotFlow { listState.firstVisibleItemIndex }.distinctUntilChanged()
                     .collect { index ->
+                        val ayahNumberInSurah = ayats.getOrNull(index)?.numberInSurah()?.toInt()
+                        if (ayahNumberInSurah != null) {
+                            onAyahItemChanged(ayahNumberInSurah)
+                        }
                         val pageNumber = ayats.getOrNull(index)?.page()?.toInt()
                         if (pageNumber != null) {
-                            onFirstVisibleItemChanged(pageNumber)
+                            onPageItemChanged(pageNumber)
                         }
                     }
             }
@@ -94,14 +100,12 @@ interface AyaListItem {
                 }
 
                 itemsIndexed(
-                    items = ayats,
-                    key = { index, aya -> aya.number() }
-                ) { index, aya ->
+                    items = ayats, key = { index, aya -> aya.number() }) { index, aya ->
                     val translationText =
                         if (index < translations.size) translations[index].text() else "Перевод отсутствует"
-                    val arabicText = if (index == 0 && chapterNumber != 9)
-                        aya.text().removePrefix("بِسۡمِ ٱللَّهِ ٱلرَّحۡمَـٰنِ ٱلرَّحِیمِ").trimStart(' ', '،', '\n')
-                    else aya.text()
+                    val arabicText =
+                        if (index == 0 && chapterNumber != 9) aya.text().removeBasmala()
+                        else aya.text()
 
                     AyahItem(
                         isDarkTheme = isDarkTheme,
@@ -118,8 +122,7 @@ interface AyaListItem {
                         showRussian = showRussian,
                         onClickSound = { number, numberInSurah ->
                             onClickSound(number, numberInSurah)
-                        }
-                    )
+                        })
                 }
             }
         }

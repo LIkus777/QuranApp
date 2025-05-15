@@ -47,7 +47,7 @@ interface ChapterAudioFile {
 
     fun <T> map(mapper: Mapper<T>): T
 
-    class Base(
+    data class Base(
         @SerializedName("number") private val number: Long,
         @SerializedName("name") private val name: String,
         @SerializedName("englishName") private val englishName: String,
@@ -129,7 +129,7 @@ interface Ayah {
 
     fun <T> map(mapper: Mapper<T>): T
 
-    class Base(
+    data class Base(
         private val reciter: String,
         @SerializedName("number") private val verseNumber: Long,
         @SerializedName("audio") private val audio: String,

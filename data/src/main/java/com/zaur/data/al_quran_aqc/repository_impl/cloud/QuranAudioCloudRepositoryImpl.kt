@@ -2,6 +2,7 @@ package com.zaur.data.al_quran_aqc.repository_impl.cloud
 
 import com.zaur.data.al_quran_aqc.api.QuranApiAqc
 import com.zaur.data.downloader.AudioDownloader
+import com.zaur.data.network.retryWithBackoff
 import com.zaur.domain.al_quran_cloud.models.audiofile.CacheAudio
 import com.zaur.domain.al_quran_cloud.models.audiofile.ChapterAudioFile
 import com.zaur.domain.al_quran_cloud.models.audiofile.VerseAudioAqc
@@ -24,17 +25,19 @@ class QuranAudioCloudRepositoryImpl(
         val cachedAudios: MutableList<CacheAudio.Base> = mutableListOf()
         val surahAudio = getChapterAudioOfReciterCloud(chapterNumber, reciter)
 
-        surahAudio.ayahs().forEach { ayah ->
-            val file = audioDownloader.downloadToCache(
-                ayah.audio(), "surah_${chapterNumber}_${ayah.numberInSurah()}.mp3"
-            )
-            cachedAudios.add(
-                CacheAudio.Base(
-                    chapterNumber = chapterNumber,
-                    verseNumber = ayah.numberInSurah().toInt(),
-                    path = file.absolutePath
+        retryWithBackoff {
+            surahAudio.ayahs().forEach { ayah ->
+                val file = audioDownloader.downloadToCache(
+                    ayah.audio(), "surah_${chapterNumber}_${ayah.numberInSurah()}.mp3"
                 )
-            )
+                cachedAudios.add(
+                    CacheAudio.Base(
+                        chapterNumber = chapterNumber,
+                        verseNumber = ayah.numberInSurah().toInt(),
+                        path = file.absolutePath
+                    )
+                )
+            }
         }
 
         return cachedAudios.toList()
@@ -43,11 +46,14 @@ class QuranAudioCloudRepositoryImpl(
     override suspend fun getChapterAudioOfReciterCloud(
         chapterNumber: Int,
         reciter: String,
-    ): ChapterAudioFile.Base =
+    ): ChapterAudioFile.Base = retryWithBackoff {
         quranApiAqc.getChapterAudioOfReciter(chapterNumber, reciter).chapterAudio()
+    }
+
 
     override suspend fun getAyahAudioByKeyCloud(
         verseKey: String,
         reciter: String,
-    ): VerseAudioAqc.Base = quranApiAqc.getAyahAudioByKey(verseKey, reciter).verseAudio()
+    ): VerseAudioAqc.Base =
+        retryWithBackoff { quranApiAqc.getAyahAudioByKey(verseKey, reciter).verseAudio() }
 }

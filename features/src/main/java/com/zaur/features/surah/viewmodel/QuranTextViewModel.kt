@@ -28,8 +28,8 @@ interface QuranTextViewModel : QuranTextObservable.Read {
     fun getAllChapters()
     fun getArabicChapter(chapterNumber: Int)
 
-    fun getLastReadPosition(): Pair<Int, Int>
-    fun saveLastReadPosition(chapterNumber: Int, ayahNumber: Int)
+    fun getLastReadAyahPosition(): Pair<Int, Int>
+    fun saveLastReadAyahPosition(chapterNumber: Int, ayahNumber: Int)
 
     class Base(
         private val observable: QuranTextObservable.Mutable,
@@ -78,10 +78,15 @@ interface QuranTextViewModel : QuranTextObservable.Read {
             }
         }
 
-        override fun getLastReadPosition(): Pair<Int, Int> = quranTextUseCase.getLastReadPosition()
+        override fun getLastReadAyahPosition(): Pair<Int, Int> =
+            quranTextUseCase.getLastReadAyahPosition()
 
-        override fun saveLastReadPosition(chapterNumber: Int, ayahNumber: Int) =
-            quranTextUseCase.saveLastReadPosition(chapterNumber, ayahNumber)
+        override fun saveLastReadAyahPosition(chapterNumber: Int, ayahNumber: Int) {
+            Log.d(
+                "TAG", "saveLastReadPosition: chapterNumber $chapterNumber, ayahNumber $ayahNumber"
+            )
+            quranTextUseCase.saveLastReadAyahPosition(chapterNumber, ayahNumber)
+        }
 
     }
 }

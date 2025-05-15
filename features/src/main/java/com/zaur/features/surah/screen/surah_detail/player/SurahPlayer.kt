@@ -1,6 +1,7 @@
 package com.zaur.features.surah.screen.surah_detail.player
 
 
+import android.util.Log
 import com.zaur.domain.al_quran_cloud.models.audiofile.Ayah
 import com.zaur.domain.al_quran_cloud.models.audiofile.CacheAudio
 import com.zaur.domain.al_quran_cloud.models.audiofile.VerseAudioAqc
@@ -71,6 +72,9 @@ interface SurahPlayer {
         }
 
         override fun setAyahs(ayahs: List<Ayah.Base>) {
+            ayahs.forEach {
+                Log.d("TAG", "setAyahs: $it")
+            }
             this.ayahs = RealAyahList(ayahs)
         }
 

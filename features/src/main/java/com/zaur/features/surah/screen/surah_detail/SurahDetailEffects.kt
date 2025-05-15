@@ -1,87 +1,88 @@
 package com.zaur.features.surah.screen.surah_detail
 
 import android.util.Log
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.zaur.domain.al_quran_cloud.models.audiofile.VerseAudioAqc
-import com.zaur.features.surah.ui_state.aqc.QuranAudioAqcUIState
-import com.zaur.features.surah.ui_state.aqc.QuranTextAqcUIState
-import com.zaur.features.surah.ui_state.aqc.SurahDetailScreenState
-import com.zaur.features.surah.viewmodel.QuranAudioViewModel
-import com.zaur.features.surah.viewmodel.QuranPageViewModel
-import com.zaur.features.surah.viewmodel.QuranTextViewModel
-import com.zaur.features.surah.viewmodel.QuranTranslationViewModel
-import com.zaur.features.surah.viewmodel.SurahDetailViewModel
 
 /**
-* @author Zaur
-* @since 2025-05-12
-*/
+ * @author Zaur
+ * @since 2025-05-12
+ */
 
 @Composable
 fun SurahDetailEffects(
-    pageNumber: Int,
     chapterNumber: Int,
-    audioState: QuranAudioAqcUIState,
-    surahDetailState: SurahDetailScreenState,
-    quranAudioViewModel: QuranAudioViewModel,
-    quranTextViewModel: QuranTextViewModel,
-    quranTranslationViewModel: QuranTranslationViewModel,
-    surahDetailViewModel: SurahDetailViewModel,
-    quranPageViewModel: QuranPageViewModel
+    deps: SurahDetailDependencies,
+    uiData: SurahDetailUiData,
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
 
-    LaunchedEffect(audioState.cacheAudios()) {
-        audioState.cacheAudios().let {
-            quranAudioViewModel.setCacheAudios(it)
-        }
-    }
+    with(uiData) {
+        with(deps) {
 
-    LaunchedEffect(audioState.chaptersAudioFile()) {
-        audioState.chaptersAudioFile().ayahs().let {
-            quranAudioViewModel.setAyahs(it)
-        }
-    }
+            val pageNumber = quranPageViewModel().getLastReadPagePosition()
 
-    LaunchedEffect(audioState.verseAudioFile(), surahDetailState.audioPlayerState().restartAudio()) {
-        if (audioState.verseAudioFile() !is VerseAudioAqc.Empty || surahDetailState.audioPlayerState().restartAudio() == true) {
-            quranAudioViewModel.onPlayVerse(verse = audioState.verseAudioFile())
-        }
-    }
+            LaunchedEffect(uiData.audioState().cacheAudios()) {
+                uiData.audioState().cacheAudios().let {
+                    quranAudioViewModel().setCacheAudios(it)
+                }
+            }
 
-    LaunchedEffect(chapterNumber) {
-        val reciter = quranAudioViewModel.getReciterName()
-        surahDetailViewModel.selectedReciter(reciter.toString())
-        if (reciter.isNullOrEmpty()) {
-            surahDetailViewModel.showReciterDialog(true)
-        }
-        quranPageViewModel.getUthmaniPage(pageNumber)
-        quranPageViewModel.getTranslatedPage(pageNumber, "ru.kuliev") //todo
-        quranTextViewModel.getArabicChapter(chapterNumber)
-        quranTranslationViewModel.getTranslationForChapter(chapterNumber, "ru.kuliev") //todo
-        quranAudioViewModel.downloadToCache(
-            chapterNumber,
-            quranAudioViewModel.getReciter().toString()
-        )
-        quranAudioViewModel.getChaptersAudioOfReciter(
-            chapterNumber, quranAudioViewModel.getReciter().toString()
-        )
-    }
+            LaunchedEffect(uiData.audioState().chaptersAudioFile().ayahs()) {
+                uiData.audioState().chaptersAudioFile().ayahs().let {
+                    quranAudioViewModel().setAyahs(it)
+                }
+            }
 
-    DisposableEffect(lifecycleOwner) {
-        val observer = LifecycleEventObserver { _, event ->
-            Log.i("SurahDetailScreen", "SurahDetailScreenContent Lifecycle event: $event")
-        }
-        lifecycleOwner.lifecycle.addObserver(observer)
-        onDispose {
-            Log.i("SurahDetailScreen", "SurahDetailScreenContent disposed via DisposableEffect")
-            quranAudioViewModel.clear()
-            lifecycleOwner.lifecycle.removeObserver(observer)
+            LaunchedEffect(
+                uiData.audioState().verseAudioFile(),
+                uiData.surahDetailState().audioPlayerState().restartAudio()
+            ) {
+                if (audioState().verseAudioFile() !is VerseAudioAqc.Empty || uiData.surahDetailState()
+                        .audioPlayerState().restartAudio() == true
+                ) {
+                    quranAudioViewModel().onPlayVerse(verse = uiData.audioState().verseAudioFile())
+                }
+            }
+
+            LaunchedEffect(chapterNumber) {
+                val reciter = quranAudioViewModel().getReciterName()
+                surahDetailViewModel().selectedReciter(reciter.toString())
+                if (reciter.isNullOrEmpty()) {
+                    surahDetailViewModel().showReciterDialog(true)
+                }
+                quranPageViewModel().getUthmaniPage(pageNumber)
+                quranPageViewModel().getTranslatedPage(pageNumber, "ru.kuliev") //todo
+                quranTextViewModel().getArabicChapter(chapterNumber)
+                quranTranslationViewModel().getTranslationForChapter(
+                    chapterNumber, "ru.kuliev"
+                ) //todo
+                quranAudioViewModel().downloadToCache(
+                    chapterNumber, quranAudioViewModel().getReciter().toString()
+                )
+                quranAudioViewModel().getChaptersAudioOfReciter(
+                    chapterNumber, quranAudioViewModel().getReciter().toString()
+                )
+            }
+
+            DisposableEffect(lifecycleOwner) {
+                val observer = LifecycleEventObserver { _, event ->
+                    Log.i("SurahDetailScreen", "SurahDetailScreenContent Lifecycle event: $event")
+                }
+                lifecycleOwner.lifecycle.addObserver(observer)
+                onDispose {
+                    Log.i(
+                        "SurahDetailScreen",
+                        "SurahDetailScreenContent disposed via DisposableEffect"
+                    )
+                    quranAudioViewModel().clear()
+                    lifecycleOwner.lifecycle.removeObserver(observer)
+                }
+            }
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.zaur.features.surah.ui_state.aqc
 
+import com.zaur.domain.al_quran_cloud.models.page.QuranPage
 import com.zaur.domain.al_quran_cloud.models.page.QuranPageAqc
 
 
@@ -10,15 +11,15 @@ import com.zaur.domain.al_quran_cloud.models.page.QuranPageAqc
 
 interface QuranPageAqcUIState {
 
-    fun uthmaniPage(): QuranPageAqc
-    fun translatedPage(): QuranPageAqc
+    fun uthmaniPage(): QuranPage
+    fun translatedPage(): QuranPage
 
     data class Base(
-        private val uthmaniPage: QuranPageAqc,
-        private val translatedPage: QuranPageAqc,
+        private val uthmaniPage: QuranPage = QuranPage.Empty,
+        private val translatedPage: QuranPage = QuranPage.Empty,
     ) : QuranPageAqcUIState {
-        override fun uthmaniPage(): QuranPageAqc = uthmaniPage
-        override fun translatedPage(): QuranPageAqc = translatedPage
+        override fun uthmaniPage(): QuranPage = uthmaniPage
+        override fun translatedPage(): QuranPage = translatedPage
     }
 
 }

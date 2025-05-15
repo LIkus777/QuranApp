@@ -2,19 +2,25 @@ package com.zaur.di.module
 
 import android.content.Context
 import com.zaur.data.al_quran_aqc.repository_impl.cloud.QuranAudioCloudRepositoryImpl
+import com.zaur.data.al_quran_aqc.repository_impl.cloud.QuranPageCloudRepositoryImpl
 import com.zaur.data.al_quran_aqc.repository_impl.cloud.QuranTextCloudRepositoryImpl
 import com.zaur.data.al_quran_aqc.repository_impl.cloud.QuranTranslationCloudRepositoryImpl
 import com.zaur.data.al_quran_aqc.repository_impl.local.QuranAudioLocalRepositoryImpl
+import com.zaur.data.al_quran_aqc.repository_impl.local.QuranPageLocalRepositoryImpl
 import com.zaur.data.al_quran_aqc.repository_impl.local.QuranTextLocalRepositoryImpl
 import com.zaur.data.al_quran_aqc.repository_impl.local.QuranTranslationLocalRepositoryImpl
 import com.zaur.di.provides.ProvideAudioPlaybackHelper
 import com.zaur.di.provides.ProvideAudioPlayer
 import com.zaur.di.provides.ProvideAudioPlayerStateUpdater
+import com.zaur.di.provides.ProvidePageUseCase
 import com.zaur.di.provides.ProvidePlaylistBuilder
 import com.zaur.di.provides.ProvideQuranAudioRepositoryAqcCloud
 import com.zaur.di.provides.ProvideQuranAudioRepositoryAqcLocal
 import com.zaur.di.provides.ProvideQuranAudioUseCaseAqc
 import com.zaur.di.provides.ProvideQuranAudioViewModelFactory
+import com.zaur.di.provides.ProvideQuranPageRepositopryCloud
+import com.zaur.di.provides.ProvideQuranPageRepositopryLocal
+import com.zaur.di.provides.ProvideQuranPageViewModelFactory
 import com.zaur.di.provides.ProvideQuranTextRepositoryAqcCloud
 import com.zaur.di.provides.ProvideQuranTextRepositoryAqcLocal
 import com.zaur.di.provides.ProvideQuranTextUseCaseAqc
@@ -32,9 +38,11 @@ import com.zaur.di.provides.ProvideSurahPlayer
 import com.zaur.di.provides.ProvideThemeUseCase
 import com.zaur.di.provides.ProvideTranslationViewModelFactory
 import com.zaur.domain.al_quran_cloud.repository.QuranAudioRepository
+import com.zaur.domain.al_quran_cloud.repository.QuranPageRepository
 import com.zaur.domain.al_quran_cloud.repository.QuranTextRepository
 import com.zaur.domain.al_quran_cloud.repository.QuranTranslationRepository
 import com.zaur.domain.al_quran_cloud.use_case.QuranAudioUseCase
+import com.zaur.domain.al_quran_cloud.use_case.QuranPageUseCase
 import com.zaur.domain.al_quran_cloud.use_case.QuranTextUseCase
 import com.zaur.domain.al_quran_cloud.use_case.QuranTranslationUseCase
 import com.zaur.domain.al_quran_cloud.use_case.ReciterUseCase
@@ -48,20 +56,23 @@ import com.zaur.features.surah.screen.surah_detail.player.PlaylistBuilder
 import com.zaur.features.surah.screen.surah_detail.player.SurahPlayer
 import com.zaur.features.surah.viewmodel.SurahDetailViewModel
 import com.zaur.features.surah.viewmodel.factory.QuranAudioViewModelFactory
+import com.zaur.features.surah.viewmodel.factory.QuranPageViewModelFactory
 import com.zaur.features.surah.viewmodel.factory.QuranTextViewModelFactory
 import com.zaur.features.surah.viewmodel.factory.QuranTranslationViewModelFactory
 import com.zaur.features.surah.viewmodel.factory.ScreenContentViewModelFactory
 import com.zaur.features.surah.viewmodel.factory.SurahChooseViewModelFactory
 
 /**
-* @author Zaur
-* @since 2025-05-12
-*/
+ * @author Zaur
+ * @since 2025-05-12
+ */
 
-interface SurahDetailModule : ProvideReciterUseCase, ProvideReciterManager, ProvideThemeUseCase, ProvideScreenContentViewModelFactory, ProvideSurahChooseViewModelFactory,
+interface SurahDetailModule : ProvideQuranPageRepositopryCloud, ProvideQuranPageRepositopryLocal,
+    ProvidePageUseCase, ProvideReciterUseCase, ProvideReciterManager, ProvideThemeUseCase,
+    ProvideScreenContentViewModelFactory, ProvideSurahChooseViewModelFactory,
     ProvideTranslationViewModelFactory, ProvideQuranAudioViewModelFactory,
-    ProvideQuranTextViewModelFactory, ProvideSurahDetailViewModel, ProvideSurahPlayer,
-    ProvideSurahDetailStateManager, ProvideAudioPlayer, ProvidePlaylistBuilder,
+    ProvideQuranPageViewModelFactory, ProvideQuranTextViewModelFactory, ProvideSurahDetailViewModel,
+    ProvideSurahPlayer, ProvideSurahDetailStateManager, ProvideAudioPlayer, ProvidePlaylistBuilder,
     ProvideAudioPlayerStateUpdater, ProvideAudioPlaybackHelper, ProvideQuranAudioUseCaseAqc,
     ProvideQuranTextUseCaseAqc, ProvideQuranTranslationUseCaseAqc,
     ProvideQuranAudioRepositoryAqcLocal, ProvideQuranAudioRepositoryAqcCloud,
@@ -223,6 +234,22 @@ interface SurahDetailModule : ProvideReciterUseCase, ProvideReciterManager, Prov
 
         override fun provideScreenContentViewModelFactory(): ScreenContentViewModelFactory =
             ScreenContentViewModelFactory.Base(provideSurahDetailStateManager())
+
+        override fun provideQuranPageViewModelFactory(): QuranPageViewModelFactory =
+            QuranPageViewModelFactory.Base(quranPageUseCase = providePageUseCase())
+
+        override fun providePageUseCase(): QuranPageUseCase = QuranPageUseCase.Base(
+            dataModule.provideQuranStorage(),
+            dataModule.provideOfflineRepository(),
+            provideQuranPageRepositoryCloud(),
+            provideQuranPageRepositoryLocal()
+        )
+
+        override fun provideQuranPageRepositoryCloud(): QuranPageRepository.Cloud =
+            QuranPageCloudRepositoryImpl(dataModule.provideQuranApiAqc())
+
+        override fun provideQuranPageRepositoryLocal(): QuranPageRepository.Local =
+            QuranPageLocalRepositoryImpl(dataModule.provideQuranApiAqc())
     }
 
 }

@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import com.zaur.features.surah.screen.main.MainScreen
 import com.zaur.features.surah.screen.surah_choose.SurahChooseScreen
+import com.zaur.features.surah.screen.surah_detail.SurahDetailDependencies
 import com.zaur.features.surah.screen.surah_detail.SurahDetailScreen
 import com.zaur.features.surah.viewmodel.OfflineViewModel
 import com.zaur.features.surah.viewmodel.ThemeViewModel
@@ -67,18 +68,25 @@ class MainActivity : ComponentActivity() {
                         val surahChooseViewModel = remember { surahDetailModule.provideSurahChooseViewModelFactory().create() }
                         val quranTranslationViewModel = remember { surahDetailModule.provideQuranTranslationViewModelFactory().create() }
                         val screenContentViewModel = remember { surahDetailModule.provideScreenContentViewModelFactory().create() }
-                        SurahDetailScreen(
-                            surahName,
-                            surahNumber,
-                            offlineViewModel,
-                            surahChooseViewModel,
-                            surahDetailViewModel = surahDetailViewModel,
+                        val quranPageViewModel = remember { surahDetailModule.provideQuranPageViewModelFactory().create() }
+
+                        val deps = SurahDetailDependencies.Base(
                             themeViewModel = themeViewModel,
+                            offlineViewModel = offlineViewModel,
+                            surahChooseViewModel = surahChooseViewModel,
+                            surahDetailViewModel = surahDetailViewModel,
                             quranTextViewModel = quranTextViewModel,
                             quranAudioViewModel = quranAudioViewModel,
                             quranTranslationViewModel = quranTranslationViewModel,
                             screenContentViewModel = screenContentViewModel,
-                            controller,
+                            quranPageViewModel = quranPageViewModel,
+                            controller = controller
+                        )
+
+                        SurahDetailScreen(
+                            surahName,
+                            surahNumber,
+                            deps
                         )
                     })
                 }

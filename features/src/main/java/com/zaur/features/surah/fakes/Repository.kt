@@ -19,9 +19,9 @@ import com.zaur.features.surah.screen.surah_detail.player.SurahPlayer
 import com.zaur.features.surah.viewmodel.QuranAudioViewModel
 
 /**
-* @author Zaur
-* @since 2025-05-12
-*/
+ * @author Zaur
+ * @since 2025-05-12
+ */
 
 class FakeThemeStorage() : ThemeStorage {
     override fun getIsDarkTheme(): Boolean {
@@ -70,11 +70,19 @@ class FakeQuranStorage() : QuranStorage {
         TODO("Not yet implemented")
     }
 
-    override fun saveLastRead(chapterNumber: Int, ayahNumber: Int) {
+    override fun getLastReadAyahPosition(): Pair<Int, Int> {
         TODO("Not yet implemented")
     }
 
-    override fun getLastRead(): Pair<Int, Int> {
+    override fun saveLastReadAyahPosition(chapterNumber: Int, ayahNumber: Int) {
+        TODO("Not yet implemented")
+    }
+
+    override fun getLastReadPagePosition(): Int {
+        TODO("Not yet implemented")
+    }
+
+    override fun saveLastReadPagePosition(pageNumber: Int) {
         TODO("Not yet implemented")
     }
 

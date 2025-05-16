@@ -13,7 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.zaur.features.surah.ui_state.main.MainState
+import com.zaur.presentation.ui.ui_state.main.MainState
 import com.zaur.navigation.Screen
 
 /**

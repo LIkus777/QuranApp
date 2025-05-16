@@ -27,7 +27,7 @@ import com.zaur.features.surah.fakes.FakeQTranslationRCloud
 import com.zaur.features.surah.fakes.FakeQTranslationRLocal
 import com.zaur.features.surah.fakes.FakeQuranStorage
 import com.zaur.features.surah.observables.SurahChooseObservable
-import com.zaur.features.surah.ui_state.aqc.QuranTextAqcUIState
+import com.zaur.presentation.ui.ui_state.aqc.QuranTextAqcUIState
 import com.zaur.features.surah.viewmodel.OfflineViewModel
 import com.zaur.features.surah.viewmodel.SurahChooseViewModel
 import kotlinx.coroutines.launch

@@ -1,4 +1,4 @@
-package com.zaur.features.surah.ui_state.offline
+package com.zaur.presentation.ui.ui_state.offline
 
 /**
 * @author Zaur

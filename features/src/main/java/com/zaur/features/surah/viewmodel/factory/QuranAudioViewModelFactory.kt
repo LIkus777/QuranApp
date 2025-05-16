@@ -5,7 +5,7 @@ import com.zaur.features.surah.manager.ReciterManager
 import com.zaur.features.surah.observables.QuranAudioObservable
 import com.zaur.features.surah.manager.SurahDetailStateManager
 import com.zaur.features.surah.screen.surah_detail.player.SurahPlayer
-import com.zaur.features.surah.ui_state.aqc.QuranAudioAqcUIState
+import com.zaur.presentation.ui.ui_state.aqc.QuranAudioAqcUIState
 import com.zaur.features.surah.viewmodel.QuranAudioViewModel
 
 /**

@@ -13,7 +13,7 @@ import com.zaur.features.surah.manager.ReciterManager
 import com.zaur.features.surah.observables.QuranAudioObservable
 import com.zaur.features.surah.manager.SurahDetailStateManager
 import com.zaur.features.surah.screen.surah_detail.player.SurahPlayer
-import com.zaur.features.surah.ui_state.aqc.QuranAudioAqcUIState
+import com.zaur.presentation.ui.ui_state.aqc.QuranAudioAqcUIState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -67,10 +67,7 @@ interface QuranAudioViewModel : QuranAudioObservable.Read {
                 }
                 result.handle(object : HandleResult<List<CacheAudio.Base>> {
                     override fun handleSuccess(data: List<CacheAudio.Base>) {
-                        viewModelScope.launch(Dispatchers.IO) {
-                            data.forEach {
-                                Log.d("TAG", "downloadToCache: $it")
-                            }
+                        viewModelScope.launch(Dispatchers.Main) {
                             observable.update(observable.audioState().value.copy(cacheAudios = data))
                         }
                     }
@@ -118,7 +115,7 @@ interface QuranAudioViewModel : QuranAudioObservable.Read {
                 }
                 result.handle(object : HandleResult<ChapterAudioFile> {
                     override fun handleSuccess(data: ChapterAudioFile) {
-                        viewModelScope.launch {
+                        viewModelScope.launch(Dispatchers.Main) {
                             observable.update(observable.audioState().value.copy(chaptersAudioFile = data))
                         }
                     }
@@ -143,7 +140,7 @@ interface QuranAudioViewModel : QuranAudioObservable.Read {
                 result.handle(object : HandleResult<VerseAudioAqc> {
                     override fun handleSuccess(data: VerseAudioAqc) {
                         Log.i("TAGGG", "getVerseAudioFile: data ${data.audio()} ")
-                        viewModelScope.launch {
+                        viewModelScope.launch(Dispatchers.Main) {
                             if (data.audio() == observable.audioState().value.verseAudioFile().audio()) {
                                 val newState = stateManager.surahDetailState().value.copy(
                                     audioPlayerState = stateManager.surahDetailState().value.audioPlayerState.copy(

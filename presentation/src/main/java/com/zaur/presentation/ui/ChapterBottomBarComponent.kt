@@ -1,10 +1,7 @@
-package com.zaur.features.surah.screen.surah_detail
+package com.zaur.presentation.ui
 
-import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.zaur.presentation.ui.ChapterBottomBar
-import com.zaur.presentation.ui.QuranColors
 
 /**
 * @author Zaur

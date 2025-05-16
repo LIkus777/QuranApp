@@ -4,9 +4,9 @@ import com.zaur.core.BaseViewModel
 import com.zaur.features.surah.manager.SurahDetailStateManager
 import com.zaur.features.surah.observables.AnimatedMenuObservable
 import com.zaur.features.surah.observables.SurahModeObservable
-import com.zaur.features.surah.ui_state.AnimatedMenuUiState
-import com.zaur.features.surah.ui_state.AyaListItem
-import com.zaur.features.surah.ui_state.SurahDetailUiState
+import com.zaur.presentation.ui.ui_state.AnimatedMenuUiState
+import com.zaur.presentation.ui.ui_state.AyaListItem
+import com.zaur.presentation.ui.ui_state.SurahDetailUiState
 import kotlinx.coroutines.flow.StateFlow
 
 /**

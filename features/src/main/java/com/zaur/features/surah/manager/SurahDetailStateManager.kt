@@ -1,7 +1,7 @@
 package com.zaur.features.surah.manager
 
 import com.zaur.features.surah.base.Observable
-import com.zaur.features.surah.ui_state.aqc.SurahDetailScreenState
+import com.zaur.presentation.ui.ui_state.aqc.SurahDetailScreenState
 import kotlinx.coroutines.flow.StateFlow
 
 /**

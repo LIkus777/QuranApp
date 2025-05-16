@@ -1,4 +1,4 @@
-package com.zaur.features.surah.ui_state
+package com.zaur.presentation.ui.ui_state
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,10 +12,11 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.zaur.domain.al_quran_cloud.models.arabic.Ayah
-import com.zaur.features.surah.screen.surah_detail.removeBasmala
 import com.zaur.presentation.ui.AyahItem
 import com.zaur.presentation.ui.BasmalaItem
 import com.zaur.presentation.ui.QuranColors
+import com.zaur.presentation.ui.removeBasmala
+import com.zaur.presentation.ui.ui_state.aqc.SurahDetailScreenState
 import kotlinx.coroutines.flow.distinctUntilChanged
 
 /**
@@ -29,13 +30,8 @@ interface AyaListItem {
 
     @Composable
     fun Render(
-        ayaNumber: Int,
         chapterNumber: Int,
-        soundIsActive: Boolean,
-        showArabic: Boolean,
-        showRussian: Boolean,
-        fontSizeArabic: Float,
-        fontSizeRussian: Float,
+        surahDetailState: SurahDetailScreenState,
         listState: LazyListState,
         ayats: List<Ayah.Base>,
         isDarkTheme: Boolean,
@@ -59,13 +55,8 @@ interface AyaListItem {
     object AyahListItem : AyaListItem {
         @Composable
         override fun Render(
-            ayaNumber: Int,
             chapterNumber: Int,
-            soundIsActive: Boolean,
-            showArabic: Boolean,
-            showRussian: Boolean,
-            fontSizeArabic: Float,
-            fontSizeRussian: Float,
+            surahDetailState: SurahDetailScreenState,
             listState: LazyListState,
             ayats: List<Ayah.Base>,
             isDarkTheme: Boolean,
@@ -73,7 +64,7 @@ interface AyaListItem {
             onAyahItemChanged: (Int) -> Unit,
             onPageItemChanged: (Int) -> Unit,
             onClickSound: (Int, Int) -> Unit,
-            translations: List<com.zaur.domain.al_quran_cloud.models.translate.Ayah.Base>
+            translations: List<com.zaur.domain.al_quran_cloud.models.translate.Ayah.Base>,
         ) {
             // Отслеживаем верхний видимый аят и передаём его page
             LaunchedEffect(listState) {
@@ -111,15 +102,12 @@ interface AyaListItem {
                         isDarkTheme = isDarkTheme,
                         ayahNumber = aya.number().toInt(),
                         currentAyahInSurah = aya.numberInSurah().toInt(),
-                        isCurrent = ayaNumber == aya.numberInSurah().toInt(),
+                        isCurrent = surahDetailState.audioPlayerState()
+                            .currentAyahInSurah() == aya.numberInSurah().toInt(),
                         arabicText = arabicText,
                         translation = translationText,
                         colors = colors,
-                        fontSizeArabic = fontSizeArabic,
-                        fontSizeRussian = fontSizeRussian,
-                        soundIsActive = soundIsActive,
-                        showArabic = showArabic,
-                        showRussian = showRussian,
+                        surahDetailState = surahDetailState,
                         onClickSound = { number, numberInSurah ->
                             onClickSound(number, numberInSurah)
                         })

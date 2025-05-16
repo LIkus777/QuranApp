@@ -1,9 +1,9 @@
-package com.zaur.features.surah.ui_state.aqc
+package com.zaur.presentation.ui.ui_state.aqc
 
 /**
-* @author Zaur
-* @since 2025-05-12
-*/
+ * @author Zaur
+ * @since 2025-05-12
+ */
 
 interface SurahDetailScreenState {
 
@@ -22,6 +22,13 @@ interface SurahDetailScreenState {
         override fun reciterState(): ReciterState.Base = reciterState
         override fun uiPreferencesState(): UiPreferencesState.Base = uiPreferencesState
         override fun bottomSheetState(): BottomSheetState.Base = bottomSheetState
+    }
+
+    object Empty : SurahDetailScreenState {
+        override fun audioPlayerState(): AudioPlayerState.Base = AudioPlayerState.Empty
+        override fun reciterState(): ReciterState.Base = ReciterState.Empty
+        override fun uiPreferencesState(): UiPreferencesState.Base = UiPreferencesState.Empty
+        override fun bottomSheetState(): BottomSheetState.Base = BottomSheetState.Empty
     }
 }
 
@@ -50,6 +57,9 @@ interface AudioPlayerState {
         override fun isOfflineMode() = isOfflineMode
     }
 
+    companion object {
+        val Empty = Base()
+    }
 }
 
 interface UiPreferencesState {
@@ -75,6 +85,10 @@ interface UiPreferencesState {
         override fun showSurahMode(): Boolean = showSurahMode
         override fun showPageMode(): Boolean = showPageMode
     }
+
+    companion object {
+        val Empty = Base()
+    }
 }
 
 interface ReciterState {
@@ -88,7 +102,13 @@ interface ReciterState {
         override fun currentReciter() = currentReciter
         override fun showReciterDialog() = showReciterDialog
     }
+
+    companion object {
+        val Empty = Base(currentReciter = "")
+    }
 }
+
+// BottomSheetState
 
 interface BottomSheetState {
     fun showTextBottomSheet(): Boolean
@@ -100,5 +120,9 @@ interface BottomSheetState {
     ) : BottomSheetState {
         override fun showTextBottomSheet() = showTextBottomSheet
         override fun showSettingsBottomSheet() = showSettingsBottomSheet
+    }
+
+    companion object {
+        val Empty = Base()
     }
 }

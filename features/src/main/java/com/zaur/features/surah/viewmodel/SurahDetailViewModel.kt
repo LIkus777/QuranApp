@@ -2,7 +2,7 @@ package com.zaur.features.surah.viewmodel
 
 import com.zaur.core.BaseViewModel
 import com.zaur.features.surah.manager.SurahDetailStateManager
-import com.zaur.features.surah.ui_state.aqc.SurahDetailScreenState
+import com.zaur.presentation.ui.ui_state.aqc.SurahDetailScreenState
 import kotlinx.coroutines.flow.StateFlow
 
 /**

@@ -1,4 +1,4 @@
-package com.zaur.features.surah.ui_state.theme
+package com.zaur.presentation.ui.ui_state.theme
 
 /**
 * @author Zaur

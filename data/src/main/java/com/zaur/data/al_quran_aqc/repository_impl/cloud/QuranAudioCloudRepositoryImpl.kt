@@ -13,6 +13,7 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
+import kotlinx.coroutines.withContext
 
 /**
  * @author Zaur
@@ -24,21 +25,23 @@ class QuranAudioCloudRepositoryImpl(
     private val audioDownloader: AudioDownloader,
 ) : QuranAudioRepository.Cloud {
 
+    private var chapterAudio: ChapterAudioFile = ChapterAudioFile.Empty
+
     override suspend fun downloadToCache(
         chapterNumber: Int,
         reciter: String,
     ): List<CacheAudio.Base> = coroutineScope {
-        val surahAudio = getChapterAudioOfReciterCloud(chapterNumber, reciter)
+        val surahAudio =
+            if (chapterAudio is ChapterAudioFile.Base) chapterAudio
+            else getChapterAudioOfReciterCloud(chapterNumber, reciter)
         val semaphore = Semaphore(4) // Ограничим до 4 одновременных загрузок
 
         val deferreds = surahAudio.ayahs().map { ayah ->
-            async(Dispatchers.IO) {
+            withContext(Dispatchers.IO) {
                 semaphore.withPermit {
-                    val file =
-                        audioDownloader.downloadToCache(
-                            ayah.audio(),
-                            "surah_${chapterNumber}_${ayah.numberInSurah()}.mp3"
-                        )
+                    val file = audioDownloader.downloadToCache(
+                        ayah.audio(), "surah_${chapterNumber}_${ayah.numberInSurah()}.mp3"
+                    )
 
                     CacheAudio.Base(
                         chapterNumber = chapterNumber,
@@ -49,14 +52,15 @@ class QuranAudioCloudRepositoryImpl(
             }
         }
 
-        deferreds.awaitAll()
+        deferreds
     }
 
     override suspend fun getChapterAudioOfReciterCloud(
         chapterNumber: Int,
         reciter: String,
     ): ChapterAudioFile.Base = retryWithBackoff {
-        quranApiAqc.getChapterAudioOfReciter(chapterNumber, reciter).chapterAudio()
+        chapterAudio = quranApiAqc.getChapterAudioOfReciter(chapterNumber, reciter).chapterAudio()
+        chapterAudio as ChapterAudioFile.Base
     }
 
 

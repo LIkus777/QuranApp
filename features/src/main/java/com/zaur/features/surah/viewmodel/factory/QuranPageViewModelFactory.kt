@@ -2,7 +2,7 @@ package com.zaur.features.surah.viewmodel.factory
 
 import com.zaur.domain.al_quran_cloud.use_case.QuranPageUseCase
 import com.zaur.features.surah.observables.QuranPageObservable
-import com.zaur.features.surah.ui_state.aqc.QuranPageAqcUIState
+import com.zaur.presentation.ui.ui_state.aqc.QuranPageAqcUIState
 import com.zaur.features.surah.viewmodel.QuranPageViewModel
 
 

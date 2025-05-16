@@ -1,4 +1,4 @@
-package com.zaur.features.surah.ui_state
+package com.zaur.presentation.ui.ui_state
 
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.Composable

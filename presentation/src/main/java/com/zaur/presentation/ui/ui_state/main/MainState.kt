@@ -1,4 +1,4 @@
-package com.zaur.features.surah.ui_state.main
+package com.zaur.presentation.ui.ui_state.main
 
 /**
 * @author Zaur

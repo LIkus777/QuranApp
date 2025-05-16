@@ -1,10 +1,10 @@
-package com.zaur.features.surah.screen.surah_detail
+package com.zaur.presentation.ui
 
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.Composable
 import com.zaur.domain.al_quran_cloud.models.arabic.Ayah
-import com.zaur.features.surah.ui_state.AyaListItem
-import com.zaur.presentation.ui.QuranColors
+import com.zaur.presentation.ui.ui_state.AyaListItem
+import com.zaur.presentation.ui.ui_state.aqc.SurahDetailScreenState
 
 /**
  * @author Zaur
@@ -14,14 +14,9 @@ import com.zaur.presentation.ui.QuranColors
 @Composable
 fun AyaColumn(
     state: AyaListItem,
-    ayaNumber: Int,
     chapterNumber: Int,
-    soundIsActive: Boolean,
-    showArabic: Boolean,
-    showRussian: Boolean,
-    fontSizeArabic: Float,
-    fontSizeRussian: Float,
     listState: LazyListState,
+    surahDetailState: SurahDetailScreenState,
     ayats: List<Ayah.Base>,
     isDarkTheme: Boolean,
     colors: QuranColors,
@@ -33,13 +28,8 @@ fun AyaColumn(
     when (state) {
         is AyaListItem.Loading -> state.Render()
         is AyaListItem.AyahListItem -> state.Render(
-            ayaNumber,
             chapterNumber,
-            soundIsActive,
-            showArabic,
-            showRussian,
-            fontSizeArabic,
-            fontSizeRussian,
+            surahDetailState,
             listState,
             ayats,
             isDarkTheme,

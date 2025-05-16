@@ -1,4 +1,4 @@
-package com.zaur.features.surah.screen.surah_detail
+package com.zaur.presentation.ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -14,12 +14,12 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.zaur.domain.al_quran_cloud.models.page.QuranPage
-import com.zaur.presentation.ui.AyahItem
-import com.zaur.presentation.ui.BasmalaItem
-import com.zaur.presentation.ui.QuranColors
+import com.zaur.presentation.ui.ui_state.aqc.QuranPageAqcUIState
+import com.zaur.presentation.ui.ui_state.aqc.SurahDetailScreenState
 
 /**
  * @author Zaur
@@ -28,22 +28,17 @@ import com.zaur.presentation.ui.QuranColors
 
 @Composable
 fun SurahPageScreen(
-    arabicText: QuranPage,
-    translations: QuranPage,
-    chapterNumber: Int,
-    currentAyahNumber: Int,
-    showArabic: Boolean,
-    showRussian: Boolean,
-    fontSizeArabic: Float,
-    fontSizeRussian: Float,
+    pageState: QuranPageAqcUIState,
+    surahDetailState: SurahDetailScreenState,
     isDarkTheme: Boolean,
     colors: QuranColors,
-    soundIsActive: Boolean,
     onClickSound: (ayahNumber: Int, ayahInSurah: Int) -> Unit,
     onClickPreviousPage: () -> Unit,
     onClickNextPage: () -> Unit,
 ) {
     val listState = rememberLazyListState()
+    val arabicText = remember { derivedStateOf { pageState.uthmaniPage() } }
+    val translations = remember { derivedStateOf { pageState.translatedPage() } }
 
     Column(modifier = Modifier.fillMaxSize()) {
         LazyColumn(
@@ -52,7 +47,7 @@ fun SurahPageScreen(
                 .fillMaxWidth(), state = listState
         ) {
             // Отображаем басмалу, если первая сура на странице не 9
-            val firstSurah = arabicText.ayahs().firstOrNull()?.surah()
+            val firstSurah = arabicText.value.ayahs().firstOrNull()?.surah()
             if (firstSurah != null && firstSurah.number() != 9L) {
                 item {
                     BasmalaItem(colors)
@@ -60,10 +55,11 @@ fun SurahPageScreen(
             }
 
             itemsIndexed(
-                items = arabicText.ayahs(), key = { index, aya -> aya.number() }) { index, aya ->
+                items = arabicText.value.ayahs(),
+                key = { index, aya -> aya.number() }) { index, aya ->
                 val translationText =
-                    if (index < translations.ayahs().size) translations.ayahs().getOrNull(index)
-                        ?.text() else "Перевод отсутствует"
+                    if (index < translations.value.ayahs().size) translations.value.ayahs()
+                        .getOrNull(index)?.text() else "Перевод отсутствует"
                 val arabicText =
                     if (index == 0 && aya.surah().number() != 9L) aya.text().removeBasmala()
                     else aya.text()
@@ -72,15 +68,12 @@ fun SurahPageScreen(
                     isDarkTheme = isDarkTheme,
                     ayahNumber = aya.number().toInt(),
                     currentAyahInSurah = aya.numberInSurah().toInt(),
-                    isCurrent = currentAyahNumber == aya.number().toInt(),
+                    isCurrent = surahDetailState.audioPlayerState()
+                        .currentAyahInSurah() == aya.number().toInt(),
                     arabicText = arabicText,
                     translation = translationText.toString(),
                     colors = colors,
-                    fontSizeArabic = fontSizeArabic,
-                    fontSizeRussian = fontSizeRussian,
-                    soundIsActive = soundIsActive,
-                    showArabic = showArabic,
-                    showRussian = showRussian,
+                    surahDetailState = surahDetailState,
                     onClickSound = { number, numberInSurah ->
                         onClickSound(number, numberInSurah)
                     })

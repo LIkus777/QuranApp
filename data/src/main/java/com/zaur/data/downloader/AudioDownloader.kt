@@ -16,10 +16,7 @@ import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.io.File
-import java.io.FileOutputStream
 import java.io.IOException
-import java.net.HttpURLConnection
-import java.net.URL
 
 /**
  * @author Zaur
@@ -42,6 +39,7 @@ interface AudioDownloader {
         private val context: Context,
     ) : AudioDownloader {
 
+        private val okHttpClient = OkHttpClient()
         private var downloadDirectory: File? = null
 
         init {
@@ -137,7 +135,7 @@ interface AudioDownloader {
                     val start = System.currentTimeMillis()
                     val request = Request.Builder().url(url).build()
 
-                    OkHttpClient().newCall(request).execute().use { response ->
+                    okHttpClient.newCall(request).execute().use { response ->
                         if (!response.isSuccessful) {
                             throw IOException("Failed to download file: HTTP ${response.code}")
                         }

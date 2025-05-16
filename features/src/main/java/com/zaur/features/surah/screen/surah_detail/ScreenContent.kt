@@ -13,8 +13,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import com.zaur.domain.al_quran_cloud.models.arabic.ArabicChapter
 import com.zaur.domain.al_quran_cloud.models.translate.TranslationAqc
-import com.zaur.features.surah.ui_state.AnimatedMenuUiState
-import com.zaur.features.surah.ui_state.SurahDetailUiState
+import com.zaur.presentation.ui.ui_state.AnimatedMenuUiState
+import com.zaur.presentation.ui.ui_state.SurahDetailUiState
 import com.zaur.presentation.ui.QuranColors
 
 /**
@@ -34,13 +34,11 @@ fun ScreenContent(
 ) {
     with(uiData) {
         with(deps) {
-            val isLoading =
-                textState().currentArabicText() == ArabicChapter.Empty || translateState().translations() == TranslationAqc.Empty
-
             val isBarsVisible = remember { mutableStateOf(true) }
-
             val surahMode = screenContentViewModel().surahMode().collectAsState()
             val animatedMenu = screenContentViewModel().animatedMenu().collectAsState()
+            val isLoading =
+                textState().currentArabicText() == ArabicChapter.Empty || translateState().translations() == TranslationAqc.Empty
 
             Box(
                 modifier = Modifier
@@ -53,19 +51,14 @@ fun ScreenContent(
 
                 // Основной контент на фоне
                 when (surahMode.value) {
-                    is SurahDetailUiState.SurahModeState -> surahMode.value.Render(
+                    is SurahDetailUiState.SurahModeState -> surahMode.value.RenderSurahMode(
                         state = screenContentViewModel().fetchAyaListItem(
                             isLoading, chapterNumber
-                        ), //todo
+                        ),
                         colors = colors,
                         isDarkTheme = isDarkTheme(),
                         chapterNumber = chapterNumber,
-                        soundIsActive = surahDetailState().audioPlayerState().isAudioPlaying(),
-                        ayaNumber = surahDetailState().audioPlayerState().currentAyahInSurah(),
-                        fontSizeArabic = surahDetailState().uiPreferencesState().fontSizeArabic(),
-                        fontSizeRussian = surahDetailState().uiPreferencesState().fontSizeRussian(),
-                        showArabic = surahDetailState().uiPreferencesState().showArabic(),
-                        showRussian = surahDetailState().uiPreferencesState().showRussian(),
+                        surahDetailState = surahDetailState(),
                         translations = translateState().translations().translationAyahs(),
                         ayats = textState().currentArabicText().ayahs(),
                         listState = listState,
@@ -86,19 +79,11 @@ fun ScreenContent(
                             )
                         })
 
-                    is SurahDetailUiState.PageModeState -> surahMode.value.Render(
+                    is SurahDetailUiState.PageModeState -> surahMode.value.RenderPageMode(
                         colors = colors,
                         isDarkTheme = isDarkTheme(),
-                        chapterNumber = chapterNumber,
-                        currentAyahNumber = surahDetailState().audioPlayerState()
-                            .currentAyahInSurah(),
-                        arabicText = pageState().uthmaniPage(),
-                        translatedText = pageState().translatedPage(),
-                        fontSizeArabic = surahDetailState().uiPreferencesState().fontSizeArabic(),
-                        fontSizeRussian = surahDetailState().uiPreferencesState().fontSizeRussian(),
-                        showArabic = surahDetailState().uiPreferencesState().showArabic(),
-                        showRussian = surahDetailState().uiPreferencesState().showRussian(),
-                        soundIsActive = surahDetailState().audioPlayerState().isAudioPlaying(),
+                        pageState = pageState(),
+                        surahDetailState = surahDetailState(),
                         onClickPreviousPage = {},
                         onClickNextPage = {},
                         onClickSound = { ayahNumber, ayahNumberInSurah ->

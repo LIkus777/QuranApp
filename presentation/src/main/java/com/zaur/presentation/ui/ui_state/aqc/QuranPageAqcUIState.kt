@@ -1,4 +1,4 @@
-package com.zaur.features.surah.ui_state.aqc
+package com.zaur.presentation.ui.ui_state.aqc
 
 import com.zaur.domain.al_quran_cloud.models.page.QuranPage
 import com.zaur.domain.al_quran_cloud.models.page.QuranPageAqc

@@ -38,18 +38,12 @@ fun SurahDetailScreenContent(
     )
 
     // Диалоги
-    SettingsBottomSheetComponent(uiData.surahDetailState(), colors, deps.surahDetailViewModel()) //todo почистить
-    ChooseTextDialogComponent( //todo почистить
-        colors,
+    SettingsBottomSheetComponent(uiData.surahDetailState(), colors, deps.surahDetailViewModel())
+    ChooseTextDialogComponent(colors, uiData, deps)
+    ChooseReciterDialogComponent(
         uiData.surahDetailState(),
-        uiData.isDarkTheme(),
-        uiData.isSurahMode(),
-        deps.screenContentViewModel(),
-        deps.quranTextViewModel(),
-        deps.themeViewModel(),
-        deps.surahDetailViewModel()
-    )
-    ChooseReciterDialogComponent( //todo почистить
-        uiData.surahDetailState(), colors, deps.surahDetailViewModel(), deps.quranAudioViewModel()
+        colors,
+        deps.surahDetailViewModel(),
+        deps.quranAudioViewModel()
     )
 }

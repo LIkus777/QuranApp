@@ -28,7 +28,7 @@ import com.zaur.features.surah.fakes.FakeQTextRLocal
 import com.zaur.features.surah.fakes.FakeQuranStorage
 import com.zaur.features.surah.fakes.FakeThemeStorage
 import com.zaur.features.surah.observables.SurahChooseObservable
-import com.zaur.features.surah.ui_state.aqc.QuranTextAqcUIState
+import com.zaur.presentation.ui.ui_state.aqc.QuranTextAqcUIState
 import com.zaur.features.surah.viewmodel.SurahChooseViewModel
 import com.zaur.features.surah.viewmodel.ThemeViewModel
 import com.zaur.navigation.Screen

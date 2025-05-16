@@ -3,7 +3,7 @@ package com.zaur.features.surah.viewmodel
 import com.zaur.core.BaseViewModel
 import com.zaur.domain.storage.theme.ThemeUseCase
 import com.zaur.features.surah.observables.ThemeObservable
-import com.zaur.features.surah.ui_state.theme.ThemeUIState
+import com.zaur.presentation.ui.ui_state.theme.ThemeUIState
 import kotlinx.coroutines.flow.StateFlow
 
 /**

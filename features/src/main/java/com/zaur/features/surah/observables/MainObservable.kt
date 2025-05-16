@@ -1,7 +1,7 @@
 package com.zaur.features.surah.observables
 
 import com.zaur.features.surah.base.Observable
-import com.zaur.features.surah.ui_state.main.MainState
+import com.zaur.presentation.ui.ui_state.main.MainState
 import kotlinx.coroutines.flow.StateFlow
 
 /**

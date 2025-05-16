@@ -1,4 +1,4 @@
-package com.zaur.features.surah.ui_state
+package com.zaur.presentation.ui.ui_state
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -6,13 +6,11 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material3.CheckboxDefaults.colors
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.zaur.features.surah.screen.surah_detail.ChapterBottomBarComponent
-import com.zaur.features.surah.screen.surah_detail.ChapterTopBarComponent
+import com.zaur.presentation.ui.ChapterBottomBarComponent
+import com.zaur.presentation.ui.ChapterTopBarComponent
 import com.zaur.presentation.ui.QuranColors
 
 

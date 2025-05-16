@@ -12,7 +12,7 @@ interface CacheAyahList {
     fun toPlaylist(): List<String>
     fun getList(): List<CacheAudio.Base>
 
-    class RealCacheAyahList(private val ayahs: List<CacheAudio.Base>) : CacheAyahList {
+    data class RealCacheAyahList(private val ayahs: List<CacheAudio.Base>) : CacheAyahList {
         override fun isEmpty() = ayahs.isEmpty()
         override fun toPlaylist(): List<String> = ayahs.map { it.path() }
         override fun getList(): List<CacheAudio.Base> = ayahs

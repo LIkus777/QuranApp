@@ -13,7 +13,7 @@ interface AyahList {
     fun getList(): List<Ayah.Base>
     fun findByNumberInSurah(number: Int): Ayah.Base
 
-    class RealAyahList(private val ayahs: List<Ayah.Base>) : AyahList {
+    data class RealAyahList(private val ayahs: List<Ayah.Base>) : AyahList {
         override fun isEmpty() = ayahs.isEmpty()
         override fun get(index: Int): Ayah.Base = ayahs[index]
         override fun getList(): List<Ayah.Base> = ayahs

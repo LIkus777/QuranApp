@@ -9,9 +9,9 @@ import kotlinx.coroutines.delay
 */
 
 suspend fun <T> retryWithBackoff(
-    maxAttempts: Int = 10,
-    initialDelay: Long = 500,
-    factor: Double = 2.0,
+    maxAttempts: Int = 15,
+    initialDelay: Long = 100,
+    factor: Double = 1.1,
     block: suspend () -> T
 ): T {
     var currentDelay = initialDelay

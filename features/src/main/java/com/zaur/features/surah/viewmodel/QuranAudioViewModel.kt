@@ -33,8 +33,8 @@ interface QuranAudioViewModel : QuranAudioObservable.Read {
     fun getAyahAudioByKey(verseKey: String, reciter: String)
     fun getChaptersAudioOfReciter(chapterNumber: Int, reciter: String)
 
-    fun setAyahs(ayahs: List<Ayah.Base>)
-    fun setCacheAudios(ayahs: List<CacheAudio.Base>)
+    suspend fun setAyahs(ayahs: List<Ayah.Base>)
+    suspend fun setCacheAudios(ayahs: List<CacheAudio.Base>)
 
     fun onPlayWholeClicked()
     fun onPlayVerse(verse: VerseAudioAqc)
@@ -67,7 +67,10 @@ interface QuranAudioViewModel : QuranAudioObservable.Read {
                 }
                 result.handle(object : HandleResult<List<CacheAudio.Base>> {
                     override fun handleSuccess(data: List<CacheAudio.Base>) {
-                        viewModelScope.launch {
+                        viewModelScope.launch(Dispatchers.IO) {
+                            data.forEach {
+                                Log.d("TAG", "downloadToCache: $it")
+                            }
                             observable.update(observable.audioState().value.copy(cacheAudios = data))
                         }
                     }
@@ -79,6 +82,7 @@ interface QuranAudioViewModel : QuranAudioObservable.Read {
             surahPlayer.setQuranAudioVmCallback(object : QuranAudioVmCallback {
                 override fun callVerseAudioFile(ayah: Int) {
                     Log.i("TAGGG", "callVerseAudioFile CALLED} ayah $ayah")
+                    Log.i("TAGGG", "${stateManager.surahDetailState().value.audioPlayerState.currentSurahNumber()}:$ayah")
                     getAyahAudioByKey(
                         "${stateManager.surahDetailState().value.audioPlayerState.currentSurahNumber()}:$ayah",
                         reciterManager.getReciter().toString()
@@ -115,9 +119,6 @@ interface QuranAudioViewModel : QuranAudioObservable.Read {
                 result.handle(object : HandleResult<ChapterAudioFile> {
                     override fun handleSuccess(data: ChapterAudioFile) {
                         viewModelScope.launch {
-                            data.ayahs().forEach {
-                                Log.d("TAG", "getChaptersAudioOfReciter: data - $it")
-                            }
                             observable.update(observable.audioState().value.copy(chaptersAudioFile = data))
                         }
                     }
@@ -125,11 +126,12 @@ interface QuranAudioViewModel : QuranAudioObservable.Read {
             }
         }
 
-        override fun setAyahs(ayahs: List<Ayah.Base>) {
+        override suspend fun setAyahs(ayahs: List<Ayah.Base>) {
             surahPlayer.setAyahs(ayahs)
         }
 
-        override fun setCacheAudios(ayahs: List<CacheAudio.Base>) {
+        override suspend fun setCacheAudios(ayahs: List<CacheAudio.Base>) {
+            Log.d("TAG", "setCacheAudios: called")
             surahPlayer.setCacheAudios(ayahs)
         }
 

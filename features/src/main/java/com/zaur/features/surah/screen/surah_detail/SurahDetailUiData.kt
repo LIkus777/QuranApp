@@ -95,7 +95,7 @@ interface SurahDetailDependencies {
 
 @Composable
 fun rememberSurahDetailUiData(
-    deps: SurahDetailDependencies,
+    chapterNumber: Int, deps: SurahDetailDependencies,
 ): SurahDetailUiData {
     val offlineState by deps.offlineViewModel().offlineState().collectAsState()
     val textState by deps.quranTextViewModel().textState().collectAsState()
@@ -105,6 +105,10 @@ fun rememberSurahDetailUiData(
     val pageState by deps.quranPageViewModel().pageState().collectAsState()
     val isDarkTheme = deps.themeViewModel().getIsDarkTheme()
     val isSurahMode = surahDetailState.uiPreferencesState().showSurahMode()
+    deps.surahDetailViewModel().setSurahNumber(chapterNumber)
+    deps.surahDetailViewModel().setOfflineMode(offlineState.isOffline())
+    deps.surahDetailViewModel().fontSizeArabic(deps.quranTextViewModel().getFontSizeArabic())
+    deps.surahDetailViewModel().fontSizeRussian(deps.quranTextViewModel().getFontSizeRussian())
 
     return SurahDetailUiData.Base(
         offlineState,

@@ -27,8 +27,12 @@ fun SurahDetailEffects(
             val pageNumber = quranPageViewModel().getLastReadPagePosition()
 
             LaunchedEffect(uiData.audioState().cacheAudios()) {
-                uiData.audioState().cacheAudios().let {
-                    quranAudioViewModel().setCacheAudios(it)
+                if (uiData.audioState().cacheAudios().isNullOrEmpty()) {
+                    //тут должна быть полоска
+                } else {
+                    uiData.audioState().cacheAudios().let {
+                        quranAudioViewModel().setCacheAudios(it)
+                    }
                 }
             }
 
@@ -50,6 +54,7 @@ fun SurahDetailEffects(
             }
 
             LaunchedEffect(chapterNumber) {
+                Log.i("TAG", "SurahDetailEffects: CALLED LaunchedEffect(chapterNumber)")
                 val reciter = quranAudioViewModel().getReciterName()
                 surahDetailViewModel().selectedReciter(reciter.toString())
                 if (reciter.isNullOrEmpty()) {

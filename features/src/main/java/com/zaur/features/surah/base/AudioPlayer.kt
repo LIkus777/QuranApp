@@ -40,7 +40,7 @@ interface AudioPlayer {
     fun setAudioPlayerCallback(callback: AudioPlayerCallback)
 
     // Реализация плеера, использующего ExoPlayer
-    class Base(private val context: Context) : AudioPlayer {
+    data class Base(private val context: Context) : AudioPlayer {
         private var player: ExoPlayer? = null
         private var currentMediaItem: MediaItem? = null
 
@@ -57,6 +57,7 @@ interface AudioPlayer {
 
                 addListener(object : Player.Listener {
                     override fun onPlaybackStateChanged(state: Int) {
+                        Log.d("TAG", "onPlaybackStateChanged: $state CHANGED")
                         if (state == Player.STATE_ENDED) {
                             audioPlayerCallback?.audioEnded()
                         }
@@ -65,9 +66,9 @@ interface AudioPlayer {
                     // ВОТ ТУТ: вызывается каждый раз, когда проигрыватель переходит к следующему аяту
                     override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
                         val mediaId = mediaItem?.mediaId
+                        Log.d("TAG", "onMediaItemTransition: mediaId $mediaId")
                         audioPlayerCallback?.onAyahChanged(mediaId)
                     }
-
 
                     override fun onPlayerError(error: PlaybackException) {
                         Log.e("TAGGG", "Playback error: ${error.errorCodeName} | ${error.message}")
@@ -81,6 +82,9 @@ interface AudioPlayer {
         }
 
         override fun playPlaylist(items: List<MediaItem>) {
+            items.forEach {
+                Log.d("TAG", "playPlaylist: $it")
+            }
             player?.apply {
                 clearMediaItems()
                 addMediaItems(items)

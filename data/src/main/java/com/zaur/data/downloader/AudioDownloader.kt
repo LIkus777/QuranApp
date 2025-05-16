@@ -7,20 +7,24 @@ import androidx.annotation.OptIn
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.DataSpec
 import androidx.media3.datasource.DefaultDataSource
+import com.zaur.data.network.retryWithBackoff
 import com.zaur.data.room.models.ChapterAudioEntity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import okhttp3.OkHttpClient
+import okhttp3.Request
 import java.io.File
 import java.io.FileOutputStream
+import java.io.IOException
 import java.net.HttpURLConnection
 import java.net.URL
 
 /**
-* @author Zaur
-* @since 2025-05-12
-*/
+ * @author Zaur
+ * @since 2025-05-12
+ */
 
 interface AudioDownloader {
 
@@ -125,18 +129,32 @@ interface AudioDownloader {
         }
 
         override suspend fun downloadToCache(url: String, fileName: String): File {
-            val cacheFile = File(context.cacheDir, fileName)
+            val cacheFile = File(context.filesDir, fileName)
             if (cacheFile.exists()) return cacheFile
 
-            withContext(Dispatchers.IO) {
-                val urlConnection = URL(url).openConnection() as HttpURLConnection
-                urlConnection.inputStream.use { input ->
-                    FileOutputStream(cacheFile).use { output ->
-                        input.copyTo(output)
+            return retryWithBackoff {
+                withContext(Dispatchers.IO) {
+                    val start = System.currentTimeMillis()
+                    val request = Request.Builder().url(url).build()
+
+                    OkHttpClient().newCall(request).execute().use { response ->
+                        if (!response.isSuccessful) {
+                            throw IOException("Failed to download file: HTTP ${response.code}")
+                        }
+
+                        val body = response.body ?: throw IOException("Empty body")
+
+                        cacheFile.outputStream().use { output ->
+                            body.byteStream().copyTo(output)
+                        }
+
+                        val time = System.currentTimeMillis() - start
+                        Log.d("AudioDownloader", "Downloaded $fileName in ${time}ms")
                     }
+
+                    return@withContext cacheFile
                 }
             }
-            return cacheFile
         }
     }
 }

@@ -162,11 +162,11 @@ class FakeSurahPlayer() : SurahPlayer {
         TODO("Not yet implemented")
     }
 
-    override fun setAyahs(ayahs: List<Ayah.Base>) {
+    override suspend fun setAyahs(ayahs: List<Ayah.Base>) {
         TODO("Not yet implemented")
     }
 
-    override fun setCacheAudios(ayahs: List<CacheAudio.Base>) {
+    override suspend fun setCacheAudios(ayahs: List<CacheAudio.Base>) {
         TODO("Not yet implemented")
     }
 }

@@ -17,7 +17,7 @@ fun SurahDetailScreenContent(
     deps: SurahDetailDependencies,
     onMenuClick: () -> Unit,
 ) {
-    val uiData = rememberSurahDetailUiData(deps)
+    val uiData = rememberSurahDetailUiData(chapterNumber, deps)
     val listState = rememberLazyListState()
     val colors = if (uiData.isDarkTheme()) DarkThemeColors else LightThemeColors
 

@@ -18,7 +18,7 @@ interface AudioPlayerStateUpdater {
     fun setRestartAudio(restart: Boolean, isAudioPlaying: Boolean)
     fun setCurrentAyahAndSurah(ayah: Int, surah: Int)
 
-    class Base(
+    data class Base(
         private val surahDetailStateManager: SurahDetailStateManager, //todo
     ) : AudioPlayerStateUpdater {
 

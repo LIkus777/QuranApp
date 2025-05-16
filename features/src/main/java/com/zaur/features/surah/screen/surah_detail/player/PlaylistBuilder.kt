@@ -1,47 +1,65 @@
 package com.zaur.features.surah.screen.surah_detail.player
 
 import android.net.Uri
+import android.util.Log
 import androidx.media3.common.MediaItem
 import com.zaur.data.downloader.AudioDownloader
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import java.io.File
 
 /**
-* @author Zaur
-* @since 2025-05-12
-*/
+ * @author Zaur
+ * @since 2025-05-12
+ */
 
 interface PlaylistBuilder {
 
-    fun buildLocalPlaylist(
+    suspend fun buildLocalPlaylistAsync(
         ayahs: AyahList,
         surahNumber: Int,
     ): List<MediaItem>
 
-    fun buildCachePlaylist(
-        ayahs: CacheAyahList,
-    ): List<MediaItem>
+    suspend fun buildCachePlaylistAsync(ayahs: CacheAyahList): List<MediaItem>
 
-    class Base(
+    data class Base(
         private val audioDownloader: AudioDownloader,
     ) : PlaylistBuilder {
-        override fun buildLocalPlaylist(
+        override suspend fun buildLocalPlaylistAsync(
             ayahs: AyahList,
             surahNumber: Int,
-        ): List<MediaItem> {
-            return ayahs.getList().map { ayah ->
-                val localFile = audioDownloader.getAudioFile(
+        ): List<MediaItem> = withContext(Dispatchers.Default) {
+            val mediaItems = mutableListOf<MediaItem>()
+
+            for (ayah in ayahs.getList()) {
+                val file = audioDownloader.getAudioFile(
                     surahNumber.toLong(), ayah.numberInSurah().toLong(), "ar.alafasy"
                 )
-                val uri = Uri.fromFile(localFile)
-                MediaItem.Builder().setUri(uri).setMediaId(ayah.numberInSurah().toString()).build()
+
+                if (file != null) {
+                    if (file.exists()) {
+                        val uri = Uri.fromFile(file)
+                        val mediaItem = MediaItem.Builder().setUri(uri)
+                            .setMediaId(ayah.numberInSurah().toString()).build()
+                        mediaItems.add(mediaItem)
+                    } else {
+                        Log.w("PlaylistBuilder", "Missing file for ayah ${ayah.numberInSurah()}")
+                    }
+                }
             }
+
+            return@withContext mediaItems
         }
 
-        override fun buildCachePlaylist(ayahs: CacheAyahList): List<MediaItem> {
-            return ayahs.getList().map { cacheAudio ->
-                val uri = Uri.parse("file://${cacheAudio.path()}")
-                MediaItem.Builder().setUri(uri).setMediaId(cacheAudio.verseNumber().toString())
-                    .build()
+        override suspend fun buildCachePlaylistAsync(ayahs: CacheAyahList): List<MediaItem> =
+            withContext(Dispatchers.Default) {
+                Log.d("TAG", "Building playlist of ${ayahs.getList().size} ayahs")
+
+                ayahs.getList().map { cacheAudio ->
+                    val uri = Uri.fromFile(File(cacheAudio.path()))
+                    MediaItem.Builder().setUri(uri).setMediaId(cacheAudio.verseNumber().toString())
+                        .build()
+                }
             }
-        }
     }
 }

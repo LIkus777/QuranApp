@@ -7,6 +7,12 @@ import com.zaur.domain.al_quran_cloud.models.audiofile.CacheAudio
 import com.zaur.domain.al_quran_cloud.models.audiofile.ChapterAudioFile
 import com.zaur.domain.al_quran_cloud.models.audiofile.VerseAudioAqc
 import com.zaur.domain.al_quran_cloud.repository.QuranAudioRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.sync.Semaphore
+import kotlinx.coroutines.sync.withPermit
 
 /**
  * @author Zaur
@@ -21,26 +27,29 @@ class QuranAudioCloudRepositoryImpl(
     override suspend fun downloadToCache(
         chapterNumber: Int,
         reciter: String,
-    ): List<CacheAudio.Base> {
-        val cachedAudios: MutableList<CacheAudio.Base> = mutableListOf()
+    ): List<CacheAudio.Base> = coroutineScope {
         val surahAudio = getChapterAudioOfReciterCloud(chapterNumber, reciter)
+        val semaphore = Semaphore(4) // Ограничим до 4 одновременных загрузок
 
-        retryWithBackoff {
-            surahAudio.ayahs().forEach { ayah ->
-                val file = audioDownloader.downloadToCache(
-                    ayah.audio(), "surah_${chapterNumber}_${ayah.numberInSurah()}.mp3"
-                )
-                cachedAudios.add(
+        val deferreds = surahAudio.ayahs().map { ayah ->
+            async(Dispatchers.IO) {
+                semaphore.withPermit {
+                    val file =
+                        audioDownloader.downloadToCache(
+                            ayah.audio(),
+                            "surah_${chapterNumber}_${ayah.numberInSurah()}.mp3"
+                        )
+
                     CacheAudio.Base(
                         chapterNumber = chapterNumber,
                         verseNumber = ayah.numberInSurah().toInt(),
                         path = file.absolutePath
                     )
-                )
+                }
             }
         }
 
-        return cachedAudios.toList()
+        deferreds.awaitAll()
     }
 
     override suspend fun getChapterAudioOfReciterCloud(

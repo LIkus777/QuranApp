@@ -1,5 +1,6 @@
 package com.zaur.data.al_quran_aqc.repository_impl.cloud
 
+import android.util.Log
 import com.zaur.data.al_quran_aqc.api.QuranApiAqc
 import com.zaur.data.downloader.AudioDownloader
 import com.zaur.data.network.retryWithBackoff
@@ -31,28 +32,33 @@ class QuranAudioCloudRepositoryImpl(
         chapterNumber: Int,
         reciter: String,
     ): List<CacheAudio.Base> = coroutineScope {
-        val surahAudio =
-            if (chapterAudio is ChapterAudioFile.Base) chapterAudio
-            else getChapterAudioOfReciterCloud(chapterNumber, reciter)
+        val surahAudio = if (chapterAudio is ChapterAudioFile.Base) chapterAudio
+        else getChapterAudioOfReciterCloud(chapterNumber, reciter)
         val semaphore = Semaphore(4) // Ограничим до 4 одновременных загрузок
 
-        val deferreds = surahAudio.ayahs().map { ayah ->
-            withContext(Dispatchers.IO) {
-                semaphore.withPermit {
-                    val file = audioDownloader.downloadToCache(
-                        ayah.audio(), "surah_${chapterNumber}_${ayah.numberInSurah()}.mp3"
-                    )
-
-                    CacheAudio.Base(
-                        chapterNumber = chapterNumber,
-                        verseNumber = ayah.numberInSurah().toInt(),
-                        path = file.absolutePath
-                    )
+        val deferreds = surahAudio.ayahs().mapNotNull { ayah ->
+            Log.d("AudioDownloader", "аят ${ayah}")
+            val audioUrl = ayah.audio()
+            if (audioUrl.isNullOrBlank()) {
+                Log.w("AudioDownloader", "Пропускаем аят ${ayah.numberInSurah()} с пустым URL аудио")
+                null // не будем загружать этот аят
+            } else {
+                async(Dispatchers.IO) {
+                    semaphore.withPermit {
+                        val file = audioDownloader.downloadToCache(
+                            audioUrl, "surah_${chapterNumber}_${ayah.numberInSurah()}.mp3"
+                        )
+                        CacheAudio.Base(
+                            chapterNumber = chapterNumber,
+                            verseNumber = ayah.numberInSurah().toInt(),
+                            path = file.absolutePath
+                        )
+                    }
                 }
             }
         }
 
-        deferreds
+        deferreds.awaitAll()
     }
 
     override suspend fun getChapterAudioOfReciterCloud(

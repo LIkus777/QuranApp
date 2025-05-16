@@ -101,8 +101,8 @@ interface SurahDetailEffectHandler {
             LaunchedEffect(chapterNumber) {
                 Log.i("TAG", "SurahDetailEffects: CALLED LaunchedEffect(chapterNumber)")
 
-                val reciter = quranAudio.getReciterName()
-                surahDetail.selectedReciter(reciter ?: "")
+                val reciter = quranAudio.getReciter() ?: throw IllegalStateException("Нету ресайтера")
+                surahDetail.selectedReciter(reciter)
                 if (reciter.isNullOrEmpty()) {
                     surahDetail.showReciterDialog(true)
                 }
@@ -113,8 +113,8 @@ interface SurahDetailEffectHandler {
                     quranPage.getTranslatedPage(pageNumber, "ru.kuliev")
                     quranText.getArabicChapter(chapterNumber)
                     quranTranslation.getTranslationForChapter(chapterNumber, "ru.kuliev")
-                    quranAudio.downloadToCache(chapterNumber, reciter.orEmpty())
-                    quranAudio.getChaptersAudioOfReciter(chapterNumber, reciter.orEmpty())
+                    quranAudio.downloadToCache(chapterNumber, reciter)
+                    quranAudio.getChaptersAudioOfReciter(chapterNumber, reciter)
                 }
             }
         }

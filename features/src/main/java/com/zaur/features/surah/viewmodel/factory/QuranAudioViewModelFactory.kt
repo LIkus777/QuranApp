@@ -5,7 +5,7 @@ import com.zaur.features.surah.manager.ReciterManager
 import com.zaur.features.surah.observables.QuranAudioObservable
 import com.zaur.features.surah.manager.SurahDetailStateManager
 import com.zaur.features.surah.screen.surah_detail.player.SurahPlayer
-import com.zaur.presentation.ui.ui_state.aqc.QuranAudioAqcUIState
+import com.zaur.presentation.ui.ui_state.aqc.QuranAudioUIState
 import com.zaur.features.surah.viewmodel.QuranAudioViewModel
 
 /**
@@ -22,7 +22,7 @@ interface QuranAudioViewModelFactory {
         private val reciterManager: ReciterManager? = null,
         private val stateManager: SurahDetailStateManager,
         private val observable: QuranAudioObservable.Mutable = QuranAudioObservable.Base(
-            QuranAudioAqcUIState.Base()
+            QuranAudioUIState.Base()
         ),
         private val quranAudioUseCase: QuranAudioUseCase,
     ) : QuranAudioViewModelFactory {

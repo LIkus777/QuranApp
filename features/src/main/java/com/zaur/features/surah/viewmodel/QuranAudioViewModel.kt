@@ -13,7 +13,7 @@ import com.zaur.features.surah.manager.ReciterManager
 import com.zaur.features.surah.observables.QuranAudioObservable
 import com.zaur.features.surah.manager.SurahDetailStateManager
 import com.zaur.features.surah.screen.surah_detail.player.SurahPlayer
-import com.zaur.presentation.ui.ui_state.aqc.QuranAudioAqcUIState
+import com.zaur.presentation.ui.ui_state.aqc.QuranAudioUIState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -79,16 +79,16 @@ interface QuranAudioViewModel : QuranAudioObservable.Read {
             surahPlayer.setQuranAudioVmCallback(object : QuranAudioVmCallback {
                 override fun callVerseAudioFile(ayah: Int) {
                     Log.i("TAGGG", "callVerseAudioFile CALLED} ayah $ayah")
-                    Log.i("TAGGG", "${stateManager.surahDetailState().value.audioPlayerState.currentSurahNumber()}:$ayah")
+                    Log.i("TAGGG", "${stateManager.surahDetailState().value.audioPlayerState().currentSurahNumber()}:$ayah")
                     getAyahAudioByKey(
-                        "${stateManager.surahDetailState().value.audioPlayerState.currentSurahNumber()}:$ayah",
+                        "${stateManager.surahDetailState().value.audioPlayerState().currentSurahNumber()}:$ayah",
                         reciterManager.getReciter().toString()
                     )
                 }
             })
         }
 
-        override fun audioState(): StateFlow<QuranAudioAqcUIState.Base> = observable.audioState()
+        override fun audioState(): StateFlow<QuranAudioUIState.Base> = observable.audioState()
 
         override fun onPlayWholeClicked() {
             surahPlayer.onPlayWholeClicked()
@@ -143,7 +143,7 @@ interface QuranAudioViewModel : QuranAudioObservable.Read {
                         viewModelScope.launch(Dispatchers.Main) {
                             if (data.audio() == observable.audioState().value.verseAudioFile().audio()) {
                                 val newState = stateManager.surahDetailState().value.copy(
-                                    audioPlayerState = stateManager.surahDetailState().value.audioPlayerState.copy(
+                                    audioPlayerState = stateManager.surahDetailState().value.audioPlayerState().copy(
                                         restartAudio = true
                                     )
                                 )

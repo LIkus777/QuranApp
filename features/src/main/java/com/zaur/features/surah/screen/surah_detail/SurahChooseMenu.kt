@@ -48,7 +48,7 @@ fun SurahChooseMenu(
     navController: NavController,
     modifier: Modifier,
 ) {
-    val isDarkTheme = themeViewModel.getIsDarkTheme()
+    val isDarkTheme = themeViewModel.themeState().collectAsState().value.isDarkTheme
     val colors = if (isDarkTheme) DarkThemeColors else LightThemeColors
     Box(
         Modifier

@@ -18,7 +18,7 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.zaur.presentation.ui.ui_state.aqc.QuranPageAqcUIState
+import com.zaur.presentation.ui.ui_state.aqc.QuranPageUIState
 import com.zaur.presentation.ui.ui_state.aqc.SurahDetailScreenState
 
 /**
@@ -28,7 +28,7 @@ import com.zaur.presentation.ui.ui_state.aqc.SurahDetailScreenState
 
 @Composable
 fun SurahPageScreen(
-    pageState: QuranPageAqcUIState,
+    pageState: QuranPageUIState,
     surahDetailState: SurahDetailScreenState,
     isDarkTheme: Boolean,
     colors: QuranColors,
@@ -47,11 +47,14 @@ fun SurahPageScreen(
                 .fillMaxWidth(), state = listState
         ) {
             // Отображаем басмалу, если первая сура на странице не 9
-            val firstSurah = arabicText.value.ayahs().firstOrNull()?.surah()
-            if (firstSurah != null && firstSurah.number() != 9L) {
-                item {
-                    BasmalaItem(colors)
-                }
+
+            val shouldShowBasmala = arabicText.value.ayahs().firstOrNull()?.let { ayah ->
+                // номер аята в суре == 1 (начало суры)
+                // и сама сура не 9‑я
+                ayah.numberInSurah() == 1L && ayah.surah().number() != 9L
+            } != false
+            if (shouldShowBasmala) {
+                item { BasmalaItem(colors) }
             }
 
             itemsIndexed(
@@ -69,7 +72,7 @@ fun SurahPageScreen(
                     ayahNumber = aya.number().toInt(),
                     currentAyahInSurah = aya.numberInSurah().toInt(),
                     isCurrent = surahDetailState.audioPlayerState()
-                        .currentAyahInSurah() == aya.number().toInt(),
+                        .currentAyah() == aya.number().toInt(),
                     arabicText = arabicText,
                     translation = translationText.toString(),
                     colors = colors,

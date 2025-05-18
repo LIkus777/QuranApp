@@ -1,5 +1,6 @@
 package com.zaur.presentation.ui
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -17,6 +18,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -48,6 +50,8 @@ fun ModernSurahText(
     revelationType: RevelationType = RevelationType.Meccan,
     modifier: Modifier = Modifier
 ) {
+    val cleanName = remember(arabicName) { stripSurahPrefix(arabicName) }
+
     Card(
         shape = RoundedCornerShape(16.dp), colors = CardDefaults.cardColors(
             containerColor = colors.cardBackground
@@ -93,7 +97,9 @@ fun ModernSurahText(
                             Font(R.font.noto_medium)
                         ),
                         color = colors.textPrimary, // Синий цвет ссылки
-                    ), modifier = Modifier.padding(start = 6.dp).height(30.dp)
+                    ), modifier = Modifier
+                        .padding(start = 6.dp)
+                        .height(30.dp)
                 )
 
                 //Spacer(modifier = Modifier.height(2.dp))
@@ -110,7 +116,7 @@ fun ModernSurahText(
             }
 
             Text(
-                text = arabicName, style = TextStyle(
+                text = cleanName, style = TextStyle(
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
                     fontFamily = FontFamily.Default, // Подбери арабский шрифт, если нужно
@@ -122,3 +128,9 @@ fun ModernSurahText(
     }
 }
 
+fun stripSurahPrefix(arabicName: String): String {
+    // trim() убирает ведущие/концевые пробелы,
+    // split(..., limit = 2) разбивает на две части: до первого пробела и остаток
+    val parts = arabicName.trim().split("\\s+".toRegex(), limit = 2)
+    return if (parts.size >= 2) parts[1] else arabicName
+}

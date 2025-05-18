@@ -76,7 +76,6 @@ interface AnimatedMenuUiState {
                         onClickSettings = onClickSettings,
                         onClickReciter = onClickReciter,
                         onClickPlay = onClickPlay,
-                        modifier = Modifier.fillMaxWidth()
                     )
                 }
             }

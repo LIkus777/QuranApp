@@ -49,9 +49,9 @@ dependencies {
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.compose.lifecycle.runtime)
     implementation(libs.material)
-    implementation("androidx.compose.material3:material3:1.2.0")
-    implementation("androidx.compose.ui:ui:1.6.0")
-    implementation("androidx.compose.runtime:runtime:1.6.0")
+    implementation(libs.material3)
+    implementation(libs.ui)
+    implementation(libs.androidx.runtime)
 
     // Image Loading
     implementation(libs.coil.compose)

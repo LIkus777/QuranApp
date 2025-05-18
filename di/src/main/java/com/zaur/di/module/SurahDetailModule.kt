@@ -110,7 +110,7 @@ interface SurahDetailModule : ProvideQuranPageRepositopryCloud, ProvideQuranPage
         }
 
         private val quranTextViewModelFactory by lazy {
-            QuranTextViewModelFactory.Base(quranTextUseCase = provideQuranTextUseCaseAqc())
+            QuranTextViewModelFactory.Base(surahDetailStateManager = provideSurahDetailStateManager(), quranTextUseCase = provideQuranTextUseCaseAqc())
         }
 
         private val quranAudioUseCase by lazy {

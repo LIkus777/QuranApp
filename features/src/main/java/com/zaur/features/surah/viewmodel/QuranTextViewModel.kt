@@ -7,8 +7,9 @@ import com.zaur.core.HandleResult
 import com.zaur.domain.al_quran_cloud.models.arabic.ArabicChapter
 import com.zaur.domain.al_quran_cloud.models.chapter.ChapterAqc
 import com.zaur.domain.al_quran_cloud.use_case.QuranTextUseCase
+import com.zaur.features.surah.manager.SurahDetailStateManager
 import com.zaur.features.surah.observables.QuranTextObservable
-import com.zaur.presentation.ui.ui_state.aqc.QuranTextAqcUIState
+import com.zaur.presentation.ui.ui_state.aqc.QuranTextUIState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -34,9 +35,10 @@ interface QuranTextViewModel : QuranTextObservable.Read {
     class Base(
         private val observable: QuranTextObservable.Mutable,
         private val quranTextUseCase: QuranTextUseCase,
+        private val stateManager: SurahDetailStateManager
     ) : BaseViewModel(), QuranTextViewModel {
 
-        override fun textState(): StateFlow<QuranTextAqcUIState.Base> = observable.textState()
+        override fun textState(): StateFlow<QuranTextUIState.Base> = observable.textState()
 
         override fun getFontSizeArabic() = quranTextUseCase.getFontSizeArabic()
 
@@ -71,6 +73,7 @@ interface QuranTextViewModel : QuranTextObservable.Read {
                 result.handle(object : HandleResult<ArabicChapter.Base> {
                     override fun handleSuccess(data: ArabicChapter.Base) {
                         viewModelScope.launch(Dispatchers.Main) {
+                            Log.i("TAG", "getArabicChapter: DATA - $data")
                             observable.update(observable.textState().value.copy(currentArabicText = data))
                         }
                     }
@@ -86,6 +89,7 @@ interface QuranTextViewModel : QuranTextObservable.Read {
                 "TAG", "saveLastReadPosition: chapterNumber $chapterNumber, ayahNumber $ayahNumber"
             )
             quranTextUseCase.saveLastReadAyahPosition(chapterNumber, ayahNumber)
+            stateManager.setAyahInText(ayahNumber)
         }
 
     }

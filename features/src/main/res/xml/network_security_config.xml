@@ -8,8 +8,12 @@
         </trust-anchors>
     </domain-config>
 
-    <!-- HTTP для api.alquran.cloud -->
-    <domain-config cleartextTrafficPermitted="true">
+    <!-- HTTPS для api.alquran.cloud -->
+    <domain-config cleartextTrafficPermitted="false">
         <domain includeSubdomains="true">api.alquran.cloud</domain>
+        <trust-anchors>
+            <certificates src="system" />
+            <certificates src="@raw/apialqurancloud" />
+        </trust-anchors>
     </domain-config>
 </network-security-config>

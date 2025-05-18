@@ -1,5 +1,6 @@
 package com.zaur.features.surah.manager
 
+import android.util.Log
 import com.zaur.features.surah.base.Observable
 import com.zaur.presentation.ui.ui_state.aqc.SurahDetailScreenState
 import kotlinx.coroutines.flow.StateFlow
@@ -40,7 +41,8 @@ interface SurahDetailStateManager : SurahDetailStateObservable.Read {
     fun fontSizeArabic(fontSize: Float)
     fun fontSizeRussian(fontSize: Float)
     fun selectedReciter(reciter: String)
-    fun setAyahInSurahNumber(ayahInSurah: Int)
+    fun setAyahInAudio(ayah: Int)
+    fun setAyahInText(ayah: Int)
     fun setOfflineMode(isOffline: Boolean)
 
     fun clear()
@@ -52,12 +54,16 @@ interface SurahDetailStateManager : SurahDetailStateObservable.Read {
         ),
     ) : Observable.Abstract<SurahDetailScreenState.Base>(initial), SurahDetailStateManager {
 
-        override fun surahDetailState(): StateFlow<SurahDetailScreenState.Base> =
-            observable.surahDetailState()
-        
+        override fun surahDetailState(): StateFlow<SurahDetailScreenState.Base> {
+            val state = observable.surahDetailState()
+            Log.w("TAG", "SurahDetailViewModel: state $state", )
+            return state
+        }
+
         override fun updateState(state: SurahDetailScreenState.Base) {
             observable.update(
                 observable.surahDetailState().value.copy(
+                    textState = state.textState(),
                     audioPlayerState = state.audioPlayerState(),
                     reciterState = state.reciterState(),
                     uiPreferencesState = state.uiPreferencesState(),
@@ -79,7 +85,7 @@ interface SurahDetailStateManager : SurahDetailStateObservable.Read {
         override fun showTextBottomSheet(show: Boolean) {
             observable.update(
                 observable.surahDetailState().value.copy(
-                    bottomSheetState = observable.surahDetailState().value.bottomSheetState.copy(
+                    bottomSheetState = observable.surahDetailState().value.bottomSheetState().copy(
                         showTextBottomSheet = show
                     )
                 )
@@ -89,9 +95,10 @@ interface SurahDetailStateManager : SurahDetailStateObservable.Read {
         override fun showSurahMode(show: Boolean) {
             observable.update(
                 observable.surahDetailState().value.copy(
-                    uiPreferencesState = observable.surahDetailState().value.uiPreferencesState.copy(
-                        showSurahMode = show
-                    )
+                    uiPreferencesState = observable.surahDetailState().value.uiPreferencesState()
+                        .copy(
+                            showSurahMode = show
+                        )
                 )
             )
         }
@@ -99,9 +106,10 @@ interface SurahDetailStateManager : SurahDetailStateObservable.Read {
         override fun showPageMode(show: Boolean) {
             observable.update(
                 observable.surahDetailState().value.copy(
-                    uiPreferencesState = observable.surahDetailState().value.uiPreferencesState.copy(
-                        showPageMode = show
-                    )
+                    uiPreferencesState = observable.surahDetailState().value.uiPreferencesState()
+                        .copy(
+                            showPageMode = show
+                        )
                 )
             )
         }
@@ -109,7 +117,7 @@ interface SurahDetailStateManager : SurahDetailStateObservable.Read {
         override fun showSettingsBottomSheet(show: Boolean) {
             observable.update(
                 observable.surahDetailState().value.copy(
-                    bottomSheetState = observable.surahDetailState().value.bottomSheetState.copy(
+                    bottomSheetState = observable.surahDetailState().value.bottomSheetState().copy(
                         showSettingsBottomSheet = show
                     )
                 )
@@ -119,9 +127,10 @@ interface SurahDetailStateManager : SurahDetailStateObservable.Read {
         override fun showArabic(show: Boolean) {
             observable.update(
                 observable.surahDetailState().value.copy(
-                    uiPreferencesState = observable.surahDetailState().value.uiPreferencesState.copy(
-                        showArabic = show
-                    )
+                    uiPreferencesState = observable.surahDetailState().value.uiPreferencesState()
+                        .copy(
+                            showArabic = show
+                        )
                 )
             )
         }
@@ -129,9 +138,10 @@ interface SurahDetailStateManager : SurahDetailStateObservable.Read {
         override fun showRussian(show: Boolean) {
             observable.update(
                 observable.surahDetailState().value.copy(
-                    uiPreferencesState = observable.surahDetailState().value.uiPreferencesState.copy(
-                        showRussian = show
-                    )
+                    uiPreferencesState = observable.surahDetailState().value.uiPreferencesState()
+                        .copy(
+                            showRussian = show
+                        )
                 )
             )
         }
@@ -139,9 +149,10 @@ interface SurahDetailStateManager : SurahDetailStateObservable.Read {
         override fun fontSizeArabic(fontSize: Float) {
             observable.update(
                 observable.surahDetailState().value.copy(
-                    uiPreferencesState = observable.surahDetailState().value.uiPreferencesState.copy(
-                        fontSizeArabic = fontSize
-                    )
+                    uiPreferencesState = observable.surahDetailState().value.uiPreferencesState()
+                        .copy(
+                            fontSizeArabic = fontSize
+                        )
                 )
             )
         }
@@ -149,9 +160,10 @@ interface SurahDetailStateManager : SurahDetailStateObservable.Read {
         override fun fontSizeRussian(fontSize: Float) {
             observable.update(
                 observable.surahDetailState().value.copy(
-                    uiPreferencesState = observable.surahDetailState().value.uiPreferencesState.copy(
-                        fontSizeRussian = fontSize
-                    )
+                    uiPreferencesState = observable.surahDetailState().value.uiPreferencesState()
+                        .copy(
+                            fontSizeRussian = fontSize
+                        )
                 )
             )
         }
@@ -159,18 +171,28 @@ interface SurahDetailStateManager : SurahDetailStateObservable.Read {
         override fun selectedReciter(reciter: String) {
             observable.update(
                 observable.surahDetailState().value.copy(
-                    reciterState = observable.surahDetailState().value.reciterState.copy(
+                    reciterState = observable.surahDetailState().value.reciterState().copy(
                         currentReciter = reciter
                     )
                 )
             )
         }
 
-        override fun setAyahInSurahNumber(ayahInSurah: Int) {
+        override fun setAyahInAudio(ayahInSurah: Int) {
             observable.update(
                 observable.surahDetailState().value.copy(
-                    audioPlayerState = observable.surahDetailState().value.audioPlayerState.copy(
-                        currentAyahInSurah = ayahInSurah
+                    audioPlayerState = observable.surahDetailState().value.audioPlayerState().copy(
+                        currentAyah = ayahInSurah
+                    )
+                )
+            )
+        }
+
+        override fun setAyahInText(ayah: Int) {
+            observable.update(
+                observable.surahDetailState().value.copy(
+                    textState = observable.surahDetailState().value.textState().copy(
+                        currentAyah = ayah
                     )
                 )
             )
@@ -179,7 +201,7 @@ interface SurahDetailStateManager : SurahDetailStateObservable.Read {
         override fun setOfflineMode(isOffline: Boolean) {
             observable.update(
                 observable.surahDetailState().value.copy(
-                    audioPlayerState = observable.surahDetailState().value.audioPlayerState.copy(
+                    audioPlayerState = observable.surahDetailState().value.audioPlayerState().copy(
                         isOfflineMode = isOffline
                     )
                 )
@@ -190,10 +212,11 @@ interface SurahDetailStateManager : SurahDetailStateObservable.Read {
             val base = SurahDetailScreenState.Base()
             observable.update(
                 observable.surahDetailState().value.copy(
-                    audioPlayerState = base.audioPlayerState,
-                    reciterState = base.reciterState,
-                    uiPreferencesState = base.uiPreferencesState,
-                    bottomSheetState = base.bottomSheetState
+                    textState = base.textState(),
+                    audioPlayerState = base.audioPlayerState(),
+                    reciterState = base.reciterState(),
+                    uiPreferencesState = base.uiPreferencesState(),
+                    bottomSheetState = base.bottomSheetState()
                 )
             )
         }
@@ -201,7 +224,7 @@ interface SurahDetailStateManager : SurahDetailStateObservable.Read {
         override fun showReciterDialog(show: Boolean) {
             observable.update(
                 observable.surahDetailState().value.copy(
-                    reciterState = observable.surahDetailState().value.reciterState.copy(
+                    reciterState = observable.surahDetailState().value.reciterState().copy(
                         showReciterDialog = show
                     )
                 )

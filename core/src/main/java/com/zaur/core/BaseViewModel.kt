@@ -25,8 +25,16 @@ abstract class BaseViewModel(
 
     // Метод для обработки ошибок (можно переопределять в наследниках)
     protected open fun handleError(error: Throwable) {
-        // Логирование или специфическая обработка
-        Log.e("TAG", "handleError: $error")
+        // получаем весь стек в виде строки
+        val trace = error.stackTrace
+            .firstOrNull { it.className.startsWith("com.zaur.quranapp") }
+            ?.let { "${it.className}.${it.methodName}(${it.fileName}:${it.lineNumber})" }
+            ?: "место не определено"
+
+        Log.e("ErrorOrigin",
+            "handleError: ${error::class.java.simpleName} в $trace",
+            error
+        )
     }
 
     // Запуск корутины с обработкой ошибок

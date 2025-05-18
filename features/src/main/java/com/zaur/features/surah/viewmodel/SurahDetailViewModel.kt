@@ -1,5 +1,6 @@
 package com.zaur.features.surah.viewmodel
 
+import android.util.Log
 import com.zaur.core.BaseViewModel
 import com.zaur.features.surah.manager.SurahDetailStateManager
 import com.zaur.presentation.ui.ui_state.aqc.SurahDetailScreenState
@@ -26,7 +27,8 @@ interface SurahDetailViewModel {
     fun fontSizeArabic(fontSize: Float)
     fun fontSizeRussian(fontSize: Float)
     fun selectedReciter(reciter: String)
-    fun setAyahInSurahNumber(ayahInSurah: Int)
+    fun setAyahInAudio(ayahInSurah: Int)
+    fun setAyahInText(ayah: Int)
     fun setOfflineMode(isOffline: Boolean)
 
     fun clear()
@@ -39,7 +41,11 @@ interface SurahDetailViewModel {
             stateManager.updateState(state)
         }
 
-        override fun surahDetailState(): StateFlow<SurahDetailScreenState> = stateManager.surahDetailState()
+        override fun surahDetailState(): StateFlow<SurahDetailScreenState> {
+            val state = stateManager.surahDetailState()
+            Log.w("TAG", "SurahDetailViewModel: state $state", )
+            return state
+        }
 
         override fun setSurahNumber(surahNumber: Int) {
             stateManager.setSurahNumber(surahNumber)
@@ -87,8 +93,12 @@ interface SurahDetailViewModel {
             stateManager.selectedReciter(reciter)
         }
 
-        override fun setAyahInSurahNumber(ayahInSurah: Int) {
-            stateManager.setAyahInSurahNumber(ayahInSurah)
+        override fun setAyahInAudio(ayahInSurah: Int) {
+            stateManager.setAyahInAudio(ayahInSurah)
+        }
+
+        override fun setAyahInText(ayah: Int) {
+            stateManager.setAyahInText(ayah)
         }
 
         override fun setOfflineMode(isOffline: Boolean) {

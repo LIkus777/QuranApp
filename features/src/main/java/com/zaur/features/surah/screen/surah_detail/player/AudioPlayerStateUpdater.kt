@@ -3,9 +3,9 @@ package com.zaur.features.surah.screen.surah_detail.player
 import com.zaur.features.surah.manager.SurahDetailStateManager
 
 /**
-* @author Zaur
-* @since 2025-05-12
-*/
+ * @author Zaur
+ * @since 2025-05-12
+ */
 
 interface AudioPlayerStateUpdater {
 
@@ -14,7 +14,6 @@ interface AudioPlayerStateUpdater {
     fun setPlayWholeChapter(playing: Boolean)
     fun setPlaying(playing: Boolean)
     fun updateCurrentAyah(numberInSurah: Int)
-    fun updateCurrentAyahInSurah(ayah: Int)
     fun setRestartAudio(restart: Boolean, isAudioPlaying: Boolean)
     fun setCurrentAyahAndSurah(ayah: Int, surah: Int)
 
@@ -26,26 +25,17 @@ interface AudioPlayerStateUpdater {
 
         override fun setPlaying(playing: Boolean) {
             surahDetailStateManager.updateState(
-                state.value.copy(audioPlayerState = state.value.audioPlayerState.copy(isAudioPlaying = playing))
+                state.value.copy(
+                    audioPlayerState = state.value.audioPlayerState().copy(isAudioPlaying = playing)
+                )
             )
         }
 
         override fun setRestartAudio(restart: Boolean, isAudioPlaying: Boolean) {
             surahDetailStateManager.updateState(
                 state.value.copy(
-                    audioPlayerState = state.value.audioPlayerState.copy(
-                        restartAudio = restart,
-                        isAudioPlaying = isAudioPlaying
-                    )
-                )
-            )
-        }
-
-        override fun updateCurrentAyahInSurah(ayah: Int) {
-            surahDetailStateManager.updateState(
-                state.value.copy(
-                    audioPlayerState = state.value.audioPlayerState.copy(
-                        currentAyahInSurah = ayah,
+                    audioPlayerState = state.value.audioPlayerState().copy(
+                        restartAudio = restart, isAudioPlaying = isAudioPlaying
                     )
                 )
             )
@@ -54,8 +44,10 @@ interface AudioPlayerStateUpdater {
         override fun updateCurrentAyah(numberInSurah: Int) {
             surahDetailStateManager.updateState(
                 state.value.copy(
-                    audioPlayerState = state.value.audioPlayerState.copy(
-                        currentAyahInSurah = numberInSurah,
+                    textState = state.value.textState().copy(
+                        currentAyah = numberInSurah
+                    ), audioPlayerState = state.value.audioPlayerState().copy(
+                        currentAyah = numberInSurah,
                     )
                 )
             )
@@ -64,7 +56,7 @@ interface AudioPlayerStateUpdater {
         override fun setPlayWholeChapter(playing: Boolean) {
             surahDetailStateManager.updateState(
                 state.value.copy(
-                    audioPlayerState = state.value.audioPlayerState.copy(
+                    audioPlayerState = state.value.audioPlayerState().copy(
                         playWholeChapter = playing
                     )
                 )
@@ -74,7 +66,7 @@ interface AudioPlayerStateUpdater {
         override fun markWholeChapterPlaying(isAudioPlaying: Boolean, playWholeChapter: Boolean) {
             surahDetailStateManager.updateState(
                 state.value.copy(
-                    audioPlayerState = state.value.audioPlayerState.copy(
+                    audioPlayerState = state.value.audioPlayerState().copy(
                         isAudioPlaying = isAudioPlaying, playWholeChapter = playWholeChapter
                     )
                 )
@@ -83,14 +75,16 @@ interface AudioPlayerStateUpdater {
 
         override fun stop() {
             surahDetailStateManager.updateState(
-                state.value.copy(audioPlayerState = state.value.audioPlayerState.copy(isAudioPlaying = false))
+                state.value.copy(
+                    audioPlayerState = state.value.audioPlayerState().copy(isAudioPlaying = false)
+                )
             )
         }
 
         override fun setCurrentAyahAndSurah(ayah: Int, surah: Int) {
             surahDetailStateManager.updateState(
                 state.value.copy(
-                    audioPlayerState = state.value.audioPlayerState.copy(
+                    audioPlayerState = state.value.audioPlayerState().copy(
                         currentSurahNumber = surah, isAudioPlaying = true, playWholeChapter = false
                     )
                 )

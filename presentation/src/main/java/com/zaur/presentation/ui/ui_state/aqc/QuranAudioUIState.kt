@@ -9,7 +9,7 @@ import com.zaur.domain.al_quran_cloud.models.audiofile.VerseAudioAqc
 * @since 2025-05-12
 */
 
-interface QuranAudioAqcUIState {
+interface QuranAudioUIState {
     fun chaptersAudioFile(): ChapterAudioFile
     fun cacheAudios(): List<CacheAudio.Base>
     fun verseAudioFile(): VerseAudioAqc
@@ -18,7 +18,7 @@ interface QuranAudioAqcUIState {
         private val chaptersAudioFile: ChapterAudioFile = ChapterAudioFile.Empty,
         private val cacheAudios: List<CacheAudio.Base> = emptyList(),
         private val verseAudioFile: VerseAudioAqc = VerseAudioAqc.Empty,
-    ) : QuranAudioAqcUIState {
+    ) : QuranAudioUIState {
         override fun chaptersAudioFile() = chaptersAudioFile
         override fun cacheAudios() = cacheAudios
         override fun verseAudioFile() = verseAudioFile

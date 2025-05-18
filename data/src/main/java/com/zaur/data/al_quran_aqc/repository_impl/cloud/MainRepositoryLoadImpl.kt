@@ -2,6 +2,7 @@ package com.zaur.data.al_quran_aqc.repository_impl.cloud
 
 import android.util.Log
 import com.zaur.data.al_quran_aqc.api.QuranApiAqc
+import com.zaur.data.network.retryWithBackoff
 import com.zaur.domain.al_quran_cloud.models.arabic.ArabicChapter
 import com.zaur.domain.al_quran_cloud.models.audiofile.ChapterAudioFile
 import com.zaur.domain.al_quran_cloud.models.audiofile.VerseAudioAqc
@@ -19,13 +20,11 @@ class MainRepositoryLoadImpl(
 ) : MainRepository.Load {
 
     override suspend fun loadChapters(): List<ChapterAqc.Base> =
-        quranApiAqc.getAllChapters().chapters()
+        retryWithBackoff { quranApiAqc.getAllChapters().chapters() }
 
     override suspend fun loadChaptersArabic(chaptersNumbers: IntRange): List<ArabicChapter.Base> {
         return chaptersNumbers.map { chapterNumber ->
-
-            quranApiAqc.getArabicChapter(chapterNumber).arabicChapters()
-
+            retryWithBackoff { quranApiAqc.getArabicChapter(chapterNumber).arabicChapters() }
         }
     }
 
@@ -33,9 +32,8 @@ class MainRepositoryLoadImpl(
         chaptersNumbers: IntRange,
         reciter: String,
     ): List<VerseAudioAqc.Base> {
-        return emptyList<VerseAudioAqc.Base>()/*retryWithBackoff { //TODO
-            quranApiAqc.getAyahAudioByKey()
-        }*/
+        // Пока пусто, если появится реализация — обернуть в retryWithBackoff
+        return emptyList()
     }
 
     override suspend fun loadChaptersAudio(
@@ -44,9 +42,9 @@ class MainRepositoryLoadImpl(
     ): List<ChapterAudioFile.Base> {
         return chaptersNumbers.map { chapterNumber ->
             Log.i("TAG", "Loading chapter: $chapterNumber for reciter: $reciter")
-
-            quranApiAqc.getChapterAudioOfReciter(chapterNumber, reciter).chapterAudio()
-
+            retryWithBackoff {
+                quranApiAqc.getChapterAudioOfReciter(chapterNumber, reciter).chapterAudio()
+            }
         }
     }
 
@@ -56,9 +54,9 @@ class MainRepositoryLoadImpl(
     ): List<TranslationAqc.Base> {
         val result = mutableListOf<TranslationAqc.Base>()
         chaptersNumbers.forEach { chapterNumber ->
-            val item =
+            val item = retryWithBackoff {
                 quranApiAqc.getTranslationForChapter(chapterNumber, translator).translations()
-
+            }
             result.add(item.withTranslator(translator))
         }
         return result

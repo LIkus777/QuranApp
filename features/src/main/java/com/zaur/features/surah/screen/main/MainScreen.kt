@@ -49,7 +49,7 @@ fun MainScreen(
     var showAudioChoiceDialog by rememberSaveable { mutableStateOf(false) }
     var showDownloadScreen by rememberSaveable { mutableStateOf(false) }
 
-    val isDarkTheme = themeViewModel.getIsDarkTheme()
+    val isDarkTheme = themeViewModel.themeState().collectAsState().value.isDarkTheme
     val colors = if (isDarkTheme) DarkThemeColors else LightThemeColors
 
     LaunchedEffect(selectedReciter) {

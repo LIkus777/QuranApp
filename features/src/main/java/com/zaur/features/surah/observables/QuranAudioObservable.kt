@@ -1,8 +1,8 @@
 package com.zaur.features.surah.observables
 
 import com.zaur.features.surah.base.Observable
-import com.zaur.presentation.ui.ui_state.aqc.QuranAudioAqcUIState
-import com.zaur.presentation.ui.ui_state.aqc.QuranAudioAqcUIState.Base
+import com.zaur.presentation.ui.ui_state.aqc.QuranAudioUIState
+import com.zaur.presentation.ui.ui_state.aqc.QuranAudioUIState.Base
 import kotlinx.coroutines.flow.StateFlow
 
 /**
@@ -12,18 +12,18 @@ import kotlinx.coroutines.flow.StateFlow
 
 interface QuranAudioObservable : Observable.Mutable<Base> {
 
-    interface Update : Observable.Update<QuranAudioAqcUIState.Base>
+    interface Update : Observable.Update<QuranAudioUIState.Base>
 
-    interface Read : Observable.Read<QuranAudioAqcUIState.Base> {
-        fun audioState(): StateFlow<QuranAudioAqcUIState.Base>
+    interface Read : Observable.Read<QuranAudioUIState.Base> {
+        fun audioState(): StateFlow<QuranAudioUIState.Base>
     }
 
     interface Mutable : Update, Read
 
     class Base(
-        private val initial: QuranAudioAqcUIState.Base
-    ) : Observable.Abstract<QuranAudioAqcUIState.Base>(initial), Mutable {
-        override fun audioState(): StateFlow<QuranAudioAqcUIState.Base> = state()
+        private val initial: QuranAudioUIState.Base
+    ) : Observable.Abstract<QuranAudioUIState.Base>(initial), Mutable {
+        override fun audioState(): StateFlow<QuranAudioUIState.Base> = state()
     }
 
 }

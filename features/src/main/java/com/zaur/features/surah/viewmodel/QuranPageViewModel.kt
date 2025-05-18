@@ -7,7 +7,7 @@ import com.zaur.core.HandleResult
 import com.zaur.domain.al_quran_cloud.models.page.QuranPage
 import com.zaur.domain.al_quran_cloud.use_case.QuranPageUseCase
 import com.zaur.features.surah.observables.QuranPageObservable
-import com.zaur.presentation.ui.ui_state.aqc.QuranPageAqcUIState
+import com.zaur.presentation.ui.ui_state.aqc.QuranPageUIState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -30,7 +30,7 @@ interface QuranPageViewModel : QuranPageObservable.Read {
         private val quranPageUseCase: QuranPageUseCase,
         private val observable: QuranPageObservable.Mutable,
     ) : BaseViewModel(), QuranPageViewModel {
-        override fun pageState(): StateFlow<QuranPageAqcUIState.Base> = observable.pageState()
+        override fun pageState(): StateFlow<QuranPageUIState.Base> = observable.pageState()
 
         override fun getUthmaniPage(page: Int) {
             viewModelScope.launch(Dispatchers.IO) {
@@ -42,6 +42,10 @@ interface QuranPageViewModel : QuranPageObservable.Read {
                         viewModelScope.launch(Dispatchers.Main) {
                             observable.update(observable.pageState().value.copy(uthmaniPage = data))
                         }
+                    }
+
+                    override fun handleError(e: Exception) {
+                        Log.e("TAG", "handleError: getUthmaniPage  e - $e")
                     }
                 })
             }
@@ -59,6 +63,10 @@ interface QuranPageViewModel : QuranPageObservable.Read {
                             observable.update(observable.pageState().value.copy(translatedPage = data))
                         }
                     }
+
+                    override fun handleError(e: Exception) {
+                        Log.e("TAG", "handleError: getTranslatedPage  e - $e")
+                    }
                 })
             }
         }
@@ -74,8 +82,6 @@ interface QuranPageViewModel : QuranPageObservable.Read {
         override fun saveLastReadPagePosition(pageNumber: Int) {
             Log.i("TAG", "saveLastReadPagePosition: pageNumber $pageNumber")
             quranPageUseCase.saveLastReadPagePosition(pageNumber)
-            getUthmaniPage(pageNumber)
-            getTranslatedPage(pageNumber, "ru.kuliev") //todo
             //todo сделать чтобы с сохранением страницы обновлялся observable getTranslatedPage.
             //todo чтобы арабский и перевод всегда после обновления были свежие, так как обновление вызывается только 1 раз - в SurahDetailEffects
         }

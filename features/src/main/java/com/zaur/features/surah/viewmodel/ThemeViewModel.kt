@@ -14,7 +14,6 @@ import kotlinx.coroutines.flow.StateFlow
 interface ThemeViewModel : ThemeObservable.Read {
 
     fun saveTheme(isDark: Boolean)
-    fun getIsDarkTheme(): Boolean
 
     class Base(
         private val observable: ThemeObservable.Mutable = ThemeObservable.Base(ThemeUIState()),
@@ -23,11 +22,8 @@ interface ThemeViewModel : ThemeObservable.Read {
 
         override fun themeState(): StateFlow<ThemeUIState> = observable.themeState() //todo начать использовать
 
-        override fun getIsDarkTheme(): Boolean {
-            return themeUseCase.getIsDarkTheme()
-        }
-
         override fun saveTheme(isDark: Boolean) {
+            observable.update(themeState().value.copy(isDarkTheme = isDark))
             themeUseCase.saveTheme(isDark)
         }
     }

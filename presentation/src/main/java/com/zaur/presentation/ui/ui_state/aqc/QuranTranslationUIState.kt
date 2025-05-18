@@ -7,7 +7,7 @@ import com.zaur.domain.al_quran_cloud.models.translate.TranslationAqc
 * @since 2025-05-12
 */
 
-interface QuranTranslationAqcUIState {
+interface QuranTranslationUIState {
 
     fun isLoading(): Boolean
     fun translations(): TranslationAqc
@@ -17,7 +17,7 @@ interface QuranTranslationAqcUIState {
         private val isLoading: Boolean = false,
         private val translations: TranslationAqc = TranslationAqc.Empty,
         private val isRefreshing: Boolean = false
-    ) : QuranTranslationAqcUIState {
+    ) : QuranTranslationUIState {
         override fun isLoading() = isLoading
         override fun translations() = translations
         override fun isRefreshing() = isRefreshing

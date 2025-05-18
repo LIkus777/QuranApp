@@ -26,6 +26,11 @@ sealed class Result<T> {
 interface HandleResult<T> {
     fun handleSuccess(data: T)
     fun handleError(e: Exception) {
-        Log.e("TAG", "handleError: $e")
+        // берем первые 3 записи из stackTrace
+        val origins = e.stackTrace
+            .take(30)
+            .joinToString("\n") { "at ${it.className}.${it.methodName}(${it.fileName}:${it.lineNumber})" }
+
+        Log.e("TAG", "handleError: ${e::class.java.simpleName}\n$origins", e)
     }
 }

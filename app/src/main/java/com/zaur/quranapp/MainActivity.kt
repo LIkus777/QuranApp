@@ -7,6 +7,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
@@ -39,9 +40,9 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             val navController = rememberNavController()
-            val isDarkTheme = themeViewModel.getIsDarkTheme()
+            val isDarkTheme = themeViewModel.themeState().collectAsState()
             Log.i("TAGGGG", "AyahItem: isDarkTheme ${isDarkTheme}")
-            QuranAppTheme(darkTheme = isDarkTheme) {
+            QuranAppTheme(darkTheme = isDarkTheme.value.isDarkTheme) {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     QuranNavGraph(navController = navController, mainScreen = { controller ->
                         MainScreen(

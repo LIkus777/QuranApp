@@ -48,7 +48,7 @@ interface ScreenContentViewModel {
 
         override fun fetchSurahMode() { //todo сделать сохранение и вынимание в prefs и пофиксить креш
             val isSurahMode =
-                surahDetailStateManager.surahDetailState().value.uiPreferencesState.showSurahMode() == true
+                surahDetailStateManager.surahDetailState().value.uiPreferencesState().showSurahMode() == true
             if (isSurahMode) {
                 surahModeObservable.update(
                     SurahDetailUiState.SurahModeState

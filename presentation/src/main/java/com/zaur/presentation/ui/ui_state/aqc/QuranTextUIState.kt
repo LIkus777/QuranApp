@@ -8,7 +8,7 @@ import com.zaur.domain.al_quran_cloud.models.chapter.ChapterAqc
 * @since 2025-05-12
 */
 
-interface QuranTextAqcUIState {
+interface QuranTextUIState {
     fun isLoading(): Boolean
     fun chapters(): List<ChapterAqc>
     fun currentChapter(): ChapterAqc
@@ -21,7 +21,7 @@ interface QuranTextAqcUIState {
         private val currentChapter: ChapterAqc = ChapterAqc.Empty,
         private val currentArabicText: ArabicChapter = ArabicChapter.Empty,
         private val isRefreshing: Boolean = false
-    ) : QuranTextAqcUIState {
+    ) : QuranTextUIState {
         override fun isLoading() = isLoading
         override fun chapters() = chapters
         override fun currentChapter() = currentChapter

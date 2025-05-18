@@ -48,7 +48,7 @@ interface ArabicChapter {
 
     fun <T> map(mapper: Mapper<T>): T
 
-    class Base(
+    data class Base(
         @SerializedName("number") private val number: Long,
         @SerializedName("name") private val name: String,
         @SerializedName("englishName") private val englishName: String,

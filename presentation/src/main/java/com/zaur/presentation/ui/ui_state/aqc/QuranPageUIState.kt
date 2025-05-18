@@ -1,7 +1,6 @@
 package com.zaur.presentation.ui.ui_state.aqc
 
 import com.zaur.domain.al_quran_cloud.models.page.QuranPage
-import com.zaur.domain.al_quran_cloud.models.page.QuranPageAqc
 
 
 /**
@@ -9,7 +8,7 @@ import com.zaur.domain.al_quran_cloud.models.page.QuranPageAqc
  * @since 14.05.2025
  */
 
-interface QuranPageAqcUIState {
+interface QuranPageUIState {
 
     fun uthmaniPage(): QuranPage
     fun translatedPage(): QuranPage
@@ -17,7 +16,7 @@ interface QuranPageAqcUIState {
     data class Base(
         private val uthmaniPage: QuranPage = QuranPage.Empty,
         private val translatedPage: QuranPage = QuranPage.Empty,
-    ) : QuranPageAqcUIState {
+    ) : QuranPageUIState {
         override fun uthmaniPage(): QuranPage = uthmaniPage
         override fun translatedPage(): QuranPage = translatedPage
     }

@@ -1,13 +1,14 @@
 package com.zaur.features.surah.screen.surah_detail
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.navigation.NavHostController
-import com.zaur.presentation.ui.ui_state.aqc.QuranAudioAqcUIState
-import com.zaur.presentation.ui.ui_state.aqc.QuranPageAqcUIState
-import com.zaur.presentation.ui.ui_state.aqc.QuranTextAqcUIState
-import com.zaur.presentation.ui.ui_state.aqc.QuranTranslationAqcUIState
+import com.zaur.presentation.ui.ui_state.aqc.QuranAudioUIState
+import com.zaur.presentation.ui.ui_state.aqc.QuranPageUIState
+import com.zaur.presentation.ui.ui_state.aqc.QuranTextUIState
+import com.zaur.presentation.ui.ui_state.aqc.QuranTranslationUIState
 import com.zaur.presentation.ui.ui_state.aqc.SurahDetailScreenState
 import com.zaur.presentation.ui.ui_state.offline.OfflineUIState
 import com.zaur.features.surah.viewmodel.OfflineViewModel
@@ -27,21 +28,21 @@ import com.zaur.features.surah.viewmodel.ThemeViewModel
 
 interface SurahDetailUiData {
     fun offlineState(): OfflineUIState
-    fun textState(): QuranTextAqcUIState
-    fun audioState(): QuranAudioAqcUIState
-    fun translateState(): QuranTranslationAqcUIState
+    fun textState(): QuranTextUIState
+    fun audioState(): QuranAudioUIState
+    fun translateState(): QuranTranslationUIState
     fun surahDetailState(): SurahDetailScreenState
-    fun pageState(): QuranPageAqcUIState
+    fun pageState(): QuranPageUIState
     fun isDarkTheme(): Boolean
     fun isSurahMode(): Boolean
 
     data class Base(
         private val offlineState: OfflineUIState,
-        private val textState: QuranTextAqcUIState,
-        private val audioState: QuranAudioAqcUIState,
-        private val translateState: QuranTranslationAqcUIState,
+        private val textState: QuranTextUIState,
+        private val audioState: QuranAudioUIState,
+        private val translateState: QuranTranslationUIState,
         private val surahDetailState: SurahDetailScreenState,
-        private val pageState: QuranPageAqcUIState,
+        private val pageState: QuranPageUIState,
         private val isDarkTheme: Boolean,
         private val isSurahMode: Boolean,
     ) : SurahDetailUiData {
@@ -102,10 +103,12 @@ fun rememberSurahDetailUiData(
     val audioState by deps.quranAudioViewModel().audioState().collectAsState()
     val translateState by deps.quranTranslationViewModel().translationState().collectAsState()
     val surahDetailState by deps.surahDetailViewModel().surahDetailState().collectAsState()
+    Log.w("TAG", "rememberSurahDetailUiData: surahDetailState $surahDetailState")
     val pageState by deps.quranPageViewModel().pageState().collectAsState()
-    val isDarkTheme = deps.themeViewModel().getIsDarkTheme()
+    val isDarkTheme = deps.themeViewModel().themeState().collectAsState().value.isDarkTheme
     val isSurahMode = surahDetailState.uiPreferencesState().showSurahMode()
     deps.surahDetailViewModel().setSurahNumber(chapterNumber)
+    deps.surahDetailViewModel().setAyahInText(deps.quranTextViewModel().getLastReadAyahPosition().second)
     deps.surahDetailViewModel().setOfflineMode(offlineState.isOffline())
     deps.surahDetailViewModel().fontSizeArabic(deps.quranTextViewModel().getFontSizeArabic())
     deps.surahDetailViewModel().fontSizeRussian(deps.quranTextViewModel().getFontSizeRussian())

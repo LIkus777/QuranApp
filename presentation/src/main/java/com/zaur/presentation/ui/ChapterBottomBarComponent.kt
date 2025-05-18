@@ -10,7 +10,6 @@ import androidx.compose.ui.Modifier
 
 @Composable
 fun ChapterBottomBarComponent(
-    modifier: Modifier,
     colors: QuranColors,
     isPlaying: Boolean,
     onClickSettings: () -> Unit,
@@ -18,7 +17,6 @@ fun ChapterBottomBarComponent(
     onClickPlay: () -> Unit
 ) {
     ChapterBottomBar(
-        modifier = modifier,
         colors = colors,
         isPlaying = isPlaying,
         showReciterDialog = onClickReciter,

@@ -28,7 +28,7 @@ import com.zaur.features.surah.fakes.FakeQTextRLocal
 import com.zaur.features.surah.fakes.FakeQuranStorage
 import com.zaur.features.surah.fakes.FakeThemeStorage
 import com.zaur.features.surah.observables.SurahChooseObservable
-import com.zaur.presentation.ui.ui_state.aqc.QuranTextAqcUIState
+import com.zaur.presentation.ui.ui_state.aqc.QuranTextUIState
 import com.zaur.features.surah.viewmodel.SurahChooseViewModel
 import com.zaur.features.surah.viewmodel.ThemeViewModel
 import com.zaur.navigation.Screen
@@ -49,7 +49,7 @@ fun SurahChooseScreen(
     navController: NavController,
 ) {
 
-    val isDarkTheme = themeViewModel.getIsDarkTheme()
+    val isDarkTheme = themeViewModel.themeState().collectAsState().value.isDarkTheme
     val colors = if (isDarkTheme) DarkThemeColors else LightThemeColors
 
     LaunchedEffect(surahChooseViewModel) {
@@ -104,7 +104,7 @@ fun SurahChoosePreview() {
                     themeUseCase = ThemeUseCase(FakeThemeStorage())
                 ), surahChooseViewModel = SurahChooseViewModel.Base(
                     observable = SurahChooseObservable.Base(
-                        QuranTextAqcUIState.Base()
+                        QuranTextUIState.Base()
                     ), quranTextUseCase = QuranTextUseCase.Base(
                         FakeQuranStorage(),
                         FakeOfflineRepos(),

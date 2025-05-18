@@ -9,7 +9,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.zaur.domain.al_quran_cloud.models.arabic.Ayah
 import com.zaur.presentation.ui.AyaColumn
-import com.zaur.presentation.ui.ui_state.aqc.QuranPageAqcUIState
+import com.zaur.presentation.ui.ui_state.aqc.QuranPageUIState
 import com.zaur.presentation.ui.ui_state.aqc.SurahDetailScreenState
 import com.zaur.presentation.ui.QuranColors
 import com.zaur.presentation.ui.SurahPageScreen
@@ -42,7 +42,7 @@ interface SurahDetailUiState {
 
     @Composable
     fun RenderPageMode(
-        pageState: QuranPageAqcUIState,
+        pageState: QuranPageUIState,
         surahDetailState: SurahDetailScreenState,
         isDarkTheme: Boolean,
         colors: QuranColors,
@@ -64,7 +64,7 @@ interface SurahDetailUiState {
             onAyahItemChanged: (Int) -> Unit,
             onPageItemChanged: (Int) -> Unit,
             onClickSound: (Int, Int) -> Unit,
-            translations: List<com.zaur.domain.al_quran_cloud.models.translate.Ayah.Base>,
+            translations: List<com.zaur.domain.al_quran_cloud.models.translate.Ayah.Base>
         ) {
             AyaColumn(
                 state = state,
@@ -85,7 +85,7 @@ interface SurahDetailUiState {
     object PageModeState : SurahDetailUiState {
         @Composable
         override fun RenderPageMode(
-            pageState: QuranPageAqcUIState,
+            pageState: QuranPageUIState,
             surahDetailState: SurahDetailScreenState,
             isDarkTheme: Boolean,
             colors: QuranColors,

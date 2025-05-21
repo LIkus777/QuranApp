@@ -1,7 +1,5 @@
 package com.zaur.presentation.ui.ui_state.aqc
 
-import com.zaur.presentation.ui.ui_state.aqc.AudioPlayerState.Base
-
 /**
  * @author Zaur
  * @since 2025-05-12
@@ -18,7 +16,7 @@ interface SurahDetailScreenState {
     data class Base(
         private val textState: TextState.Base = TextState.Base(),
         private val audioPlayerState: AudioPlayerState.Base = AudioPlayerState.Base(),
-        private val reciterState: ReciterState.Base = ReciterState.Base(""),
+        private val reciterState: ReciterState.Base = ReciterState.Base("", ""),
         private val uiPreferencesState: UiPreferencesState.Base = UiPreferencesState.Base(),
         private val bottomSheetState: BottomSheetState.Base = BottomSheetState.Base(),
     ) : SurahDetailScreenState {
@@ -114,18 +112,21 @@ interface UiPreferencesState {
 
 interface ReciterState {
     fun currentReciter(): String
+    fun currentReciterName(): String
     fun showReciterDialog(): Boolean
 
     data class Base(
         private val currentReciter: String,
+        private val currentReciterName: String,
         private val showReciterDialog: Boolean = false,
     ) : ReciterState {
-        override fun currentReciter() = currentReciter
+        override fun currentReciter(): String = currentReciter
+        override fun currentReciterName() = currentReciterName
         override fun showReciterDialog() = showReciterDialog
     }
 
     companion object {
-        val Empty = Base(currentReciter = "")
+        val Empty = Base(currentReciter = "", currentReciterName = "")
     }
 }
 

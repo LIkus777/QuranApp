@@ -11,11 +11,22 @@ import com.zaur.domain.al_quran_cloud.models.edition.Types
 
 interface EditionRepository {
 
-    suspend fun getAllTypes(): Types
-    suspend fun getAllEditions(): Editions
-    suspend fun getAllLanguages(): Languages
-    suspend fun getEditionByType(type: String): Editions
-    suspend fun getEditionByLanguage(language: String): Editions
-    suspend fun getEditionByParam(format: String, language: String, type: String): Editions
+    interface Local {
+        suspend fun getAllTypes(): Types.Base
+        suspend fun getAllEditions(): Editions.Base
+        suspend fun getAllLanguages(): Languages.Base
+        suspend fun getEditionByType(type: String): Editions.Base
+        suspend fun getEditionByLanguage(language: String): Editions.Base
+        suspend fun getEditionByParam(format: String, language: String, type: String): Editions.Base
 
+    }
+
+    interface Cloud {
+        suspend fun getAllTypes(): Types.Base
+        suspend fun getAllEditions(): Editions.Base
+        suspend fun getAllLanguages(): Languages.Base
+        suspend fun getEditionByType(type: String): Editions.Base
+        suspend fun getEditionByLanguage(language: String): Editions.Base
+        suspend fun getEditionByParam(format: String, language: String, type: String): Editions.Base
+    }
 }

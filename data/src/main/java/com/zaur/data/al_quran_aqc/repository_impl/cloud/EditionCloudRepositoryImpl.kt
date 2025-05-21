@@ -14,24 +14,24 @@ import com.zaur.domain.al_quran_cloud.repository.EditionRepository
 
 class EditionCloudRepositoryImpl(
     private val quranApiAqc: QuranApiAqc,
-) : EditionRepository {
-    override suspend fun getAllTypes(): Types = retryWithBackoff { quranApiAqc.getAllTypes() }
+) : EditionRepository.Cloud {
+    override suspend fun getAllTypes(): Types.Base = retryWithBackoff { quranApiAqc.getAllTypes() }
 
-    override suspend fun getAllEditions(): Editions =
+    override suspend fun getAllEditions(): Editions.Base =
         retryWithBackoff { quranApiAqc.getAllEditions() }
 
-    override suspend fun getAllLanguages(): Languages =
+    override suspend fun getAllLanguages(): Languages.Base =
         retryWithBackoff { quranApiAqc.getAllLanguages() }
 
-    override suspend fun getEditionByType(type: String): Editions =
+    override suspend fun getEditionByType(type: String): Editions.Base =
         retryWithBackoff { quranApiAqc.getEditionByType(type) }
 
-    override suspend fun getEditionByLanguage(language: String): Editions =
+    override suspend fun getEditionByLanguage(language: String): Editions.Base =
         retryWithBackoff { quranApiAqc.getEditionByLanguage(language) }
 
     override suspend fun getEditionByParam(
         format: String,
         language: String,
         type: String,
-    ): Editions = retryWithBackoff { quranApiAqc.getEditionByParam(format, language, type) }
+    ): Editions.Base = retryWithBackoff { quranApiAqc.getEditionByParam(format, language, type) }
 }

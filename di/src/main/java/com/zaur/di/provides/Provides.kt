@@ -22,12 +22,14 @@ import com.zaur.data.room.models.mappers.chapter.ChapterMapper
 import com.zaur.data.room.models.mappers.translate.EditionTranslationMapper
 import com.zaur.data.room.models.mappers.translate.TranslationAyahMapper
 import com.zaur.data.room.models.mappers.translate.TranslationMapper
+import com.zaur.domain.al_quran_cloud.repository.EditionRepository
 import com.zaur.domain.al_quran_cloud.repository.MainRepository
 import com.zaur.domain.al_quran_cloud.repository.OfflineRepository
 import com.zaur.domain.al_quran_cloud.repository.QuranAudioRepository
 import com.zaur.domain.al_quran_cloud.repository.QuranPageRepository
 import com.zaur.domain.al_quran_cloud.repository.QuranTextRepository
 import com.zaur.domain.al_quran_cloud.repository.QuranTranslationRepository
+import com.zaur.domain.al_quran_cloud.use_case.EditionUseCase
 import com.zaur.domain.al_quran_cloud.use_case.MainUseCase
 import com.zaur.domain.al_quran_cloud.use_case.OfflineUseCase
 import com.zaur.domain.al_quran_cloud.use_case.QuranAudioUseCase
@@ -47,6 +49,7 @@ import com.zaur.features.surah.screen.surah_detail.player.AudioPlayerStateUpdate
 import com.zaur.features.surah.screen.surah_detail.player.PlaylistBuilder
 import com.zaur.features.surah.screen.surah_detail.player.SurahPlayer
 import com.zaur.features.surah.viewmodel.SurahDetailViewModel
+import com.zaur.features.surah.viewmodel.factory.EditionViewModelFactory
 import com.zaur.features.surah.viewmodel.factory.QuranAudioViewModelFactory
 import com.zaur.features.surah.viewmodel.factory.QuranPageViewModelFactory
 import com.zaur.features.surah.viewmodel.factory.QuranTextViewModelFactory
@@ -55,9 +58,9 @@ import com.zaur.features.surah.viewmodel.factory.ScreenContentViewModelFactory
 import com.zaur.features.surah.viewmodel.factory.SurahChooseViewModelFactory
 
 /**
-* @author Zaur
-* @since 2025-05-12
-*/
+ * @author Zaur
+ * @since 2025-05-12
+ */
 
 interface ProvideChapterAudioMapper {
     fun provideChapterAudioMapper(): ChapterAudioMapper
@@ -123,6 +126,10 @@ interface ProvideQuranPageRepositopryLocal {
     fun provideQuranPageRepositoryLocal(): QuranPageRepository.Local
 }
 
+interface ProvideEditionUseCase {
+    fun provideEditionUseCase(): EditionUseCase
+}
+
 interface ProvidePageUseCase {
     fun providePageUseCase(): QuranPageUseCase
 }
@@ -133,6 +140,10 @@ interface ProvideQuranPageViewModelFactory {
 
 interface ProvideQuranTextViewModelFactory {
     fun provideQuranTextViewModelFactory(): QuranTextViewModelFactory
+}
+
+interface ProvideEditionViewModelFactory {
+    fun provideEditionViewModelFactory(): EditionViewModelFactory
 }
 
 interface ProvideQuranAudioViewModelFactory {
@@ -247,46 +258,54 @@ interface ProvideMainUseCase {
     fun provideMainUseCase(): MainUseCase
 }
 
-interface ProvideQuranAudioUseCaseAqc {
-    fun provideQuranAudioUseCaseAqc(): QuranAudioUseCase
+interface ProvideQuranAudioUseCase {
+    fun provideQuranAudioUseCase(): QuranAudioUseCase
 }
 
-interface ProvideQuranTextUseCaseAqc {
-    fun provideQuranTextUseCaseAqc(): QuranTextUseCase
+interface ProvideQuranTextUseCase {
+    fun provideQuranTextUseCase(): QuranTextUseCase
 }
 
-interface ProvideQuranTranslationUseCaseAqc {
-    fun provideQuranTranslationUseCaseAqc(): QuranTranslationUseCase
+interface ProvideQuranTranslationUseCase {
+    fun provideQuranTranslationUseCase(): QuranTranslationUseCase
 }
 
 interface ProvideQuranApiAqc {
     fun provideQuranApiAqc(): QuranApiAqc
 }
 
-interface ProvideQuranAudioRepositoryAqcCloud {
-    fun provideQuranAudioRepositoryAqcCloud(): QuranAudioRepository.Cloud
+interface ProvideEditionRepositoryCloud {
+    fun provideEditionRepositoryCloud(): EditionRepository.Cloud
 }
 
-interface ProvideQuranAudioRepositoryAqcLocal {
-    fun provideQuranAudioRepositoryAqcLocal(): QuranAudioRepository.Local
+interface ProvideEditionRepositoryLocal {
+    fun provideEditionRepositoryLocal(): EditionRepository.Local
+}
+
+interface ProvideQuranAudioRepositoryCloud {
+    fun provideQuranAudioRepositoryCloud(): QuranAudioRepository.Cloud
+}
+
+interface ProvideQuranAudioRepositoryLocal {
+    fun provideQuranAudioRepositoryLocal(): QuranAudioRepository.Local
 }
 
 interface ProvideOfflineRepository {
     fun provideOfflineRepository(): OfflineRepository
 }
 
-interface ProvideQuranTextRepositoryAqcLocal {
-    fun provideQuranTextRepositoryAqcLocal(): QuranTextRepository.Local
+interface ProvideQuranTextRepositoryLocal {
+    fun provideQuranTextRepositoryLocal(): QuranTextRepository.Local
 }
 
-interface ProvideQuranTextRepositoryAqcCloud {
-    fun provideQuranTextRepositoryAqcCloud(): QuranTextRepository.Cloud
+interface ProvideQuranTextRepositoryCloud {
+    fun provideQuranTextRepositoryCloud(): QuranTextRepository.Cloud
 }
 
-interface ProvideQuranTranslationRepositoryAqcLocal {
-    fun provideQuranTranslationRepositoryAqcLocal(): QuranTranslationRepository.Local
+interface ProvideQuranTranslationRepositoryLocal {
+    fun provideQuranTranslationRepositoryLocal(): QuranTranslationRepository.Local
 }
 
-interface ProvideQuranTranslationRepositoryAqcCloud {
-    fun provideQuranTranslationRepositoryAqcCloud(): QuranTranslationRepository.Cloud
+interface ProvideQuranTranslationRepositoryCloud {
+    fun provideQuranTranslationRepositoryCloud(): QuranTranslationRepository.Cloud
 }

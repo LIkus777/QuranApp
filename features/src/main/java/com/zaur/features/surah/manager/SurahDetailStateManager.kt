@@ -40,7 +40,7 @@ interface SurahDetailStateManager : SurahDetailStateObservable.Read {
     fun showRussian(show: Boolean)
     fun fontSizeArabic(fontSize: Float)
     fun fontSizeRussian(fontSize: Float)
-    fun selectedReciter(reciter: String)
+    fun selectedReciter(reciter: String, reciterName: String)
     fun setAyahInAudio(ayah: Int)
     fun setAyahInText(ayah: Int)
     fun setOfflineMode(isOffline: Boolean)
@@ -168,11 +168,12 @@ interface SurahDetailStateManager : SurahDetailStateObservable.Read {
             )
         }
 
-        override fun selectedReciter(reciter: String) {
+        override fun selectedReciter(reciter: String, reciterName: String) {
             observable.update(
                 observable.surahDetailState().value.copy(
                     reciterState = observable.surahDetailState().value.reciterState().copy(
-                        currentReciter = reciter
+                        currentReciter = reciter,
+                        currentReciterName = reciterName
                     )
                 )
             )

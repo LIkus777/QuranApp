@@ -5,11 +5,12 @@ import com.zaur.domain.al_quran_cloud.models.audiofile.ChapterAudioFile
 import com.zaur.domain.al_quran_cloud.models.audiofile.VerseAudioAqc
 
 /**
-* @author Zaur
-* @since 2025-05-12
-*/
+ * @author Zaur
+ * @since 2025-05-12
+ */
 
 interface QuranAudioUIState {
+
     fun chaptersAudioFile(): ChapterAudioFile
     fun cacheAudios(): List<CacheAudio.Base>
     fun verseAudioFile(): VerseAudioAqc
@@ -23,4 +24,5 @@ interface QuranAudioUIState {
         override fun cacheAudios() = cacheAudios
         override fun verseAudioFile() = verseAudioFile
     }
+
 }

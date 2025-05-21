@@ -4,7 +4,9 @@ import android.net.Uri
 import android.util.Log
 import androidx.media3.common.MediaItem
 import com.zaur.data.downloader.AudioDownloader
+import com.zaur.presentation.ui.ui_state.aqc.SurahDetailScreenState
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.withContext
 import java.io.File
 
@@ -23,6 +25,7 @@ interface PlaylistBuilder {
     suspend fun buildCachePlaylistAsync(ayahs: CacheAyahList): List<MediaItem>
 
     data class Base(
+        private val surahDetailScreenState: StateFlow<SurahDetailScreenState.Base>,
         private val audioDownloader: AudioDownloader,
     ) : PlaylistBuilder {
         override suspend fun buildLocalPlaylistAsync(
@@ -33,7 +36,9 @@ interface PlaylistBuilder {
 
             for (ayah in ayahs.getList()) {
                 val file = audioDownloader.getAudioFile(
-                    surahNumber.toLong(), ayah.numberInSurah().toLong(), "ar.alafasy"
+                    surahNumber.toLong(),
+                    ayah.numberInSurah().toLong(),
+                    surahDetailScreenState.value.reciterState().currentReciter()
                 )
 
                 if (file != null) {

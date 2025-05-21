@@ -12,24 +12,24 @@ import com.zaur.domain.al_quran_cloud.repository.EditionRepository
 
 class EditionLocalRepositoryImpl(
 
-) : EditionRepository {
-    override suspend fun getAllTypes(): Types {
+) : EditionRepository.Local {
+    override suspend fun getAllTypes(): Types.Base {
         TODO("Not yet implemented")
     }
 
-    override suspend fun getAllEditions(): Editions {
+    override suspend fun getAllEditions(): Editions.Base {
         TODO("Not yet implemented")
     }
 
-    override suspend fun getAllLanguages(): Languages {
+    override suspend fun getAllLanguages(): Languages.Base {
         TODO("Not yet implemented")
     }
 
-    override suspend fun getEditionByType(type: String): Editions {
+    override suspend fun getEditionByType(type: String): Editions.Base {
         TODO("Not yet implemented")
     }
 
-    override suspend fun getEditionByLanguage(language: String): Editions {
+    override suspend fun getEditionByLanguage(language: String): Editions.Base {
         TODO("Not yet implemented")
     }
 
@@ -37,7 +37,7 @@ class EditionLocalRepositoryImpl(
         format: String,
         language: String,
         type: String,
-    ): Editions {
+    ): Editions.Base {
         TODO("Not yet implemented")
     }
 }

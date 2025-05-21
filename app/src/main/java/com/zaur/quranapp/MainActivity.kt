@@ -1,5 +1,6 @@
 package com.zaur.quranapp
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -11,6 +12,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
+import com.unity3d.player.UnityPlayerGameActivity
 import com.zaur.features.surah.screen.main.MainScreen
 import com.zaur.features.surah.screen.surah_choose.SurahChooseScreen
 import com.zaur.features.surah.screen.surah_detail.SurahDetailDependencies
@@ -22,9 +24,9 @@ import com.zaur.navigation.QuranNavGraph
 import com.zaur.presentation.ui.QuranAppTheme
 
 /**
-* @author Zaur
-* @since 2025-05-12
-*/
+ * @author Zaur
+ * @since 2025-05-12
+ */
 
 class MainActivity : ComponentActivity() {
 
@@ -38,6 +40,8 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+       /* val intent = Intent(this, UnityPlayerGameActivity::class.java)
+        startActivity(intent)*/
         setContent {
             val navController = rememberNavController()
             val isDarkTheme = themeViewModel.themeState().collectAsState()
@@ -55,7 +59,9 @@ class MainActivity : ComponentActivity() {
                         )
                     }, surahChooseScreen = { controller ->
                         val surahDetailModule = remember { di.provideSurahDetailModule() }
-                        val surahChooseViewModel = remember { surahDetailModule.provideSurahChooseViewModelFactory().create() }
+                        val surahChooseViewModel = remember {
+                            surahDetailModule.provideSurahChooseViewModelFactory().create()
+                        }
                         SurahChooseScreen(
                             themeViewModel,
                             surahChooseViewModel,
@@ -85,9 +91,7 @@ class MainActivity : ComponentActivity() {
                         )
 
                         SurahDetailScreen(
-                            surahName,
-                            surahNumber,
-                            deps
+                            surahName, surahNumber, deps
                         )
                     })
                 }

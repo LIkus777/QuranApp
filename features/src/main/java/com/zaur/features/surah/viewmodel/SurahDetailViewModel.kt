@@ -26,7 +26,7 @@ interface SurahDetailViewModel {
     fun showRussian(show: Boolean)
     fun fontSizeArabic(fontSize: Float)
     fun fontSizeRussian(fontSize: Float)
-    fun selectedReciter(reciter: String)
+    fun selectedReciter(reciter: String, reciterName: String)
     fun setAyahInAudio(ayahInSurah: Int)
     fun setAyahInText(ayah: Int)
     fun setOfflineMode(isOffline: Boolean)
@@ -89,8 +89,8 @@ interface SurahDetailViewModel {
             stateManager.fontSizeRussian(fontSize)
         }
 
-        override fun selectedReciter(reciter: String) {
-            stateManager.selectedReciter(reciter)
+        override fun selectedReciter(reciter: String, reciterName: String) {
+            stateManager.selectedReciter(reciter, reciterName)
         }
 
         override fun setAyahInAudio(ayahInSurah: Int) {

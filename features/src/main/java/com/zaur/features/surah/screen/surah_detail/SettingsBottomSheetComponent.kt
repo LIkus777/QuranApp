@@ -18,7 +18,7 @@ fun SettingsBottomSheetComponent(
         SettingsBottomSheet(
             showSheet = true,
             colors = colors,
-            selectedReciter = state.reciterState().currentReciter(),
+            selectedReciter = state.reciterState().currentReciterName(),
             showReciterDialog = { viewModel.showReciterDialog(it) },
             showArabic = state.uiPreferencesState().showArabic(),
             onShowArabicChange = { viewModel.showArabic(it) },

@@ -101,8 +101,11 @@ interface SurahDetailEffectHandler {
             LaunchedEffect(chapterNumber) {
                 Log.i("TAG", "SurahDetailEffects: CALLED LaunchedEffect(chapterNumber)")
 
-                val reciter = quranAudio.getReciter() ?: throw IllegalStateException("Нету ресайтера")
-                surahDetail.selectedReciter(reciter)
+                val reciter =
+                    quranAudio.getReciter() ?: throw IllegalStateException("Нету ресайтера")
+                val reciterName = quranAudio.getReciterName()
+                    ?: throw IllegalStateException("Нету ресайтера name")
+                surahDetail.selectedReciter(reciter, reciterName)
                 if (reciter.isNullOrEmpty()) {
                     surahDetail.showReciterDialog(true)
                 }

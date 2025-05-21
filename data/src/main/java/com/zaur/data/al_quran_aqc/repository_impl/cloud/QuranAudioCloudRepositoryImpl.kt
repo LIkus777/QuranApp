@@ -45,7 +45,7 @@ class QuranAudioCloudRepositoryImpl(
                 async(Dispatchers.IO) {
                     semaphore.withPermit {
                         val file = audioDownloader.downloadToCache(
-                            audioUrl, "surah_${chapterNumber}_${ayah.numberInSurah()}.mp3"
+                            audioUrl, "surah_${chapterNumber}_${ayah.numberInSurah()}_${reciter}.mp3"
                         )
                         CacheAudio.Base(
                             chapterNumber = chapterNumber,

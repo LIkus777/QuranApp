@@ -42,6 +42,17 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = libs.versions.activityCompose.toString()
     }
+
+    android {
+        sourceSets {
+            getByName("main") {
+                jniLibs.srcDirs(
+                    "src/main/jniLibs",
+                    "../unityLibrary/src/main/jniLibs"
+                )
+            }
+        }
+    }
 }
 
 dependencies {
@@ -61,6 +72,8 @@ dependencies {
     implementation("androidx.compose.material3:material3:1.2.0")
     implementation("androidx.compose.ui:ui:1.6.0")
     implementation("androidx.compose.runtime:runtime:1.6.0")
+    implementation(files("C:\\Users\\zm393\\Masjid\\android\\unityLibrary\\libs\\classes.jar"))
+    implementation(files("C:\\Users\\zm393\\Masjid\\android\\unityLibrary\\libs\\unity-classes.jar"))
 
     // Debugging tools
     debugImplementation(libs.androidx.ui.tooling)
@@ -79,6 +92,10 @@ dependencies {
     debugImplementation (libs.leakcanary.android)
     //releaseImplementation (libs.leakcanary.android.no.op)
 
+    /*implementation (files("libs/classes.jar"))
+    implementation (files("libs/unity-classes.jar"))*/
+
+    implementation(project(":unityLibrary"))
     implementation(project(":di"))
     implementation(project(":core"))
     implementation(project(":data"))

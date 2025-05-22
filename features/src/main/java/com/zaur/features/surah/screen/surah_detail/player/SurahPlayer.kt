@@ -1,21 +1,12 @@
 package com.zaur.features.surah.screen.surah_detail.player
 
-
 import android.util.Log
-import androidx.media3.common.MediaItem
 import com.zaur.domain.al_quran_cloud.models.audiofile.Ayah
 import com.zaur.domain.al_quran_cloud.models.audiofile.CacheAudio
 import com.zaur.domain.al_quran_cloud.models.audiofile.VerseAudioAqc
 import com.zaur.features.surah.base.AudioPlayer
 import com.zaur.features.surah.base.AudioPlayerCallback
 import com.zaur.features.surah.manager.SurahDetailStateManager
-import com.zaur.features.surah.screen.surah_detail.player.AyahList.EmptyAyahList
-import com.zaur.features.surah.screen.surah_detail.player.AyahList.RealAyahList
-import com.zaur.features.surah.screen.surah_detail.player.CacheAyahList.EmptyCacheAyahList
-import com.zaur.features.surah.screen.surah_detail.player.CacheAyahList.RealCacheAyahList
-import com.zaur.features.surah.screen.surah_detail.player.PlayerCommand.PauseCommand
-import com.zaur.features.surah.screen.surah_detail.player.PlayerCommand.PlayWholeChapterCommand
-import com.zaur.features.surah.screen.surah_detail.player.PlayerCommand.ResumeCommand
 import com.zaur.features.surah.viewmodel.QuranAudioViewModel
 
 /**
@@ -26,10 +17,14 @@ import com.zaur.features.surah.viewmodel.QuranAudioViewModel
 // Интерфейс для управления плеером
 interface SurahPlayer {
 
+    fun onNextAyahClicked()
+    fun onNextSurahClicked()
+    fun onPreviousAyahClicked()
+    fun onPreviousSurahClicked()
+
     fun onPlayVerse(verse: VerseAudioAqc)
     fun onPlayWholeClicked()
     fun onPlaySingleClicked(ayahNumber: Int, surahNumber: Int)
-    fun onAudioEnded()
     fun onPauseClicked()
     fun onStopClicked()
 
@@ -49,126 +44,124 @@ interface SurahPlayer {
         private val surahDetailStateManager: SurahDetailStateManager, // Менеджер состояния плеера
     ) : SurahPlayer {
 
-        private var localMediaItems: List<MediaItem> = emptyList()
-        private var cacheMediaItems: List<MediaItem> = emptyList()
         private var quranAudioVmCallback: QuranAudioViewModel.QuranAudioVmCallback? = null
-        private var ayahs: AyahList = EmptyAyahList
-        private var cacheAyahs: CacheAyahList = EmptyCacheAyahList
-        private var currentAyahIndex = 0
 
         private val state = surahDetailStateManager.surahDetailState()
+        private val playlistManager = PlaylistManager.Base(playlistBuilder, surahDetailStateManager)
+        private val playbackController = PlaybackController.Base(
+            audioPlayer,
+            audioPlayerStateUpdater,
+            playlistManager,
+            audioPlaybackHelper,
+            surahDetailStateManager
+        )
 
         init {
             audioPlayer.setAudioPlayerCallback(object : AudioPlayerCallback {
                 override fun audioEnded() {
-                    onAudioEnded()
+                    // если режим — НЕ воспроизведение всей суры, сразу останавливаем
+                    if (!state.value.audioPlayerState().playWholeChapter()) {
+                        Log.i("TAG", "audioEnded: IF")
+                        audioPlayerStateUpdater.stop()
+                        return
+                    }
+
+                    // иначе — логика перехода к следующему аяту
+                    val next = state.value.audioPlayerState().currentAyah() + 1
+                    val atEnd = next > playlistManager.currentPlaylist().lastIndex
+
+                    playbackController.handleTrackEnd(next, atEnd)
+
+                    if (!atEnd) {
+                        quranAudioVmCallback?.callVerseAudioFile(next)
+                    }
                 }
 
                 override fun onAyahChanged(mediaId: String?) {
-                    val ayahNumberInSurah = mediaId?.toIntOrNull() ?: return
-                    Log.d("TAG", "onAyahChanged: $ayahNumberInSurah")
-                    Log.d("TAG", "onAyahChanged: ayahs - $ayahs")
-                    val ayah = ayahs.findByNumberInSurah(ayahNumberInSurah)
-                    if (ayah != null) {
-                        audioPlayerStateUpdater.updateCurrentAyah(ayah.numberInSurah().toInt())
-                    } else {
-                        Log.w("SurahPlayer", "onAyahChanged: Ayah not found for number $ayahNumberInSurah")
+                    mediaId?.toIntOrNull()?.let { num ->
+                        audioPlayerStateUpdater.updateCurrentAyah(num)
                     }
                 }
             })
         }
 
         override suspend fun setAyahs(ayahs: List<Ayah.Base>) {
-            this.ayahs = RealAyahList(ayahs)
-            localMediaItems = playlistBuilder.buildLocalPlaylistAsync(
-                this.ayahs, state.value.audioPlayerState().currentSurahNumber()
-            )
+            playlistManager.setAyahs(ayahs)
         }
 
         override suspend fun setCacheAudios(ayahs: List<CacheAudio.Base>) {
-            this.cacheAyahs = RealCacheAyahList(ayahs)
-            cacheMediaItems = playlistBuilder.buildCachePlaylistAsync(this.cacheAyahs)
+            playlistManager.setCacheAudios(ayahs)
         }
 
-        override fun onPlayVerse(verse: VerseAudioAqc) {
-            if (state.value.audioPlayerState().restartAudio()) {
-                audioPlayer.restartAudio()
-            } else {
-                audioPlaybackHelper.play(verse)
+        override fun onNextAyahClicked() {
+            val stateValue = state.value.audioPlayerState()
+            val currentIndex = stateValue.currentAyah() - 1             // медиаId == номер аята
+            val playlist = playlistManager.currentPlaylist()
+            val nextIndex = currentIndex + 1
+
+            if (nextIndex < playlist.size) {
+                // Переходим на следующий аят
+                playbackController.playAtIndex(nextIndex)              // нужно добавить в контроллер метод playAtIndex
             }
-            audioPlayerStateUpdater.setRestartAudio(false, true)
+        }
+
+        override fun onPreviousAyahClicked() {
+            val stateValue = state.value.audioPlayerState()
+            val currentIndex = stateValue.currentAyah() - 1
+            val prevIndex = currentIndex - 1
+
+            if (prevIndex >= 0) {
+                playbackController.playAtIndex(prevIndex)
+            }
+        }
+
+        override fun onNextSurahClicked() {
+            val currentSurah = state.value.audioPlayerState().currentSurahNumber()
+            val nextSurah =
+                (currentSurah + 1).coerceAtLeast(1) // можно ограничить по макс. числу сур
+
+            audioPlayerStateUpdater.setCurrentAyahAndSurah(nextSurah, 1)
+            audioPlayerStateUpdater.setPlayWholeChapter(false)
+            audioPlayerStateUpdater.setPlaying(false)
+            quranAudioVmCallback?.loadNewSurah(nextSurah)
+        }
+
+        override fun onPreviousSurahClicked() {
+            val currentSurah = state.value.audioPlayerState().currentSurahNumber()
+            val prevSurah = (currentSurah - 1).coerceAtLeast(1)
+
+            audioPlayerStateUpdater.setCurrentAyahAndSurah(prevSurah, 1)
+            audioPlayerStateUpdater.setPlayWholeChapter(false)
+            audioPlayerStateUpdater.setPlaying(false)
+            quranAudioVmCallback?.loadNewSurah(prevSurah)
+        }
+
+
+        override fun onPlayVerse(verse: VerseAudioAqc) {
+            playbackController.playVerse(verse)
         }
 
         override fun onPlayWholeClicked() {
-            val isOffline = state.value.audioPlayerState().isOfflineMode()
-            val items = if (isOffline) localMediaItems else cacheMediaItems
-
-            if (items.isNotEmpty()) {
-                val command = when {
-                    !audioPlayer.isPlaying() && !audioPlayer.isPaused() -> PlayWholeChapterCommand(
-                        audioPlayer, audioPlayerStateUpdater, playlistBuilder, items
-                    )
-
-                    audioPlayer.isPlaying() -> PauseCommand(audioPlayer, audioPlayerStateUpdater)
-                    else -> ResumeCommand(audioPlayer, audioPlayerStateUpdater)
-                }
-
-                command.execute()
-            }
+            playbackController.toggleChapterPlayback()
         }
 
         override fun onPlaySingleClicked(ayahNumber: Int, surahNumber: Int) {
-            audioPlayerStateUpdater.setCurrentAyahAndSurah(ayahNumber, surahNumber)
-            Log.i("TAGGG", "C: aya - $ayahNumber, surah - $surahNumber")
-            quranAudioVmCallback?.callVerseAudioFile(ayahNumber)
-        }
-
-        fun playCurrentAyah() {
-            if (ayahs.isEmpty() == false) {
-                val currentAyah = ayahs.get(currentAyahIndex)
-                audioPlayerStateUpdater.updateCurrentAyah(
-                    currentAyah.numberInSurah().toInt()
-                )
-                Log.i("TAGGG", "playCurrentAyah: CALLED currentAyah - $currentAyah")
-                quranAudioVmCallback?.callVerseAudioFile(currentAyah.numberInSurah().toInt())
-            } else {
-                audioPlayerStateUpdater.markWholeChapterPlaying(false, true)
+            playbackController.playSingle(ayahNumber, surahNumber) {
+                quranAudioVmCallback?.callVerseAudioFile(it)
             }
-        }
-
-        override fun onAudioEnded() {
-            Log.i("TAG", "onAudioEnded: STARTED")
-            if (!state.value.audioPlayerState().playWholeChapter()) {
-                audioPlayerStateUpdater.stop()
-                return
-            }
-
-            // Если воспроизведение главы — переходим к следующему аяту
-            currentAyahIndex++
-            if (currentAyahIndex >= ayahs.getList().size) {
-                audioPlayerStateUpdater.markWholeChapterPlaying(false, true)
-                return
-            }
-            playCurrentAyah()
         }
 
         override fun onPauseClicked() {
-            audioPlayer.pauseAudio()
-            audioPlayerStateUpdater.stop()
+            playbackController.pause()
         }
 
         override fun onStopClicked() {
-            audioPlayer.stopAudio()
-            audioPlayerStateUpdater.stop()
+            playbackController.stop()
         }
 
         override fun clear() {
             audioPlayer.clear()
-            currentAyahIndex = 0
-            ayahs = EmptyAyahList
-            cacheAyahs = EmptyCacheAyahList
-            localMediaItems = emptyList()
-            cacheMediaItems = emptyList()
+            playlistManager.clear()
             quranAudioVmCallback = null
         }
 

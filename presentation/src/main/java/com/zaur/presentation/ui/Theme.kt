@@ -3,9 +3,9 @@ package com.zaur.presentation.ui
 import androidx.compose.ui.graphics.Color
 
 /**
-* @author Zaur
-* @since 2025-05-12
-*/
+ * @author Zaur
+ * @since 2025-05-12
+ */
 
 // Основные цвета
 val PrimaryGreen = Color(0xFF2E7D68) // Умиротворяющий зелёный
@@ -30,6 +30,7 @@ val TransparentWhite = Color(0x66FFFFFF)
 val DisabledGray = Color(0xFFD0D0D2)
 val CurrentGray = Color(0xCCE5E5E5)
 val CurrentBlack = Color(0xFF393939)
+val BalancedGold = Color(0xFFF2C94C) // приятный тёплый золотой без кислотности
 
 val AyahColorLight = Color(0xFF717171) // Темно-серый для светлой темы
 val AyahColorDark = Color(0xFF7F898E) // Светло-серый с голубоватым оттенком для тёмной темы
@@ -71,7 +72,8 @@ val LightThemeColors = QuranColors(
     currentCard = CurrentGray,
     ayahBorder = AyahBorderLight,
     ayahColor = AyahColorLight,
-    ayahTextPrimary =White
+    ayahTextPrimary = White,
+    progressCircle = BalancedGold
 )
 
 // Тёмная тема
@@ -104,11 +106,13 @@ val DarkThemeColors = QuranColors(
     iconColor = IconColor,
     ayahBorder = AyahBorderDark,
     ayahColor = AyahColorDark,
-    ayahTextPrimary =White
+    ayahTextPrimary = White,
+    progressCircle = BalancedGold,
 )
 
 // Расширенная структура цветов
 data class QuranColors(
+    val progressCircle: Color,
     val shadowForActiveBars: Color,
     val shadowForDialogs: Color,
     val background: Color,

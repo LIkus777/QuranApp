@@ -15,7 +15,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.navigation.NavHostController
 import com.zaur.domain.al_quran_cloud.models.audiofile.VerseAudioAqc
+import com.zaur.navigation.Screen
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -34,15 +36,19 @@ interface SurahDetailEffectHandler {
     fun HandlePlayVerse()
 
     @Composable
+    fun HandleReciter()
+
+    @Composable
     fun HandleInitialLoad(pageNumber: Int)
 
     @Composable
     fun HandleLifecycleLogging(lifecycleOwner: androidx.lifecycle.LifecycleOwner)
 
     class Base(
-        private val deps: SurahDetailDependencies,
-        private val uiData: SurahDetailUiData,
         private val chapterNumber: Int,
+        private val uiData: SurahDetailUiData,
+        private val deps: SurahDetailDependencies,
+        private val controller: NavHostController,
     ) : SurahDetailEffectHandler {
 
         private val quranAudio = deps.quranAudioViewModel()
@@ -61,6 +67,7 @@ interface SurahDetailEffectHandler {
             HandleAudioCache()
             HandleAyahs()
             HandlePlayVerse()
+            HandleReciter()
             HandleInitialLoad(pageNumber)
             HandleLifecycleLogging(lifecycleOwner)
         }
@@ -70,6 +77,7 @@ interface SurahDetailEffectHandler {
             val cached = uiData.audioState().cacheAudios()
             LaunchedEffect(cached) {
                 if (!cached.isNullOrEmpty()) {
+                    Log.d("TAG", "HandleAudioCache: cache - $cached")
                     quranAudio.setCacheAudios(cached)
                 } else {
                     // показать полосу загрузки — TODO
@@ -97,9 +105,31 @@ interface SurahDetailEffectHandler {
         }
 
         @Composable
+        override fun HandleReciter() {
+            val reciter = uiData.surahDetailState().reciterState().currentReciter()
+            val reciterName = uiData.surahDetailState().reciterState().currentReciterName()
+            LaunchedEffect(reciter, reciterName) {
+                quranAudio.downloadToCache(chapterNumber, reciter)
+            }
+        }
+
+        @Composable
         override fun HandleInitialLoad(pageNumber: Int) {
+            LaunchedEffect(uiData.surahDetailState().audioPlayerState().currentSurahNumber()) {
+                val currentSurahNumber =
+                    uiData.surahDetailState().audioPlayerState().currentSurahNumber()
+                if (chapterNumber != currentSurahNumber && currentSurahNumber != 0) {
+                    val surahName =
+                        uiData.textState().chapters()[currentSurahNumber - 1].englishName()
+                    controller.navigate(
+                        Screen.SurahDetail.createRoute(
+                            currentSurahNumber, surahName
+                        )
+                    )
+                }
+            }
+
             LaunchedEffect(chapterNumber) {
-                Log.i("TAG", "SurahDetailEffects: CALLED LaunchedEffect(chapterNumber)")
 
                 val reciter =
                     quranAudio.getReciter() ?: throw IllegalStateException("Нету ресайтера")
@@ -114,6 +144,7 @@ interface SurahDetailEffectHandler {
                 withContext(Dispatchers.IO) {
                     quranPage.getUthmaniPage(pageNumber)
                     quranPage.getTranslatedPage(pageNumber, "ru.kuliev")
+                    quranText.getAllChapters()
                     quranText.getArabicChapter(chapterNumber)
                     quranTranslation.getTranslationForChapter(chapterNumber, "ru.kuliev")
                     quranAudio.downloadToCache(chapterNumber, reciter)

@@ -70,7 +70,7 @@ class FakeQuranStorage() : QuranStorage {
         TODO("Not yet implemented")
     }
 
-    override fun getLastReadAyahPosition(): Pair<Int, Int> {
+    override fun getLastReadAyahPosition(chapterNumber: Int): Int {
         TODO("Not yet implemented")
     }
 
@@ -130,6 +130,22 @@ class FakeReciterManager() : ReciterManager {
 }
 
 class FakeSurahPlayer() : SurahPlayer {
+    override fun onNextAyahClicked() {
+        TODO("Not yet implemented")
+    }
+
+    override fun onNextSurahClicked() {
+        TODO("Not yet implemented")
+    }
+
+    override fun onPreviousAyahClicked() {
+        TODO("Not yet implemented")
+    }
+
+    override fun onPreviousSurahClicked() {
+        TODO("Not yet implemented")
+    }
+
     override fun onPlayVerse(verse: VerseAudioAqc) {
         TODO("Not yet implemented")
     }
@@ -139,10 +155,6 @@ class FakeSurahPlayer() : SurahPlayer {
     }
 
     override fun onPlaySingleClicked(ayahNumber: Int, surahNumber: Int) {
-        TODO("Not yet implemented")
-    }
-
-    override fun onAudioEnded() {
         TODO("Not yet implemented")
     }
 

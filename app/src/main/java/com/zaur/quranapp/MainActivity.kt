@@ -1,6 +1,5 @@
 package com.zaur.quranapp
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -12,7 +11,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
-import com.unity3d.player.UnityPlayerGameActivity
 import com.zaur.features.surah.screen.main.MainScreen
 import com.zaur.features.surah.screen.surah_choose.SurahChooseScreen
 import com.zaur.features.surah.screen.surah_detail.SurahDetailDependencies
@@ -91,7 +89,7 @@ class MainActivity : ComponentActivity() {
                         )
 
                         SurahDetailScreen(
-                            surahName, surahNumber, deps
+                            surahName, surahNumber, deps, controller
                         )
                     })
                 }

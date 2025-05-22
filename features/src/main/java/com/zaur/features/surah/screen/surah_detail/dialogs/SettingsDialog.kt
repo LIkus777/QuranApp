@@ -1,4 +1,4 @@
-package com.zaur.features.surah.screen.surah_detail
+package com.zaur.features.surah.screen.surah_detail.dialogs
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -22,6 +22,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.zaur.features.surah.screen.surah_detail.CustomBottomSheet
 import com.zaur.presentation.ui.LightThemeColors
 import com.zaur.presentation.ui.QuranColors
 
@@ -32,7 +33,7 @@ import com.zaur.presentation.ui.QuranColors
 
 @Preview(showBackground = true)
 @Composable
-fun SettingsBottomSheet(
+fun SettingsDialog(
     showSheet: Boolean = true,
     colors: QuranColors = LightThemeColors,
     selectedReciter: String? = "Alafasy",
@@ -47,7 +48,6 @@ fun SettingsBottomSheet(
         colors = colors,
         isVisible = showSheet,
         onDismiss = { onDismiss() },
-        alignment = Alignment.BottomStart
     ) {
         Box(
             modifier = Modifier

@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.zaur.domain.al_quran_cloud.use_case.OfflineUseCase
 import com.zaur.domain.al_quran_cloud.use_case.QuranAudioUseCase
@@ -42,6 +43,7 @@ fun SurahDetailScreen(
     surahName: String,
     chapterNumber: Int,
     deps: SurahDetailDependencies,
+    controller: NavHostController,
 ) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -58,7 +60,7 @@ fun SurahDetailScreen(
         }, gesturesEnabled = drawerState.isOpen
     ) {
         SurahDetailScreenContent(
-            surahName, chapterNumber, deps, onMenuClick = {
+            surahName, chapterNumber, deps, controller, onMenuClick = {
                 scope.launch { drawerState.open() }
             })
     }

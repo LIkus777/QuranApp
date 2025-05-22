@@ -1,4 +1,4 @@
-package com.zaur.features.surah.screen.surah_detail
+package com.zaur.features.surah.screen.surah_detail.dialogs
 
 import androidx.compose.runtime.Composable
 import com.zaur.presentation.ui.ui_state.aqc.SurahDetailScreenState
@@ -11,11 +11,11 @@ import com.zaur.presentation.ui.QuranColors
 */
 
 @Composable
-fun SettingsBottomSheetComponent(
+fun SettingsDialogComponent(
     state: SurahDetailScreenState, colors: QuranColors, viewModel: SurahDetailViewModel
 ) {
     if (state.bottomSheetState().showSettingsBottomSheet()) {
-        SettingsBottomSheet(
+        SettingsDialog(
             showSheet = true,
             colors = colors,
             selectedReciter = state.reciterState().currentReciterName(),

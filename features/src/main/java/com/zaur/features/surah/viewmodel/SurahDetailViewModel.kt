@@ -16,8 +16,10 @@ interface SurahDetailViewModel {
     fun updateState(state: SurahDetailScreenState.Base)
     fun surahDetailState(): StateFlow<SurahDetailScreenState>
 
+    fun setSurahName(name: String)
     fun setSurahNumber(surahNumber: Int)
     fun showReciterDialog(show: Boolean)
+    fun showPlayerBottomSheet(show: Boolean)
     fun showTextBottomSheet(show: Boolean)
     fun showSurahMode(show: Boolean)
     fun showPageMode(show: Boolean)
@@ -47,12 +49,20 @@ interface SurahDetailViewModel {
             return state
         }
 
+        override fun setSurahName(name: String) {
+            stateManager.setSurahName(name)
+        }
+
         override fun setSurahNumber(surahNumber: Int) {
             stateManager.setSurahNumber(surahNumber)
         }
 
         override fun showReciterDialog(show: Boolean) {
             stateManager.showReciterDialog(show)
+        }
+
+        override fun showPlayerBottomSheet(show: Boolean) {
+            stateManager.showPlayerBottomSheet(show)
         }
 
         override fun showTextBottomSheet(show: Boolean) {

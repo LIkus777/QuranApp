@@ -106,19 +106,3 @@ fun SurahPageScreen(
         }
     }
 }
-
-fun String.removeBasmala(): String {
-    // Это разные варианты басмалы (разные касыры, сукуны, татвилы, орфография)
-    val variants = listOf(
-        "بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ",
-        "بِسۡمِ ٱللَّهِ ٱلرَّحۡمَـٰنِ ٱلرَّحِیمِ",
-        "بسم الله الرحمن الرحيم",
-    )
-    val cleaned = this.trimStart(' ', '،', '\n')
-    for (variant in variants) {
-        if (cleaned.startsWith(variant)) {
-            return cleaned.removePrefix(variant).trimStart(' ', '،', '\n')
-        }
-    }
-    return this
-}

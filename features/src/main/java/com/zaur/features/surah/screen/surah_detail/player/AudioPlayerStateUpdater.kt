@@ -15,10 +15,10 @@ interface AudioPlayerStateUpdater {
     fun setPlaying(playing: Boolean)
     fun updateCurrentAyah(numberInSurah: Int)
     fun setRestartAudio(restart: Boolean, isAudioPlaying: Boolean)
-    fun setCurrentAyahAndSurah(ayah: Int, surah: Int)
+    fun setCurrentAyahAndSurah(surah: Int, ayah: Int)
 
     data class Base(
-        private val surahDetailStateManager: SurahDetailStateManager, //todo
+        private val surahDetailStateManager: SurahDetailStateManager,
     ) : AudioPlayerStateUpdater {
 
         private val state = surahDetailStateManager.surahDetailState()
@@ -76,16 +76,17 @@ interface AudioPlayerStateUpdater {
         override fun stop() {
             surahDetailStateManager.updateState(
                 state.value.copy(
-                    audioPlayerState = state.value.audioPlayerState().copy(isAudioPlaying = false)
+                    audioPlayerState = state.value.audioPlayerState()
+                        .copy(isAudioPlaying = false, playWholeChapter = false)
                 )
             )
         }
 
-        override fun setCurrentAyahAndSurah(ayah: Int, surah: Int) {
+        override fun setCurrentAyahAndSurah(surah: Int, ayah: Int) {
             surahDetailStateManager.updateState(
                 state.value.copy(
                     audioPlayerState = state.value.audioPlayerState().copy(
-                        currentSurahNumber = surah, isAudioPlaying = true, playWholeChapter = false
+                        currentSurahNumber = surah, currentAyah = ayah
                     )
                 )
             )

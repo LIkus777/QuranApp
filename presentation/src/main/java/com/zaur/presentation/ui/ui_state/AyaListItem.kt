@@ -1,6 +1,5 @@
 package com.zaur.presentation.ui.ui_state
 
-import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
@@ -9,10 +8,6 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -72,27 +67,10 @@ interface AyaListItem {
             translations: List<com.zaur.domain.al_quran_cloud.models.translate.Ayah.Base>,
         ) {
             val currentAudioAyah = surahDetailState.audioPlayerState().currentAyah()
-            val currentTextAyah = surahDetailState.textState().currentAyah()
-
-            // Флаг, чтобы один раз проскроллить к текстовому аяту при заходе на экран
-            var initialScrollDone by remember { mutableStateOf(false) }
-
-            Log.w("TAG", "Render: currentAudioAyah $currentAudioAyah")
-            Log.w(
-                "TAG",
-                "Render: textState().currentAyah() ${surahDetailState.textState().currentAyah()}"
-            )
-
-            LaunchedEffect(currentTextAyah) {
-                if (!initialScrollDone && currentTextAyah > 0) {
-                    listState.scrollToItem(currentTextAyah)
-                    initialScrollDone = true
-                }
-            }
 
             // Эффект для скролла при изменении текущего аята аудио
             LaunchedEffect(currentAudioAyah) {
-                if (initialScrollDone && currentAudioAyah > 0) {
+                if (currentAudioAyah > 0) {
                     listState.animateScrollToItem(currentAudioAyah)
                 }
             }

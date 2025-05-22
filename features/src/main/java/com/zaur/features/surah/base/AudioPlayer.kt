@@ -24,18 +24,19 @@ interface AudioPlayerCallback {
 // Интерфейс для всех операций с аудио
 interface AudioPlayer {
 
-    fun playAudio(url: String, playFromCache: Boolean = false) // Воспроизвести аудио по URL
-    fun pauseAudio() // Пауза аудио
-    fun stopAudio() // Остановка аудио
-    fun restartAudio()
+    fun clear()
     fun resume()
     fun release() // Освобождение ресурсов
-    fun isPlaying(): Boolean // Проверка, воспроизводится ли аудио
     fun isPaused(): Boolean
+    fun stopAudio() // Остановка аудио
+    fun isPlaying(): Boolean // Проверка, воспроизводится ли аудио
+    fun pauseAudio() // Пауза аудио
+    fun restartAudio()
+    fun seekTo(items: List<MediaItem>, index: Int, positionMs: Long = 0L)
+
+    fun playAudio(url: String, playFromCache: Boolean = false) // Воспроизвести аудио по URL
 
     fun playPlaylist(items: List<MediaItem>)
-
-    fun clear()
 
     fun setAudioPlayerCallback(callback: AudioPlayerCallback)
 
@@ -134,6 +135,13 @@ interface AudioPlayer {
                     it.seekTo(0) // Перемотка на начало
                     it.playWhenReady = true
                 }
+            }
+        }
+
+        override fun seekTo(items: List<MediaItem>, index: Int, positionMs: Long) {
+            player?.let {
+                it.setMediaItems(items, index, 0L)
+                it.playWhenReady = true
             }
         }
 

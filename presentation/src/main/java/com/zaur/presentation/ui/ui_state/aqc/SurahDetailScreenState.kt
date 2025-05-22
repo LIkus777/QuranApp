@@ -38,11 +38,14 @@ interface SurahDetailScreenState {
 
 interface TextState {
 
+    fun surahName(): String
     fun currentAyah(): Int
 
     data class Base(
+        private val surahName: String = "",
         private val currentAyah: Int = 0
     ) : TextState {
+        override fun surahName(): String = surahName
         override fun currentAyah(): Int = currentAyah
     }
 
@@ -130,17 +133,18 @@ interface ReciterState {
     }
 }
 
-// BottomSheetState
-
 interface BottomSheetState {
     fun showTextBottomSheet(): Boolean
+    fun showPlayerBottomSheet(): Boolean
     fun showSettingsBottomSheet(): Boolean
 
     data class Base(
         private val showTextBottomSheet: Boolean = false,
         private val showSettingsBottomSheet: Boolean = false,
+        private val showPlayerBottomSheet: Boolean = false,
     ) : BottomSheetState {
         override fun showTextBottomSheet() = showTextBottomSheet
+        override fun showPlayerBottomSheet() = showPlayerBottomSheet
         override fun showSettingsBottomSheet() = showSettingsBottomSheet
     }
 

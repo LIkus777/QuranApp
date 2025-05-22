@@ -25,7 +25,6 @@ import com.zaur.presentation.ui.ui_state.SurahDetailUiState
 @Composable
 fun ScreenContent(
     chapterNumber: Int,
-    listState: LazyListState,
     deps: SurahDetailDependencies,
     uiData: SurahDetailUiData,
     colors: QuranColors,
@@ -61,7 +60,6 @@ fun ScreenContent(
                         surahDetailState = surahDetailState(),
                         translations = translateState().translations().translationAyahs(),
                         ayats = textState().currentArabicText().ayahs(),
-                        listState = listState,
                         onAyahItemChanged = { index ->
                             quranTextViewModel().saveLastReadAyahPosition(chapterNumber, index)
                         },
@@ -70,20 +68,13 @@ fun ScreenContent(
                         },
                         onClickSound = { ayahNumber, ayahNumberInSurah ->
                             surahDetailViewModel().setAyahInAudio(ayahNumberInSurah)
-                            Log.i(
-                                "TAG",
-                                "SreenContent: ayahNumber $ayahNumber ayahNumberInSurah $ayahNumberInSurah"
-                            )
+                            Log.i("TAG", "SreenContent: ayahNumber $ayahNumber ayahNumberInSurah $ayahNumberInSurah")
                             quranAudioViewModel().onPlaySingleClicked(
                                 ayahNumberInSurah, chapterNumber
                             )
                         })
 
                     is SurahDetailUiState.PageModeState -> {
-                        Log.w(
-                            "TAG",
-                            "ScreenContent: is SurahDetailUiState.PageModeState -> { CALLED"
-                        )
                         deps.quranPageViewModel()
                             .getUthmaniPage(deps.quranPageViewModel().getLastReadPagePosition())
                         deps.quranPageViewModel().getTranslatedPage(
@@ -99,10 +90,7 @@ fun ScreenContent(
                             onClickNextPage = {},
                             onClickSound = { ayahNumber, ayahNumberInSurah ->
                                 surahDetailViewModel().setAyahInAudio(ayahNumberInSurah)
-                                Log.i(
-                                    "TAG",
-                                    "SreenContent: ayahNumber $ayahNumber ayahNumberInSurah $ayahNumberInSurah"
-                                )
+                                Log.i("TAG", "SreenContent: ayahNumber $ayahNumber ayahNumberInSurah $ayahNumberInSurah")
                                 quranAudioViewModel().onPlaySingleClicked(
                                     ayahNumberInSurah, chapterNumber
                                 )
@@ -120,7 +108,7 @@ fun ScreenContent(
                         onMenuClick = onMenuClick,
                         onClickSettings = { surahDetailViewModel().showSettingsBottomSheet(true) },
                         onClickReciter = { surahDetailViewModel().showTextBottomSheet(true) },
-                        onClickPlay = { quranAudioViewModel().onPlayWholeClicked() },
+                        onClickPlay = { surahDetailViewModel().showPlayerBottomSheet(true) },
                     )
                 }
             }

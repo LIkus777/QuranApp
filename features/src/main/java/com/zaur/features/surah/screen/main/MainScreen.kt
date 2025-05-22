@@ -23,7 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.zaur.features.surah.screen.surah_detail.ChooseReciterDialog
+import com.zaur.features.surah.screen.surah_detail.dialogs.ChooseReciterDialog
 import com.zaur.features.surah.viewmodel.ThemeViewModel
 import com.zaur.features.surah.viewmodel.factory.MainViewModelFactory
 import com.zaur.navigation.Screen

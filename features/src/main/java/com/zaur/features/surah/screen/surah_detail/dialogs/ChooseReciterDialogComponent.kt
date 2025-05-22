@@ -1,4 +1,4 @@
-package com.zaur.features.surah.screen.surah_detail
+package com.zaur.features.surah.screen.surah_detail.dialogs
 
 import androidx.compose.runtime.Composable
 import com.zaur.features.surah.viewmodel.QuranAudioViewModel

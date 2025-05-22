@@ -1,6 +1,8 @@
-package com.zaur.features.surah.screen.surah_detail
+package com.zaur.features.surah.screen.surah_detail.dialogs
 
 import androidx.compose.runtime.Composable
+import com.zaur.features.surah.screen.surah_detail.SurahDetailDependencies
+import com.zaur.features.surah.screen.surah_detail.SurahDetailUiData
 import com.zaur.presentation.ui.QuranColors
 
 /**

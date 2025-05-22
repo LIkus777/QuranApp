@@ -21,7 +21,7 @@ interface QuranTextUseCase {
     fun saveFontSizeArabic(size: Float)
     fun saveFontSizeRussian(size: Float)
 
-    fun getLastReadAyahPosition(): Pair<Int, Int>
+    fun getLastReadAyahPosition(chapterNumber: Int): Int
     fun saveLastReadAyahPosition(chapterNumber: Int, ayahNumber: Int)
 
     fun markSurahScreenAsOpened()
@@ -70,8 +70,7 @@ interface QuranTextUseCase {
             quranStorage.saveFontSizeRussian(size)
         }
 
-        override fun getLastReadAyahPosition(): Pair<Int, Int> = quranStorage.getLastReadAyahPosition()
-
+        override fun getLastReadAyahPosition(chapterNumber: Int): Int = quranStorage.getLastReadAyahPosition(chapterNumber)
 
         override fun saveLastReadAyahPosition(chapterNumber: Int, ayahNumber: Int) = quranStorage.saveLastReadAyahPosition(chapterNumber, ayahNumber)
 

@@ -10,7 +10,7 @@ interface QuranStorage {
     fun getFontSizeRussian(): Float
     fun saveFontSizeArabic(size: Float)
     fun saveFontSizeRussian(size: Float)
-    fun getLastReadAyahPosition(): Pair<Int, Int>
+    fun getLastReadAyahPosition(chapterNumber: Int): Int
     fun saveLastReadAyahPosition(chapterNumber: Int, ayahNumber: Int)
     fun getLastReadPagePosition(): Int
     fun saveLastReadPagePosition(pageNumber: Int)

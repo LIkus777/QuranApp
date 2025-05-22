@@ -30,8 +30,10 @@ interface SurahDetailStateManager : SurahDetailStateObservable.Read {
 
     fun updateState(state: SurahDetailScreenState.Base)
 
+    fun setSurahName(name: String)
     fun setSurahNumber(surahNumber: Int)
     fun showReciterDialog(show: Boolean)
+    fun showPlayerBottomSheet(show: Boolean)
     fun showTextBottomSheet(show: Boolean)
     fun showSurahMode(show: Boolean)
     fun showPageMode(show: Boolean)
@@ -68,6 +70,16 @@ interface SurahDetailStateManager : SurahDetailStateObservable.Read {
                     reciterState = state.reciterState(),
                     uiPreferencesState = state.uiPreferencesState(),
                     bottomSheetState = state.bottomSheetState()
+                )
+            )
+        }
+
+        override fun setSurahName(name: String) {
+            observable.update(
+                observable.surahDetailState().value.copy(
+                    textState = observable.surahDetailState().value.textState().copy(
+                        surahName = name
+                    )
                 )
             )
         }
@@ -227,6 +239,16 @@ interface SurahDetailStateManager : SurahDetailStateObservable.Read {
                 observable.surahDetailState().value.copy(
                     reciterState = observable.surahDetailState().value.reciterState().copy(
                         showReciterDialog = show
+                    )
+                )
+            )
+        }
+
+        override fun showPlayerBottomSheet(show: Boolean) {
+            observable.update(
+                observable.surahDetailState().value.copy(
+                    bottomSheetState = observable.surahDetailState().value.bottomSheetState().copy(
+                        showPlayerBottomSheet = show
                     )
                 )
             )

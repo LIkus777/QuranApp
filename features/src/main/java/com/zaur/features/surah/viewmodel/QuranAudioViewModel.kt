@@ -10,8 +10,8 @@ import com.zaur.domain.al_quran_cloud.models.audiofile.ChapterAudioFile
 import com.zaur.domain.al_quran_cloud.models.audiofile.VerseAudioAqc
 import com.zaur.domain.al_quran_cloud.use_case.QuranAudioUseCase
 import com.zaur.features.surah.manager.ReciterManager
-import com.zaur.features.surah.observables.QuranAudioObservable
 import com.zaur.features.surah.manager.SurahDetailStateManager
+import com.zaur.features.surah.observables.QuranAudioObservable
 import com.zaur.features.surah.screen.surah_detail.player.SurahPlayer
 import com.zaur.presentation.ui.ui_state.aqc.QuranAudioUIState
 import kotlinx.coroutines.Dispatchers
@@ -19,9 +19,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 /**
-* @author Zaur
-* @since 2025-05-12
-*/
+ * @author Zaur
+ * @since 2025-05-12
+ */
 
 interface QuranAudioViewModel : QuranAudioObservable.Read {
 
@@ -36,6 +36,10 @@ interface QuranAudioViewModel : QuranAudioObservable.Read {
     suspend fun setAyahs(ayahs: List<Ayah.Base>)
     suspend fun setCacheAudios(ayahs: List<CacheAudio.Base>)
 
+    fun onNextAyahClicked()
+    fun onNextSurahClicked()
+    fun onPreviousAyahClicked()
+    fun onPreviousSurahClicked()
     fun onPlayWholeClicked()
     fun onPlayVerse(verse: VerseAudioAqc)
     fun onPlaySingleClicked(ayahNumber: Int, chapterNumber: Int)
@@ -44,6 +48,7 @@ interface QuranAudioViewModel : QuranAudioObservable.Read {
 
     interface QuranAudioVmCallback {
         fun callVerseAudioFile(ayah: Int)
+        fun loadNewSurah(chapterNumber: Int)
     }
 
     class Base(
@@ -79,11 +84,23 @@ interface QuranAudioViewModel : QuranAudioObservable.Read {
             surahPlayer.setQuranAudioVmCallback(object : QuranAudioVmCallback {
                 override fun callVerseAudioFile(ayah: Int) {
                     Log.i("TAGGG", "callVerseAudioFile CALLED} ayah $ayah")
-                    Log.i("TAGGG", "${stateManager.surahDetailState().value.audioPlayerState().currentSurahNumber()}:$ayah")
-                    getAyahAudioByKey(
-                        "${stateManager.surahDetailState().value.audioPlayerState().currentSurahNumber()}:$ayah",
-                        reciterManager.getReciter().toString()
+                    Log.i(
+                        "TAGGG",
+                        "${
+                            stateManager.surahDetailState().value.audioPlayerState()
+                                .currentSurahNumber()
+                        }:$ayah"
                     )
+                    getAyahAudioByKey(
+                        "${
+                            stateManager.surahDetailState().value.audioPlayerState()
+                                .currentSurahNumber()
+                        }:$ayah", reciterManager.getReciter().toString()
+                    )
+                }
+
+                override fun loadNewSurah(chapterNumber: Int) {
+                    getChaptersAudioOfReciter(chapterNumber, getReciter().toString())
                 }
             })
         }
@@ -132,23 +149,45 @@ interface QuranAudioViewModel : QuranAudioObservable.Read {
             surahPlayer.setCacheAudios(ayahs)
         }
 
+        override fun onNextAyahClicked() {
+            surahPlayer.onNextAyahClicked()
+        }
+
+        override fun onNextSurahClicked() {
+            surahPlayer.onNextSurahClicked()
+        }
+
+        override fun onPreviousAyahClicked() {
+            surahPlayer.onPreviousAyahClicked()
+        }
+
+        override fun onPreviousSurahClicked() {
+            surahPlayer.onPreviousSurahClicked()
+        }
+
         override fun getAyahAudioByKey(verseKey: String, reciter: String) {
             //todo
             viewModelScope.launch(Dispatchers.IO) {
-                val result =
-                    launchSafely { quranAudioUseCase.getAyahAudioByKey(verseKey, reciter) }
+                val result = launchSafely { quranAudioUseCase.getAyahAudioByKey(verseKey, reciter) }
                 result.handle(object : HandleResult<VerseAudioAqc> {
                     override fun handleSuccess(data: VerseAudioAqc) {
                         Log.i("TAGGG", "getVerseAudioFile: data ${data.audio()} ")
                         viewModelScope.launch(Dispatchers.Main) {
-                            if (data.audio() == observable.audioState().value.verseAudioFile().audio()) {
+                            if (data.audio() == observable.audioState().value.verseAudioFile()
+                                    .audio()
+                            ) {
                                 val newState = stateManager.surahDetailState().value.copy(
-                                    audioPlayerState = stateManager.surahDetailState().value.audioPlayerState().copy(
-                                        restartAudio = true
-                                    )
+                                    audioPlayerState = stateManager.surahDetailState().value.audioPlayerState()
+                                        .copy(
+                                            restartAudio = true
+                                        )
                                 )
                                 stateManager.updateState(newState)
-                            } else observable.update(observable.audioState().value.copy(verseAudioFile = data))
+                            } else observable.update(
+                                observable.audioState().value.copy(
+                                    verseAudioFile = data
+                                )
+                            )
                         }
                     }
 

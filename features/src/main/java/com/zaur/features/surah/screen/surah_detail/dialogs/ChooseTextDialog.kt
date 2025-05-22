@@ -1,4 +1,4 @@
-package com.zaur.features.surah.screen.surah_detail
+package com.zaur.features.surah.screen.surah_detail.dialogs
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -26,6 +26,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.zaur.features.surah.screen.surah_detail.CustomBottomSheet
 import com.zaur.presentation.ui.LightThemeColors
 import com.zaur.presentation.ui.QuranColors
 
@@ -55,7 +56,6 @@ fun ChooseTextDialog(
             showTextDialog,
             colors = colors,
             onDismiss = onDismiss,
-            alignment = Alignment.BottomStart
         ) {
             Box(
                 modifier = Modifier

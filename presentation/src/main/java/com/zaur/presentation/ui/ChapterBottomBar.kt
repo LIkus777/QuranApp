@@ -95,9 +95,7 @@ fun ChapterBottomBar(
 
             IconButton(onClick = onClickPlayer) {
                 Icon(
-                    painter = if (isPlaying) painterResource(R.drawable.pause) else painterResource(
-                        R.drawable.play
-                    ), contentDescription = "Play/Pause"
+                    painter = painterResource(R.drawable.headphone_line), contentDescription = "Play/Pause"
                 )
             }
 

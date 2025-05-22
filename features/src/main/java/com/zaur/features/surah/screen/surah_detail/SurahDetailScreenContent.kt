@@ -1,7 +1,11 @@
 package com.zaur.features.surah.screen.surah_detail
 
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavHostController
+import com.zaur.features.surah.screen.surah_detail.dialogs.ChooseReciterDialogComponent
+import com.zaur.features.surah.screen.surah_detail.dialogs.ChooseTextDialogComponent
+import com.zaur.features.surah.screen.surah_detail.dialogs.PlayerDialogComponent
+import com.zaur.features.surah.screen.surah_detail.dialogs.SettingsDialogComponent
 import com.zaur.presentation.ui.DarkThemeColors
 import com.zaur.presentation.ui.LightThemeColors
 
@@ -15,21 +19,20 @@ fun SurahDetailScreenContent(
     surahName: String,
     chapterNumber: Int,
     deps: SurahDetailDependencies,
+    controller: NavHostController,
     onMenuClick: () -> Unit,
 ) {
-    val uiData = rememberSurahDetailUiData(chapterNumber, deps)
-    val listState = rememberLazyListState()
+    val uiData = rememberSurahDetailUiData(surahName, chapterNumber, deps)
     val colors = if (uiData.isDarkTheme()) DarkThemeColors else LightThemeColors
 
     // Эффекты
     SurahDetailEffects(
-        chapterNumber = chapterNumber, deps = deps, uiData = uiData
+        chapterNumber = chapterNumber, deps = deps, uiData = uiData, controller = controller
     )
 
     // Контент
     ScreenContent(
         chapterNumber = chapterNumber,
-        listState = listState,
         deps = deps,
         uiData = uiData,
         colors = colors,
@@ -38,7 +41,8 @@ fun SurahDetailScreenContent(
     )
 
     // Диалоги
-    SettingsBottomSheetComponent(uiData.surahDetailState(), colors, deps.surahDetailViewModel())
+    SettingsDialogComponent(uiData.surahDetailState(), colors, deps.surahDetailViewModel())
+    PlayerDialogComponent(colors, uiData, deps)
     ChooseTextDialogComponent(colors, uiData, deps)
     ChooseReciterDialogComponent(
         uiData.surahDetailState(),

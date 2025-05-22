@@ -29,7 +29,7 @@ interface QuranTextViewModel : QuranTextObservable.Read {
     fun getAllChapters()
     fun getArabicChapter(chapterNumber: Int)
 
-    fun getLastReadAyahPosition(): Pair<Int, Int>
+    fun getLastReadAyahPosition(chapterNumber: Int): Int
     fun saveLastReadAyahPosition(chapterNumber: Int, ayahNumber: Int)
 
     class Base(
@@ -81,8 +81,8 @@ interface QuranTextViewModel : QuranTextObservable.Read {
             }
         }
 
-        override fun getLastReadAyahPosition(): Pair<Int, Int> =
-            quranTextUseCase.getLastReadAyahPosition()
+        override fun getLastReadAyahPosition(chapterNumber: Int): Int =
+            quranTextUseCase.getLastReadAyahPosition(chapterNumber)
 
         override fun saveLastReadAyahPosition(chapterNumber: Int, ayahNumber: Int) {
             Log.d(

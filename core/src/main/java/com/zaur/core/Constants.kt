@@ -10,6 +10,8 @@ object QuranSharedPrefKeys {
     const val RUSSIAN_FONT_SIZE = "RUSSIAN_FONT_SIZE"
     const val QURAN_PREFS = "QURAN_PREFS"
     const val SURAH_OPENED = "SURAH_OPENED"
+    const val LAST_PLAYED_SURAH = "last_played_surah"
+    const val LAST_READ_SURAH = "last_read_surah"
     const val LAST_READ_AYAH = "last_read_ayah"
     const val LAST_READ_PAGE_NUMBER = "last_read_page_number"
 }

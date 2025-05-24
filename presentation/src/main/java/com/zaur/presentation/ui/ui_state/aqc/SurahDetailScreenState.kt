@@ -40,13 +40,16 @@ interface TextState {
 
     fun surahName(): String
     fun currentAyah(): Int
+    fun currentSurahNumber(): Int
 
     data class Base(
         private val surahName: String = "",
-        private val currentAyah: Int = 0
+        private val currentAyah: Int = 0,
+        private val currentSurahNumber: Int = 0,
     ) : TextState {
         override fun surahName(): String = surahName
         override fun currentAyah(): Int = currentAyah
+        override fun currentSurahNumber() = currentSurahNumber
     }
 
     companion object {
@@ -62,6 +65,8 @@ interface AudioPlayerState {
     fun playWholeChapter(): Boolean
     fun restartAudio(): Boolean
     fun isOfflineMode(): Boolean
+    fun position(): Long
+    fun duration(): Long
 
     data class Base(
         private val currentAyah: Int = 0,
@@ -70,6 +75,8 @@ interface AudioPlayerState {
         private val playWholeChapter: Boolean = true,
         private val restartAudio: Boolean = false,
         private val isOfflineMode: Boolean = false,
+        private val position: Long = 0L,
+        private val duration: Long = 0L,
     ) : AudioPlayerState {
         override fun currentAyah() = currentAyah
         override fun currentSurahNumber() = currentSurahNumber
@@ -77,6 +84,8 @@ interface AudioPlayerState {
         override fun playWholeChapter() = playWholeChapter
         override fun restartAudio() = restartAudio
         override fun isOfflineMode() = isOfflineMode
+        override fun position(): Long = position
+        override fun duration(): Long = duration
     }
 
     companion object {

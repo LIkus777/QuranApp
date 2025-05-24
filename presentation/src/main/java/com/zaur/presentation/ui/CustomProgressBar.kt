@@ -1,6 +1,7 @@
 package com.zaur.presentation.ui
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.detectDragGestures
@@ -33,6 +34,66 @@ import androidx.compose.ui.unit.dp
 @SuppressLint("UnusedBoxWithConstraintsScope")
 @Composable
 fun CustomProgressBar(
+    colors: QuranColors,
+    progress: Float,         // 0f..1f
+    durationMs: Long,        // >=1L
+    onSeekRequested: (Long) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    var isDragging by remember { mutableStateOf(false) }
+    var dragOffsetPx by remember { mutableStateOf(0f) }
+
+    BoxWithConstraints(
+        modifier = modifier
+            .height(24.dp)
+            .pointerInput(Unit) {
+                detectDragGestures(
+                    onDragStart = { offset ->
+                        isDragging = true
+                        dragOffsetPx = offset.x.coerceIn(0f, size.width.toFloat())
+                        Log.d("CustomProgressBar", "Drag started at x=${offset.x}, clamped to $dragOffsetPx")
+                    },
+                    onDrag = { change, dragAmount ->
+                        change.consume()
+                        dragOffsetPx = (dragOffsetPx + dragAmount.x).coerceIn(0f, size.width.toFloat())
+                        Log.d("CustomProgressBar", "Dragging: dragAmount=${dragAmount.x}, dragOffsetPx=$dragOffsetPx")
+                    },
+                    onDragEnd = {
+                        isDragging = false
+                        val frac = (dragOffsetPx / size.width.toFloat()).coerceIn(0f,1f)
+                        val seekPosition = (frac * durationMs).toLong()
+                        Log.d("CustomProgressBar", "Drag ended. Seeking to position: $seekPosition ms (fraction $frac)")
+                        onSeekRequested(seekPosition)
+                    },
+                    onDragCancel = {
+                        isDragging = false
+                        Log.d("CustomProgressBar", "Drag cancelled")
+                    }
+                )
+            },
+        contentAlignment = Alignment.CenterStart
+    ) {
+        val widthPx = constraints.maxWidth.toFloat()
+        val baseOffset = (progress.coerceIn(0f,1f) * widthPx)
+        val currentOffset = if (isDragging) dragOffsetPx else baseOffset
+        val fraction = (currentOffset / widthPx).coerceIn(0f,1f)
+
+        Log.d("CustomProgressBar", "Drawing progress. Progress=$progress, baseOffset=$baseOffset, currentOffset=$currentOffset, fraction=$fraction")
+
+        Box(Modifier.fillMaxWidth().height(4.dp).clip(RoundedCornerShape(2.dp)).background(Color.LightGray))
+        Box(Modifier.fillMaxWidth(fraction).height(4.dp).clip(RoundedCornerShape(2.dp)).background(colors.buttonPrimary))
+        Box(
+            Modifier
+                .offset { IntOffset((currentOffset - 6).toInt(), 0) }
+                .size(12.dp)
+                .background(colors.buttonTertiary, shape = CircleShape)
+                .border(0.5.dp, colors.cardBackground, CircleShape)
+        )
+    }
+}
+@SuppressLint("UnusedBoxWithConstraintsScope")
+@Composable
+fun CustomProgressBarSound(
     colors: QuranColors,
     progress: Float,
     onProgressChanged: (Float) -> Unit,

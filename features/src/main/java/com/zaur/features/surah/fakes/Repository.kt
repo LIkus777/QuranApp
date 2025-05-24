@@ -70,6 +70,22 @@ class FakeQuranStorage() : QuranStorage {
         TODO("Not yet implemented")
     }
 
+    override fun getLastPlayedSurah(): Int {
+        TODO("Not yet implemented")
+    }
+
+    override fun setLastPlayedSurah(surahNumber: Int) {
+        TODO("Not yet implemented")
+    }
+
+    override fun setLastReadSurah(surahNumber: Int) {
+        TODO("Not yet implemented")
+    }
+
+    override fun getLastReadSurah(): Int {
+        TODO("Not yet implemented")
+    }
+
     override fun getLastReadAyahPosition(chapterNumber: Int): Int {
         TODO("Not yet implemented")
     }
@@ -143,6 +159,10 @@ class FakeSurahPlayer() : SurahPlayer {
     }
 
     override fun onPreviousSurahClicked() {
+        TODO("Not yet implemented")
+    }
+
+    override fun seekTo(position: Long) {
         TODO("Not yet implemented")
     }
 

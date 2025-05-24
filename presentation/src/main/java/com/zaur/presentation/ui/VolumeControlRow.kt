@@ -47,18 +47,6 @@ fun VolumeControlRow(
     var prevVolume by remember { mutableFloatStateOf(sliderPos) }
 
     // Функция для выбора иконки по уровню
-    @Composable
-    fun volumeIcon(sliderPos: Float, isMuted: Boolean): Int {
-        return if (isMuted || sliderPos == 0f) {
-            R.drawable.volume_mute_line
-        } else {
-            when {
-                sliderPos <= 0.33f -> R.drawable.volume_down_line
-                sliderPos <= 0.66f -> R.drawable.volume_up_line    // средний уровень
-                else -> R.drawable.volume_up_line    // высокий тоже
-            }
-        }
-    }
 
     Row(
         verticalAlignment = Alignment.CenterVertically, modifier = modifier
@@ -91,7 +79,7 @@ fun VolumeControlRow(
         Spacer(modifier = Modifier.width(6.dp))
 
         // 2) Ползунок
-        CustomProgressBar(
+        CustomProgressBarSound(
             colors = colors, progress = sliderPos, onProgressChanged = { newProgress ->
                 isMuted = false
                 sliderPos = newProgress
@@ -103,5 +91,18 @@ fun VolumeControlRow(
                 .height(20.dp)
                 .width(150.dp)
         )
+    }
+}
+
+@Composable
+fun volumeIcon(sliderPos: Float, isMuted: Boolean): Int {
+    return if (isMuted || sliderPos == 0f) {
+        R.drawable.volume_mute_line
+    } else {
+        when {
+            sliderPos <= 0.33f -> R.drawable.volume_down_line
+            sliderPos <= 0.66f -> R.drawable.volume_up_line    // средний уровень
+            else -> R.drawable.volume_up_line    // высокий тоже
+        }
     }
 }

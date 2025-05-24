@@ -22,6 +22,7 @@ interface SurahPlayer {
     fun onPreviousAyahClicked()
     fun onPreviousSurahClicked()
 
+    fun seekTo(position: Long)
     fun onPlayVerse(verse: VerseAudioAqc)
     fun onPlayWholeClicked()
     fun onPlaySingleClicked(ayahNumber: Int, surahNumber: Int)
@@ -83,6 +84,13 @@ interface SurahPlayer {
                     }
                 }
             })
+
+            audioPlayer.setProgressListener { pos, dur ->
+                // pos — текущая позиция в мс
+                // dur — общая длительность (в мс), может быть ненадёжной (<=0)
+                val safeDur = if (dur <= 0L) 1L else dur
+                surahDetailStateManager.updatePlaybackPosition(pos, safeDur)
+            }
         }
 
         override suspend fun setAyahs(ayahs: List<Ayah.Base>) {
@@ -134,6 +142,10 @@ interface SurahPlayer {
             audioPlayerStateUpdater.setPlayWholeChapter(false)
             audioPlayerStateUpdater.setPlaying(false)
             quranAudioVmCallback?.loadNewSurah(prevSurah)
+        }
+
+        override fun seekTo(position: Long) {
+            audioPlayer.seekTo(position)
         }
 
 

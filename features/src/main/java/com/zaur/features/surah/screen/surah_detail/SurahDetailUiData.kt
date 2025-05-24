@@ -107,8 +107,11 @@ fun rememberSurahDetailUiData(
     val pageState by deps.quranPageViewModel().pageState().collectAsState()
     val isDarkTheme = deps.themeViewModel().themeState().collectAsState().value.isDarkTheme
     val isSurahMode = surahDetailState.uiPreferencesState().showSurahMode()
+    val audioSurahNumber = if (deps.quranAudioViewModel().getLastPlayedSurah() != 0) deps.quranAudioViewModel().getLastPlayedSurah()
+    else deps.quranTextViewModel().getLastReadSurah()
     deps.surahDetailViewModel().setSurahName(surahName)
-    deps.surahDetailViewModel().setSurahNumber(chapterNumber)
+    deps.surahDetailViewModel().setTextSurahNumber(chapterNumber)
+    deps.surahDetailViewModel().setAudioSurahNumber(audioSurahNumber)
     deps.surahDetailViewModel().setAyahInText(deps.quranTextViewModel().getLastReadAyahPosition(chapterNumber))
     deps.surahDetailViewModel().setOfflineMode(offlineState.isOffline())
     deps.surahDetailViewModel().fontSizeArabic(deps.quranTextViewModel().getFontSizeArabic())

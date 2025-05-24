@@ -89,7 +89,7 @@ fun SurahDetailScreenPreview() {
         FakeOfflineRepos(), FakeQTranslationRLocal(), FakeQTranslationRCloud()
     )
     QuranAudioUseCase.Base(
-        FakeOfflineRepos(), FakeQAudioRLocal(), FakeQAudioRCloud()
+        FakeQuranStorage(), FakeOfflineRepos(), FakeQAudioRLocal(), FakeQAudioRCloud()
     )
     SurahChooseViewModel.Base(
         quranTextUseCase = textUseCaseAqc, observable = SurahChooseObservable.Base(

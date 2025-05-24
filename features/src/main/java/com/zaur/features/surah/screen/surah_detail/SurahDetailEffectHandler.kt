@@ -115,10 +115,10 @@ interface SurahDetailEffectHandler {
 
         @Composable
         override fun HandleInitialLoad(pageNumber: Int) {
-            LaunchedEffect(uiData.surahDetailState().audioPlayerState().currentSurahNumber()) {
+            LaunchedEffect(uiData.surahDetailState().textState().currentSurahNumber()) {
                 val currentSurahNumber =
-                    uiData.surahDetailState().audioPlayerState().currentSurahNumber()
-                if (chapterNumber != currentSurahNumber && currentSurahNumber != 0) {
+                    uiData.surahDetailState().textState().currentSurahNumber()
+                if (chapterNumber != currentSurahNumber && currentSurahNumber != 0 && !uiData.textState().chapters().isNullOrEmpty()) {
                     val surahName =
                         uiData.textState().chapters()[currentSurahNumber - 1].englishName()
                     controller.navigate(
@@ -155,7 +155,7 @@ interface SurahDetailEffectHandler {
 
         @Composable
         override fun HandleLifecycleLogging(lifecycleOwner: androidx.lifecycle.LifecycleOwner) {
-            DisposableEffect(lifecycleOwner) {
+            /*DisposableEffect(lifecycleOwner) {
                 val observer = LifecycleEventObserver { _, event ->
                     Log.i("SurahDetailScreen", "SurahDetailScreenContent Lifecycle event: $event")
                 }
@@ -165,7 +165,7 @@ interface SurahDetailEffectHandler {
                     quranAudio.clear()
                     lifecycleOwner.lifecycle.removeObserver(observer)
                 }
-            }
+            }*/
         }
     }
 }

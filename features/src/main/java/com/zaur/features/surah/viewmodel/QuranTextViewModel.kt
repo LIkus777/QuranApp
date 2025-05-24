@@ -29,13 +29,15 @@ interface QuranTextViewModel : QuranTextObservable.Read {
     fun getAllChapters()
     fun getArabicChapter(chapterNumber: Int)
 
+    fun getLastReadSurah(): Int
+    fun setLastReadSurah(surahNumber: Int)
     fun getLastReadAyahPosition(chapterNumber: Int): Int
     fun saveLastReadAyahPosition(chapterNumber: Int, ayahNumber: Int)
 
     class Base(
         private val observable: QuranTextObservable.Mutable,
         private val quranTextUseCase: QuranTextUseCase,
-        private val stateManager: SurahDetailStateManager
+        private val stateManager: SurahDetailStateManager,
     ) : BaseViewModel(), QuranTextViewModel {
 
         override fun textState(): StateFlow<QuranTextUIState.Base> = observable.textState()
@@ -80,6 +82,11 @@ interface QuranTextViewModel : QuranTextObservable.Read {
                 })
             }
         }
+
+        override fun setLastReadSurah(surahNumber: Int) =
+            quranTextUseCase.setLastReadSurah(surahNumber)
+
+        override fun getLastReadSurah(): Int = quranTextUseCase.getLastReadSurah()
 
         override fun getLastReadAyahPosition(chapterNumber: Int): Int =
             quranTextUseCase.getLastReadAyahPosition(chapterNumber)

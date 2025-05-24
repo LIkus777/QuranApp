@@ -31,7 +31,8 @@ interface SurahDetailStateManager : SurahDetailStateObservable.Read {
     fun updateState(state: SurahDetailScreenState.Base)
 
     fun setSurahName(name: String)
-    fun setSurahNumber(surahNumber: Int)
+    fun setAudioSurahNumber(surahNumber: Int)
+    fun setTextSurahNumber(surahNumber: Int)
     fun showReciterDialog(show: Boolean)
     fun showPlayerBottomSheet(show: Boolean)
     fun showTextBottomSheet(show: Boolean)
@@ -46,6 +47,7 @@ interface SurahDetailStateManager : SurahDetailStateObservable.Read {
     fun setAyahInAudio(ayah: Int)
     fun setAyahInText(ayah: Int)
     fun setOfflineMode(isOffline: Boolean)
+    fun updatePlaybackPosition(position: Long, duration: Long)
 
     fun clear()
 
@@ -84,10 +86,20 @@ interface SurahDetailStateManager : SurahDetailStateObservable.Read {
             )
         }
 
-        override fun setSurahNumber(surahNumber: Int) {
+        override fun setAudioSurahNumber(surahNumber: Int) {
             observable.update(
                 observable.surahDetailState().value.copy(
                     audioPlayerState = observable.surahDetailState().value.audioPlayerState().copy(
+                        currentSurahNumber = surahNumber
+                    )
+                )
+            )
+        }
+
+        override fun setTextSurahNumber(surahNumber: Int) {
+            observable.update(
+                observable.surahDetailState().value.copy(
+                    textState = observable.surahDetailState().value.textState().copy(
                         currentSurahNumber = surahNumber
                     )
                 )
@@ -216,6 +228,17 @@ interface SurahDetailStateManager : SurahDetailStateObservable.Read {
                 observable.surahDetailState().value.copy(
                     audioPlayerState = observable.surahDetailState().value.audioPlayerState().copy(
                         isOfflineMode = isOffline
+                    )
+                )
+            )
+        }
+
+        override fun updatePlaybackPosition(position: Long, duration: Long) {
+            observable.update(
+                observable.surahDetailState().value.copy(
+                    audioPlayerState = observable.surahDetailState().value.audioPlayerState().copy(
+                        position = position,
+                        duration = duration
                     )
                 )
             )

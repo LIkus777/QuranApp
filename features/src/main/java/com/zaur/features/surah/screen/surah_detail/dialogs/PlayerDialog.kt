@@ -1,5 +1,8 @@
 package com.zaur.features.surah.screen.surah_detail.dialogs
 
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -15,6 +18,7 @@ import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -41,6 +45,8 @@ import com.zaur.presentation.ui.rippleClickable
 
 @Composable
 fun PlayerDialog(
+    soundDuration: Long = 0L,
+    soundPosition: Long = 0L,
     showSheet: Boolean = true,
     isPlaying: Boolean = false,
     colors: QuranColors = LightThemeColors,
@@ -53,14 +59,27 @@ fun PlayerDialog(
     onPreviousAyahClicked: () -> Unit = {},
     onNextSurahClicked: () -> Unit = {},
     onPreviousSurahClicked: () -> Unit = {},
+    onSeekRequested: (newPositionMs: Long) -> Unit = {},
+    onSurahAndAyahClicked: () -> Unit = {},
     onDismiss: () -> Unit = {},
 ) {
-    var soundProgress by remember { mutableStateOf(0.5f) }
+    // 1) Никогда не делим на ноль
+    val safeDuration = soundDuration.coerceAtLeast(1L)
+
+    // 2) Прогресс от плеера 0f..1f
+    val rawProgress = (soundPosition / safeDuration.toFloat()).coerceIn(0f,1f)
+
+    // 4) Формат времени
+    fun fmt(ms: Long): String {
+        val total = ms.coerceIn(0L, safeDuration)
+        val s = total / 1000
+        return "%02d:%02d".format(s/60, s%60)
+    }
+    val displayPos = (rawProgress * safeDuration).toLong()
+    val remaining = safeDuration - displayPos
 
     CustomBottomSheet(
-        colors = colors,
-        isVisible = showSheet,
-        onDismiss = onDismiss,
+        colors = colors, isVisible = showSheet, onDismiss = onDismiss
     ) {
         Column(
             modifier = Modifier
@@ -69,22 +88,22 @@ fun PlayerDialog(
                 .background(colors.boxBackground),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Верхний прогресс
+            // ————— Прогресс-бар —————
             CustomProgressBar(
                 colors = colors,
-                progress = soundProgress,
-                onProgressChanged = { soundProgress = it },
+                progress = rawProgress,
+                durationMs = safeDuration,
+                onSeekRequested = onSeekRequested,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 4.dp)
             )
-
             // Время
             Row(
                 modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text("00:00", color = colors.textSecondary, fontSize = 12.sp)
-                Text("-00:18", color = colors.textSecondary, fontSize = 12.sp)
+                Text(fmt(displayPos), color = colors.textSecondary, fontSize = 12.sp)
+                Text("-${fmt(remaining)}", color = colors.textSecondary, fontSize = 12.sp)
             }
 
             // Сура и чтец в одной колонке

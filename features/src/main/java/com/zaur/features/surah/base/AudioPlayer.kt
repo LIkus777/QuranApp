@@ -2,6 +2,8 @@ package com.zaur.features.surah.base
 
 import android.content.Context
 import android.net.Uri
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import androidx.media3.common.AudioAttributes
 import androidx.media3.common.C
@@ -33,10 +35,13 @@ interface AudioPlayer {
     fun pauseAudio() // Пауза аудио
     fun restartAudio()
     fun seekTo(items: List<MediaItem>, index: Int, positionMs: Long = 0L)
+    fun seekTo(position: Long)
 
     fun playAudio(url: String, playFromCache: Boolean = false) // Воспроизвести аудио по URL
 
     fun playPlaylist(items: List<MediaItem>)
+
+    fun setProgressListener(listener: (currentPosition: Long, duration: Long) -> Unit)
 
     fun setAudioPlayerCallback(callback: AudioPlayerCallback)
 
@@ -46,6 +51,14 @@ interface AudioPlayer {
         private var currentMediaItem: MediaItem? = null
 
         private var audioPlayerCallback: AudioPlayerCallback? = null
+
+        private var updateHandler: Handler? = null
+        private var updateRunnable: Runnable? = null
+        private var progressListener: ((Long, Long) -> Unit)? = null
+
+        override fun setProgressListener(listener: (currentPosition: Long, duration: Long) -> Unit) {
+            progressListener = listener
+        }
 
         init {
             Log.i("TAG", "SurahPlayer: player $player")
@@ -76,6 +89,39 @@ interface AudioPlayer {
                     }
                 })
             }
+            // Отслеживаем прогресс проигрывания
+            player?.addListener(object : Player.Listener {
+                override fun onIsPlayingChanged(isPlaying: Boolean) {
+                    if (isPlaying) {
+                        startProgressUpdates()
+                    }
+                }
+
+                override fun onPlaybackStateChanged(state: Int) {
+                    if (state == Player.STATE_ENDED || state == Player.STATE_IDLE) {
+                        stopProgressUpdates()
+                    }
+                }
+            })
+        }
+
+        fun startProgressUpdates() {
+            if (updateHandler == null) {
+                updateHandler = Handler(Looper.getMainLooper())
+            }
+
+            updateRunnable = object : Runnable {
+                override fun run() {
+                    val player = player ?: return
+                    progressListener?.invoke(player.currentPosition, player.duration)
+                    updateHandler?.postDelayed(this, 16L)
+                }
+            }
+            updateHandler?.post(updateRunnable!!)
+        }
+
+        fun stopProgressUpdates() {
+            updateRunnable?.let { updateHandler?.removeCallbacks(it) }
         }
 
         override fun resume() {
@@ -143,6 +189,10 @@ interface AudioPlayer {
                 it.setMediaItems(items, index, 0L)
                 it.playWhenReady = true
             }
+        }
+
+        override fun seekTo(position: Long) {
+            player?.seekTo(position)
         }
 
         override fun release() {

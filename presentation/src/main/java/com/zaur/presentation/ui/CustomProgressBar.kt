@@ -23,8 +23,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import kotlin.math.roundToInt
 
 /**
  * @author Zaur
@@ -47,50 +49,67 @@ fun CustomProgressBar(
         modifier = modifier
             .height(24.dp)
             .pointerInput(Unit) {
-                detectDragGestures(
-                    onDragStart = { offset ->
-                        isDragging = true
-                        dragOffsetPx = offset.x.coerceIn(0f, size.width.toFloat())
-                        Log.d("CustomProgressBar", "Drag started at x=${offset.x}, clamped to $dragOffsetPx")
-                    },
-                    onDrag = { change, dragAmount ->
-                        change.consume()
-                        dragOffsetPx = (dragOffsetPx + dragAmount.x).coerceIn(0f, size.width.toFloat())
-                        Log.d("CustomProgressBar", "Dragging: dragAmount=${dragAmount.x}, dragOffsetPx=$dragOffsetPx")
-                    },
-                    onDragEnd = {
-                        isDragging = false
-                        val frac = (dragOffsetPx / size.width.toFloat()).coerceIn(0f,1f)
-                        val seekPosition = (frac * durationMs).toLong()
-                        Log.d("CustomProgressBar", "Drag ended. Seeking to position: $seekPosition ms (fraction $frac)")
-                        onSeekRequested(seekPosition)
-                    },
-                    onDragCancel = {
-                        isDragging = false
-                        Log.d("CustomProgressBar", "Drag cancelled")
-                    }
-                )
-            },
-        contentAlignment = Alignment.CenterStart
+                detectDragGestures(onDragStart = { offset ->
+                    isDragging = true
+                    dragOffsetPx = offset.x.coerceIn(0f, size.width.toFloat())
+                    Log.d(
+                        "CustomProgressBar",
+                        "Drag started at x=${offset.x}, clamped to $dragOffsetPx"
+                    )
+                }, onDrag = { change, dragAmount ->
+                    change.consume()
+                    dragOffsetPx = (dragOffsetPx + dragAmount.x).coerceIn(0f, size.width.toFloat())
+                    Log.d(
+                        "CustomProgressBar",
+                        "Dragging: dragAmount=${dragAmount.x}, dragOffsetPx=$dragOffsetPx"
+                    )
+                }, onDragEnd = {
+                    isDragging = false
+                    val frac = (dragOffsetPx / size.width.toFloat()).coerceIn(0f, 1f)
+                    val seekPosition = (frac * durationMs).toLong()
+                    Log.d(
+                        "CustomProgressBar",
+                        "Drag ended. Seeking to position: $seekPosition ms (fraction $frac)"
+                    )
+                    onSeekRequested(seekPosition)
+                }, onDragCancel = {
+                    isDragging = false
+                    Log.d("CustomProgressBar", "Drag cancelled")
+                })
+            }, contentAlignment = Alignment.CenterStart
     ) {
         val widthPx = constraints.maxWidth.toFloat()
-        val baseOffset = (progress.coerceIn(0f,1f) * widthPx)
+        val baseOffset = (progress.coerceIn(0f, 1f) * widthPx)
         val currentOffset = if (isDragging) dragOffsetPx else baseOffset
-        val fraction = (currentOffset / widthPx).coerceIn(0f,1f)
+        val fraction = (currentOffset / widthPx).coerceIn(0f, 1f)
 
-        Log.d("CustomProgressBar", "Drawing progress. Progress=$progress, baseOffset=$baseOffset, currentOffset=$currentOffset, fraction=$fraction")
+        Log.d(
+            "CustomProgressBar",
+            "Drawing progress. Progress=$progress, baseOffset=$baseOffset, currentOffset=$currentOffset, fraction=$fraction"
+        )
 
-        Box(Modifier.fillMaxWidth().height(4.dp).clip(RoundedCornerShape(2.dp)).background(Color.LightGray))
-        Box(Modifier.fillMaxWidth(fraction).height(4.dp).clip(RoundedCornerShape(2.dp)).background(colors.buttonPrimary))
         Box(
             Modifier
-                .offset { IntOffset((currentOffset - 6).toInt(), 0) }
-                .size(12.dp)
-                .background(colors.buttonTertiary, shape = CircleShape)
-                .border(0.5.dp, colors.cardBackground, CircleShape)
+                .fillMaxWidth()
+                .height(4.dp)
+                .clip(RoundedCornerShape(2.dp))
+                .background(Color.LightGray)
         )
+        Box(
+            Modifier
+                .fillMaxWidth(fraction)
+                .height(4.dp)
+                .clip(RoundedCornerShape(2.dp))
+                .background(colors.buttonPrimary)
+        )
+        Box(Modifier
+            .offset { IntOffset((currentOffset - 6).toInt(), 0) }
+            .size(12.dp)
+            .background(colors.buttonTertiary, shape = CircleShape)
+            .border(0.5.dp, colors.cardBackground, CircleShape))
     }
 }
+
 @SuppressLint("UnusedBoxWithConstraintsScope")
 @Composable
 fun CustomProgressBarSound(
@@ -105,12 +124,15 @@ fun CustomProgressBarSound(
             .height(24.dp), contentAlignment = Alignment.CenterStart
     ) {
         val barWidth = constraints.maxWidth.toFloat()
+        val density = LocalDensity.current
+        // рассчитываем смещение хит-области для центрирования
+        val halfHitAreaPx = with(density) { 12.dp.toPx() }
         var dragOffset by remember { mutableStateOf(0f) }
 
         val actualProgress = progress.coerceIn(0f, 1f)
         val thumbOffsetPx = actualProgress * barWidth
 
-        // Трек
+        // Трек без кликов
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -128,23 +150,31 @@ fun CustomProgressBarSound(
                 .background(colors.buttonPrimary)
         )
 
-        // Ползунок
-        Box(modifier = Modifier
-            .offset {
-                IntOffset((thumbOffsetPx - 6).toInt(), 0)
-            }
-            .size(12.dp)
-            .pointerInput(Unit) {
-                detectDragGestures(onDragStart = {
-                    dragOffset = thumbOffsetPx
-                }, onDrag = { change, dragAmount ->
-                    change.consume()
-                    dragOffset += dragAmount.x
-                    val newProgress = (dragOffset / barWidth).coerceIn(0f, 1f)
-                    onProgressChanged(newProgress)
-                })
-            }
-            .background(colors.buttonTertiary, shape = CircleShape)
-            .border(0.5.dp, colors.cardBackground, CircleShape))
+        // Ползунок: только область хит-теста реагирует на тач
+        Box(
+            modifier = Modifier
+                .offset {
+                    IntOffset((thumbOffsetPx - halfHitAreaPx).roundToInt(), 0)
+                }
+                .size(24.dp)
+                .pointerInput(Unit) {
+                    detectDragGestures(onDragStart = {
+                        dragOffset = thumbOffsetPx
+                    }, onDrag = { change, dragAmount ->
+                        change.consume()
+                        dragOffset = (dragOffset + dragAmount.x).coerceIn(0f, barWidth)
+                        val newProgress = (dragOffset / barWidth).coerceIn(0f, 1f)
+                        onProgressChanged(newProgress)
+                    })
+                }, contentAlignment = Alignment.Center
+        ) {
+            // сам "кругляшок" 12.dp
+            Box(
+                modifier = Modifier
+                    .size(12.dp)
+                    .background(colors.buttonTertiary, shape = CircleShape)
+                    .border(0.5.dp, colors.cardBackground, CircleShape)
+            )
+        }
     }
 }

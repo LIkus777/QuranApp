@@ -30,6 +30,7 @@ interface AyaListItem {
 
     @Composable
     fun Render(
+        isCurrentSurah: Boolean,
         chapterNumber: Int,
         surahDetailState: SurahDetailScreenState,
         listState: LazyListState,
@@ -55,6 +56,7 @@ interface AyaListItem {
     object AyahListItem : AyaListItem {
         @Composable
         override fun Render(
+            isCurrentSurah: Boolean,
             chapterNumber: Int,
             surahDetailState: SurahDetailScreenState,
             listState: LazyListState,
@@ -64,13 +66,13 @@ interface AyaListItem {
             onAyahItemChanged: (Int) -> Unit,
             onPageItemChanged: (Int) -> Unit,
             onClickSound: (Int, Int) -> Unit,
-            translations: List<com.zaur.domain.al_quran_cloud.models.translate.Ayah.Base>,
+            translations: List<com.zaur.domain.al_quran_cloud.models.translate.Ayah.Base>
         ) {
             val currentAudioAyah = surahDetailState.audioPlayerState().currentAyah()
 
             // Эффект для скролла при изменении текущего аята аудио
             LaunchedEffect(currentAudioAyah) {
-                if (currentAudioAyah > 0) {
+                if (currentAudioAyah > 0 && isCurrentSurah) {
                     listState.animateScrollToItem(currentAudioAyah)
                 }
             }

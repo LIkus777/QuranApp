@@ -25,6 +25,20 @@ class QuranPreferences(context: Context) : QuranStorage {
     override fun saveFontSizeRussian(size: Float) =
         sharedPreferences.edit().putFloat(QuranSharedPrefKeys.RUSSIAN_FONT_SIZE, size).apply()
 
+    override fun getAudioSurahName(): String =
+        sharedPreferences.getString(QuranSharedPrefKeys.AUDIO_SURAH_NAME, "").toString()
+
+    override fun setAudioSurahName(surahName: String) = sharedPreferences.edit().putString(
+        QuranSharedPrefKeys.AUDIO_SURAH_NAME, surahName
+    ).apply()
+
+    override fun getLastPlayedAyah(): Int =
+        sharedPreferences.getInt(QuranSharedPrefKeys.LAST_PLAYED_AYAH, 0)
+
+    override fun setLastPlayedAyah(ayahNumber: Int) = sharedPreferences.edit().putInt(
+        QuranSharedPrefKeys.LAST_PLAYED_AYAH, ayahNumber
+    ).apply()
+
     override fun getLastPlayedSurah(): Int =
         sharedPreferences.getInt(QuranSharedPrefKeys.LAST_PLAYED_SURAH, 0)
 

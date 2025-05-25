@@ -10,6 +10,10 @@ interface QuranStorage {
     fun getFontSizeRussian(): Float
     fun saveFontSizeArabic(size: Float)
     fun saveFontSizeRussian(size: Float)
+    fun getAudioSurahName(): String
+    fun setAudioSurahName(surahName: String)
+    fun getLastPlayedAyah(): Int
+    fun setLastPlayedAyah(ayahNumber: Int)
     fun getLastPlayedSurah(): Int
     fun setLastPlayedSurah(surahNumber: Int)
     fun setLastReadSurah(surahNumber: Int)

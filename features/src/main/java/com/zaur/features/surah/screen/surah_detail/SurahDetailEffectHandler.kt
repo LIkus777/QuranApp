@@ -1,6 +1,5 @@
 package com.zaur.features.surah.screen.surah_detail
 
-
 /**
  * @author Zaur
  * @since 17.05.2025
@@ -8,12 +7,10 @@ package com.zaur.features.surah.screen.surah_detail
 
 import android.util.Log
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.navigation.NavHostController
 import com.zaur.domain.al_quran_cloud.models.audiofile.VerseAudioAqc
@@ -37,6 +34,9 @@ interface SurahDetailEffectHandler {
 
     @Composable
     fun HandleReciter()
+
+    @Composable
+    fun HandleAyah()
 
     @Composable
     fun HandleInitialLoad(pageNumber: Int)
@@ -67,6 +67,7 @@ interface SurahDetailEffectHandler {
             HandleAudioCache()
             HandleAyahs()
             HandlePlayVerse()
+            HandleAyah()
             HandleReciter()
             HandleInitialLoad(pageNumber)
             HandleLifecycleLogging(lifecycleOwner)
@@ -108,17 +109,27 @@ interface SurahDetailEffectHandler {
         override fun HandleReciter() {
             val reciter = uiData.surahDetailState().reciterState().currentReciter()
             val reciterName = uiData.surahDetailState().reciterState().currentReciterName()
+            val savedSurahNumber =
+                deps.quranAudioViewModel().getLastPlayedSurah().takeIf { it != 0 } ?: chapterNumber
             LaunchedEffect(reciter, reciterName) {
-                quranAudio.downloadToCache(chapterNumber, reciter)
+                quranAudio.downloadToCache(savedSurahNumber, reciter)
+            }
+        }
+
+        @Composable
+        override fun HandleAyah() {
+            LaunchedEffect(uiData.surahDetailState().audioPlayerState().currentAyah()) {
+                quranAudio.setLastPlayedAyah(uiData.surahDetailState().audioPlayerState().currentAyah())
             }
         }
 
         @Composable
         override fun HandleInitialLoad(pageNumber: Int) {
             LaunchedEffect(uiData.surahDetailState().textState().currentSurahNumber()) {
-                val currentSurahNumber =
-                    uiData.surahDetailState().textState().currentSurahNumber()
-                if (chapterNumber != currentSurahNumber && currentSurahNumber != 0 && !uiData.textState().chapters().isNullOrEmpty()) {
+                val currentSurahNumber = uiData.surahDetailState().textState().currentSurahNumber()
+                if (chapterNumber != currentSurahNumber && currentSurahNumber != 0 && !uiData.textState()
+                        .chapters().isNullOrEmpty()
+                ) {
                     val surahName =
                         uiData.textState().chapters()[currentSurahNumber - 1].englishName()
                     controller.navigate(
@@ -130,7 +141,6 @@ interface SurahDetailEffectHandler {
             }
 
             LaunchedEffect(chapterNumber) {
-
                 val reciter =
                     quranAudio.getReciter() ?: throw IllegalStateException("Нету ресайтера")
                 val reciterName = quranAudio.getReciterName()
@@ -146,16 +156,14 @@ interface SurahDetailEffectHandler {
                     quranPage.getTranslatedPage(pageNumber, "ru.kuliev")
                     quranText.getAllChapters()
                     quranText.getArabicChapter(chapterNumber)
-                    quranTranslation.getTranslationForChapter(chapterNumber, "ru.kuliev")
-                    quranAudio.downloadToCache(chapterNumber, reciter)
-                    quranAudio.getChaptersAudioOfReciter(chapterNumber, reciter)
+                    quranTranslation.getTranslationForChapter(chapterNumber, "ru.kuliev")/*quranAudio.downloadToCache(chapterNumber, reciter)
+                    quranAudio.getChaptersAudioOfReciter(chapterNumber, reciter)*/
                 }
             }
         }
 
         @Composable
-        override fun HandleLifecycleLogging(lifecycleOwner: androidx.lifecycle.LifecycleOwner) {
-            /*DisposableEffect(lifecycleOwner) {
+        override fun HandleLifecycleLogging(lifecycleOwner: androidx.lifecycle.LifecycleOwner) {/*DisposableEffect(lifecycleOwner) {
                 val observer = LifecycleEventObserver { _, event ->
                     Log.i("SurahDetailScreen", "SurahDetailScreenContent Lifecycle event: $event")
                 }

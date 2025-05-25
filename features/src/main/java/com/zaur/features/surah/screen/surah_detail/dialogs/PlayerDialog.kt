@@ -61,6 +61,7 @@ fun PlayerDialog(
     onPreviousSurahClicked: () -> Unit = {},
     onSeekRequested: (newPositionMs: Long) -> Unit = {},
     onSurahAndAyahClicked: () -> Unit = {},
+    onReciterClicked: () -> Unit = {},
     onDismiss: () -> Unit = {},
 ) {
     // 1) Никогда не делим на ноль
@@ -113,7 +114,7 @@ fun PlayerDialog(
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.rippleClickable { /* действие */ }) {
+                    modifier = Modifier.rippleClickable { onSurahAndAyahClicked() }) {
                     Text(
                         text = "$surahNumber. $surahName, аят ${if (ayahNumber != 0) ayahNumber else ""}",
                         fontWeight = FontWeight.Bold,
@@ -129,7 +130,7 @@ fun PlayerDialog(
 
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.rippleClickable(onClick = {})
+                    modifier = Modifier.rippleClickable(onClick = { onReciterClicked() })
                 ) {
                     Text(
                         text = reciterName, color = colors.textSecondary, fontSize = 14.sp

@@ -16,7 +16,8 @@ interface SurahDetailViewModel {
     fun updateState(state: SurahDetailScreenState.Base)
     fun surahDetailState(): StateFlow<SurahDetailScreenState>
 
-    fun setSurahName(name: String)
+    fun setTextSurahName(name: String)
+    fun setAudioSurahName(name: String)
     fun setAudioSurahNumber(surahNumber: Int)
     fun setTextSurahNumber(surahNumber: Int)
     fun showReciterDialog(show: Boolean)
@@ -30,7 +31,7 @@ interface SurahDetailViewModel {
     fun fontSizeArabic(fontSize: Float)
     fun fontSizeRussian(fontSize: Float)
     fun selectedReciter(reciter: String, reciterName: String)
-    fun setAyahInAudio(ayahInSurah: Int)
+    fun setAudioSurahAyah(ayahInSurah: Int)
     fun setAyahInText(ayah: Int)
     fun setOfflineMode(isOffline: Boolean)
 
@@ -46,12 +47,16 @@ interface SurahDetailViewModel {
 
         override fun surahDetailState(): StateFlow<SurahDetailScreenState> {
             val state = stateManager.surahDetailState()
-            Log.w("TAG", "SurahDetailViewModel: state $state", )
+            Log.w("TAG", "SurahDetailViewModel: state $state")
             return state
         }
 
-        override fun setSurahName(name: String) {
-            stateManager.setSurahName(name)
+        override fun setTextSurahName(name: String) {
+            stateManager.setTextSurahName(name)
+        }
+
+        override fun setAudioSurahName(name: String) {
+            stateManager.setAudioSurahName(name)
         }
 
         override fun setAudioSurahNumber(surahNumber: Int) {
@@ -108,8 +113,8 @@ interface SurahDetailViewModel {
             stateManager.selectedReciter(reciter, reciterName)
         }
 
-        override fun setAyahInAudio(ayahInSurah: Int) {
-            stateManager.setAyahInAudio(ayahInSurah)
+        override fun setAudioSurahAyah(ayahInSurah: Int) {
+            stateManager.setAudioSurahAyah(ayahInSurah)
         }
 
         override fun setAyahInText(ayah: Int) {

@@ -26,6 +26,9 @@ fun AyaColumn(
     translations: List<com.zaur.domain.al_quran_cloud.models.translate.Ayah.Base>,
 ) {
 
+    val isCurrentSurah =
+        surahDetailState.textState().surahName() == surahDetailState.audioPlayerState().surahName()
+
     // 1) получаем начальный аят
     val currentTextAyah = surahDetailState.textState().currentAyah()
 
@@ -37,6 +40,7 @@ fun AyaColumn(
     when (state) {
         is AyaListItem.Loading -> state.Render()
         is AyaListItem.AyahListItem -> state.Render(
+            isCurrentSurah,
             chapterNumber,
             surahDetailState,
             listState,

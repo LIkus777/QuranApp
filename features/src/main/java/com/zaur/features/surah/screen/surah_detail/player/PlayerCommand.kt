@@ -14,12 +14,15 @@ interface PlayerCommand {
     class PlayWholeChapterCommand(
         private val audioPlayer: AudioPlayer,
         private val audioPlayerStateUpdater: AudioPlayerStateUpdater,
-        private val mediaItem: List<MediaItem>,
+        private val mediaItems: List<MediaItem>,
+        private val startIndex: Int
     ) : PlayerCommand {
         override fun execute() {
-            audioPlayer.playPlaylist(mediaItem)
+            // вместо playPlaylist → play from startIndex
+            audioPlayer.playFromIndex(mediaItems, startIndex, /*positionMs=*/0L)
             audioPlayerStateUpdater.markWholeChapterPlaying(
-                isAudioPlaying = true, playWholeChapter = true
+                isAudioPlaying = true,
+                playWholeChapter = true
             )
         }
     }

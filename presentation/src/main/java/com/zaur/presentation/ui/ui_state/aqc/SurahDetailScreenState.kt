@@ -59,6 +59,7 @@ interface TextState {
 
 interface AudioPlayerState {
 
+    fun surahName(): String
     fun currentAyah(): Int
     fun currentSurahNumber(): Int
     fun isAudioPlaying(): Boolean
@@ -69,6 +70,7 @@ interface AudioPlayerState {
     fun duration(): Long
 
     data class Base(
+        private val surahName: String = "",
         private val currentAyah: Int = 0,
         private val currentSurahNumber: Int = 0,
         private val isAudioPlaying: Boolean = false,
@@ -78,6 +80,7 @@ interface AudioPlayerState {
         private val position: Long = 0L,
         private val duration: Long = 0L,
     ) : AudioPlayerState {
+        override fun surahName(): String = surahName
         override fun currentAyah() = currentAyah
         override fun currentSurahNumber() = currentSurahNumber
         override fun isAudioPlaying() = isAudioPlaying

@@ -6,6 +6,7 @@ import com.zaur.features.surah.screen.surah_detail.dialogs.ChooseReciterDialogCo
 import com.zaur.features.surah.screen.surah_detail.dialogs.ChooseTextDialogComponent
 import com.zaur.features.surah.screen.surah_detail.dialogs.PlayerDialogComponent
 import com.zaur.features.surah.screen.surah_detail.dialogs.SettingsDialogComponent
+import com.zaur.features.surah.screen.surah_detail.dialogs.rememberSurahDetailUiData
 import com.zaur.presentation.ui.DarkThemeColors
 import com.zaur.presentation.ui.LightThemeColors
 
@@ -45,9 +46,6 @@ fun SurahDetailScreenContent(
     PlayerDialogComponent(colors, uiData, deps)
     ChooseTextDialogComponent(colors, uiData, deps)
     ChooseReciterDialogComponent(
-        uiData.surahDetailState(),
-        colors,
-        deps.surahDetailViewModel(),
-        deps.quranAudioViewModel()
+        uiData.surahDetailState(), colors, deps.surahDetailViewModel(), deps.quranAudioViewModel()
     )
 }

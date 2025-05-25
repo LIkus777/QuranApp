@@ -34,6 +34,7 @@ interface AudioPlayer {
     fun isPlaying(): Boolean // Проверка, воспроизводится ли аудио
     fun pauseAudio() // Пауза аудио
     fun restartAudio()
+    fun playFromIndex(items: List<MediaItem>, index: Int, positionMs: Long)
     fun seekTo(items: List<MediaItem>, index: Int, positionMs: Long = 0L)
     fun seekTo(position: Long)
 
@@ -181,6 +182,25 @@ interface AudioPlayer {
                     it.seekTo(0) // Перемотка на начало
                     it.playWhenReady = true
                 }
+            }
+        }
+
+        override fun playFromIndex(
+            items: List<MediaItem>,
+            index: Int,
+            positionMs: Long,
+        ) {
+            player?.apply {
+                // 1) Сбрасываем всё
+                clearMediaItems()
+                // 2) Добавляем все items
+                addMediaItems(items)
+                // 3) Устанавливаем стартовый трек и позицию
+                //    -- здесь важно вызвать именно setMediaItems с нужным индексом+позицией
+                setMediaItems(items, index, positionMs)
+                // 4) Подготовка и запуск
+                prepare()
+                playWhenReady = true
             }
         }
 

@@ -70,6 +70,22 @@ class FakeQuranStorage() : QuranStorage {
         TODO("Not yet implemented")
     }
 
+    override fun getAudioSurahName(): String {
+        TODO("Not yet implemented")
+    }
+
+    override fun setAudioSurahName(surahName: String) {
+        TODO("Not yet implemented")
+    }
+
+    override fun getLastPlayedAyah(): Int {
+        TODO("Not yet implemented")
+    }
+
+    override fun setLastPlayedAyah(ayahNumber: Int) {
+        TODO("Not yet implemented")
+    }
+
     override fun getLastPlayedSurah(): Int {
         TODO("Not yet implemented")
     }

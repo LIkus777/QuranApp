@@ -60,9 +60,12 @@ interface PlaybackController {
             val items = playlistManager.currentPlaylist()
             if (items.isEmpty()) return
 
+            val stateValue = state.value.audioPlayerState()
+            val currentIndex = stateValue.currentAyah() - 1
+
             val cmd = when {
                 !audioPlayer.isPlaying() && !audioPlayer.isPaused() -> PlayWholeChapterCommand(
-                    audioPlayer, audioPlayerStateUpdater, items
+                    audioPlayer, audioPlayerStateUpdater, items, startIndex = currentIndex
                 )
 
                 audioPlayer.isPlaying() -> PauseCommand(audioPlayer, audioPlayerStateUpdater)

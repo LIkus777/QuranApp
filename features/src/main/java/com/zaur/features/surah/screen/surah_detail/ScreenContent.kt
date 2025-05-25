@@ -5,7 +5,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
@@ -67,7 +66,7 @@ fun ScreenContent(
                             quranPageViewModel().saveLastReadPagePosition(page)
                         },
                         onClickSound = { ayahNumber, ayahNumberInSurah ->
-                            surahDetailViewModel().setAyahInAudio(ayahNumberInSurah)
+                            surahDetailViewModel().setAudioSurahAyah(ayahNumberInSurah)
                             Log.i("TAG", "SreenContent: ayahNumber $ayahNumber ayahNumberInSurah $ayahNumberInSurah")
                             quranAudioViewModel().onPlaySingleClicked(
                                 ayahNumberInSurah, chapterNumber
@@ -89,7 +88,7 @@ fun ScreenContent(
                             onClickPreviousPage = {},
                             onClickNextPage = {},
                             onClickSound = { ayahNumber, ayahNumberInSurah ->
-                                surahDetailViewModel().setAyahInAudio(ayahNumberInSurah)
+                                surahDetailViewModel().setAudioSurahAyah(ayahNumberInSurah)
                                 Log.i("TAG", "SreenContent: ayahNumber $ayahNumber ayahNumberInSurah $ayahNumberInSurah")
                                 quranAudioViewModel().onPlaySingleClicked(
                                     ayahNumberInSurah, chapterNumber

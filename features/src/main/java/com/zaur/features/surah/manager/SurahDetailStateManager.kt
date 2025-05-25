@@ -2,6 +2,7 @@ package com.zaur.features.surah.manager
 
 import android.util.Log
 import com.zaur.features.surah.base.Observable
+import com.zaur.features.surah.observables.SurahDetailStateObservable
 import com.zaur.presentation.ui.ui_state.aqc.SurahDetailScreenState
 import kotlinx.coroutines.flow.StateFlow
 
@@ -10,27 +11,12 @@ import kotlinx.coroutines.flow.StateFlow
  * @since 2025-05-12
  */
 
-interface SurahDetailStateObservable : Observable.Mutable<SurahDetailScreenState.Base> {
-    interface Update : Observable.Update<SurahDetailScreenState.Base>
-
-    interface Read : Observable.Read<SurahDetailScreenState.Base> {
-        fun surahDetailState(): StateFlow<SurahDetailScreenState.Base>
-    }
-
-    interface Mutable : Update, Read
-
-    class Base(
-        private val initial: SurahDetailScreenState.Base,
-    ) : Observable.Abstract<SurahDetailScreenState.Base>(initial), Mutable {
-        override fun surahDetailState(): StateFlow<SurahDetailScreenState.Base> = state()
-    }
-}
-
 interface SurahDetailStateManager : SurahDetailStateObservable.Read {
 
     fun updateState(state: SurahDetailScreenState.Base)
 
-    fun setSurahName(name: String)
+    fun setTextSurahName(name: String)
+    fun setAudioSurahName(name: String)
     fun setAudioSurahNumber(surahNumber: Int)
     fun setTextSurahNumber(surahNumber: Int)
     fun showReciterDialog(show: Boolean)
@@ -44,7 +30,7 @@ interface SurahDetailStateManager : SurahDetailStateObservable.Read {
     fun fontSizeArabic(fontSize: Float)
     fun fontSizeRussian(fontSize: Float)
     fun selectedReciter(reciter: String, reciterName: String)
-    fun setAyahInAudio(ayah: Int)
+    fun setAudioSurahAyah(ayah: Int)
     fun setAyahInText(ayah: Int)
     fun setOfflineMode(isOffline: Boolean)
     fun updatePlaybackPosition(position: Long, duration: Long)
@@ -60,7 +46,7 @@ interface SurahDetailStateManager : SurahDetailStateObservable.Read {
 
         override fun surahDetailState(): StateFlow<SurahDetailScreenState.Base> {
             val state = observable.surahDetailState()
-            Log.w("TAG", "SurahDetailViewModel: state $state", )
+            Log.w("TAG", "SurahDetailViewModel: state $state")
             return state
         }
 
@@ -76,10 +62,20 @@ interface SurahDetailStateManager : SurahDetailStateObservable.Read {
             )
         }
 
-        override fun setSurahName(name: String) {
+        override fun setTextSurahName(name: String) {
             observable.update(
                 observable.surahDetailState().value.copy(
                     textState = observable.surahDetailState().value.textState().copy(
+                        surahName = name
+                    )
+                )
+            )
+        }
+
+        override fun setAudioSurahName(name: String) {
+            observable.update(
+                observable.surahDetailState().value.copy(
+                    audioPlayerState = observable.surahDetailState().value.audioPlayerState().copy(
                         surahName = name
                     )
                 )
@@ -196,14 +192,13 @@ interface SurahDetailStateManager : SurahDetailStateObservable.Read {
             observable.update(
                 observable.surahDetailState().value.copy(
                     reciterState = observable.surahDetailState().value.reciterState().copy(
-                        currentReciter = reciter,
-                        currentReciterName = reciterName
+                        currentReciter = reciter, currentReciterName = reciterName
                     )
                 )
             )
         }
 
-        override fun setAyahInAudio(ayahInSurah: Int) {
+        override fun setAudioSurahAyah(ayahInSurah: Int) {
             observable.update(
                 observable.surahDetailState().value.copy(
                     audioPlayerState = observable.surahDetailState().value.audioPlayerState().copy(
@@ -237,8 +232,7 @@ interface SurahDetailStateManager : SurahDetailStateObservable.Read {
             observable.update(
                 observable.surahDetailState().value.copy(
                     audioPlayerState = observable.surahDetailState().value.audioPlayerState().copy(
-                        position = position,
-                        duration = duration
+                        position = position, duration = duration
                     )
                 )
             )
@@ -278,5 +272,3 @@ interface SurahDetailStateManager : SurahDetailStateObservable.Read {
         }
     }
 }
-
-

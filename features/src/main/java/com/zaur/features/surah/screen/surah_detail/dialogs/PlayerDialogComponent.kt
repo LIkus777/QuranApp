@@ -22,42 +22,45 @@ fun PlayerDialogComponent(
 ) {
     with(uiData) {
         with(deps) {
-            val surahNumber = if (uiData.surahDetailState().audioPlayerState().currentSurahNumber() != 0)
-                uiData.surahDetailState().audioPlayerState().currentSurahNumber()
-            else uiData.surahDetailState().textState().currentSurahNumber()
-            PlayerDialog(
-                soundDuration = uiData.surahDetailState().audioPlayerState().duration(),
-                soundPosition = uiData.surahDetailState().audioPlayerState().position(),
-                colors = colors,
-                surahName = uiData.surahDetailState().textState().surahName(),
-                ayahNumber = uiData.surahDetailState().audioPlayerState().currentAyah(),
-                surahNumber = surahNumber,
-                reciterName = uiData.surahDetailState().reciterState().currentReciterName(),
-                showSheet = uiData.surahDetailState().bottomSheetState().showPlayerBottomSheet(),
-                isPlaying = uiData.surahDetailState().audioPlayerState().isAudioPlaying(),
-                onPlayClicked = {
-                    quranAudioViewModel().onPlayWholeClicked()
-                },
-                onNextAyahClicked = {
-                    quranAudioViewModel().onNextAyahClicked()
-                },
-                onPreviousAyahClicked = {
-                    quranAudioViewModel().onPreviousAyahClicked()
-                },
-                onNextSurahClicked = {
-                    quranAudioViewModel().onNextSurahClicked()
-                },
-                onPreviousSurahClicked = {
-                    quranAudioViewModel().onPreviousSurahClicked()
-                },
-                onSeekRequested = { newPosMs ->
-                    // здесь вызываем метод плеера, который вы в себе реализуете, например:
-                    quranAudioViewModel().seekTo(newPosMs)
-                },
-                onSurahAndAyahClicked = {
+            with(surahDetailState()) {
+                val surahNumber = audioPlayerState().currentSurahNumber()
+                PlayerDialog(
+                    soundDuration = audioPlayerState().duration(),
+                    soundPosition = audioPlayerState().position(),
+                    colors = colors,
+                    surahName = audioPlayerState().surahName(),
+                    ayahNumber = audioPlayerState().currentAyah(),
+                    surahNumber = surahNumber,
+                    reciterName = reciterState().currentReciterName(),
+                    showSheet = bottomSheetState().showPlayerBottomSheet(),
+                    isPlaying = audioPlayerState().isAudioPlaying(),
+                    onPlayClicked = {
+                        quranAudioViewModel().onPlayWholeClicked()
+                    },
+                    onNextAyahClicked = {
+                        quranAudioViewModel().onNextAyahClicked()
+                    },
+                    onPreviousAyahClicked = {
+                        quranAudioViewModel().onPreviousAyahClicked()
+                    },
+                    onNextSurahClicked = {
+                        quranAudioViewModel().onNextSurahClicked()
+                    },
+                    onPreviousSurahClicked = {
+                        quranAudioViewModel().onPreviousSurahClicked()
+                    },
+                    onSeekRequested = { newPosMs ->
+                        // здесь вызываем метод плеера, который вы в себе реализуете, например:
+                        quranAudioViewModel().seekTo(newPosMs)
+                    },
+                    onSurahAndAyahClicked = {
 
-                },
-                onDismiss = { surahDetailViewModel().showPlayerBottomSheet(false) })
+                    },
+                    onReciterClicked = {
+                        deps.surahDetailViewModel().showReciterDialog(true)
+                    },
+                    onDismiss = { surahDetailViewModel().showPlayerBottomSheet(false) })
+            }
         }
     }
 }

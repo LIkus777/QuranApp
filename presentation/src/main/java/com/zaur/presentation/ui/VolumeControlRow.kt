@@ -1,7 +1,13 @@
 package com.zaur.presentation.ui
 
+import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
+import android.database.ContentObserver
 import android.media.AudioManager
+import android.os.Handler
+import android.os.Looper
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -9,6 +15,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -21,6 +28,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.zaur.presentation.R
 import kotlin.math.roundToInt
+import android.provider.Settings
+import androidx.compose.runtime.LaunchedEffect
 
 /**
  * @author Zaur
@@ -39,19 +48,38 @@ fun VolumeControlRow(
     val maxVol = remember { audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC) }
 
     var sliderPos by remember {
-        mutableFloatStateOf(
-            audioManager.getStreamVolume(AudioManager.STREAM_MUSIC).toFloat() / maxVol
-        )
+        mutableStateOf(audioManager.getStreamVolume(AudioManager.STREAM_MUSIC) / maxVol.toFloat())
     }
-    var isMuted by remember { mutableStateOf(false) }
-    var prevVolume by remember { mutableFloatStateOf(sliderPos) }
+    var isMuted by remember { mutableStateOf(sliderPos == 0f) }
+    var prevVolume by remember { mutableStateOf(sliderPos) }
 
-    // Функция для выбора иконки по уровню
+    // BroadcastReceiver для отслеживания аппаратных кнопок громкости
+    DisposableEffect(context) {
+        val receiver = object : BroadcastReceiver() {
+            override fun onReceive(ctx: Context, intent: Intent) {
+                if (intent.action == "android.media.VOLUME_CHANGED_ACTION") {
+                    val streamType = intent.getIntExtra("android.media.EXTRA_VOLUME_STREAM_TYPE", -1)
+                    if (streamType == AudioManager.STREAM_MUSIC) {
+                        val newVol = intent.getIntExtra("android.media.EXTRA_VOLUME_STREAM_VALUE", 0)
+                        val newPos = newVol / maxVol.toFloat()
+                        sliderPos = newPos.coerceIn(0f, 1f)
+                        isMuted = sliderPos == 0f
+                    }
+                }
+            }
+        }
+        val filter = IntentFilter("android.media.VOLUME_CHANGED_ACTION")
+        context.registerReceiver(receiver, filter)
+        onDispose {
+            context.unregisterReceiver(receiver)
+        }
+    }
 
     Row(
-        verticalAlignment = Alignment.CenterVertically, modifier = modifier
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier
     ) {
-        // 1) Иконка
+        // Иконка
         val iconRes = volumeIcon(sliderPos, isMuted)
         Icon(
             painter = painterResource(iconRes),
@@ -61,10 +89,10 @@ fun VolumeControlRow(
                 .rippleClickable {
                     if (!isMuted) {
                         prevVolume = sliderPos
-                        sliderPos = 0f
                         audioManager.setStreamVolume(
                             AudioManager.STREAM_MUSIC, 0, AudioManager.FLAG_SHOW_UI
                         )
+                        sliderPos = 0f
                     } else {
                         sliderPos = prevVolume.coerceIn(0f, 1f)
                         audioManager.setStreamVolume(
@@ -74,20 +102,24 @@ fun VolumeControlRow(
                         )
                     }
                     isMuted = !isMuted
-                })
+                }
+        )
 
-        Spacer(modifier = Modifier.width(6.dp))
+        Spacer(Modifier.width(6.dp))
 
-        // 2) Ползунок
+        // Ваш слайдер
         CustomProgressBarSound(
-            colors = colors, progress = sliderPos, onProgressChanged = { newProgress ->
+            colors = colors,
+            progress = sliderPos,
+            onProgressChanged = { newProgress ->
                 isMuted = false
                 sliderPos = newProgress
                 val newVol = (newProgress * maxVol).roundToInt()
                 audioManager.setStreamVolume(
                     AudioManager.STREAM_MUSIC, newVol, AudioManager.FLAG_SHOW_UI
                 )
-            }, modifier = Modifier
+            },
+            modifier = Modifier
                 .height(20.dp)
                 .width(150.dp)
         )

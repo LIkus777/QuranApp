@@ -23,8 +23,12 @@ interface QuranAudioUseCase {
 
     suspend fun getAyahAudioByKey(verseKey: String, reciter: String): VerseAudioAqc
 
+    fun getAudioSurahName(): String
+    fun setAudioSurahName(surahName: String)
     fun getLastPlayedSurah(): Int
     fun setLastPlayedSurah(surahNumber: Int)
+    fun getLastPlayedAyah(): Int
+    fun setLastPlayedAyah(ayahNumber: Int)
 
     class Base(
         private val quranStorage: QuranStorage,
@@ -54,8 +58,16 @@ interface QuranAudioUseCase {
             quranAudioRepositoryCloud.getAyahAudioByKeyCloud(verseKey, reciter)
         }
 
+        override fun getAudioSurahName(): String = quranStorage.getAudioSurahName()
+
+        override fun setAudioSurahName(surahName: String) = quranStorage.setAudioSurahName(surahName)
+
         override fun getLastPlayedSurah(): Int = quranStorage.getLastPlayedSurah()
 
         override fun setLastPlayedSurah(surahNumber: Int) = quranStorage.setLastPlayedSurah(surahNumber)
+
+        override fun getLastPlayedAyah(): Int = quranStorage.getLastPlayedAyah()
+
+        override fun setLastPlayedAyah(ayahNumber: Int) = quranStorage.setLastPlayedAyah(ayahNumber)
     }
 }

@@ -4,7 +4,7 @@ import com.zaur.domain.al_quran_cloud.models.audiofile.CacheAudio
 import com.zaur.domain.al_quran_cloud.models.audiofile.ChapterAudioFile
 import com.zaur.domain.al_quran_cloud.models.audiofile.VerseAudioAqc
 import com.zaur.features.surah.manager.SurahDetailStateManager
-import com.zaur.features.surah.observables.QuranAudioObservable
+import com.zaur.features.surah.observables.SurahPlayerObservable
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -22,7 +22,7 @@ interface AudioResultHandler {
     fun handleCacheAudio(data: List<CacheAudio.Base>)
 
     class Base(
-        private val observable: QuranAudioObservable.Mutable,
+        private val observable: SurahPlayerObservable.Mutable,
         private val stateManager: SurahDetailStateManager,
         private val scope: CoroutineScope,
     ) : AudioResultHandler {

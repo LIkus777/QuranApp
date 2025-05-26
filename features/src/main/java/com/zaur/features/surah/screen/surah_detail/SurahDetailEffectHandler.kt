@@ -27,9 +27,6 @@ interface SurahDetailEffectHandler {
     fun HandleAudioCache()
 
     @Composable
-    fun HandleAyahs()
-
-    @Composable
     fun HandlePlayVerse()
 
     @Composable
@@ -65,7 +62,6 @@ interface SurahDetailEffectHandler {
             }
 
             HandleAudioCache()
-            HandleAyahs()
             HandlePlayVerse()
             HandleAyah()
             HandleReciter()
@@ -83,14 +79,6 @@ interface SurahDetailEffectHandler {
                 } else {
                     // показать полосу загрузки — TODO
                 }
-            }
-        }
-
-        @Composable
-        override fun HandleAyahs() {
-            val ayahs = uiData.audioState().chaptersAudioFile().ayahs()
-            LaunchedEffect(ayahs) {
-                quranAudio.setAyahs(ayahs)
             }
         }
 
@@ -119,7 +107,9 @@ interface SurahDetailEffectHandler {
         @Composable
         override fun HandleAyah() {
             LaunchedEffect(uiData.surahDetailState().audioPlayerState().currentAyah()) {
-                quranAudio.setLastPlayedAyah(uiData.surahDetailState().audioPlayerState().currentAyah())
+                quranAudio.setLastPlayedAyah(
+                    uiData.surahDetailState().audioPlayerState().currentAyah()
+                )
             }
         }
 
@@ -132,11 +122,20 @@ interface SurahDetailEffectHandler {
                 ) {
                     val surahName =
                         uiData.textState().chapters()[currentSurahNumber - 1].englishName()
+                    quranAudio.setAudioSurahName(surahName)
+                    quranText.setLastReadSurah(currentSurahNumber)
+                    quranAudio.setLastPlayedSurah(currentSurahNumber)
                     controller.navigate(
                         Screen.SurahDetail.createRoute(
                             currentSurahNumber, surahName
                         )
-                    )
+                    ) {
+                        // Удаляем предыдущий SurahDetail из стека, чтобы не возвращаться к нему
+                        popUpTo(Screen.SurahDetail.route) {
+                            inclusive = true // полностью убрать предыдущий SurahDetail
+                        }
+                        launchSingleTop = true // чтобы не дублировать в стеке одинаковые экраны
+                    }
                 }
             }
 

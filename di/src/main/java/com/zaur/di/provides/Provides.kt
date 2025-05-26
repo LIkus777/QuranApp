@@ -50,7 +50,7 @@ import com.zaur.features.surah.screen.surah_detail.player.PlaylistBuilder
 import com.zaur.features.surah.screen.surah_detail.player.SurahPlayer
 import com.zaur.features.surah.viewmodel.SurahDetailViewModel
 import com.zaur.features.surah.viewmodel.factory.EditionViewModelFactory
-import com.zaur.features.surah.viewmodel.factory.QuranAudioViewModelFactory
+import com.zaur.features.surah.viewmodel.factory.SurahPlayerViewModelFactory
 import com.zaur.features.surah.viewmodel.factory.QuranPageViewModelFactory
 import com.zaur.features.surah.viewmodel.factory.QuranTextViewModelFactory
 import com.zaur.features.surah.viewmodel.factory.QuranTranslationViewModelFactory
@@ -147,7 +147,7 @@ interface ProvideEditionViewModelFactory {
 }
 
 interface ProvideQuranAudioViewModelFactory {
-    fun provideQuranAudioViewModelFactory(): QuranAudioViewModelFactory
+    fun provideQuranAudioViewModelFactory(): SurahPlayerViewModelFactory
 }
 
 interface ProvideScreenContentViewModelFactory {

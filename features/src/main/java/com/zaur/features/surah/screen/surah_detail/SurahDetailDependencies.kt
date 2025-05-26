@@ -2,7 +2,7 @@ package com.zaur.features.surah.screen.surah_detail
 
 import androidx.navigation.NavHostController
 import com.zaur.features.surah.viewmodel.OfflineViewModel
-import com.zaur.features.surah.viewmodel.QuranAudioViewModel
+import com.zaur.features.surah.viewmodel.SurahPlayerViewModel
 import com.zaur.features.surah.viewmodel.QuranPageViewModel
 import com.zaur.features.surah.viewmodel.QuranTextViewModel
 import com.zaur.features.surah.viewmodel.QuranTranslationViewModel
@@ -22,7 +22,7 @@ interface SurahDetailDependencies {
     fun surahChooseViewModel(): SurahChooseViewModel
     fun surahDetailViewModel(): SurahDetailViewModel
     fun quranTextViewModel(): QuranTextViewModel
-    fun quranAudioViewModel(): QuranAudioViewModel
+    fun quranAudioViewModel(): SurahPlayerViewModel
     fun quranTranslationViewModel(): QuranTranslationViewModel
     fun screenContentViewModel(): ScreenContentViewModel
     fun quranPageViewModel(): QuranPageViewModel
@@ -34,7 +34,7 @@ interface SurahDetailDependencies {
         private val surahChooseViewModel: SurahChooseViewModel,
         private val surahDetailViewModel: SurahDetailViewModel,
         private val quranTextViewModel: QuranTextViewModel,
-        private val quranAudioViewModel: QuranAudioViewModel,
+        private val surahPlayerViewModel: SurahPlayerViewModel,
         private val quranTranslationViewModel: QuranTranslationViewModel,
         private val screenContentViewModel: ScreenContentViewModel,
         private val quranPageViewModel: QuranPageViewModel,
@@ -45,7 +45,7 @@ interface SurahDetailDependencies {
         override fun surahChooseViewModel() = surahChooseViewModel
         override fun surahDetailViewModel() = surahDetailViewModel
         override fun quranTextViewModel() = quranTextViewModel
-        override fun quranAudioViewModel() = quranAudioViewModel
+        override fun quranAudioViewModel() = surahPlayerViewModel
         override fun quranTranslationViewModel() = quranTranslationViewModel
         override fun screenContentViewModel() = screenContentViewModel
         override fun quranPageViewModel() = quranPageViewModel

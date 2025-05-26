@@ -1,6 +1,6 @@
 package com.zaur.features.surah.screen.surah_detail
 
-import com.zaur.presentation.ui.ui_state.aqc.QuranAudioUIState
+import com.zaur.presentation.ui.ui_state.aqc.SurahPlayerUIState
 import com.zaur.presentation.ui.ui_state.aqc.QuranPageUIState
 import com.zaur.presentation.ui.ui_state.aqc.QuranTextUIState
 import com.zaur.presentation.ui.ui_state.aqc.QuranTranslationUIState
@@ -15,7 +15,7 @@ import com.zaur.presentation.ui.ui_state.offline.OfflineUIState
 interface SurahDetailUiData {
     fun offlineState(): OfflineUIState
     fun textState(): QuranTextUIState
-    fun audioState(): QuranAudioUIState
+    fun audioState(): SurahPlayerUIState
     fun translateState(): QuranTranslationUIState
     fun surahDetailState(): SurahDetailScreenState
     fun pageState(): QuranPageUIState
@@ -25,7 +25,7 @@ interface SurahDetailUiData {
     data class Base(
         private val offlineState: OfflineUIState,
         private val textState: QuranTextUIState,
-        private val audioState: QuranAudioUIState,
+        private val audioState: SurahPlayerUIState,
         private val translateState: QuranTranslationUIState,
         private val surahDetailState: SurahDetailScreenState,
         private val pageState: QuranPageUIState,

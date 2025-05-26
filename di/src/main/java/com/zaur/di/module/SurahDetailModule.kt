@@ -33,7 +33,6 @@ import com.zaur.di.provides.ProvideReciterManager
 import com.zaur.di.provides.ProvideReciterUseCase
 import com.zaur.di.provides.ProvideScreenContentViewModelFactory
 import com.zaur.di.provides.ProvideSurahChooseViewModelFactory
-import com.zaur.di.provides.ProvideSurahDetailStateManager
 import com.zaur.di.provides.ProvideSurahDetailViewModel
 import com.zaur.di.provides.ProvideThemeUseCase
 import com.zaur.di.provides.ProvideTranslationViewModelFactory
@@ -50,10 +49,9 @@ import com.zaur.domain.al_quran_cloud.use_case.QuranTranslationUseCase
 import com.zaur.domain.al_quran_cloud.use_case.ReciterUseCase
 import com.zaur.domain.storage.theme.ThemeUseCase
 import com.zaur.features.surah.manager.ReciterManager
-import com.zaur.features.surah.manager.SurahDetailStateManager
 import com.zaur.features.surah.viewmodel.SurahDetailViewModel
 import com.zaur.features.surah.viewmodel.factory.EditionViewModelFactory
-import com.zaur.features.surah.viewmodel.factory.QuranAudioViewModelFactory
+import com.zaur.features.surah.viewmodel.factory.SurahPlayerViewModelFactory
 import com.zaur.features.surah.viewmodel.factory.QuranPageViewModelFactory
 import com.zaur.features.surah.viewmodel.factory.QuranTextViewModelFactory
 import com.zaur.features.surah.viewmodel.factory.QuranTranslationViewModelFactory
@@ -92,8 +90,8 @@ interface SurahDetailModule : ProvideQuranPageRepositopryCloud, ProvideQuranPage
             QuranTranslationViewModelFactory.Base(quranTranslationUseCase = provideQuranTranslationUseCase())
         }
 
-        private val quranAudioViewModelFactory by lazy {
-            QuranAudioViewModelFactory.Base(
+        private val surahPlayerViewModelFactory by lazy {
+            SurahPlayerViewModelFactory.Base(
                 audioModule.provideSurahPlayer(),
                 provideReciterManager(),
                 surahDetailStateManagerModule.provideSurahDetailStateManager(),
@@ -182,8 +180,8 @@ interface SurahDetailModule : ProvideQuranPageRepositopryCloud, ProvideQuranPage
         override fun provideQuranTranslationViewModelFactory(): QuranTranslationViewModelFactory =
             quranTranslationViewModelFactory
 
-        override fun provideQuranAudioViewModelFactory(): QuranAudioViewModelFactory =
-            quranAudioViewModelFactory
+        override fun provideQuranAudioViewModelFactory(): SurahPlayerViewModelFactory =
+            surahPlayerViewModelFactory
 
         override fun provideQuranTextViewModelFactory(): QuranTextViewModelFactory =
             quranTextViewModelFactory

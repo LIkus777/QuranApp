@@ -22,6 +22,8 @@ interface PlaybackController {
     fun playVerse(verse: VerseAudioAqc)
     fun handleTrackEnd(nextIndex: Int, atEnd: Boolean)
     fun playSingle(ayahNumber: Int, surahNumber: Int, callback: (Int) -> Unit)
+    fun switchSurah(newSurahNumber: Int)
+    fun playRelativeAyah(offset: Int)
 
     class Base(
         private val audioPlayer: AudioPlayer,
@@ -33,6 +35,23 @@ interface PlaybackController {
 
         private val state = surahDetailStateManager.surahDetailState()
 
+        override fun switchSurah(newSurahNumber: Int) {
+            audioPlayerStateUpdater.setCurrentAyahAndSurah(newSurahNumber, 1)
+            audioPlayer.clearItems()
+            playlistManager.clear()
+            audioPlayerStateUpdater.setPlayWholeChapter(false)
+            audioPlayerStateUpdater.setPlaying(false)
+            surahDetailStateManager.updateAyahAndSurah(1, newSurahNumber)
+        }
+
+        override fun playRelativeAyah(offset: Int) {
+            val currentIndex = state.value.audioPlayerState().currentAyah() - 1
+            val targetIndex = currentIndex + offset
+            if (targetIndex in playlistManager.currentPlaylist().indices) {
+                playAtIndex(targetIndex)
+            }
+        }
+
         override fun playAtIndex(index: Int) {
             val playlist = playlistManager.currentPlaylist()
             if (index in playlist.indices) {
@@ -42,7 +61,6 @@ interface PlaybackController {
                 audioPlayerStateUpdater.markWholeChapterPlaying(
                     isAudioPlaying = true, playWholeChapter = true
                 )
-                //audioPlayer.playPlaylist(playlist)
                 audioPlayer.seekTo(playlist, index)
             }
         }

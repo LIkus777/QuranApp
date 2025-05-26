@@ -1,7 +1,7 @@
 package com.zaur.features.surah.screen.surah_detail.dialogs
 
 import androidx.compose.runtime.Composable
-import com.zaur.features.surah.viewmodel.QuranAudioViewModel
+import com.zaur.features.surah.viewmodel.SurahPlayerViewModel
 import com.zaur.features.surah.viewmodel.SurahDetailViewModel
 import com.zaur.presentation.ui.QuranColors
 import com.zaur.presentation.ui.ui_state.aqc.SurahDetailScreenState
@@ -16,7 +16,7 @@ fun ChooseReciterDialogComponent(
     state: SurahDetailScreenState,
     colors: QuranColors,
     viewModel: SurahDetailViewModel,
-    audioViewModel: QuranAudioViewModel,
+    audioViewModel: SurahPlayerViewModel,
 ) {
     ChooseReciterDialog(
         showDialog = state.reciterState().showReciterDialog(), colors = colors

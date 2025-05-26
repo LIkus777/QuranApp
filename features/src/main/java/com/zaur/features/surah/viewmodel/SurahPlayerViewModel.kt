@@ -10,10 +10,10 @@ import com.zaur.domain.al_quran_cloud.models.audiofile.VerseAudioAqc
 import com.zaur.domain.al_quran_cloud.use_case.QuranAudioUseCase
 import com.zaur.features.surah.manager.ReciterManager
 import com.zaur.features.surah.manager.SurahDetailStateManager
-import com.zaur.features.surah.observables.QuranAudioObservable
+import com.zaur.features.surah.observables.SurahPlayerObservable
 import com.zaur.features.surah.screen.surah_detail.player.SurahPlayer
 import com.zaur.features.surah.viewmodel.handlers.AudioResultHandler
-import com.zaur.presentation.ui.ui_state.aqc.QuranAudioUIState
+import com.zaur.presentation.ui.ui_state.aqc.SurahPlayerUIState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -23,7 +23,7 @@ import kotlinx.coroutines.launch
  * @since 2025-05-12
  */
 
-interface QuranAudioViewModel : QuranAudioObservable.Read {
+interface SurahPlayerViewModel : SurahPlayerObservable.Read {
 
     fun getReciter(): String?
     fun saveReciter(identifier: String)
@@ -63,9 +63,9 @@ interface QuranAudioViewModel : QuranAudioObservable.Read {
         private val surahPlayer: SurahPlayer,
         private val reciterManager: ReciterManager,
         private val stateManager: SurahDetailStateManager,
-        private val observable: QuranAudioObservable.Mutable,
+        private val observable: SurahPlayerObservable.Mutable,
         private val quranAudioUseCase: QuranAudioUseCase,
-    ) : BaseViewModel(), QuranAudioViewModel {
+    ) : BaseViewModel(), SurahPlayerViewModel {
 
         private val resultHandler =
             AudioResultHandler.Base(observable, stateManager, viewModelScope)
@@ -80,11 +80,25 @@ interface QuranAudioViewModel : QuranAudioObservable.Read {
 
                 override fun loadNewSurah(surahNumber: Int) {
                     getChaptersAudioOfReciter(surahNumber, getReciter().orEmpty())
+                    stateManager.updateState(
+                        stateManager.surahDetailState().value.copy(
+                            textState = stateManager.surahDetailState().value.textState().copy(
+                                currentSurahNumber = surahNumber,
+                                currentAyah = 1 // сбрасываем на первый аят
+                            ),
+                            audioPlayerState = stateManager.surahDetailState().value.audioPlayerState()
+                                //todo переписать так чтобы моя vm была независимой, чтобы моей плеер жил сам по себе
+                                .copy(
+                                    currentSurahNumber = surahNumber,
+                                    currentAyah = 1 // сбрасываем на первый аят
+                                )
+                        )
+                    )
                 }
             })
         }
 
-        override fun audioState(): StateFlow<QuranAudioUIState.Base> = observable.audioState()
+        override fun audioState(): StateFlow<SurahPlayerUIState.Base> = observable.audioState()
 
         override fun onPlaySingleClicked(ayahNumber: Int, surahNumber: Int) {
             surahPlayer.onPlaySingleClicked(ayahNumber, surahNumber)

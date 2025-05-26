@@ -7,7 +7,7 @@ import com.zaur.domain.al_quran_cloud.models.audiofile.VerseAudioAqc
 import com.zaur.features.surah.base.AudioPlayer
 import com.zaur.features.surah.base.AudioPlayerCallback
 import com.zaur.features.surah.manager.SurahDetailStateManager
-import com.zaur.features.surah.viewmodel.QuranAudioViewModel
+import com.zaur.features.surah.viewmodel.SurahPlayerViewModel
 
 /**
  * @author Zaur
@@ -31,7 +31,7 @@ interface SurahPlayer {
 
     fun clear()
 
-    fun setQuranAudioVmCallback(callback: QuranAudioViewModel.QuranAudioVmCallback)
+    fun setQuranAudioVmCallback(callback: SurahPlayerViewModel.QuranAudioVmCallback)
 
     suspend fun setAyahs(ayahs: List<Ayah.Base>)
     suspend fun setCacheAudios(ayahs: List<CacheAudio.Base>)
@@ -45,7 +45,7 @@ interface SurahPlayer {
         private val surahDetailStateManager: SurahDetailStateManager, // Менеджер состояния плеера
     ) : SurahPlayer {
 
-        private var quranAudioVmCallback: QuranAudioViewModel.QuranAudioVmCallback? = null
+        private var quranAudioVmCallback: SurahPlayerViewModel.QuranAudioVmCallback? = null
 
         private val state = surahDetailStateManager.surahDetailState()
         private val playlistManager = PlaylistManager.Base(playlistBuilder, surahDetailStateManager)
@@ -101,48 +101,16 @@ interface SurahPlayer {
             playlistManager.setCacheAudios(ayahs)
         }
 
-        override fun onNextAyahClicked() {
-            val stateValue = state.value.audioPlayerState()
-            val currentIndex = stateValue.currentAyah() - 1             // медиаId == номер аята
-            val playlist = playlistManager.currentPlaylist()
-            val nextIndex = currentIndex + 1
+        override fun onNextAyahClicked() = playbackController.playRelativeAyah(1)
+        override fun onPreviousAyahClicked() = playbackController.playRelativeAyah(-1)
 
-            if (nextIndex < playlist.size) {
-                // Переходим на следующий аят
-                playbackController.playAtIndex(nextIndex)              // нужно добавить в контроллер метод playAtIndex
-            }
-        }
+        override fun onNextSurahClicked() = playbackController.switchSurah(
+            (state.value.audioPlayerState().currentSurahNumber() + 1).coerceAtLeast(1)
+        )
 
-        override fun onPreviousAyahClicked() {
-            val stateValue = state.value.audioPlayerState()
-            val currentIndex = stateValue.currentAyah() - 1
-            val prevIndex = currentIndex - 1
-
-            if (prevIndex >= 0) {
-                playbackController.playAtIndex(prevIndex)
-            }
-        }
-
-        override fun onNextSurahClicked() {
-            val currentSurah = state.value.audioPlayerState().currentSurahNumber()
-            val nextSurah =
-                (currentSurah + 1).coerceAtLeast(1) // можно ограничить по макс. числу сур
-
-            audioPlayerStateUpdater.setCurrentAyahAndSurah(nextSurah, 1)
-            audioPlayerStateUpdater.setPlayWholeChapter(false)
-            audioPlayerStateUpdater.setPlaying(false)
-            quranAudioVmCallback?.loadNewSurah(nextSurah)
-        }
-
-        override fun onPreviousSurahClicked() {
-            val currentSurah = state.value.audioPlayerState().currentSurahNumber()
-            val prevSurah = (currentSurah - 1).coerceAtLeast(1)
-
-            audioPlayerStateUpdater.setCurrentAyahAndSurah(prevSurah, 1)
-            audioPlayerStateUpdater.setPlayWholeChapter(false)
-            audioPlayerStateUpdater.setPlaying(false)
-            quranAudioVmCallback?.loadNewSurah(prevSurah)
-        }
+        override fun onPreviousSurahClicked() = playbackController.switchSurah(
+            (state.value.audioPlayerState().currentSurahNumber() - 1).coerceAtLeast(1)
+        )
 
         override fun seekTo(position: Long) {
             audioPlayer.seekTo(position)
@@ -177,7 +145,7 @@ interface SurahPlayer {
             quranAudioVmCallback = null
         }
 
-        override fun setQuranAudioVmCallback(callback: QuranAudioViewModel.QuranAudioVmCallback) {
+        override fun setQuranAudioVmCallback(callback: SurahPlayerViewModel.QuranAudioVmCallback) {
             this.quranAudioVmCallback = callback
         }
     }

@@ -1,6 +1,5 @@
 package com.zaur.features.surah.manager
 
-import android.util.Log
 import com.zaur.features.surah.base.Observable
 import com.zaur.features.surah.observables.SurahDetailStateObservable
 import com.zaur.presentation.ui.ui_state.aqc.SurahDetailScreenState
@@ -34,6 +33,7 @@ interface SurahDetailStateManager : SurahDetailStateObservable.Read {
     fun setAyahInText(ayah: Int)
     fun setOfflineMode(isOffline: Boolean)
     fun updatePlaybackPosition(position: Long, duration: Long)
+    fun updateAyahAndSurah(ayah: Int, surah: Int)
 
     fun clear()
 
@@ -44,231 +44,130 @@ interface SurahDetailStateManager : SurahDetailStateObservable.Read {
         ),
     ) : Observable.Abstract<SurahDetailScreenState.Base>(initial), SurahDetailStateManager {
 
-        override fun surahDetailState(): StateFlow<SurahDetailScreenState.Base> {
-            val state = observable.surahDetailState()
-            Log.w("TAG", "SurahDetailViewModel: state $state")
-            return state
+        internal inline fun update(block: SurahDetailScreenState.Base.() -> SurahDetailScreenState.Base) {
+            val current = observable.surahDetailState().value
+            observable.update(current.block())
         }
 
-        override fun updateState(state: SurahDetailScreenState.Base) {
+        override fun surahDetailState(): StateFlow<SurahDetailScreenState.Base> =
+            observable.surahDetailState()
+
+        override fun updateState(state: SurahDetailScreenState.Base) = with(state) {
             observable.update(
                 observable.surahDetailState().value.copy(
-                    textState = state.textState(),
-                    audioPlayerState = state.audioPlayerState(),
-                    reciterState = state.reciterState(),
-                    uiPreferencesState = state.uiPreferencesState(),
-                    bottomSheetState = state.bottomSheetState()
+                    textState = textState(),
+                    audioPlayerState = audioPlayerState(),
+                    reciterState = reciterState(),
+                    uiPreferencesState = uiPreferencesState(),
+                    bottomSheetState = bottomSheetState()
                 )
             )
         }
 
-        override fun setTextSurahName(name: String) {
-            observable.update(
-                observable.surahDetailState().value.copy(
-                    textState = observable.surahDetailState().value.textState().copy(
-                        surahName = name
-                    )
+        override fun setAudioSurahNumber(surahNumber: Int) = update {
+            copy(audioPlayerState = audioPlayerState().copy(currentSurahNumber = surahNumber))
+        }
+
+        override fun setTextSurahName(name: String) = update {
+            copy(textState = textState().copy(surahName = name))
+        }
+
+        override fun setAudioSurahName(name: String) = update {
+            copy(audioPlayerState = audioPlayerState().copy(surahName = name))
+        }
+
+        override fun setTextSurahNumber(surahNumber: Int) = update {
+            copy(textState = textState().copy(currentSurahNumber = surahNumber))
+        }
+
+        override fun showTextBottomSheet(show: Boolean) = update {
+            copy(bottomSheetState = bottomSheetState().copy(showTextBottomSheet = show))
+        }
+
+        override fun showSurahMode(show: Boolean) = update {
+            copy(uiPreferencesState = uiPreferencesState().copy(showSurahMode = show))
+        }
+
+        override fun showPageMode(show: Boolean) = update {
+            copy(uiPreferencesState = uiPreferencesState().copy(showPageMode = show))
+        }
+
+        override fun showSettingsBottomSheet(show: Boolean) = update {
+            copy(bottomSheetState = bottomSheetState().copy(showSettingsBottomSheet = show))
+        }
+
+        override fun showArabic(show: Boolean) = update {
+            copy(uiPreferencesState = uiPreferencesState().copy(showArabic = show))
+        }
+
+        override fun showRussian(show: Boolean) = update {
+            copy(uiPreferencesState = uiPreferencesState().copy(showRussian = show))
+        }
+
+        override fun fontSizeArabic(fontSize: Float) = update {
+            copy(uiPreferencesState = uiPreferencesState().copy(fontSizeArabic = fontSize))
+        }
+
+        override fun fontSizeRussian(fontSize: Float) = update {
+            copy(uiPreferencesState = uiPreferencesState().copy(fontSizeRussian = fontSize))
+        }
+
+        override fun selectedReciter(reciter: String, reciterName: String) = update {
+            copy(
+                reciterState = reciterState().copy(
+                    currentReciter = reciter, currentReciterName = reciterName
                 )
             )
         }
 
-        override fun setAudioSurahName(name: String) {
-            observable.update(
-                observable.surahDetailState().value.copy(
-                    audioPlayerState = observable.surahDetailState().value.audioPlayerState().copy(
-                        surahName = name
-                    )
+        override fun setAudioSurahAyah(ayahInSurah: Int) = update {
+            copy(audioPlayerState = audioPlayerState().copy(currentAyah = ayahInSurah))
+        }
+
+        override fun setAyahInText(ayah: Int) = update {
+            copy(textState = textState().copy(currentAyah = ayah))
+        }
+
+        override fun setOfflineMode(isOffline: Boolean) = update {
+            copy(audioPlayerState = audioPlayerState().copy(isOfflineMode = isOffline))
+        }
+
+        override fun updatePlaybackPosition(position: Long, duration: Long) = update {
+            copy(
+                audioPlayerState = audioPlayerState().copy(
+                    position = position, duration = duration
                 )
             )
         }
 
-        override fun setAudioSurahNumber(surahNumber: Int) {
-            observable.update(
-                observable.surahDetailState().value.copy(
-                    audioPlayerState = observable.surahDetailState().value.audioPlayerState().copy(
-                        currentSurahNumber = surahNumber
-                    )
-                )
-            )
-        }
-
-        override fun setTextSurahNumber(surahNumber: Int) {
-            observable.update(
-                observable.surahDetailState().value.copy(
-                    textState = observable.surahDetailState().value.textState().copy(
-                        currentSurahNumber = surahNumber
-                    )
-                )
-            )
-        }
-
-        override fun showTextBottomSheet(show: Boolean) {
-            observable.update(
-                observable.surahDetailState().value.copy(
-                    bottomSheetState = observable.surahDetailState().value.bottomSheetState().copy(
-                        showTextBottomSheet = show
-                    )
-                )
-            )
-        }
-
-        override fun showSurahMode(show: Boolean) {
-            observable.update(
-                observable.surahDetailState().value.copy(
-                    uiPreferencesState = observable.surahDetailState().value.uiPreferencesState()
-                        .copy(
-                            showSurahMode = show
-                        )
-                )
-            )
-        }
-
-        override fun showPageMode(show: Boolean) {
-            observable.update(
-                observable.surahDetailState().value.copy(
-                    uiPreferencesState = observable.surahDetailState().value.uiPreferencesState()
-                        .copy(
-                            showPageMode = show
-                        )
-                )
-            )
-        }
-
-        override fun showSettingsBottomSheet(show: Boolean) {
-            observable.update(
-                observable.surahDetailState().value.copy(
-                    bottomSheetState = observable.surahDetailState().value.bottomSheetState().copy(
-                        showSettingsBottomSheet = show
-                    )
-                )
-            )
-        }
-
-        override fun showArabic(show: Boolean) {
-            observable.update(
-                observable.surahDetailState().value.copy(
-                    uiPreferencesState = observable.surahDetailState().value.uiPreferencesState()
-                        .copy(
-                            showArabic = show
-                        )
-                )
-            )
-        }
-
-        override fun showRussian(show: Boolean) {
-            observable.update(
-                observable.surahDetailState().value.copy(
-                    uiPreferencesState = observable.surahDetailState().value.uiPreferencesState()
-                        .copy(
-                            showRussian = show
-                        )
-                )
-            )
-        }
-
-        override fun fontSizeArabic(fontSize: Float) {
-            observable.update(
-                observable.surahDetailState().value.copy(
-                    uiPreferencesState = observable.surahDetailState().value.uiPreferencesState()
-                        .copy(
-                            fontSizeArabic = fontSize
-                        )
-                )
-            )
-        }
-
-        override fun fontSizeRussian(fontSize: Float) {
-            observable.update(
-                observable.surahDetailState().value.copy(
-                    uiPreferencesState = observable.surahDetailState().value.uiPreferencesState()
-                        .copy(
-                            fontSizeRussian = fontSize
-                        )
-                )
-            )
-        }
-
-        override fun selectedReciter(reciter: String, reciterName: String) {
-            observable.update(
-                observable.surahDetailState().value.copy(
-                    reciterState = observable.surahDetailState().value.reciterState().copy(
-                        currentReciter = reciter, currentReciterName = reciterName
-                    )
-                )
-            )
-        }
-
-        override fun setAudioSurahAyah(ayahInSurah: Int) {
-            observable.update(
-                observable.surahDetailState().value.copy(
-                    audioPlayerState = observable.surahDetailState().value.audioPlayerState().copy(
-                        currentAyah = ayahInSurah
-                    )
-                )
-            )
-        }
-
-        override fun setAyahInText(ayah: Int) {
-            observable.update(
-                observable.surahDetailState().value.copy(
-                    textState = observable.surahDetailState().value.textState().copy(
-                        currentAyah = ayah
-                    )
-                )
-            )
-        }
-
-        override fun setOfflineMode(isOffline: Boolean) {
-            observable.update(
-                observable.surahDetailState().value.copy(
-                    audioPlayerState = observable.surahDetailState().value.audioPlayerState().copy(
-                        isOfflineMode = isOffline
-                    )
-                )
-            )
-        }
-
-        override fun updatePlaybackPosition(position: Long, duration: Long) {
-            observable.update(
-                observable.surahDetailState().value.copy(
-                    audioPlayerState = observable.surahDetailState().value.audioPlayerState().copy(
-                        position = position, duration = duration
-                    )
+        override fun updateAyahAndSurah(ayah: Int, surah: Int) = update {
+            copy(
+                textState = textState().copy(currentAyah = ayah, currentSurahNumber = surah),
+                audioPlayerState = audioPlayerState().copy(
+                    currentAyah = ayah, currentSurahNumber = surah
                 )
             )
         }
 
         override fun clear() {
             val base = SurahDetailScreenState.Base()
-            observable.update(
-                observable.surahDetailState().value.copy(
+            update {
+                copy(
                     textState = base.textState(),
                     audioPlayerState = base.audioPlayerState(),
                     reciterState = base.reciterState(),
                     uiPreferencesState = base.uiPreferencesState(),
                     bottomSheetState = base.bottomSheetState()
                 )
-            )
+            }
         }
 
-        override fun showReciterDialog(show: Boolean) {
-            observable.update(
-                observable.surahDetailState().value.copy(
-                    reciterState = observable.surahDetailState().value.reciterState().copy(
-                        showReciterDialog = show
-                    )
-                )
-            )
+        override fun showReciterDialog(show: Boolean) = update {
+            copy(reciterState = reciterState().copy(showReciterDialog = show))
         }
 
-        override fun showPlayerBottomSheet(show: Boolean) {
-            observable.update(
-                observable.surahDetailState().value.copy(
-                    bottomSheetState = observable.surahDetailState().value.bottomSheetState().copy(
-                        showPlayerBottomSheet = show
-                    )
-                )
-            )
+        override fun showPlayerBottomSheet(show: Boolean) = update {
+            copy(bottomSheetState = bottomSheetState().copy(showPlayerBottomSheet = show))
         }
     }
 }

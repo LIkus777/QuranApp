@@ -81,7 +81,7 @@ class MainActivity : ComponentActivity() {
                             surahChooseViewModel = surahChooseViewModel,
                             surahDetailViewModel = surahDetailViewModel,
                             quranTextViewModel = quranTextViewModel,
-                            quranAudioViewModel = quranAudioViewModel,
+                            surahPlayerViewModel = quranAudioViewModel,
                             quranTranslationViewModel = quranTranslationViewModel,
                             screenContentViewModel = screenContentViewModel,
                             quranPageViewModel = quranPageViewModel,

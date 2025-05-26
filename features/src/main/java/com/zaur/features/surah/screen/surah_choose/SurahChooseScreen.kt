@@ -86,7 +86,13 @@ fun SurahChooseScreen(
                         Screen.SurahDetail.createRoute(
                             chapter.number().toInt(), chapter.englishName()
                         )
-                    )
+                    ) {
+                        // Удаляем предыдущий SurahDetail из стека, чтобы не возвращаться к нему
+                        popUpTo(Screen.SurahDetail.route) {
+                            inclusive = true // полностью убрать предыдущий SurahDetail
+                        }
+                        launchSingleTop = true // чтобы не дублировать в стеке одинаковые экраны
+                    }
                 })
             Spacer(Modifier.height(6.dp))
         }

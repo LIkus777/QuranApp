@@ -16,7 +16,7 @@ import com.zaur.domain.storage.ReciterStorage
 import com.zaur.domain.storage.theme.ThemeStorage
 import com.zaur.features.surah.manager.ReciterManager
 import com.zaur.features.surah.screen.surah_detail.player.SurahPlayer
-import com.zaur.features.surah.viewmodel.QuranAudioViewModel
+import com.zaur.features.surah.viewmodel.SurahPlayerViewModel
 
 /**
  * @author Zaur
@@ -206,7 +206,7 @@ class FakeSurahPlayer() : SurahPlayer {
         TODO("Not yet implemented")
     }
 
-    override fun setQuranAudioVmCallback(callback: QuranAudioViewModel.QuranAudioVmCallback) {
+    override fun setQuranAudioVmCallback(callback: SurahPlayerViewModel.QuranAudioVmCallback) {
         TODO("Not yet implemented")
     }
 

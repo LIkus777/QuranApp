@@ -7,6 +7,7 @@ import com.zaur.domain.al_quran_cloud.models.audiofile.VerseAudioAqc
 import com.zaur.features.surah.base.AudioPlayer
 import com.zaur.features.surah.base.AudioPlayerCallback
 import com.zaur.features.surah.manager.SurahDetailStateManager
+import com.zaur.features.surah.screen.surah_detail.SurahNavigationCallback
 import com.zaur.features.surah.viewmodel.SurahPlayerViewModel
 
 /**
@@ -31,7 +32,8 @@ interface SurahPlayer {
 
     fun clear()
 
-    fun setQuranAudioVmCallback(callback: SurahPlayerViewModel.QuranAudioVmCallback)
+    fun setQuranAudioVmCallback(callback: SurahPlayerViewModel.SurahPlayerVmCallback)
+    fun setSurahNavigationCallback(callback: SurahNavigationCallback)
 
     suspend fun setAyahs(ayahs: List<Ayah.Base>)
     suspend fun setCacheAudios(ayahs: List<CacheAudio.Base>)
@@ -45,7 +47,7 @@ interface SurahPlayer {
         private val surahDetailStateManager: SurahDetailStateManager, // Менеджер состояния плеера
     ) : SurahPlayer {
 
-        private var quranAudioVmCallback: SurahPlayerViewModel.QuranAudioVmCallback? = null
+        private var surahPlayerVmCallback: SurahPlayerViewModel.SurahPlayerVmCallback? = null
 
         private val state = surahDetailStateManager.surahDetailState()
         private val playlistManager = PlaylistManager.Base(playlistBuilder, surahDetailStateManager)
@@ -74,7 +76,7 @@ interface SurahPlayer {
                     playbackController.handleTrackEnd(next, atEnd)
 
                     if (!atEnd) {
-                        quranAudioVmCallback?.callVerseAudioFile(next)
+                        surahPlayerVmCallback?.callVerseAudioFile(next)
                     }
                 }
 
@@ -127,7 +129,7 @@ interface SurahPlayer {
 
         override fun onPlaySingleClicked(ayahNumber: Int, surahNumber: Int) {
             playbackController.playSingle(ayahNumber, surahNumber) {
-                quranAudioVmCallback?.callVerseAudioFile(it)
+                surahPlayerVmCallback?.callVerseAudioFile(it)
             }
         }
 
@@ -142,11 +144,15 @@ interface SurahPlayer {
         override fun clear() {
             audioPlayer.clear()
             playlistManager.clear()
-            quranAudioVmCallback = null
+            surahPlayerVmCallback = null
         }
 
-        override fun setQuranAudioVmCallback(callback: SurahPlayerViewModel.QuranAudioVmCallback) {
-            this.quranAudioVmCallback = callback
+        override fun setQuranAudioVmCallback(callback: SurahPlayerViewModel.SurahPlayerVmCallback) {
+            this.surahPlayerVmCallback = callback
+        }
+
+        override fun setSurahNavigationCallback(callback: SurahNavigationCallback) {
+            playbackController.setSurahNavigationCallback(callback)
         }
     }
 }

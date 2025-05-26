@@ -18,6 +18,10 @@ import com.zaur.navigation.Screen
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
+interface SurahNavigationCallback {
+    fun naviate(surahNumber: Int)
+}
+
 interface SurahDetailEffectHandler {
 
     @Composable
@@ -48,18 +52,20 @@ interface SurahDetailEffectHandler {
         private val controller: NavHostController,
     ) : SurahDetailEffectHandler {
 
-        private val quranAudio = deps.quranAudioViewModel()
-        private val quranPage = deps.quranPageViewModel()
-        private val quranText = deps.quranTextViewModel()
-        private val quranTranslation = deps.quranTranslationViewModel()
-        private val surahDetail = deps.surahDetailViewModel()
+        private val surahPlayerVm = deps.quranAudioViewModel()
+        private val quranPageVm = deps.quranPageViewModel()
+        private val quranTextVm = deps.quranTextViewModel()
+        private val quranTranslationVm = deps.quranTranslationViewModel()
+        private val surahDetailVm = deps.surahDetailViewModel()
 
         @Composable
         override fun Handle() {
             val lifecycleOwner = LocalLifecycleOwner.current
             val pageNumber by remember {
-                derivedStateOf { quranPage.getLastReadPagePosition() }
+                derivedStateOf { quranPageVm.getLastReadPagePosition() }
             }
+
+            Log.i("bug", "Handle CALLED")
 
             HandleAudioCache()
             HandlePlayVerse()
@@ -75,7 +81,7 @@ interface SurahDetailEffectHandler {
             LaunchedEffect(cached) {
                 if (!cached.isNullOrEmpty()) {
                     Log.d("TAG", "HandleAudioCache: cache - $cached")
-                    quranAudio.setCacheAudios(cached)
+                    surahPlayerVm.setCacheAudios(cached)
                 } else {
                     // показать полосу загрузки — TODO
                 }
@@ -88,7 +94,7 @@ interface SurahDetailEffectHandler {
             val restart = uiData.surahDetailState().audioPlayerState().restartAudio()
             LaunchedEffect(verse, restart) {
                 if (verse !is VerseAudioAqc.Empty || restart == true) {
-                    quranAudio.onPlayVerse(verse)
+                    surahPlayerVm.onPlayVerse(verse)
                 }
             }
         }
@@ -100,14 +106,14 @@ interface SurahDetailEffectHandler {
             val savedSurahNumber =
                 deps.quranAudioViewModel().getLastPlayedSurah().takeIf { it != 0 } ?: chapterNumber
             LaunchedEffect(reciter, reciterName) {
-                quranAudio.downloadToCache(savedSurahNumber, reciter)
+                surahPlayerVm.downloadToCache(savedSurahNumber, reciter)
             }
         }
 
         @Composable
         override fun HandleAyah() {
             LaunchedEffect(uiData.surahDetailState().audioPlayerState().currentAyah()) {
-                quranAudio.setLastPlayedAyah(
+                surahPlayerVm.setLastPlayedAyah(
                     uiData.surahDetailState().audioPlayerState().currentAyah()
                 )
             }
@@ -115,47 +121,49 @@ interface SurahDetailEffectHandler {
 
         @Composable
         override fun HandleInitialLoad(pageNumber: Int) {
-            LaunchedEffect(uiData.surahDetailState().textState().currentSurahNumber()) {
-                val currentSurahNumber = uiData.surahDetailState().textState().currentSurahNumber()
-                if (chapterNumber != currentSurahNumber && currentSurahNumber != 0 && !uiData.textState()
-                        .chapters().isNullOrEmpty()
-                ) {
-                    val surahName =
-                        uiData.textState().chapters()[currentSurahNumber - 1].englishName()
-                    quranAudio.setAudioSurahName(surahName)
-                    quranText.setLastReadSurah(currentSurahNumber)
-                    quranAudio.setLastPlayedSurah(currentSurahNumber)
-                    controller.navigate(
-                        Screen.SurahDetail.createRoute(
-                            currentSurahNumber, surahName
-                        )
-                    ) {
-                        // Удаляем предыдущий SurahDetail из стека, чтобы не возвращаться к нему
-                        popUpTo(Screen.SurahDetail.route) {
-                            inclusive = true // полностью убрать предыдущий SurahDetail
+            surahPlayerVm.setSurahNavigationCallback(
+                object : SurahNavigationCallback {
+                    override fun naviate(surahNumber: Int) {
+                        Log.i("bug", "naviate CALLED")
+                        Log.i("bug", "naviate surahNumber $surahNumber")
+                        val currentSurahNumber = uiData.surahDetailState().textState().currentSurahNumber()
+                        val surahName =
+                            uiData.textState().chapters()[currentSurahNumber - 1].englishName()
+                        surahPlayerVm.setAudioSurahName(surahName)
+                        quranTextVm.setLastReadSurah(currentSurahNumber)
+                        surahPlayerVm.setLastPlayedSurah(currentSurahNumber)
+                        controller.navigate(
+                            Screen.SurahDetail.createRoute(
+                                currentSurahNumber, surahName
+                            )
+                        ) {
+                            // Удаляем предыдущий SurahDetail из стека, чтобы не возвращаться к нему
+                            popUpTo(Screen.SurahDetail.route) {
+                                inclusive = true // полностью убрать предыдущий SurahDetail
+                            }
+                            launchSingleTop = true // чтобы не дублировать в стеке одинаковые экраны
                         }
-                        launchSingleTop = true // чтобы не дублировать в стеке одинаковые экраны
                     }
                 }
-            }
+            )
 
             LaunchedEffect(chapterNumber) {
                 val reciter =
-                    quranAudio.getReciter() ?: throw IllegalStateException("Нету ресайтера")
-                val reciterName = quranAudio.getReciterName()
+                    surahPlayerVm.getReciter() ?: throw IllegalStateException("Нету ресайтера")
+                val reciterName = surahPlayerVm.getReciterName()
                     ?: throw IllegalStateException("Нету ресайтера name")
-                surahDetail.selectedReciter(reciter, reciterName)
+                surahDetailVm.selectedReciter(reciter, reciterName)
                 if (reciter.isNullOrEmpty()) {
-                    surahDetail.showReciterDialog(true)
+                    surahDetailVm.showReciterDialog(true)
                 }
 
                 // Запросы с безопасным фоновым выполнением
                 withContext(Dispatchers.IO) {
-                    quranPage.getUthmaniPage(pageNumber)
-                    quranPage.getTranslatedPage(pageNumber, "ru.kuliev")
-                    quranText.getAllChapters()
-                    quranText.getArabicChapter(chapterNumber)
-                    quranTranslation.getTranslationForChapter(chapterNumber, "ru.kuliev")/*quranAudio.downloadToCache(chapterNumber, reciter)
+                    quranPageVm.getUthmaniPage(pageNumber)
+                    quranPageVm.getTranslatedPage(pageNumber, "ru.kuliev")
+                    quranTextVm.getAllChapters()
+                    quranTextVm.getArabicChapter(chapterNumber)
+                    quranTranslationVm.getTranslationForChapter(chapterNumber, "ru.kuliev")/*quranAudio.downloadToCache(chapterNumber, reciter)
                     quranAudio.getChaptersAudioOfReciter(chapterNumber, reciter)*/
                 }
             }

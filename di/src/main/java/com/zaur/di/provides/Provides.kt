@@ -146,8 +146,8 @@ interface ProvideEditionViewModelFactory {
     fun provideEditionViewModelFactory(): EditionViewModelFactory
 }
 
-interface ProvideQuranAudioViewModelFactory {
-    fun provideQuranAudioViewModelFactory(): SurahPlayerViewModelFactory
+interface ProvideSurahPlayerViewModelFactory {
+    fun provideSurahPlayerViewModelFactory(): SurahPlayerViewModelFactory
 }
 
 interface ProvideScreenContentViewModelFactory {

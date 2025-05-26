@@ -43,7 +43,6 @@ fun SurahDetailScreenContent(
 
     // Диалоги
     SettingsDialogComponent(uiData.surahDetailState(), colors, deps.surahDetailViewModel())
-    PlayerDialogComponent(colors, uiData, deps)
     ChooseTextDialogComponent(colors, uiData, deps)
     ChooseReciterDialogComponent(
         uiData.surahDetailState(), colors, deps.surahDetailViewModel(), deps.quranAudioViewModel()

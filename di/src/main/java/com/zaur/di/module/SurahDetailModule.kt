@@ -18,7 +18,7 @@ import com.zaur.di.provides.ProvidePageUseCase
 import com.zaur.di.provides.ProvideQuranAudioRepositoryCloud
 import com.zaur.di.provides.ProvideQuranAudioRepositoryLocal
 import com.zaur.di.provides.ProvideQuranAudioUseCase
-import com.zaur.di.provides.ProvideQuranAudioViewModelFactory
+import com.zaur.di.provides.ProvideSurahPlayerViewModelFactory
 import com.zaur.di.provides.ProvideQuranPageRepositopryCloud
 import com.zaur.di.provides.ProvideQuranPageRepositopryLocal
 import com.zaur.di.provides.ProvideQuranPageViewModelFactory
@@ -67,7 +67,7 @@ interface SurahDetailModule : ProvideQuranPageRepositopryCloud, ProvideQuranPage
     ProvideEditionUseCase, ProvidePageUseCase, ProvideReciterUseCase, ProvideReciterManager,
     ProvideThemeUseCase, ProvideScreenContentViewModelFactory, ProvideSurahChooseViewModelFactory,
     ProvideTranslationViewModelFactory, ProvideEditionViewModelFactory,
-    ProvideQuranAudioViewModelFactory, ProvideQuranPageViewModelFactory,
+    ProvideSurahPlayerViewModelFactory, ProvideQuranPageViewModelFactory,
     ProvideQuranTextViewModelFactory, ProvideSurahDetailViewModel,
     ProvideQuranAudioUseCase, ProvideQuranTextUseCase, ProvideQuranTranslationUseCase,
     ProvideQuranAudioRepositoryLocal, ProvideEditionRepositoryLocal, ProvideEditionRepositoryCloud,
@@ -180,7 +180,7 @@ interface SurahDetailModule : ProvideQuranPageRepositopryCloud, ProvideQuranPage
         override fun provideQuranTranslationViewModelFactory(): QuranTranslationViewModelFactory =
             quranTranslationViewModelFactory
 
-        override fun provideQuranAudioViewModelFactory(): SurahPlayerViewModelFactory =
+        override fun provideSurahPlayerViewModelFactory(): SurahPlayerViewModelFactory =
             surahPlayerViewModelFactory
 
         override fun provideQuranTextViewModelFactory(): QuranTextViewModelFactory =

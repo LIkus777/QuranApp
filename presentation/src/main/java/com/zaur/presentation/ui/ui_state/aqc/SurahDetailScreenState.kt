@@ -21,7 +21,7 @@ interface SurahDetailScreenState {
         private val bottomSheetState: BottomSheetState.Base = BottomSheetState.Base(),
     ) : SurahDetailScreenState {
         override fun textState(): TextState.Base = textState
-        override fun audioPlayerState(): AudioPlayerState.Base = audioPlayerState
+        override fun audioPlayerState(): AudioPlayerState.Base = audioPlayerState //todo мб вынести в отдельный state
         override fun reciterState(): ReciterState.Base = reciterState
         override fun uiPreferencesState(): UiPreferencesState.Base = uiPreferencesState
         override fun bottomSheetState(): BottomSheetState.Base = bottomSheetState

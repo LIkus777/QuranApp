@@ -3,6 +3,7 @@ package com.zaur.features.surah.screen.surah_detail.player
 import com.zaur.domain.al_quran_cloud.models.audiofile.VerseAudioAqc
 import com.zaur.features.surah.base.AudioPlayer
 import com.zaur.features.surah.manager.SurahDetailStateManager
+import com.zaur.features.surah.screen.surah_detail.SurahNavigationCallback
 import com.zaur.features.surah.screen.surah_detail.player.PlayerCommand.PauseCommand
 import com.zaur.features.surah.screen.surah_detail.player.PlayerCommand.PlayWholeChapterCommand
 import com.zaur.features.surah.screen.surah_detail.player.PlayerCommand.ResumeCommand
@@ -25,6 +26,8 @@ interface PlaybackController {
     fun switchSurah(newSurahNumber: Int)
     fun playRelativeAyah(offset: Int)
 
+    fun setSurahNavigationCallback(callback: SurahNavigationCallback)
+
     class Base(
         private val audioPlayer: AudioPlayer,
         private val audioPlayerStateUpdater: AudioPlayerStateUpdater,
@@ -35,6 +38,8 @@ interface PlaybackController {
 
         private val state = surahDetailStateManager.surahDetailState()
 
+        private var surahNavigationCallback: SurahNavigationCallback? = null
+
         override fun switchSurah(newSurahNumber: Int) {
             audioPlayerStateUpdater.setCurrentAyahAndSurah(newSurahNumber, 1)
             audioPlayer.clearItems()
@@ -42,6 +47,7 @@ interface PlaybackController {
             audioPlayerStateUpdater.setPlayWholeChapter(false)
             audioPlayerStateUpdater.setPlaying(false)
             surahDetailStateManager.updateAyahAndSurah(1, newSurahNumber)
+            surahNavigationCallback?.naviate(newSurahNumber)
         }
 
         override fun playRelativeAyah(offset: Int) {
@@ -116,6 +122,10 @@ interface PlaybackController {
         override fun stop() {
             audioPlayer.stopAudio()
             audioPlayerStateUpdater.stop()
+        }
+
+        override fun setSurahNavigationCallback(callback: SurahNavigationCallback) {
+            this.surahNavigationCallback = callback
         }
     }
 

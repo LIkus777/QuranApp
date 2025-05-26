@@ -5,6 +5,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import com.zaur.features.surah.screen.surah_detail.SurahDetailDependencies
 import com.zaur.features.surah.screen.surah_detail.SurahDetailUiData
 import com.zaur.presentation.ui.ui_state.offline.OfflineUIState
@@ -20,6 +22,7 @@ fun rememberSurahDetailUiData(
     chapterNumber: Int,
     deps: SurahDetailDependencies,
 ): SurahDetailUiData {
+    Log.i("bug", "rememberSurahDetailUiData: CALLED")
     with(deps) {
         val offlineState by offlineViewModel().offlineState().collectAsState()
         val textState by quranTextViewModel().textState().collectAsState()
@@ -30,15 +33,21 @@ fun rememberSurahDetailUiData(
         val isDarkTheme = themeViewModel().themeState().collectAsState().value.isDarkTheme
         val isSurahMode = surahDetailState.uiPreferencesState().showSurahMode()
 
-        LaunchedEffect(surahName, chapterNumber, offlineState) {
-            updateSurahDetailData(
-                reciter = surahDetailState.reciterState().currentReciter(),
-                ayahNumber = surahDetailState.audioPlayerState().currentAyah(),
-                surahName = surahName,
-                chapterNumber = chapterNumber,
-                deps = deps,
-                offlineState = offlineState
-            )
+        val alreadyInitialized = remember { mutableStateOf(false) }
+
+        LaunchedEffect(Unit) {
+            if (!alreadyInitialized.value) {
+                alreadyInitialized.value = true
+                Log.i("bug", "rememberSurahDetailUiData: LaunchedEffect CALLED")
+                updateSurahDetailData(
+                    reciter = surahDetailState.reciterState().currentReciter(),
+                    ayahNumber = surahDetailState.audioPlayerState().currentAyah(),
+                    surahName = surahName,
+                    chapterNumber = chapterNumber,
+                    deps = deps,
+                    offlineState = offlineState
+                )
+            }
         }
 
         return SurahDetailUiData.Base(

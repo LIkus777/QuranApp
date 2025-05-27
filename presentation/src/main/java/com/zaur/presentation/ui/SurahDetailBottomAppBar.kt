@@ -1,21 +1,22 @@
 package com.zaur.presentation.ui
 
-import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
@@ -38,56 +39,49 @@ import androidx.compose.ui.unit.sp
 import com.zaur.presentation.R
 
 /**
-* @author Zaur
-* @since 2025-05-12
-*/
-
-fun getNavBarHeightInPx(context: Context): Int {
-    // Получение высоты навигационной панели через ресурсы
-    val resourceId = context.resources.getIdentifier("navigation_bar_height", "dimen", "android")
-    val navBarHeightInPx = if (resourceId > 0) {
-        context.resources.getDimensionPixelSize(resourceId)
-    } else {
-        0
-    }
-    return navBarHeightInPx
-}
+ * @author Zaur
+ * @since 2025-05-12
+ */
 
 @Preview(showBackground = true)
 @Composable
-fun ChapterBottomBar(
+fun SurahDetailBottomAppBar(
     modifier: Modifier = Modifier,
     colors: QuranColors = LightThemeColors,
-    isPlaying: Boolean = false,
     showReciterDialog: (Boolean) -> Unit = {},
     showSettings: () -> Unit = {},
-    onClickPlayer: () -> Unit = {}
+    onClickPlayer: () -> Unit = {},
 ) {
-
-    val context = LocalContext.current
-    val density = LocalDensity.current.density
-    val navBarHeightInDp = getNavBarHeightInPx(context) / density
-
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .height(navBarHeightInDp.dp + 50.dp),
+            .height(56.dp)
+            .windowInsetsPadding(WindowInsets.navigationBars),
     ) {
         BottomAppBar(
             containerColor = colors.appBarColor,
-            contentColor = colors.iconColor,
+            contentColor = colors.iconColorForBottom,
             modifier = Modifier.fillMaxSize() // заполнит родительский Box
         ) {
+            val iconModifier = Modifier.size(26.dp)
+
             IconButton(onClick = { showSettings() }) {
-                Icon(Icons.Default.Settings, contentDescription = "Настройки")
+                Icon(
+                    modifier = iconModifier,
+                    painter = painterResource(R.drawable.settings),
+                    contentDescription = "Настройки",
+                    tint = colors.iconColorForBottom
+                )
             }
 
             Spacer(modifier = Modifier.weight(1f))
 
             IconButton(onClick = { showReciterDialog(true) }) {
                 Icon(
-                    painter = painterResource(R.drawable.letter_case),
+                    modifier = iconModifier,
+                    painter = painterResource(R.drawable.font_size),
                     contentDescription = "Размер шрифтов",
+                    tint = colors.iconColorForBottom
                 )
             }
 
@@ -95,14 +89,22 @@ fun ChapterBottomBar(
 
             IconButton(onClick = onClickPlayer) {
                 Icon(
-                    painter = painterResource(R.drawable.headphone_line), contentDescription = "Play/Pause"
+                    modifier = iconModifier,
+                    painter = painterResource(R.drawable.headphone_line),
+                    contentDescription = "Play/Pause",
+                    tint = colors.iconColorForBottom
                 )
             }
 
             Spacer(modifier = Modifier.weight(1f))
 
             IconButton(onClick = { /* TODO: Избранное */ }) {
-                Icon(Icons.Default.Favorite, contentDescription = "Избранное")
+                Icon(
+                    modifier = iconModifier,
+                    painter = painterResource(R.drawable.star),
+                    contentDescription = "Избранное",
+                    tint = colors.iconColorForBottom
+                )
             }
         }
     }

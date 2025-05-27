@@ -1,34 +1,31 @@
 package com.zaur.features.surah.screen.surah_choose
 
 import android.util.Log
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.zaur.domain.al_quran_cloud.use_case.QuranTextUseCase
-import com.zaur.domain.storage.theme.ThemeUseCase
-import com.zaur.features.surah.fakes.FakeOfflineRepos
-import com.zaur.features.surah.fakes.FakeQTextRCloud
-import com.zaur.features.surah.fakes.FakeQTextRLocal
-import com.zaur.features.surah.fakes.FakeQuranStorage
-import com.zaur.features.surah.fakes.FakeThemeStorage
-import com.zaur.features.surah.observables.SurahChooseObservable
-import com.zaur.presentation.ui.ui_state.aqc.QuranTextUIState
 import com.zaur.features.surah.viewmodel.SurahChooseViewModel
 import com.zaur.features.surah.viewmodel.ThemeViewModel
 import com.zaur.navigation.Screen
@@ -36,74 +33,100 @@ import com.zaur.presentation.ui.DarkThemeColors
 import com.zaur.presentation.ui.LightThemeColors
 import com.zaur.presentation.ui.ModernSurahText
 import com.zaur.presentation.ui.QuranAppTheme
+import com.zaur.presentation.ui.SurahChooseTopBarComponent
 
 /**
-* @author Zaur
-* @since 2025-05-12
-*/
+ * @author Zaur
+ * @since 2025-05-12
+ */
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SurahChooseScreen(
     themeViewModel: ThemeViewModel,
     surahChooseViewModel: SurahChooseViewModel,
     navController: NavController,
+    contentPadding: PaddingValues = PaddingValues(),
+    onClickPlayer: () -> Unit,
 ) {
-
     val isDarkTheme = themeViewModel.themeState().collectAsState().value.isDarkTheme
     val colors = if (isDarkTheme) DarkThemeColors else LightThemeColors
+
+    val textState = surahChooseViewModel.textState().collectAsState()
+    var showPicker by remember { mutableStateOf(false) }
 
     LaunchedEffect(surahChooseViewModel) {
         Log.d("TAG", "LaunchedEffect(Unit) { getAllChaptersCloud() CALLED ")
         surahChooseViewModel.getAllChapters()
     }
 
-    val textState = surahChooseViewModel.textState().collectAsState()
-
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(colors.background)
-            .padding(20.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        val chapters = textState.value.chapters() ?: emptyList() // Избегаем повторного ?. вызова
-        itemsIndexed(chapters) { index, chapter ->
-            if (index == 0) {
-                Spacer(Modifier.height(20.dp))
-            } else {
+    Scaffold(
+        topBar = {
+            SurahChooseTopBarComponent(
+                modifier = Modifier.fillMaxWidth(),
+                colors = colors,
+                onClickQuranLabel = { showPicker = true },
+                onClickSearch = { },
+                onClickPlayer = { onClickPlayer() },
+            )
+        }, containerColor = colors.background
+    ) { paddingValues ->
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+                .padding(horizontal = 20.dp), // внутренние отступы от краёв
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            val chapters = textState.value.chapters() ?: emptyList()
+            itemsIndexed(chapters) { index, chapter ->
+                if (index == 0) {
+                    Spacer(Modifier.height(20.dp))
+                } else {
+                    Spacer(Modifier.height(6.dp))
+                }
+                ModernSurahText(
+                    colors = colors,
+                    number = chapter.number(),
+                    englishName = chapter.englishName(),
+                    arabicName = chapter.name(),
+                    numberOfAyats = chapter.numberOfAyahs().toInt(),
+                    revelationType = chapter.revelationType(),
+                    modifier = Modifier.clickable {
+                        navController.navigate(
+                            Screen.SurahDetail.createRoute(
+                                chapter.number().toInt(), chapter.englishName()
+                            )
+                        ) {
+                            popUpTo(Screen.SurahDetail.route) {
+                                inclusive = true
+                            }
+                            launchSingleTop = true
+                        }
+                    })
                 Spacer(Modifier.height(6.dp))
             }
-            ModernSurahText(
-                colors = colors,
-                number = chapter.number(),
-                englishName = chapter.englishName(),
-                arabicName = chapter.name(),
-                numberOfAyats = chapter.numberOfAyahs().toInt(),
-                revelationType = chapter.revelationType(),
-                modifier = Modifier.clickable {
-                    navController.navigate(
-                        Screen.SurahDetail.createRoute(
-                            chapter.number().toInt(), chapter.englishName()
-                        )
-                    ) {
-                        // Удаляем предыдущий SurahDetail из стека, чтобы не возвращаться к нему
-                        popUpTo(Screen.SurahDetail.route) {
-                            inclusive = true // полностью убрать предыдущий SurahDetail
-                        }
-                        launchSingleTop = true // чтобы не дублировать в стеке одинаковые экраны
-                    }
-                })
-            Spacer(Modifier.height(6.dp))
         }
     }
+
+    // Вот тут, вне TopBar, условно показываем Picker
+    QuranPickerDialog(
+        contentPadding,
+        isVisible = showPicker,
+        colors = colors,
+        onDismiss = { showPicker = false },
+        onPageSelected = { page -> /* navController.navigateToPage(page) */ },
+        onSurahSelected = { surah -> /* navController.navigateToSurah(surah) */ },
+        onJuzSelected = { juz -> /* navController.navigateToJuz(juz) */ })
 }
 
 @Preview(showBackground = true)
 @Composable
 fun SurahChoosePreview() {
-    val fakeNavController = rememberNavController()
+    rememberNavController()
     QuranAppTheme {
+/*
         Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
             SurahChooseScreen(
                 themeViewModel = ThemeViewModel.Base(
@@ -120,5 +143,6 @@ fun SurahChoosePreview() {
                 ), navController = fakeNavController
             )
         }
+*/
     }
 }

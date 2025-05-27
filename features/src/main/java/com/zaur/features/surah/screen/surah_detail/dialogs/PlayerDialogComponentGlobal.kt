@@ -1,5 +1,6 @@
 package com.zaur.features.surah.screen.surah_detail.dialogs
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import com.zaur.features.surah.viewmodel.SurahDetailViewModel
@@ -17,12 +18,14 @@ fun PlayerDialogComponentGlobal(
     surahDetailViewModel: SurahDetailViewModel,
     surahPlayerViewModel: SurahPlayerViewModel,
     colors: QuranColors,
+    contentPadding: PaddingValues = PaddingValues()
 ) {
     val state = surahDetailViewModel.surahDetailState().collectAsState().value
     val audioState = state.audioPlayerState()
 
     if (state.bottomSheetState().showPlayerBottomSheet()) {
         PlayerDialog(
+            contentPadding,
             soundDuration = audioState.duration(),
             soundPosition = audioState.position(),
             colors = colors,

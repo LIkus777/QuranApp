@@ -56,6 +56,8 @@ dependencies {
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.compose.lifecycle.runtime)
 
+    implementation("androidx.compose.foundation:foundation:1.3.1")
+
     // Image Loading
     implementation(libs.coil.compose)
 

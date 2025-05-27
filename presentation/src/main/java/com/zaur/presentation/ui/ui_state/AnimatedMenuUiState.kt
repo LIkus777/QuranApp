@@ -10,7 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.zaur.presentation.ui.ChapterBottomBarComponent
-import com.zaur.presentation.ui.ChapterTopBarComponent
+import com.zaur.presentation.ui.SurahDetailTopBarComponent
 import com.zaur.presentation.ui.QuranColors
 
 
@@ -26,7 +26,6 @@ interface AnimatedMenuUiState {
 
     @Composable
     fun Render(
-        isPlaying: Boolean,
         surahName: String,
         isBarsVisible: Boolean,
         colors: QuranColors,
@@ -39,7 +38,6 @@ interface AnimatedMenuUiState {
     object Animate : AnimatedMenuUiState {
         @Composable
         override fun Render(
-            isPlaying: Boolean,
             surahName: String,
             isBarsVisible: Boolean,
             colors: QuranColors,
@@ -52,7 +50,7 @@ interface AnimatedMenuUiState {
                 visible = isBarsVisible, enter = fadeIn(), exit = fadeOut()
             ) {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.TopCenter) {
-                    ChapterTopBarComponent(
+                    SurahDetailTopBarComponent(
                         surahName = surahName,
                         onMenuClick = onMenuClick,
                         colors = colors,
@@ -70,9 +68,8 @@ interface AnimatedMenuUiState {
                 Box(
                     modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter
                 ) {
-                    ChapterBottomBarComponent(
+                                                     ChapterBottomBarComponent(
                         colors = colors,
-                        isPlaying = isPlaying,
                         onClickSettings = onClickSettings,
                         onClickReciter = onClickReciter,
                         onClickPlay = onClickPlay,

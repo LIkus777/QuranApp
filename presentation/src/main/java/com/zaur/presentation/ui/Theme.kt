@@ -16,6 +16,7 @@ val DarkGray = Color(0xFF1F1F1F)
 val DarkGray75 = Color(0xBF1F1F1F)
 val DarkGray45 = Color(0x721F1F1F)
 val White = Color(0xFFFFFFFF)
+val Black = Color(0xFF000000)
 val Red = Color(0xFFD84315)
 val SoftGreen = Color(0xFF66BB6A)
 val Orange = Color(0xFFFFA726)
@@ -40,7 +41,8 @@ val AyahBorderDark = Color(0xFF6B7478) // Светло-серый с голуб�
 // Цвета для AppBar и StatusBar
 val AppBarColor = PrimaryGreen
 val StatusBarColor = DarkGray
-val IconColor = White
+val IconColorWhite = White
+val IconColorBlack = Black
 
 // Светлая тема
 val LightThemeColors = QuranColors(
@@ -68,7 +70,8 @@ val LightThemeColors = QuranColors(
     shadow = TransparentBlack,
     appBarColor = AppBarColor,
     statusBarColor = StatusBarColor,
-    iconColor = IconColor,
+    iconColorForBottom = IconColorWhite,
+    iconColorForTop = IconColorBlack,
     currentCard = CurrentGray,
     ayahBorder = AyahBorderLight,
     ayahColor = AyahColorLight,
@@ -103,7 +106,8 @@ val DarkThemeColors = QuranColors(
     shadow = TransparentWhite,
     appBarColor = AppBarColor,
     statusBarColor = StatusBarColor,
-    iconColor = IconColor,
+    iconColorForBottom = IconColorBlack,
+    iconColorForTop = IconColorWhite,
     ayahBorder = AyahBorderDark,
     ayahColor = AyahColorDark,
     ayahTextPrimary = White,
@@ -140,6 +144,7 @@ data class QuranColors(
     val shadow: Color,
     val appBarColor: Color, // Цвет для AppBar
     val statusBarColor: Color, // Цвет для StatusBar
-    val iconColor: Color,
+    val iconColorForBottom: Color,
+    val iconColorForTop: Color,
     val currentCard: Color,
 )

@@ -1,5 +1,6 @@
 package com.zaur.presentation.ui
 
+import android.content.Context
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -39,4 +40,15 @@ fun String.removeBasmala(): String {
         }
     }
     return this
+}
+
+fun getNavBarHeightInPx(context: Context): Int {
+    // Получение высоты навигационной панели через ресурсы
+    val resourceId = context.resources.getIdentifier("navigation_bar_height", "dimen", "android")
+    val navBarHeightInPx = if (resourceId > 0) {
+        context.resources.getDimensionPixelSize(resourceId)
+    } else {
+        0
+    }
+    return navBarHeightInPx + 30
 }

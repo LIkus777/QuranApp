@@ -1,28 +1,18 @@
 package com.zaur.features.surah.screen.surah_detail.dialogs
 
-import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -45,6 +35,7 @@ import com.zaur.presentation.ui.rippleClickable
 
 @Composable
 fun PlayerDialog(
+    contentPadding: PaddingValues = PaddingValues(),
     soundDuration: Long = 0L,
     soundPosition: Long = 0L,
     showSheet: Boolean = true,
@@ -68,14 +59,15 @@ fun PlayerDialog(
     val safeDuration = soundDuration.coerceAtLeast(1L)
 
     // 2) Прогресс от плеера 0f..1f
-    val rawProgress = (soundPosition / safeDuration.toFloat()).coerceIn(0f,1f)
+    val rawProgress = (soundPosition / safeDuration.toFloat()).coerceIn(0f, 1f)
 
     // 4) Формат времени
     fun fmt(ms: Long): String {
         val total = ms.coerceIn(0L, safeDuration)
         val s = total / 1000
-        return "%02d:%02d".format(s/60, s%60)
+        return "%02d:%02d".format(s / 60, s % 60)
     }
+
     val displayPos = (rawProgress * safeDuration).toLong()
     val remaining = safeDuration - displayPos
 
@@ -86,6 +78,7 @@ fun PlayerDialog(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp, vertical = 6.dp)
+                .padding(bottom = contentPadding.calculateBottomPadding())
                 .background(colors.boxBackground),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -122,7 +115,7 @@ fun PlayerDialog(
                         color = colors.textPrimary,
                     )
                     Icon(
-                        imageVector = Icons.Default.KeyboardArrowRight,
+                        painter = painterResource(R.drawable.arrow_right),
                         contentDescription = "К текущему аяту",
                         tint = colors.textPrimary
                     )
@@ -136,7 +129,7 @@ fun PlayerDialog(
                         text = reciterName, color = colors.textSecondary, fontSize = 14.sp
                     )
                     Icon(
-                        imageVector = Icons.Default.KeyboardArrowDown,
+                        painter = painterResource(R.drawable.arrow_down),
                         contentDescription = "Выбрать чтеца",
                         tint = colors.textSecondary
                     )
@@ -157,12 +150,14 @@ fun PlayerDialog(
                     painter = painterResource(R.drawable.skip_back_mini_line),
                     contentDescription = null,
                     modifier = iconModifier.rippleClickable(onClick = { onPreviousSurahClicked() }),
+                    tint = colors.iconColorForTop
                 )
 
                 Icon(
                     painter = painterResource(R.drawable.rewind_line),
                     contentDescription = null,
                     modifier = iconModifier.rippleClickable(onClick = { onPreviousAyahClicked() }),
+                    tint = colors.iconColorForTop
                 )
 
                 Icon(
@@ -174,18 +169,21 @@ fun PlayerDialog(
                         .rippleClickable(onClick = {
                             onPlayClicked()
                         }),
+                    tint = colors.iconColorForTop
                 )
 
                 Icon(
                     painter = painterResource(R.drawable.speed_line),
                     contentDescription = null,
                     modifier = iconModifier.rippleClickable(onClick = { onNextAyahClicked() }),
+                    tint = colors.iconColorForTop
                 )
 
                 Icon(
                     painter = painterResource(R.drawable.skip_forward_mini_line),
                     contentDescription = null,
                     modifier = iconModifier.rippleClickable(onClick = { onNextSurahClicked() }),
+                    tint = colors.iconColorForTop
                 )
             }
 
@@ -209,7 +207,8 @@ fun PlayerDialog(
                         contentDescription = "Repeat",
                         modifier = Modifier
                             .size(20.dp)
-                            .rippleClickable(onClick = {})
+                            .rippleClickable(onClick = {}),
+                        tint = colors.iconColorForTop
                     )
                     Text(
                         text = "1.0x",

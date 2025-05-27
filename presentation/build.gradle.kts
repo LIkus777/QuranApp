@@ -53,6 +53,8 @@ dependencies {
     implementation(libs.ui)
     implementation(libs.androidx.runtime)
 
+    implementation("androidx.compose.foundation:foundation:1.3.1")
+
     // Image Loading
     implementation(libs.coil.compose)
 

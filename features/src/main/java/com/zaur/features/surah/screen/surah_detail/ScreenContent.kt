@@ -1,6 +1,5 @@
 package com.zaur.features.surah.screen.surah_detail
 
-import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
@@ -67,7 +66,6 @@ fun ScreenContent(
                         },
                         onClickSound = { ayahNumber, ayahNumberInSurah ->
                             surahDetailViewModel().setAudioSurahAyah(ayahNumberInSurah)
-                            Log.i("TAG", "SreenContent: ayahNumber $ayahNumber ayahNumberInSurah $ayahNumberInSurah")
                             quranAudioViewModel().onPlaySingleClicked(
                                 ayahNumberInSurah, chapterNumber
                             )
@@ -77,8 +75,7 @@ fun ScreenContent(
                         deps.quranPageViewModel()
                             .getUthmaniPage(deps.quranPageViewModel().getLastReadPagePosition())
                         deps.quranPageViewModel().getTranslatedPage(
-                            deps.quranPageViewModel().getLastReadPagePosition(),
-                            "ru.kuliev"
+                            deps.quranPageViewModel().getLastReadPagePosition(), "ru.kuliev"
                         )
                         surahMode.value.RenderPageMode(
                             colors = colors,
@@ -89,7 +86,6 @@ fun ScreenContent(
                             onClickNextPage = {},
                             onClickSound = { ayahNumber, ayahNumberInSurah ->
                                 surahDetailViewModel().setAudioSurahAyah(ayahNumberInSurah)
-                                Log.i("TAG", "SreenContent: ayahNumber $ayahNumber ayahNumberInSurah $ayahNumberInSurah")
                                 quranAudioViewModel().onPlaySingleClicked(
                                     ayahNumberInSurah, chapterNumber
                                 )
@@ -100,7 +96,6 @@ fun ScreenContent(
                 // TopBar поверх контента
                 when (animatedMenu.value) {
                     is AnimatedMenuUiState.Animate -> animatedMenu.value.Render(
-                        isPlaying = surahDetailState().audioPlayerState().isAudioPlaying(),
                         surahName = surahName,
                         isBarsVisible = isBarsVisible.value,
                         colors = colors,

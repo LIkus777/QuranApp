@@ -1,7 +1,6 @@
 package com.zaur.presentation.ui
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 
 /**
 * @author Zaur
@@ -11,14 +10,12 @@ import androidx.compose.ui.Modifier
 @Composable
 fun ChapterBottomBarComponent(
     colors: QuranColors,
-    isPlaying: Boolean,
     onClickSettings: () -> Unit,
     onClickReciter: (Boolean) -> Unit,
     onClickPlay: () -> Unit
 ) {
-    ChapterBottomBar(
+    SurahDetailBottomAppBar(
         colors = colors,
-        isPlaying = isPlaying,
         showReciterDialog = onClickReciter,
         showSettings = onClickSettings,
         onClickPlayer = onClickPlay

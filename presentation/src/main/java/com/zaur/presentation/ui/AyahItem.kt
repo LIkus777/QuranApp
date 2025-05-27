@@ -109,7 +109,7 @@ fun AyahItem(
                                 onClickSound(ayahNumber, currentAyahInSurah)
                             })) {
                         Icon(
-                            painter = painterResource(R.drawable.volume),
+                            painter = painterResource(R.drawable.volume_up_line),
                             contentDescription = "Звук",
                             tint = soundIconColor,
                             modifier = Modifier.align(Alignment.Center)

@@ -195,11 +195,11 @@ interface ProvideAudioDownloader {
 }
 
 interface ProvideMainRepositorySave {
-    fun provideMainRepositorySave(): MainRepository.Save
+    fun provideMainRepositorySave(): MainRepository.Local
 }
 
 interface ProvideMainRepositoryLoad {
-    fun provideMainRepositoryLoad(): MainRepository.Load
+    fun provideMainRepositoryLoad(): MainRepository.Cloud
 }
 
 interface ProvideTranslationChapterDao {

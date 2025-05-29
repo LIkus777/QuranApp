@@ -11,9 +11,6 @@ import androidx.room.TypeConverters
 import com.google.gson.annotations.JsonAdapter
 import com.google.gson.annotations.SerializedName
 import com.zaur.data.room.converters.GenericConverters
-import com.zaur.domain.al_quran_cloud.models.audiofile.EditionVerse
-import com.zaur.domain.al_quran_cloud.models.audiofile.Surah
-import com.zaur.domain.al_quran_cloud.models.audiofile.VerseAudioAqc
 import com.zaur.domain.base.SajdaAdapter
 
 /**

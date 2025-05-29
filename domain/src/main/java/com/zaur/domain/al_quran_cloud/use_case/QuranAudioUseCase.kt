@@ -2,7 +2,7 @@ package com.zaur.domain.al_quran_cloud.use_case
 
 import com.zaur.domain.al_quran_cloud.models.audiofile.CacheAudio
 import com.zaur.domain.al_quran_cloud.models.audiofile.ChapterAudioFile
-import com.zaur.domain.al_quran_cloud.models.audiofile.VerseAudioAqc
+import com.zaur.domain.al_quran_cloud.models.audiofile.VerseAudio
 import com.zaur.domain.al_quran_cloud.repository.OfflineRepository
 import com.zaur.domain.al_quran_cloud.repository.QuranAudioRepository
 import com.zaur.domain.storage.QuranStorage
@@ -21,7 +21,7 @@ interface QuranAudioUseCase {
         reciter: String,
     ): ChapterAudioFile
 
-    suspend fun getAyahAudioByKey(verseKey: String, reciter: String): VerseAudioAqc
+    suspend fun getAyahAudioByKey(verseKey: String, reciter: String): VerseAudio
 
     fun getAudioSurahName(): String
     fun setAudioSurahName(surahName: String)
@@ -42,7 +42,7 @@ interface QuranAudioUseCase {
         override suspend fun getChapterAudioOfReciter(
             chapterNumber: Int,
             reciter: String,
-        ): ChapterAudioFile = if (offlineRepository.isOffline()) {
+        ): ChapterAudioFile = if (/*offlineRepository.isOffline()*/false) {
             quranAudioRepositoryLocal.getChapterAudioOfReciterLocal(chapterNumber, reciter)
         } else {
             quranAudioRepositoryCloud.getChapterAudioOfReciterCloud(chapterNumber, reciter)
@@ -52,7 +52,7 @@ interface QuranAudioUseCase {
         override suspend fun getAyahAudioByKey(
             verseKey: String,
             reciter: String,
-        ): VerseAudioAqc = if (offlineRepository.isOffline()) {
+        ): VerseAudio = if (offlineRepository.isOffline()) {
             quranAudioRepositoryLocal.getAyahAudioByKeyLocal(verseKey, reciter)
         } else {
             quranAudioRepositoryCloud.getAyahAudioByKeyCloud(verseKey, reciter)

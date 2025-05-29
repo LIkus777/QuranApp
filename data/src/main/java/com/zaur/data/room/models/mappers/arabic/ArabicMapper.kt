@@ -1,5 +1,6 @@
 package com.zaur.data.room.models.mappers.arabic
 
+import com.zaur.data.room.models.ArabicAyahEntity
 import com.zaur.data.room.models.ArabicChapterEntity
 import com.zaur.domain.al_quran_cloud.models.arabic.ArabicChapter
 
@@ -37,7 +38,7 @@ interface ArabicMapper {
                 entity.englishNameTranslation,
                 entity.revelationType,
                 entity.numberOfAyahs,
-                entity.ayahs.map { arabicAyahMapper.fromData(it) },
+                entity.ayahs.map { arabicAyahMapper.fromData(it as ArabicAyahEntity.Base) },
                 editionArabicMapper.fromData(entity.edition),
             )
     }

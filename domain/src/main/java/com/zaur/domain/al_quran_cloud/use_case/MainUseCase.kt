@@ -3,9 +3,9 @@ package com.zaur.domain.al_quran_cloud.use_case
 import com.zaur.domain.al_quran_cloud.repository.MainRepository
 
 /**
-* @author Zaur
-* @since 2025-05-12
-*/
+ * @author Zaur
+ * @since 2025-05-12
+ */
 
 interface MainUseCase {
 
@@ -22,28 +22,28 @@ interface MainUseCase {
     )
 
     class Base(
-        private val mainRepositoryLoad: MainRepository.Load,
-        private val mainRepositorySave: MainRepository.Save,
+        private val mainRepositoryCloud: MainRepository.Cloud,
+        private val mainRepositoryLocal: MainRepository.Local,
     ) : MainUseCase {
 
         override suspend fun loadChapters() {
-            val result = mainRepositoryLoad.loadChapters()
-            mainRepositorySave.saveChapters(result)
+            val result = mainRepositoryCloud.loadChapters()
+            mainRepositoryLocal.saveChapters(result)
         }
 
         override suspend fun loadChaptersArabic(chaptersNumbers: IntRange) {
-            val result = mainRepositoryLoad.loadChaptersArabic(chaptersNumbers)
-            mainRepositorySave.saveChaptersArabic(result)
+            val result = mainRepositoryCloud.loadChaptersArabic(chaptersNumbers)
+            mainRepositoryLocal.saveChaptersArabic(result)
         }
 
         override suspend fun loadChaptersAudio(chaptersNumbers: IntRange, reciter: String) {
-            val result = mainRepositoryLoad.loadChaptersAudio(chaptersNumbers, reciter)
-            mainRepositorySave.saveChaptersAudio(result)
+            val result = mainRepositoryCloud.loadChaptersAudio(chaptersNumbers, reciter)
+            mainRepositoryLocal.saveChaptersAudio(result)
         }
 
         override suspend fun loadChaptersTranslate(chaptersNumbers: IntRange, translator: String) {
-            val result = mainRepositoryLoad.loadChaptersTranslate(chaptersNumbers, translator)
-            mainRepositorySave.saveChaptersTranslate(result)
+            val result = mainRepositoryCloud.loadChaptersTranslate(chaptersNumbers, translator)
+            mainRepositoryLocal.saveChaptersTranslate(result)
         }
     }
 

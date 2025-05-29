@@ -4,10 +4,10 @@
     <selectionStates>
       <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2025-04-16T21:51:08.769201900Z">
+        <DropdownSelection timestamp="2025-05-29T13:24:29.731201800Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\zm393\.android\avd\Pixel_2_API_24.avd" />
+              <DeviceId pluginId="PhysicalDevice" identifier="serial=RRCW501NCTW" />
             </handle>
           </Target>
         </DropdownSelection>
@@ -21,6 +21,14 @@
       </SelectionState>
       <SelectionState runConfigName="AyahItem">
         <option name="selectionMode" value="DROPDOWN" />
+        <DropdownSelection timestamp="2025-05-29T12:05:22.564797Z">
+          <Target type="DEFAULT_BOOT">
+            <handle>
+              <DeviceId pluginId="PhysicalDevice" identifier="serial=RRCW501NCTW" />
+            </handle>
+          </Target>
+        </DropdownSelection>
+        <DialogSelection />
       </SelectionState>
     </selectionStates>
   </component>

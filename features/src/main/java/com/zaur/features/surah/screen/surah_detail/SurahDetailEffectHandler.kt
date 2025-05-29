@@ -13,13 +13,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.navigation.NavHostController
-import com.zaur.domain.al_quran_cloud.models.audiofile.VerseAudioAqc
+import com.zaur.domain.al_quran_cloud.models.audiofile.VerseAudio
 import com.zaur.navigation.Screen
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 interface SurahNavigationCallback {
-    fun naviate(surahNumber: Int)
+    fun navigate(surahNumber: Int)
 }
 
 interface SurahDetailEffectHandler {
@@ -52,7 +52,7 @@ interface SurahDetailEffectHandler {
         private val controller: NavHostController,
     ) : SurahDetailEffectHandler {
 
-        private val surahPlayerVm = deps.quranAudioViewModel()
+        private val surahPlayerVm = deps.surahPlayerViewModel()
         private val quranPageVm = deps.quranPageViewModel()
         private val quranTextVm = deps.quranTextViewModel()
         private val quranTranslationVm = deps.quranTranslationViewModel()
@@ -93,7 +93,7 @@ interface SurahDetailEffectHandler {
             val verse = uiData.audioState().verseAudioFile()
             val restart = uiData.surahDetailState().audioPlayerState().restartAudio()
             LaunchedEffect(verse, restart) {
-                if (verse !is VerseAudioAqc.Empty || restart == true) {
+                if (verse !is VerseAudio.Empty || restart == true) {
                     surahPlayerVm.onPlayVerse(verse)
                 }
             }
@@ -104,9 +104,9 @@ interface SurahDetailEffectHandler {
             val reciter = uiData.surahDetailState().reciterState().currentReciter()
             val reciterName = uiData.surahDetailState().reciterState().currentReciterName()
             val savedSurahNumber =
-                deps.quranAudioViewModel().getLastPlayedSurah().takeIf { it != 0 } ?: chapterNumber
+                deps.surahPlayerViewModel().getLastPlayedSurah().takeIf { it != 0 } ?: chapterNumber
             LaunchedEffect(reciter, reciterName) {
-                surahPlayerVm.downloadToCache(savedSurahNumber, reciter)
+                //surahPlayerVm.downloadToCache(savedSurahNumber, reciter)
             }
         }
 
@@ -123,18 +123,18 @@ interface SurahDetailEffectHandler {
         override fun HandleInitialLoad(pageNumber: Int) {
             surahPlayerVm.setSurahNavigationCallback(
                 object : SurahNavigationCallback {
-                    override fun naviate(surahNumber: Int) {
+                    override fun navigate(surahNumber: Int) {
                         Log.i("bug", "naviate CALLED")
                         Log.i("bug", "naviate surahNumber $surahNumber")
-                        val currentSurahNumber = uiData.surahDetailState().textState().currentSurahNumber()
+                        //val currentSurahNumber = uiData.surahDetailState().textState().currentSurahNumber()
                         val surahName =
-                            uiData.textState().chapters()[currentSurahNumber - 1].englishName()
+                            uiData.textState().chapters()[surahNumber - 1].englishName()
                         surahPlayerVm.setAudioSurahName(surahName)
-                        quranTextVm.setLastReadSurah(currentSurahNumber)
-                        surahPlayerVm.setLastPlayedSurah(currentSurahNumber)
+                        quranTextVm.setLastReadSurah(surahNumber)
+                        surahPlayerVm.setLastPlayedSurah(surahNumber)
                         controller.navigate(
                             Screen.SurahDetail.createRoute(
-                                currentSurahNumber, surahName
+                                surahNumber, surahName
                             )
                         ) {
                             // Удаляем предыдущий SurahDetail из стека, чтобы не возвращаться к нему

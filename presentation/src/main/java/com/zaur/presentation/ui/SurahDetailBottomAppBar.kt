@@ -1,5 +1,6 @@
 package com.zaur.presentation.ui
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -43,6 +44,7 @@ import com.zaur.presentation.R
  * @since 2025-05-12
  */
 
+@SuppressLint("SuspiciousIndentation")
 @Preview(showBackground = true)
 @Composable
 fun SurahDetailBottomAppBar(
@@ -52,16 +54,20 @@ fun SurahDetailBottomAppBar(
     showSettings: () -> Unit = {},
     onClickPlayer: () -> Unit = {},
 ) {
-    Box(
+
+    val densityCurrent = LocalDensity.current.density
+    val context = LocalContext.current
+    val navBarHeightInDp = getNavBarHeightInPx(context) / densityCurrent
+
+    /*Box(
         modifier = modifier
             .fillMaxWidth()
-            .height(56.dp)
-            .windowInsetsPadding(WindowInsets.navigationBars),
-    ) {
+            //.windowInsetsPadding(WindowInsets.navigationBars),
+    ) {*/
         BottomAppBar(
             containerColor = colors.appBarColor,
             contentColor = colors.iconColorForBottom,
-            modifier = Modifier.fillMaxSize() // заполнит родительский Box
+            modifier = Modifier.height(navBarHeightInDp.dp) // заполнит родительский Box
         ) {
             val iconModifier = Modifier.size(26.dp)
 
@@ -107,7 +113,7 @@ fun SurahDetailBottomAppBar(
                 )
             }
         }
-    }
+    //}
 }
 
 @Composable

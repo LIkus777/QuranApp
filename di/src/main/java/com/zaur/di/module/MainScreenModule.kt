@@ -1,7 +1,7 @@
 package com.zaur.di.module
 
-import com.zaur.data.al_quran_aqc.repository_impl.cloud.MainRepositoryLoadImpl
-import com.zaur.data.al_quran_aqc.repository_impl.local.MainRepositorySaveImpl
+import com.zaur.data.al_quran_aqc.repository_impl.cloud.MainRepositoryCloudImpl
+import com.zaur.data.al_quran_aqc.repository_impl.local.MainRepositoryLocalImpl
 import com.zaur.di.provides.ProvideMainRepositoryLoad
 import com.zaur.di.provides.ProvideMainRepositorySave
 import com.zaur.di.provides.ProvideMainUseCase
@@ -34,7 +34,7 @@ interface MainScreenModule : ProvideReciterUseCase, ProvideReciterManager,
 
         override fun provideThemeUseCase(): ThemeUseCase = themeUseCase
 
-        override fun provideMainRepositorySave(): MainRepository.Save = MainRepositorySaveImpl(
+        override fun provideMainRepositorySave(): MainRepository.Local = MainRepositoryLocalImpl(
             dataModule.provideAudioDownloader(),
             mapperModule.provideChapterMapper(),
             mapperModule.provideChapterAudioMapper(),
@@ -48,8 +48,8 @@ interface MainScreenModule : ProvideReciterUseCase, ProvideReciterManager,
             dataModule.provideTranslationChapterDao()
         )
 
-        override fun provideMainRepositoryLoad(): MainRepository.Load =
-            MainRepositoryLoadImpl(dataModule.provideQuranApiAqc())
+        override fun provideMainRepositoryLoad(): MainRepository.Cloud =
+            MainRepositoryCloudImpl(dataModule.provideQuranApiAqc())
 
         override fun provideMainUseCase(): MainUseCase = mainUseCase
 

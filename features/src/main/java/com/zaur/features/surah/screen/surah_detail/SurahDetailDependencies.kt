@@ -22,7 +22,7 @@ interface SurahDetailDependencies {
     fun surahChooseViewModel(): SurahChooseViewModel
     fun surahDetailViewModel(): SurahDetailViewModel
     fun quranTextViewModel(): QuranTextViewModel
-    fun quranAudioViewModel(): SurahPlayerViewModel
+    fun surahPlayerViewModel(): SurahPlayerViewModel
     fun quranTranslationViewModel(): QuranTranslationViewModel
     fun screenContentViewModel(): ScreenContentViewModel
     fun quranPageViewModel(): QuranPageViewModel
@@ -45,7 +45,7 @@ interface SurahDetailDependencies {
         override fun surahChooseViewModel() = surahChooseViewModel
         override fun surahDetailViewModel() = surahDetailViewModel
         override fun quranTextViewModel() = quranTextViewModel
-        override fun quranAudioViewModel() = surahPlayerViewModel
+        override fun surahPlayerViewModel() = surahPlayerViewModel
         override fun quranTranslationViewModel() = quranTranslationViewModel
         override fun screenContentViewModel() = screenContentViewModel
         override fun quranPageViewModel() = quranPageViewModel

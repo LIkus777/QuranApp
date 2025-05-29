@@ -10,7 +10,7 @@ import kotlinx.coroutines.delay
 
 suspend fun <T> retryWithBackoff(
     maxAttempts: Int = 100,
-    initialDelay: Long = 300,
+    initialDelay: Long = 100,
     factor: Double = 1.5,
     block: suspend () -> T
 ): T {

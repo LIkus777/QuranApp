@@ -4,7 +4,6 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import com.zaur.features.surah.screen.surah_detail.dialogs.ChooseReciterDialogComponent
 import com.zaur.features.surah.screen.surah_detail.dialogs.ChooseTextDialogComponent
-import com.zaur.features.surah.screen.surah_detail.dialogs.PlayerDialogComponent
 import com.zaur.features.surah.screen.surah_detail.dialogs.SettingsDialogComponent
 import com.zaur.features.surah.screen.surah_detail.dialogs.rememberSurahDetailUiData
 import com.zaur.presentation.ui.DarkThemeColors
@@ -45,6 +44,6 @@ fun SurahDetailScreenContent(
     SettingsDialogComponent(uiData.surahDetailState(), colors, deps.surahDetailViewModel())
     ChooseTextDialogComponent(colors, uiData, deps)
     ChooseReciterDialogComponent(
-        uiData.surahDetailState(), colors, deps.surahDetailViewModel(), deps.quranAudioViewModel()
+        uiData.surahDetailState(), colors, deps.surahDetailViewModel(), deps.surahPlayerViewModel()
     )
 }

@@ -27,9 +27,9 @@ interface SurahChooseModule : ProvideThemeUseCase, ProvideQuranTextUseCase,
         private val quranTextUseCase by lazy {
             QuranTextUseCase.Base(
                 dataModule.provideQuranStorage(),
-                dataModule.provideOfflineRepository(),
+                //dataModule.provideOfflineRepository(),
                 provideQuranTextRepositoryLocal(),
-                provideQuranTextRepositoryCloud()
+                //provideQuranTextRepositoryCloud()
             )
         }
 

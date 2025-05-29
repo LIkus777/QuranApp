@@ -2,7 +2,7 @@ package com.zaur.data.room.models.mappers.translate
 
 import com.zaur.data.room.models.TranslationEntity
 import com.zaur.domain.al_quran_cloud.models.translate.EditionTranslation
-import com.zaur.domain.al_quran_cloud.models.translate.TranslationAqc
+import com.zaur.domain.al_quran_cloud.models.translate.Translation
 
 /**
 * @author Zaur
@@ -11,14 +11,14 @@ import com.zaur.domain.al_quran_cloud.models.translate.TranslationAqc
 
 interface TranslationMapper {
 
-    fun toData(translation: TranslationAqc.Base): TranslationEntity.Base
-    fun fromData(entity: TranslationEntity.Base): TranslationAqc.Base
+    fun toData(translation: Translation.Base): TranslationEntity.Base
+    fun fromData(entity: TranslationEntity.Base): Translation.Base
 
     class Base(
         private val translationAyahMapper: TranslationAyahMapper,
         private val editionTranslationMapper: EditionTranslationMapper,
     ) : TranslationMapper {
-        override fun toData(translation: TranslationAqc.Base): TranslationEntity.Base =
+        override fun toData(translation: Translation.Base): TranslationEntity.Base =
             TranslationEntity.Base(
                 translation.number(),
                 translation.name(),
@@ -31,7 +31,7 @@ interface TranslationMapper {
                 translation.translator()
             )
 
-        override fun fromData(entity: TranslationEntity.Base): TranslationAqc.Base = TranslationAqc.Base(
+        override fun fromData(entity: TranslationEntity.Base): Translation.Base = Translation.Base(
             entity.number,
             entity.name,
             entity.englishName,

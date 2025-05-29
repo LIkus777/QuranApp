@@ -5,7 +5,7 @@ import com.zaur.data.room.dao.VerseAudioDao
 import com.zaur.data.room.models.mappers.audiofile.ChapterAudioMapper
 import com.zaur.data.room.models.mappers.audiofile.VerseAudioMapper
 import com.zaur.domain.al_quran_cloud.models.audiofile.ChapterAudioFile
-import com.zaur.domain.al_quran_cloud.models.audiofile.VerseAudioAqc
+import com.zaur.domain.al_quran_cloud.models.audiofile.VerseAudio
 import com.zaur.domain.al_quran_cloud.repository.QuranAudioRepository
 
 /**
@@ -29,7 +29,7 @@ class QuranAudioLocalRepositoryImpl(
 
     override suspend fun getAyahAudioByKeyLocal(
         verseKey: String, reciter: String,
-    ): VerseAudioAqc.Base = verseMapper.fromData(
+    ): VerseAudio.Base = verseMapper.fromData(
         verseAudioDao.getAyahAudioByKey(verseKey, reciter).verse,
         verseAudioDao.getAyahAudioByKey(verseKey, reciter).surah
     )

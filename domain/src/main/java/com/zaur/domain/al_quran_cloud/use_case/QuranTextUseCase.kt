@@ -7,9 +7,9 @@ import com.zaur.domain.al_quran_cloud.repository.QuranTextRepository
 import com.zaur.domain.storage.QuranStorage
 
 /**
-* @author Zaur
-* @since 2025-05-12
-*/
+ * @author Zaur
+ * @since 2025-05-12
+ */
 
 interface QuranTextUseCase {
 
@@ -31,25 +31,15 @@ interface QuranTextUseCase {
 
     class Base(
         private val quranStorage: QuranStorage,
-        private val offlineRepository: OfflineRepository,
         private val quranTextRepositoryLocal: QuranTextRepository.Local,
-        private val quranTextRepositoryCloud: QuranTextRepository.Cloud,
     ) : QuranTextUseCase {
 
         override suspend fun getAllChapters(): List<ChapterAqc.Base> {
-            return if (offlineRepository.isOffline()) {
-                quranTextRepositoryLocal.getAllChaptersLocal()
-            } else {
-                quranTextRepositoryCloud.getAllChaptersCloud()
-            }
+            return quranTextRepositoryLocal.getAllChaptersLocal()
         }
 
         override suspend fun getArabicChapter(chapterNumber: Int): ArabicChapter.Base {
-            return if (offlineRepository.isOffline()) {
-                quranTextRepositoryLocal.getArabicChapterLocal(chapterNumber)
-            } else {
-                quranTextRepositoryCloud.getArabicChapterCloud(chapterNumber)
-            }
+            return quranTextRepositoryLocal.getArabicChapterLocal(chapterNumber)
         }
 
         override fun getFontSizeArabic(): Float {
@@ -74,12 +64,13 @@ interface QuranTextUseCase {
 
         override fun setLastReadSurah(surahNumber: Int) = quranStorage.setLastReadSurah(surahNumber)
 
-        override fun getLastReadSurah(): Int =
-            quranStorage.getLastReadSurah()
+        override fun getLastReadSurah(): Int = quranStorage.getLastReadSurah()
 
-        override fun getLastReadAyahPosition(chapterNumber: Int): Int = quranStorage.getLastReadAyahPosition(chapterNumber)
+        override fun getLastReadAyahPosition(chapterNumber: Int): Int =
+            quranStorage.getLastReadAyahPosition(chapterNumber)
 
-        override fun saveLastReadAyahPosition(chapterNumber: Int, ayahNumber: Int) = quranStorage.saveLastReadAyahPosition(chapterNumber, ayahNumber)
+        override fun saveLastReadAyahPosition(chapterNumber: Int, ayahNumber: Int) =
+            quranStorage.saveLastReadAyahPosition(chapterNumber, ayahNumber)
 
         override fun markSurahScreenAsOpened() {
             quranStorage.setSurahScreenOpened()

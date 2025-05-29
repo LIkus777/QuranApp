@@ -4,9 +4,9 @@ import com.zaur.domain.al_quran_cloud.models.arabic.ArabicChapter
 import com.zaur.domain.al_quran_cloud.models.audiofile.Ayah
 import com.zaur.domain.al_quran_cloud.models.audiofile.CacheAudio
 import com.zaur.domain.al_quran_cloud.models.audiofile.ChapterAudioFile
-import com.zaur.domain.al_quran_cloud.models.audiofile.VerseAudioAqc
+import com.zaur.domain.al_quran_cloud.models.audiofile.VerseAudio
 import com.zaur.domain.al_quran_cloud.models.chapter.ChapterAqc
-import com.zaur.domain.al_quran_cloud.models.translate.TranslationAqc
+import com.zaur.domain.al_quran_cloud.models.translate.Translation
 import com.zaur.domain.al_quran_cloud.repository.OfflineRepository
 import com.zaur.domain.al_quran_cloud.repository.QuranAudioRepository
 import com.zaur.domain.al_quran_cloud.repository.QuranTextRepository
@@ -183,7 +183,7 @@ class FakeSurahPlayer() : SurahPlayer {
         TODO("Not yet implemented")
     }
 
-    override fun onPlayVerse(verse: VerseAudioAqc) {
+    override fun onPlayVerse(verse: VerseAudio) {
         TODO("Not yet implemented")
     }
 
@@ -235,7 +235,7 @@ class FakeQAudioRLocal : QuranAudioRepository.Local {
     override suspend fun getAyahAudioByKeyLocal(
         verseKey: String,
         reciter: String,
-    ): VerseAudioAqc.Base {
+    ): VerseAudio.Base {
         TODO("Not yet implemented")
     }
 }
@@ -258,7 +258,7 @@ class FakeQAudioRCloud : QuranAudioRepository.Cloud {
     override suspend fun getAyahAudioByKeyCloud(
         verseKey: String,
         reciter: String,
-    ): VerseAudioAqc.Base {
+    ): VerseAudio.Base {
         TODO("Not yet implemented")
     }
 }
@@ -267,7 +267,7 @@ class FakeQTranslationRLocal : QuranTranslationRepository.Local {
     override suspend fun getTranslationForChapterLocal(
         chapterNumber: Int,
         translator: String,
-    ): TranslationAqc.Base {
+    ): Translation.Base {
         TODO("Not yet implemented")
     }
 }
@@ -276,7 +276,7 @@ class FakeQTranslationRCloud : QuranTranslationRepository.Cloud {
     override suspend fun getTranslationForChapterCloud(
         chapterNumber: Int,
         translator: String,
-    ): TranslationAqc.Base {
+    ): Translation.Base {
         TODO("Not yet implemented")
     }
 }

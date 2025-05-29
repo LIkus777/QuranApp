@@ -122,17 +122,17 @@ interface SurahDetailModule : ProvideQuranPageRepositopryCloud, ProvideQuranPage
         private val quranTextUseCase by lazy {
             QuranTextUseCase.Base(
                 dataModule.provideQuranStorage(),
-                dataModule.provideOfflineRepository(),
+                //dataModule.provideOfflineRepository(),
                 provideQuranTextRepositoryLocal(),
-                provideQuranTextRepositoryCloud()
+                //provideQuranTextRepositoryCloud()
             )
         }
 
         private val quranTranslationUseCase by lazy {
             QuranTranslationUseCase.Base(
-                dataModule.provideOfflineRepository(),
+                //dataModule.provideOfflineRepository(),
                 provideQuranTranslationRepositoryLocal(),
-                provideQuranTranslationRepositoryCloud()
+                //provideQuranTranslationRepositoryCloud()
             )
         }
 

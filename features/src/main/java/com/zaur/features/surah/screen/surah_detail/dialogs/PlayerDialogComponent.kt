@@ -35,23 +35,23 @@ fun PlayerDialogComponent(
                     showSheet = bottomSheetState().showPlayerBottomSheet(),
                     isPlaying = audioPlayerState().isAudioPlaying(),
                     onPlayClicked = {
-                        quranAudioViewModel().onPlayWholeClicked()
+                        surahPlayerViewModel().onPlayWholeClicked()
                     },
                     onNextAyahClicked = {
-                        quranAudioViewModel().onNextAyahClicked()
+                        surahPlayerViewModel().onNextAyahClicked()
                     },
                     onPreviousAyahClicked = {
-                        quranAudioViewModel().onPreviousAyahClicked()
+                        surahPlayerViewModel().onPreviousAyahClicked()
                     },
                     onNextSurahClicked = {
-                        quranAudioViewModel().onNextSurahClicked()
+                        surahPlayerViewModel().onNextSurahClicked()
                     },
                     onPreviousSurahClicked = {
-                        quranAudioViewModel().onPreviousSurahClicked()
+                        surahPlayerViewModel().onPreviousSurahClicked()
                     },
                     onSeekRequested = { newPosMs ->
                         // здесь вызываем метод плеера, который вы в себе реализуете, например:
-                        quranAudioViewModel().seekTo(newPosMs)
+                        surahPlayerViewModel().seekTo(newPosMs)
                     },
                     onSurahAndAyahClicked = {
 

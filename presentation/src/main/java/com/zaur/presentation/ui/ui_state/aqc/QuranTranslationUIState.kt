@@ -1,6 +1,6 @@
 package com.zaur.presentation.ui.ui_state.aqc
 
-import com.zaur.domain.al_quran_cloud.models.translate.TranslationAqc
+import com.zaur.domain.al_quran_cloud.models.translate.Translation
 
 /**
 * @author Zaur
@@ -10,12 +10,12 @@ import com.zaur.domain.al_quran_cloud.models.translate.TranslationAqc
 interface QuranTranslationUIState {
 
     fun isLoading(): Boolean
-    fun translations(): TranslationAqc
+    fun translations(): Translation
     fun isRefreshing(): Boolean
 
     data class Base(
         private val isLoading: Boolean = false,
-        private val translations: TranslationAqc = TranslationAqc.Empty,
+        private val translations: Translation = Translation.Empty,
         private val isRefreshing: Boolean = false
     ) : QuranTranslationUIState {
         override fun isLoading() = isLoading

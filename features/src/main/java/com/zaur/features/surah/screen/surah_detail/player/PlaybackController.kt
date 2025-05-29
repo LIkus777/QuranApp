@@ -1,6 +1,6 @@
 package com.zaur.features.surah.screen.surah_detail.player
 
-import com.zaur.domain.al_quran_cloud.models.audiofile.VerseAudioAqc
+import com.zaur.domain.al_quran_cloud.models.audiofile.VerseAudio
 import com.zaur.features.surah.base.AudioPlayer
 import com.zaur.features.surah.manager.SurahDetailStateManager
 import com.zaur.features.surah.screen.surah_detail.SurahNavigationCallback
@@ -20,7 +20,7 @@ interface PlaybackController {
     fun pause()
     fun toggleChapterPlayback()
     fun playAtIndex(index: Int)
-    fun playVerse(verse: VerseAudioAqc)
+    fun playVerse(verse: VerseAudio)
     fun handleTrackEnd(nextIndex: Int, atEnd: Boolean)
     fun playSingle(ayahNumber: Int, surahNumber: Int, callback: (Int) -> Unit)
     fun switchSurah(newSurahNumber: Int)
@@ -41,13 +41,12 @@ interface PlaybackController {
         private var surahNavigationCallback: SurahNavigationCallback? = null
 
         override fun switchSurah(newSurahNumber: Int) {
-            audioPlayerStateUpdater.setCurrentAyahAndSurah(newSurahNumber, 1)
             audioPlayer.clearItems()
             playlistManager.clear()
             audioPlayerStateUpdater.setPlayWholeChapter(false)
             audioPlayerStateUpdater.setPlaying(false)
-            surahDetailStateManager.updateAyahAndSurah(1, newSurahNumber)
-            surahNavigationCallback?.naviate(newSurahNumber)
+            audioPlayerStateUpdater.setCurrentAyahAndSurah(newSurahNumber, 1)
+            surahNavigationCallback?.navigate(newSurahNumber)
         }
 
         override fun playRelativeAyah(offset: Int) {
@@ -71,7 +70,7 @@ interface PlaybackController {
             }
         }
 
-        override fun playVerse(verse: VerseAudioAqc) {
+        override fun playVerse(verse: VerseAudio) {
             if (state.value.audioPlayerState().restartAudio()) {
                 audioPlayer.restartAudio()
             } else {

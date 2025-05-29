@@ -26,7 +26,7 @@ fun rememberSurahDetailUiData(
     with(deps) {
         val offlineState by offlineViewModel().offlineState().collectAsState()
         val textState by quranTextViewModel().textState().collectAsState()
-        val audioState by quranAudioViewModel().audioState().collectAsState()
+        val audioState by surahPlayerViewModel().audioState().collectAsState()
         val translateState by quranTranslationViewModel().translationState().collectAsState()
         val surahDetailState by surahDetailViewModel().surahDetailState().collectAsState()
         val pageState by quranPageViewModel().pageState().collectAsState()
@@ -39,8 +39,16 @@ fun rememberSurahDetailUiData(
             if (!alreadyInitialized.value) {
                 alreadyInitialized.value = true
                 Log.i("bug", "rememberSurahDetailUiData: LaunchedEffect CALLED")
+
+                val reciter = deps.surahPlayerViewModel().getReciter().toString()
+                deps.surahDetailViewModel().selectedReciter(
+                    deps.surahPlayerViewModel().getReciter().toString(),
+                    deps.surahPlayerViewModel().getReciterName().toString()
+                )
+                surahPlayerViewModel().getChaptersAudioOfReciter(chapterNumber, reciter)
+
                 updateSurahDetailData(
-                    reciter = surahDetailState.reciterState().currentReciter(),
+                    reciter = reciter,
                     ayahNumber = surahDetailState.audioPlayerState().currentAyah(),
                     surahName = surahName,
                     chapterNumber = chapterNumber,
@@ -71,7 +79,7 @@ fun updateSurahDetailData(
     deps: SurahDetailDependencies,
     offlineState: OfflineUIState,
 ) = with(deps) {
-    val audioVm = quranAudioViewModel()
+    val audioVm = surahPlayerViewModel()
     val textVm = quranTextViewModel()
     val detailVm = surahDetailViewModel()
 
@@ -95,7 +103,7 @@ fun updateSurahDetailData(
         // Загружаем аятов для savedSurahNumber
         // Этот suspend-функция должна запустить SurahPlayer.setAyahs(...)
         // Через ViewModel, но здесь для примера прямой вызов
-        quranAudioViewModel().getChaptersAudioOfReciter(savedSurahNumber, reciter)
+        surahPlayerViewModel().getChaptersAudioOfReciter(savedSurahNumber, reciter)
 
         setAyahInText(textVm.getLastReadAyahPosition(chapterNumber))
         setOfflineMode(offlineState.isOffline())

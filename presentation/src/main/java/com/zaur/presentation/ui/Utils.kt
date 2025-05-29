@@ -50,5 +50,5 @@ fun getNavBarHeightInPx(context: Context): Int {
     } else {
         0
     }
-    return navBarHeightInPx + 30
+    return navBarHeightInPx
 }

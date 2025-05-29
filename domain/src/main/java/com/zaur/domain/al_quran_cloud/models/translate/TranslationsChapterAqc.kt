@@ -11,16 +11,16 @@ import com.zaur.domain.base.SajdaAdapter
 
 interface TranslationsChapterAqc {
 
-    fun translations(): TranslationAqc.Base
+    fun translations(): Translation.Base
 
     fun <T> map(mapper: Mapper<T>): T
 
     class Base(
         @SerializedName("code") private val code: Long,
         @SerializedName("status") private val status: String,
-        @SerializedName("data") private val translations: TranslationAqc.Base,
+        @SerializedName("data") private val translations: Translation.Base,
     ) : TranslationsChapterAqc {
-        override fun translations(): TranslationAqc.Base = translations
+        override fun translations(): Translation.Base = translations
 
         override fun <T> map(mapper: Mapper<T>): T = mapper.map(code, status, translations)
     }
@@ -29,12 +29,12 @@ interface TranslationsChapterAqc {
         fun map(
             code: Long,
             status: String,
-            translations: TranslationAqc,
+            translations: Translation,
         ): T
     }
 }
 
-interface TranslationAqc {
+interface Translation {
 
     fun number(): Long
     fun name(): String
@@ -60,7 +60,7 @@ interface TranslationAqc {
         @SerializedName("ayahs") private val ayahs: List<Ayah.Base>,
         @SerializedName("edition") private val edition: EditionTranslation.Base,
         private val translator: String,
-    ) : TranslationAqc {
+    ) : Translation {
 
         override fun number() = number
         override fun name() = name
@@ -113,7 +113,7 @@ interface TranslationAqc {
         ): T
     }
 
-    object Empty : TranslationAqc {
+    object Empty : Translation {
         override fun number(): Long = 0
         override fun name(): String = ""
         override fun englishName(): String = ""

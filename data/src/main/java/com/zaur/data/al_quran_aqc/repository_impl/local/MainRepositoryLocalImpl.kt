@@ -14,20 +14,20 @@ import com.zaur.data.room.models.mappers.chapter.ChapterMapper
 import com.zaur.data.room.models.mappers.translate.TranslationMapper
 import com.zaur.domain.al_quran_cloud.models.arabic.ArabicChapter
 import com.zaur.domain.al_quran_cloud.models.audiofile.ChapterAudioFile
-import com.zaur.domain.al_quran_cloud.models.audiofile.VerseAudioAqc
+import com.zaur.domain.al_quran_cloud.models.audiofile.VerseAudio
 import com.zaur.domain.al_quran_cloud.models.chapter.ChapterAqc
-import com.zaur.domain.al_quran_cloud.models.translate.TranslationAqc
+import com.zaur.domain.al_quran_cloud.models.translate.Translation
 import com.zaur.domain.al_quran_cloud.repository.MainRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 /**
-* @author Zaur
-* @since 2025-05-12
-*/
+ * @author Zaur
+ * @since 2025-05-12
+ */
 
-class MainRepositorySaveImpl(
+class MainRepositoryLocalImpl(
     private val audioDownloader: AudioDownloader,
     private val chapterMapper: ChapterMapper,
     private val chapterAudioMapper: ChapterAudioMapper,
@@ -39,14 +39,14 @@ class MainRepositorySaveImpl(
     private val chapterAudioDao: ChapterAudioDao,
     private val arabicChapterDao: ArabicChapterDao,
     private val translationChapterDao: TranslationChapterDao,
-) : MainRepository.Save {
+) : MainRepository.Local {
 
     override suspend fun saveChapters(chaptersAqc: List<ChapterAqc.Base>) {
         val chaptersEntities = chaptersAqc.map { chapterMapper.toData(it) }
         chapterDao.add(chaptersEntities)
     }
 
-    override suspend fun saveVersesAudio(versesAudio: List<VerseAudioAqc.Base>) {
+    override suspend fun saveVersesAudio(versesAudio: List<VerseAudio.Base>) {
         // Сохраняем аяты
         verseAudioDao.insertAll(versesAudio.map { verseAudioMapper.toData(it) })
     }
@@ -69,7 +69,7 @@ class MainRepositorySaveImpl(
         }
     }
 
-    override suspend fun saveChaptersTranslate(chaptersTranslate: List<TranslationAqc.Base>) {
+    override suspend fun saveChaptersTranslate(chaptersTranslate: List<Translation.Base>) {
         translationChapterDao.add(chaptersTranslate.map { translationMapper.toData(it) })
     }
 }

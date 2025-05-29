@@ -28,7 +28,7 @@ interface ChapterAudioMapper {
                 chapterAudioFile.numberOfAyahs(),
                 ayahs = chapterAudioFile.ayahs().map { ayahAudioMapper.toData(it) },
                 edition = editionAudioMapper.toData(chapterAudioFile.edition()),
-                chapterAudioFile.reciter(),
+                chapterAudioFile.reciter() ?: "",
             )
 
         override fun fromData(entity: ChapterAudioEntity.Base): ChapterAudioFile.Base =

@@ -32,11 +32,11 @@ class GenericConverters {
     }
 
     @TypeConverter
-    fun fromArabicAyahList(list: List<ArabicAyahEntity>?): String? = gson.toJson(list)
+    fun fromArabicAyahList(list: List<ArabicAyahEntity.Base>?): String? = gson.toJson(list)
 
     @TypeConverter
-    fun toArabicAyahList(json: String?): List<ArabicAyahEntity>? {
-        val type = object : TypeToken<List<ArabicAyahEntity>>() {}.type
+    fun toArabicAyahList(json: String?): List<ArabicAyahEntity.Base>? {
+        val type = object : TypeToken<List<ArabicAyahEntity.Base>>() {}.type
         return gson.fromJson(json, type)
     }
 

@@ -22,6 +22,10 @@ interface MainViewModel : MainObservable.Read {
     fun saveReciter(identifier: String)
     fun getReciterName(): String?
 
+    fun getTranslator(): String
+    fun saveTranslator(identifier: String)
+    fun getTranslatorName(): String?
+
     fun loadQuranData()
     fun loadChaptersArabic(chaptersNumbers: IntRange = 1..114)
     fun loadChaptersAudio(
@@ -47,6 +51,18 @@ interface MainViewModel : MainObservable.Read {
         override fun saveReciter(identifier: String) = reciterManager.saveReciter(identifier)
 
         override fun getReciterName(): String? = reciterManager.getReciterName()
+
+        override fun getTranslator(): String {
+            TODO("Not yet implemented")
+        }
+
+        override fun saveTranslator(identifier: String) {
+            TODO("Not yet implemented")
+        }
+
+        override fun getTranslatorName(): String? {
+            TODO("Not yet implemented")
+        }
 
         override fun loadQuranData() {
             viewModelScope.launch(Dispatchers.IO) {

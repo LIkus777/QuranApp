@@ -25,7 +25,7 @@ interface ArabicChapterEntity {
         @SerializedName("englishNameTranslation") val englishNameTranslation: String,
         @SerializedName("revelationType") val revelationType: String,
         @SerializedName("numberOfAyahs") val numberOfAyahs: Long,
-        @TypeConverters(GenericConverters::class) @SerializedName("ayahs") val ayahs: List<ArabicAyahEntity>,
+        @TypeConverters(GenericConverters::class) @SerializedName("ayahs") val ayahs: List<ArabicAyahEntity.Base>,
         @TypeConverters(GenericConverters::class) @SerializedName("edition") val edition: EditionArabicEntity.Base,
     ) : ArabicChapterEntity {
 

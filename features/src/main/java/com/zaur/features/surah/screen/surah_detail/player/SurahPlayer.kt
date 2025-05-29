@@ -3,7 +3,7 @@ package com.zaur.features.surah.screen.surah_detail.player
 import android.util.Log
 import com.zaur.domain.al_quran_cloud.models.audiofile.Ayah
 import com.zaur.domain.al_quran_cloud.models.audiofile.CacheAudio
-import com.zaur.domain.al_quran_cloud.models.audiofile.VerseAudioAqc
+import com.zaur.domain.al_quran_cloud.models.audiofile.VerseAudio
 import com.zaur.features.surah.base.AudioPlayer
 import com.zaur.features.surah.base.AudioPlayerCallback
 import com.zaur.features.surah.manager.SurahDetailStateManager
@@ -24,7 +24,7 @@ interface SurahPlayer {
     fun onPreviousSurahClicked()
 
     fun seekTo(position: Long)
-    fun onPlayVerse(verse: VerseAudioAqc)
+    fun onPlayVerse(verse: VerseAudio)
     fun onPlayWholeClicked()
     fun onPlaySingleClicked(ayahNumber: Int, surahNumber: Int)
     fun onPauseClicked()
@@ -119,7 +119,7 @@ interface SurahPlayer {
         }
 
 
-        override fun onPlayVerse(verse: VerseAudioAqc) {
+        override fun onPlayVerse(verse: VerseAudio) {
             playbackController.playVerse(verse)
         }
 

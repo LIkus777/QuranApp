@@ -10,7 +10,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import com.zaur.domain.al_quran_cloud.models.arabic.ArabicChapter
-import com.zaur.domain.al_quran_cloud.models.translate.TranslationAqc
+import com.zaur.domain.al_quran_cloud.models.translate.Translation
 import com.zaur.presentation.ui.QuranColors
 import com.zaur.presentation.ui.ui_state.AnimatedMenuUiState
 import com.zaur.presentation.ui.ui_state.SurahDetailUiState
@@ -35,7 +35,7 @@ fun ScreenContent(
             val surahMode = screenContentViewModel().surahMode().collectAsState()
             val animatedMenu = screenContentViewModel().animatedMenu().collectAsState()
             val isLoading =
-                textState().currentArabicText() == ArabicChapter.Empty || translateState().translations() == TranslationAqc.Empty
+                textState().currentArabicText() == ArabicChapter.Empty || translateState().translations() == Translation.Empty
 
             Box(
                 modifier = Modifier
@@ -66,7 +66,7 @@ fun ScreenContent(
                         },
                         onClickSound = { ayahNumber, ayahNumberInSurah ->
                             surahDetailViewModel().setAudioSurahAyah(ayahNumberInSurah)
-                            quranAudioViewModel().onPlaySingleClicked(
+                            surahPlayerViewModel().onPlaySingleClicked(
                                 ayahNumberInSurah, chapterNumber
                             )
                         })
@@ -86,7 +86,7 @@ fun ScreenContent(
                             onClickNextPage = {},
                             onClickSound = { ayahNumber, ayahNumberInSurah ->
                                 surahDetailViewModel().setAudioSurahAyah(ayahNumberInSurah)
-                                quranAudioViewModel().onPlaySingleClicked(
+                                surahPlayerViewModel().onPlaySingleClicked(
                                     ayahNumberInSurah, chapterNumber
                                 )
                             })

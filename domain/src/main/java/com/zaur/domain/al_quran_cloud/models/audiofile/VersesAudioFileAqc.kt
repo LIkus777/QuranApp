@@ -11,16 +11,16 @@ import com.zaur.domain.base.SajdaAdapter
 
 interface VersesAudioFileAqc {
 
-    fun verseAudio(): VerseAudioAqc.Base
+    fun verseAudio(): VerseAudio.Base
 
     fun <T> map(mapper: Mapper<T>): T
 
     class Base(
         @SerializedName("code") private val code: Long,
         @SerializedName("status") private val status: String,
-        @SerializedName("data") private val verseAudio: VerseAudioAqc.Base,
+        @SerializedName("data") private val verseAudio: VerseAudio.Base,
     ) : VersesAudioFileAqc {
-        override fun verseAudio(): VerseAudioAqc.Base = verseAudio
+        override fun verseAudio(): VerseAudio.Base = verseAudio
         override fun <T> map(mapper: Mapper<T>): T = mapper.map(code, status, verseAudio)
     }
 
@@ -28,12 +28,12 @@ interface VersesAudioFileAqc {
         fun map(
             code: Long,
             status: String,
-            verseAudio: VerseAudioAqc,
+            verseAudio: VerseAudio,
         ): T
     }
 }
 
-interface VerseAudioAqc {
+interface VerseAudio {
 
     fun verseNumber(): Long
     fun reciter(): String
@@ -67,7 +67,7 @@ interface VerseAudioAqc {
         @SerializedName("ruku") private val ruku: Long,
         @SerializedName("hizbQuarter") private val hizbQuarter: Long,
         @JsonAdapter(SajdaAdapter::class) @SerializedName("sajda") private val sajda: Boolean,
-    ) : VerseAudioAqc {
+    ) : VerseAudio {
 
         override fun verseNumber(): Long = verseNumber
         override fun reciter(): String = reciter
@@ -122,7 +122,7 @@ interface VerseAudioAqc {
     }
 
     // Дефолтная реализация с выбрасыванием исключений
-    object Empty : VerseAudioAqc {
+    object Empty : VerseAudio {
         override fun verseNumber(): Long = 0
         override fun reciter(): String = ""
         override fun audio(): String = ""

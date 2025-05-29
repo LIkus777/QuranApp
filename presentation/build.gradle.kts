@@ -54,6 +54,7 @@ dependencies {
     implementation(libs.androidx.runtime)
 
     implementation("androidx.compose.foundation:foundation:1.3.1")
+    implementation ("com.google.accompanist:accompanist-systemuicontroller:0.36.0")
 
     // Image Loading
     implementation(libs.coil.compose)

@@ -5,14 +5,16 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.core.view.WindowCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.WindowInsetsControllerCompat
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.zaur.features.surah.screen.main.MainBottomAppBar
@@ -46,9 +48,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()/* val intent = Intent(this, UnityPlayerGameActivity::class.java)
-        startActivity(intent)*/
-        hideSystemUI()
+        enableEdgeToEdge()
         setContent {
             val navController = rememberNavController()
             val isDarkTheme = themeViewModel.themeState().collectAsState()
@@ -65,89 +65,102 @@ class MainActivity : ComponentActivity() {
             val colors = if (isDarkTheme.value.isDarkTheme) DarkThemeColors else LightThemeColors
 
             QuranAppTheme(darkTheme = isDarkTheme.value.isDarkTheme) {
-                Scaffold(modifier = Modifier.fillMaxSize(), bottomBar = {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .systemBarsPadding()  // учесть статус-/навигационные бары
+                ) {
+                    Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .systemBarsPadding()
+                        ) {
+                            QuranNavGraph(
+                                navController = navController,
+                                mainScreen = { controller ->
+                                    val mainViewModel = remember {
+                                        MainViewModelFactory.Base(
+                                            mainScreenModule.provideMainUseCase(),
+                                            mainScreenModule.provideReciterManager()
+                                        ).create()
+                                    }
+                                    MainScreen(
+                                        controller, themeViewModel, mainViewModel = mainViewModel
+                                    )
+                                },
+                                surahChooseScreen = { controller ->
+                                    val surahChooseViewModel = remember {
+                                        surahDetailModule.provideSurahChooseViewModelFactory()
+                                            .create()
+                                    }
+                                    SurahChooseScreen(
+                                        themeViewModel,
+                                        surahChooseViewModel,
+                                        controller,
+                                        contentPadding = innerPadding,
+                                        onClickPlayer = {
+                                            surahDetailViewModel.showPlayerBottomSheet(true)
+                                        })
+                                },
+                                surahDetailScreen = { number, name, controller ->
+                                    val quranTextViewModel = remember {
+                                        surahDetailModule.provideQuranTextViewModelFactory()
+                                            .create()
+                                    }
+                                    val quranTranslationViewModel = remember {
+                                        surahDetailModule.provideQuranTranslationViewModelFactory()
+                                            .create()
+                                    }
+                                    val screenContentViewModel = remember {
+                                        surahDetailModule.provideScreenContentViewModelFactory()
+                                            .create()
+                                    }
+                                    val quranPageViewModel = remember {
+                                        surahDetailModule.provideQuranPageViewModelFactory()
+                                            .create()
+                                    }
+
+                                    val deps = SurahDetailDependencies.Base(
+                                        themeViewModel = themeViewModel,
+                                        offlineViewModel = offlineViewModel,
+                                        surahChooseViewModel = surahDetailModule.provideSurahChooseViewModelFactory()
+                                            .create(),
+                                        surahDetailViewModel = surahDetailViewModel,
+                                        quranTextViewModel = quranTextViewModel,
+                                        surahPlayerViewModel = quranAudioViewModel,
+                                        quranTranslationViewModel = quranTranslationViewModel,
+                                        screenContentViewModel = screenContentViewModel,
+                                        quranPageViewModel = quranPageViewModel,
+                                        controller = navController
+                                    )
+
+                                    SurahDetailScreen(name, number, deps, navController)
+                                })
+                        }
+                    }
                     if (showBottomBar) {
                         MainBottomAppBar(
-                            colors = colors,
-                            navController = navController,
-                            showSettings = {
+                            modifier = Modifier
+                                .align(Alignment.BottomCenter)
+                                .windowInsetsPadding(WindowInsets.navigationBars), colors = colors,
+                            //navController = navController,
+                            showQuran = {
+
+                            }, showBookmarks = {
+
+                            }, showSettings = {
 
                             })
                     }
-                }) { innerPadding ->
-                    Box(modifier = Modifier.fillMaxSize()) {
-                        QuranNavGraph(navController = navController, mainScreen = { controller ->
-                            MainScreen(
-                                controller,
-                                themeViewModel,
-                                mainViewModelFactory = MainViewModelFactory.Base(
-                                    mainScreenModule.provideMainUseCase(),
-                                    mainScreenModule.provideReciterManager()
-                                )
-                            )
-                        }, surahChooseScreen = { controller ->
-                            val surahChooseViewModel = remember {
-                                surahDetailModule.provideSurahChooseViewModelFactory().create()
-                            }
-                            SurahChooseScreen(
-                                themeViewModel,
-                                surahChooseViewModel,
-                                controller,
-                                contentPadding = innerPadding,
-                                onClickPlayer = {
-                                    surahDetailViewModel.showPlayerBottomSheet(true)
-                                })
-                        }, surahDetailScreen = { number, name, controller ->
-                            val quranTextViewModel = remember {
-                                surahDetailModule.provideQuranTextViewModelFactory().create()
-                            }
-                            val quranTranslationViewModel = remember {
-                                surahDetailModule.provideQuranTranslationViewModelFactory().create()
-                            }
-                            val screenContentViewModel = remember {
-                                surahDetailModule.provideScreenContentViewModelFactory().create()
-                            }
-                            val quranPageViewModel = remember {
-                                surahDetailModule.provideQuranPageViewModelFactory().create()
-                            }
 
-                            val deps = SurahDetailDependencies.Base(
-                                themeViewModel = themeViewModel,
-                                offlineViewModel = offlineViewModel,
-                                surahChooseViewModel = surahDetailModule.provideSurahChooseViewModelFactory()
-                                    .create(),
-                                surahDetailViewModel = surahDetailViewModel,
-                                quranTextViewModel = quranTextViewModel,
-                                surahPlayerViewModel = quranAudioViewModel,
-                                quranTranslationViewModel = quranTranslationViewModel,
-                                screenContentViewModel = screenContentViewModel,
-                                quranPageViewModel = quranPageViewModel,
-                                controller = navController
-                            )
-
-                            SurahDetailScreen(name, number, deps, navController)
-                        })
-
-                        PlayerDialogComponentGlobal(
-                            surahDetailViewModel = surahDetailViewModel,
-                            surahPlayerViewModel = quranAudioViewModel,
-                            colors = colors,
-                            contentPadding = innerPadding
-                        )
-                    }
+                    PlayerDialogComponentGlobal(
+                        surahDetailViewModel = surahDetailViewModel,
+                        surahPlayerViewModel = quranAudioViewModel,
+                        colors = colors,
+                    )
                 }
             }
         }
-    }
-
-    fun hideSystemUI() {
-        // Отключаем автоматическое смещение под системные бары
-        WindowCompat.setDecorFitsSystemWindows(window, false)
-
-        // Создаём совместимый контроллер
-        val controller = WindowInsetsControllerCompat(window, window.decorView)
-        controller.systemBarsBehavior =
-            WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-        controller.hide(WindowInsetsCompat.Type.systemBars()) // Прячем статусбар и навбар
     }
 }

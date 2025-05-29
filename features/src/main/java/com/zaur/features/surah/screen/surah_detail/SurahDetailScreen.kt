@@ -81,7 +81,7 @@ fun SurahDetailScreen(
 @Composable
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "ViewModelConstructorInComposable")
 fun SurahDetailScreenPreview() {
-    rememberNavController()
+    /*rememberNavController()
     val textUseCaseAqc = QuranTextUseCase.Base(
         FakeQuranStorage(), FakeOfflineRepos(), FakeQTextRLocal(), FakeQTextRCloud()
     )
@@ -98,7 +98,7 @@ fun SurahDetailScreenPreview() {
     )
     OfflineViewModel.Base(
         offlineUseCase = OfflineUseCase.Base(FakeOfflineRepos())
-    )/*
+    )*//*
     QuranAppTheme {
         Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
             SurahDetailScreen(

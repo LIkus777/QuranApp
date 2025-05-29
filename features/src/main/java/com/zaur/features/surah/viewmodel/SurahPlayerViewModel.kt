@@ -6,7 +6,7 @@ import com.zaur.core.HandleResult
 import com.zaur.domain.al_quran_cloud.models.audiofile.Ayah
 import com.zaur.domain.al_quran_cloud.models.audiofile.CacheAudio
 import com.zaur.domain.al_quran_cloud.models.audiofile.ChapterAudioFile
-import com.zaur.domain.al_quran_cloud.models.audiofile.VerseAudioAqc
+import com.zaur.domain.al_quran_cloud.models.audiofile.VerseAudio
 import com.zaur.domain.al_quran_cloud.use_case.QuranAudioUseCase
 import com.zaur.features.surah.manager.ReciterManager
 import com.zaur.features.surah.manager.SurahDetailStateManager
@@ -42,7 +42,7 @@ interface SurahPlayerViewModel : SurahPlayerObservable.Read {
     fun onPreviousAyahClicked()
     fun onPreviousSurahClicked()
     fun onPlayWholeClicked()
-    fun onPlayVerse(verse: VerseAudioAqc)
+    fun onPlayVerse(verse: VerseAudio)
     fun onPlaySingleClicked(ayahNumber: Int, surahNumber: Int)
     fun seekTo(position: Long)
 
@@ -94,7 +94,7 @@ interface SurahPlayerViewModel : SurahPlayerObservable.Read {
             setLastPlayedSurah(surahNumber)
         }
 
-        override fun onPlayVerse(verse: VerseAudioAqc) {
+        override fun onPlayVerse(verse: VerseAudio) {
             surahPlayer.onPlayVerse(verse)
             setLastPlayedAyah(verse.numberInSurah().toInt())
             setLastPlayedSurah(verse.surah().number().toInt())
@@ -149,8 +149,8 @@ interface SurahPlayerViewModel : SurahPlayerObservable.Read {
             viewModelScope.launch(Dispatchers.IO) {
                 launchSafely {
                     quranAudioUseCase.getAyahAudioByKey(ayahKey, reciter)
-                }.handle(object : HandleResult<VerseAudioAqc> {
-                    override fun handleSuccess(data: VerseAudioAqc) {
+                }.handle(object : HandleResult<VerseAudio> {
+                    override fun handleSuccess(data: VerseAudio) {
                         resultHandler.handleVerseAudio(data)
                     }
                 })

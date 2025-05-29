@@ -37,7 +37,7 @@ fun SurahDetailTopBarComponent(
         TopAppBar(
             modifier = modifier
                 .fillMaxWidth()
-                .statusBarsPadding(),
+                /*.statusBarsPadding()*/,
             title = { Text(surahName) },
             navigationIcon = {
                 IconButton(onClick = onMenuClick) {

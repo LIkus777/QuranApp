@@ -41,13 +41,13 @@ import com.zaur.presentation.ui.QuranColors
 fun ChooseReciterDialog(
     showDialog: Boolean = true,
     colors: QuranColors = LightThemeColors,
-    onDismiss: (String) -> Unit = {},
+    onSelect: (String) -> Unit = {},
 ) {
     if (showDialog) {
         var selectedItem by remember { mutableStateOf<String>("") }
 
         Dialog(onDismissRequest = {
-            onDismiss("") // Закрытие без выбора
+            onSelect("") // Закрытие без выбора
         }) {
             Box(
                 modifier = Modifier
@@ -78,7 +78,7 @@ fun ChooseReciterDialog(
                                 .clip(RoundedCornerShape(12.dp))
                                 .clickable {
                                     selectedItem = identifier
-                                    onDismiss(identifier)
+                                    onSelect(identifier)
                                 }
                                 .background(
                                     if (isSelected) colors.buttonPrimary else colors.cardBackground

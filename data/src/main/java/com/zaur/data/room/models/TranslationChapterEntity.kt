@@ -8,7 +8,6 @@ import com.google.gson.annotations.SerializedName
 import com.zaur.data.room.converters.GenericConverters
 import com.zaur.domain.al_quran_cloud.models.translate.Ayah
 import com.zaur.domain.al_quran_cloud.models.translate.EditionTranslation
-import com.zaur.domain.al_quran_cloud.models.translate.TranslationAqc
 import com.zaur.domain.base.SajdaAdapter
 
 /**

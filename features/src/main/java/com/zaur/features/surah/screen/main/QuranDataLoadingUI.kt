@@ -22,7 +22,7 @@ import com.zaur.navigation.Screen
 */
 
 @Composable
-fun QuranDataLoadingUI(mainState: MainState, navController: NavHostController) {
+fun QuranDataLoadingUI(mainState: MainState) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -34,33 +34,22 @@ fun QuranDataLoadingUI(mainState: MainState, navController: NavHostController) {
         LoadingItem(
             isLoaded = mainState.isChaptersLoaded,
             loadingText = "Загружается список сур...",
-            successText = "Список сур успешно загружен и сохранён!"
+            successText = "Список сур успешно загружен!"
         )
-
         LoadingItem(
             isLoaded = mainState.isChaptersArabicsLoaded,
             loadingText = "Загружается арабский текст...",
-            successText = "Арабский текст успешно загружен и сохранён!"
+            successText = "Арабский текст успешно загружен!"
         )
-
-        LoadingItem(
+        /*LoadingItem(
             isLoaded = mainState.isChaptersAudiosLoaded,
             loadingText = "Загружается аудио...",
-            successText = "Аудио успешно загружено и сохранено!"
-        )
-
+            successText = "Аудио успешно загружено!"
+        )*/
         LoadingItem(
             isLoaded = mainState.isChaptersTranslationsLoaded,
             loadingText = "Загружается перевод...",
-            successText = "Перевод успешно загружен и сохранён!"
+            successText = "Перевод успешно загружен!"
         )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Button(onClick = {
-            navController.navigate(Screen.SurahChoose.route)
-        }) {
-            Text("Перейти к Корану")
-        }
     }
 }

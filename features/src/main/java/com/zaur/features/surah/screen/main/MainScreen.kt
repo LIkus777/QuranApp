@@ -15,7 +15,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -24,72 +23,54 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.zaur.features.surah.screen.surah_detail.dialogs.ChooseReciterDialog
+import com.zaur.features.surah.viewmodel.MainViewModel
 import com.zaur.features.surah.viewmodel.ThemeViewModel
-import com.zaur.features.surah.viewmodel.factory.MainViewModelFactory
 import com.zaur.navigation.Screen
-import com.zaur.presentation.ui.DarkThemeColors
-import com.zaur.presentation.ui.LightThemeColors
 
 /**
-* @author Zaur
-* @since 2025-05-12
-*/
+ * @author Zaur
+ * @since 2025-05-12
+ */
 
 @Composable
 fun MainScreen(
     navController: NavHostController,
     themeViewModel: ThemeViewModel,
-    mainViewModelFactory: MainViewModelFactory,
+    mainViewModel: MainViewModel,
 ) {
-    val mainViewModel = remember { mainViewModelFactory.create() }
     val mainState by mainViewModel.quranState().collectAsState()
-
     var showReciterDialog by rememberSaveable { mutableStateOf(mainViewModel.getReciter() == null) }
-    var selectedReciter by rememberSaveable { mutableStateOf<String?>(null) }
-    var showAudioChoiceDialog by rememberSaveable { mutableStateOf(false) }
-    var showDownloadScreen by rememberSaveable { mutableStateOf(false) }
+    var showTranslatorDialog by rememberSaveable { mutableStateOf(mainViewModel.getReciter() == null) }
+    var showLoader by rememberSaveable { mutableStateOf(false) }
+    themeViewModel.themeState().collectAsState().value.isDarkTheme
 
-    val isDarkTheme = themeViewModel.themeState().collectAsState().value.isDarkTheme
-    val colors = if (isDarkTheme) DarkThemeColors else LightThemeColors
-
-    LaunchedEffect(selectedReciter) {
-        if (!selectedReciter.isNullOrEmpty()) {
-            showAudioChoiceDialog = true
-        }
-    }
-
+    // Dialog to pick reciter once
     if (showReciterDialog) {
-        ChooseReciterDialog(
-            showDialog = true, colors = colors
-        ) { identifier ->
-            if (!identifier.isNullOrEmpty()) mainViewModel.saveReciter(identifier)
-            selectedReciter = mainViewModel.getReciterName().toString()
+        ChooseReciterDialog(showDialog = true, onSelect = { id ->
+            mainViewModel.saveReciter(id)
             showReciterDialog = false
-        }
-    }
-
-    if (showAudioChoiceDialog) {
-        ListenModeDialog(onDismiss = { showAudioChoiceDialog = true }, onChooseOnline = {
-            showAudioChoiceDialog = false
-            navController.navigate(Screen.SurahChoose.route)
-        }, onChooseOffline = {
-            showAudioChoiceDialog = false
-            showDownloadScreen = true
-            selectedReciter?.let {
-                mainViewModel.loadQuranData()
-                mainViewModel.loadChaptersArabic()
-                mainViewModel.loadChaptersAudio(reciter = it)
-                mainViewModel.loadChaptersTranslate(translator = "ru.kuliev")
-            }
+            showLoader = true
+            // start loading all data
+            mainViewModel.loadQuranData()
+            mainViewModel.loadChaptersArabic()
+            //mainViewModel.loadChaptersAudio(reciter = id)
+            mainViewModel.loadChaptersTranslate(translator = "ru.kuliev")
         })
     }
 
-    if (showDownloadScreen) {
-        QuranDataLoadingUI(mainState, navController)
-    } else if (!showReciterDialog && !showAudioChoiceDialog) {
-        // Мы попадаем сюда ТОЛЬКО после закрытия обоих диалогов, и только один раз
+    if (showTranslatorDialog) {
+
+    }
+
+    // Show loading until all parts are loaded
+    if (showLoader) {
+        QuranDataLoadingUI(mainState)
+        // Navigate when done
+    }
+
+    if (/*mainState.isChaptersLoaded && mainState.isChaptersArabicsLoaded && mainState.isChaptersTranslationsLoaded*/true) {
         LaunchedEffect(Unit) {
-            Log.i("TAG", "navController.navigate(Screen.SurahChoose.route) CALLED")
+            Log.i("MainScreen", "All data loaded, navigating...")
             navController.navigate(Screen.SurahChoose.route)
         }
     }

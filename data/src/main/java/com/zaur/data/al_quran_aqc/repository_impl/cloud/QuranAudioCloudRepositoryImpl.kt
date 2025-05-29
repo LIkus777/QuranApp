@@ -6,7 +6,7 @@ import com.zaur.data.downloader.AudioDownloader
 import com.zaur.data.network.retryWithBackoff
 import com.zaur.domain.al_quran_cloud.models.audiofile.CacheAudio
 import com.zaur.domain.al_quran_cloud.models.audiofile.ChapterAudioFile
-import com.zaur.domain.al_quran_cloud.models.audiofile.VerseAudioAqc
+import com.zaur.domain.al_quran_cloud.models.audiofile.VerseAudio
 import com.zaur.domain.al_quran_cloud.repository.QuranAudioRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -72,6 +72,6 @@ class QuranAudioCloudRepositoryImpl(
     override suspend fun getAyahAudioByKeyCloud(
         verseKey: String,
         reciter: String,
-    ): VerseAudioAqc.Base =
+    ): VerseAudio.Base =
         retryWithBackoff { quranApiAqc.getAyahAudioByKey(verseKey, reciter).verseAudio() }
 }

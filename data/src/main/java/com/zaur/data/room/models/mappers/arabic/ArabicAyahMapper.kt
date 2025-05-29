@@ -10,11 +10,11 @@ import com.zaur.domain.al_quran_cloud.models.arabic.Ayah
 
 interface ArabicAyahMapper {
 
-    fun toData(ayah: Ayah.Base): ArabicAyahEntity
-    fun fromData(entity: ArabicAyahEntity): Ayah.Base
+    fun toData(ayah: Ayah.Base): ArabicAyahEntity.Base
+    fun fromData(entity: ArabicAyahEntity.Base): Ayah.Base
 
     class Base : ArabicAyahMapper {
-        override fun toData(ayah: Ayah.Base): ArabicAyahEntity = ArabicAyahEntity.Base(
+        override fun toData(ayah: Ayah.Base): ArabicAyahEntity.Base = ArabicAyahEntity.Base(
             ayah.number(),
             ayah.text(),
             ayah.numberInSurah(),
@@ -26,7 +26,7 @@ interface ArabicAyahMapper {
             ayah.sajda()
         )
 
-        override fun fromData(entity: ArabicAyahEntity): Ayah.Base = Ayah.Base(
+        override fun fromData(entity: ArabicAyahEntity.Base): Ayah.Base = Ayah.Base(
             entity.number(),
             entity.text(),
             entity.numberInSurah(),

@@ -17,10 +17,10 @@ import java.io.File
 
 interface PlaylistBuilder {
 
-    suspend fun buildLocalPlaylistAsync(
+    suspend fun buildCloudPlaylistAsync(
         ayahs: AyahList,
-        surahNumber: Int,
-    ): List<MediaItem>
+        surahNumber: Int
+    ): List<MediaItem>   // ← новая функция
 
     suspend fun buildCachePlaylistAsync(ayahs: CacheAyahList): List<MediaItem>
 
@@ -28,34 +28,20 @@ interface PlaylistBuilder {
         private val surahDetailScreenState: StateFlow<SurahDetailScreenState.Base>,
         private val audioDownloader: AudioDownloader,
     ) : PlaylistBuilder {
-        override suspend fun buildLocalPlaylistAsync(
+
+        override suspend fun buildCloudPlaylistAsync(
             ayahs: AyahList,
-            surahNumber: Int,
+            surahNumber: Int
         ): List<MediaItem> = withContext(Dispatchers.Default) {
-            val mediaItems = mutableListOf<MediaItem>()
-
-            for (ayah in ayahs.getList()) {
-                val file = audioDownloader.getAudioFile(
-                    surahNumber.toLong(),
-                    ayah.numberInSurah().toLong(),
-                    surahDetailScreenState.value.reciterState().currentReciter()
-                )
-
-                if (file != null) {
-                    if (file.exists()) {
-                        val uri = Uri.fromFile(file)
-                        val mediaItem = MediaItem.Builder().setUri(uri)
-                            .setMediaId(ayah.numberInSurah().toString()).build()
-                        mediaItems.add(mediaItem)
-                    } else {
-                        Log.w("PlaylistBuilder", "Missing file for ayah ${ayah.numberInSurah()}")
-                    }
-                }
+            ayahs.getList().map { ayah ->
+                // Предположим, у Ayah.Base есть метод audioUrl()
+                val url = ayah.audio()
+                MediaItem.Builder()
+                    .setUri(url)
+                    .setMediaId(ayah.numberInSurah().toString())
+                    .build()
             }
-
-            return@withContext mediaItems
         }
-
         override suspend fun buildCachePlaylistAsync(ayahs: CacheAyahList): List<MediaItem> =
             withContext(Dispatchers.Default) {
                 Log.d("TAG", "Building playlist of ${ayahs.getList().size} ayahs")

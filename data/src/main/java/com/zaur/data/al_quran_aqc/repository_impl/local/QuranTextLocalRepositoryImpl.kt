@@ -9,9 +9,9 @@ import com.zaur.domain.al_quran_cloud.models.chapter.ChapterAqc
 import com.zaur.domain.al_quran_cloud.repository.QuranTextRepository
 
 /**
-* @author Zaur
-* @since 2025-05-12
-*/
+ * @author Zaur
+ * @since 2025-05-12
+ */
 
 class QuranTextLocalRepositoryImpl(
     private val chapterMapper: ChapterMapper,

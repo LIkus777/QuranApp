@@ -2,7 +2,7 @@ package com.zaur.features.surah.viewmodel.handlers
 
 import com.zaur.domain.al_quran_cloud.models.audiofile.CacheAudio
 import com.zaur.domain.al_quran_cloud.models.audiofile.ChapterAudioFile
-import com.zaur.domain.al_quran_cloud.models.audiofile.VerseAudioAqc
+import com.zaur.domain.al_quran_cloud.models.audiofile.VerseAudio
 import com.zaur.features.surah.manager.SurahDetailStateManager
 import com.zaur.features.surah.observables.SurahPlayerObservable
 import kotlinx.coroutines.CoroutineScope
@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 
 interface AudioResultHandler {
 
-    fun handleVerseAudio(data: VerseAudioAqc)
+    fun handleVerseAudio(data: VerseAudio)
     fun handleChapterAudio(data: ChapterAudioFile)
     fun handleCacheAudio(data: List<CacheAudio.Base>)
 
@@ -26,7 +26,7 @@ interface AudioResultHandler {
         private val stateManager: SurahDetailStateManager,
         private val scope: CoroutineScope,
     ) : AudioResultHandler {
-        override fun handleVerseAudio(data: VerseAudioAqc) {
+        override fun handleVerseAudio(data: VerseAudio) {
             val currentAudio = observable.audioState().value.verseAudioFile().audio()
             val updatedState = if (data.audio() == currentAudio) {
                 stateManager.surahDetailState().value.copy(

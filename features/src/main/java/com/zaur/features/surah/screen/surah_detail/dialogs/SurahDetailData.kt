@@ -1,15 +1,11 @@
 package com.zaur.features.surah.screen.surah_detail.dialogs
 
-import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import com.zaur.features.surah.screen.surah_detail.SurahDetailDependencies
 import com.zaur.features.surah.screen.surah_detail.SurahDetailUiData
-import com.zaur.presentation.ui.ui_state.offline.OfflineUIState
 
 /**
  * @author Zaur
@@ -22,94 +18,58 @@ fun rememberSurahDetailUiData(
     chapterNumber: Int,
     deps: SurahDetailDependencies,
 ): SurahDetailUiData {
-    Log.i("bug", "rememberSurahDetailUiData: CALLED")
-    with(deps) {
-        val offlineState by offlineViewModel().offlineState().collectAsState()
-        val textState by quranTextViewModel().textState().collectAsState()
-        val audioState by surahPlayerViewModel().audioState().collectAsState()
-        val translateState by quranTranslationViewModel().translationState().collectAsState()
-        val surahDetailState by surahDetailViewModel().surahDetailState().collectAsState()
-        val pageState by quranPageViewModel().pageState().collectAsState()
-        val isDarkTheme = themeViewModel().themeState().collectAsState().value.isDarkTheme
-        val isSurahMode = surahDetailState.uiPreferencesState().showSurahMode()
+    // 1) Считываем всё состояние из ViewModel-ов одним блоком
+    val offlineState by deps.offlineViewModel().offlineState().collectAsState()
+    val textState by deps.quranTextViewModel().textState().collectAsState()
+    val audioState by deps.surahPlayerViewModel().audioState().collectAsState()
+    val translateState by deps.quranTranslationViewModel().translationState().collectAsState()
+    val detailState by deps.surahDetailViewModel().surahDetailState().collectAsState()
+    val pageState by deps.quranPageViewModel().pageState().collectAsState()
+    val isDarkTheme by deps.themeViewModel().themeState().collectAsState()
+    val isSurahMode = detailState.uiPreferencesState().showSurahMode()
 
-        val alreadyInitialized = remember { mutableStateOf(false) }
+    val playerVm = deps.surahPlayerViewModel()
+    val reciterId = playerVm.getReciter().orEmpty()
 
-        LaunchedEffect(Unit) {
-            if (!alreadyInitialized.value) {
-                alreadyInitialized.value = true
-                Log.i("bug", "rememberSurahDetailUiData: LaunchedEffect CALLED")
+    // 2) Перезапускаем каждый раз, когда chapterNumber или reciterId меняются
+    LaunchedEffect(chapterNumber, reciterId) {
+        // Сохраняем в ViewModel выбранного reciter
+        deps.surahDetailViewModel().selectedReciter(reciterId, playerVm.getReciterName().orEmpty())
 
-                val reciter = deps.surahPlayerViewModel().getReciter().toString()
-                deps.surahDetailViewModel().selectedReciter(
-                    deps.surahPlayerViewModel().getReciter().toString(),
-                    deps.surahPlayerViewModel().getReciterName().toString()
-                )
-                surahPlayerViewModel().getChaptersAudioOfReciter(chapterNumber, reciter)
+        // Каждый раз грузим новый аудио-набор
+        playerVm.getChaptersAudioOfReciter(chapterNumber, reciterId)
 
-                updateSurahDetailData(
-                    reciter = reciter,
-                    ayahNumber = surahDetailState.audioPlayerState().currentAyah(),
-                    surahName = surahName,
-                    chapterNumber = chapterNumber,
-                    deps = deps,
-                    offlineState = offlineState
-                )
-            }
+        // Инициализируем остальные поля в detailVm
+        val textVm = deps.quranTextViewModel()
+        val detailVm = deps.surahDetailViewModel()
+
+        val savedAyah =
+            playerVm.getLastPlayedAyah().takeIf { it != 0 } ?: detailState.audioPlayerState()
+                .currentAyah()
+        val savedSurah = playerVm.getLastPlayedSurah().takeIf { it != 0 } ?: chapterNumber
+        val savedName = playerVm.getAudioSurahName().takeIf(String::isNotEmpty) ?: surahName
+
+        detailVm.apply {
+            setTextSurahName(surahName)
+            setTextSurahNumber(chapterNumber)
+            setAudioSurahAyah(savedAyah)
+            setAudioSurahNumber(savedSurah)
+            setAudioSurahName(savedName)
+            setAyahInText(textVm.getLastReadAyahPosition(chapterNumber))
+            setOfflineMode(offlineState.isOffline())
+            fontSizeArabic(textVm.getFontSizeArabic())
+            fontSizeRussian(textVm.getFontSizeRussian())
         }
-
-        return SurahDetailUiData.Base(
-            offlineState,
-            textState,
-            audioState,
-            translateState,
-            surahDetailState,
-            pageState,
-            isDarkTheme,
-            isSurahMode,
-        )
-    }
-}
-
-fun updateSurahDetailData(
-    reciter: String,
-    ayahNumber: Int,
-    surahName: String,
-    chapterNumber: Int,
-    deps: SurahDetailDependencies,
-    offlineState: OfflineUIState,
-) = with(deps) {
-    val audioVm = surahPlayerViewModel()
-    val textVm = quranTextViewModel()
-    val detailVm = surahDetailViewModel()
-
-    val savedAyahNumber = audioVm.getLastPlayedAyah().takeIf { it != 0 } ?: ayahNumber
-    val savedSurahNumber = audioVm.getLastPlayedSurah().takeIf { it != 0 } ?: chapterNumber
-    val savedSurahName = audioVm.getAudioSurahName().takeIf { it.isNotEmpty() } ?: surahName
-
-    Log.i("res", "updateSurahDetailData: savedAyahNumber ${savedAyahNumber}")
-    Log.i("res", "updateSurahDetailData: savedSurahNumber ${savedSurahNumber}")
-    Log.i("res", "updateSurahDetailData: savedSurahName ${savedSurahName}")
-
-    detailVm.apply {
-        setTextSurahName(surahName)
-        setTextSurahNumber(chapterNumber)
-
-        // Устанавливаем аудио-состояние на сохранённую суру
-        setAudioSurahAyah(savedAyahNumber)
-        setAudioSurahName(savedSurahName)
-        setAudioSurahNumber(savedSurahNumber)
-
-        // Загружаем аятов для savedSurahNumber
-        // Этот suspend-функция должна запустить SurahPlayer.setAyahs(...)
-        // Через ViewModel, но здесь для примера прямой вызов
-        surahPlayerViewModel().getChaptersAudioOfReciter(savedSurahNumber, reciter)
-
-        setAyahInText(textVm.getLastReadAyahPosition(chapterNumber))
-        setOfflineMode(offlineState.isOffline())
-        fontSizeArabic(textVm.getFontSizeArabic())
-        fontSizeRussian(textVm.getFontSizeRussian())
     }
 
-    Log.i("AUDIO_NAME", "using saved sura: $savedSurahName (#$savedSurahNumber)")
+    return SurahDetailUiData.Base(
+        offlineState,
+        textState,
+        audioState,
+        translateState,
+        detailState,
+        pageState,
+        isDarkTheme.isDarkTheme,
+        isSurahMode,
+    )
 }

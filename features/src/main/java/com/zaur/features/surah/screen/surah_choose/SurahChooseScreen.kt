@@ -1,9 +1,14 @@
 package com.zaur.features.surah.screen.surah_choose
 
 import android.util.Log
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -33,6 +38,7 @@ import com.zaur.presentation.ui.DarkThemeColors
 import com.zaur.presentation.ui.LightThemeColors
 import com.zaur.presentation.ui.ModernSurahText
 import com.zaur.presentation.ui.QuranAppTheme
+import com.zaur.presentation.ui.SearchOverlay
 import com.zaur.presentation.ui.SurahChooseTopBarComponent
 
 /**
@@ -46,7 +52,6 @@ fun SurahChooseScreen(
     themeViewModel: ThemeViewModel,
     surahChooseViewModel: SurahChooseViewModel,
     navController: NavController,
-    contentPadding: PaddingValues = PaddingValues(),
     onClickPlayer: () -> Unit,
 ) {
     val isDarkTheme = themeViewModel.themeState().collectAsState().value.isDarkTheme
@@ -54,6 +59,8 @@ fun SurahChooseScreen(
 
     val textState = surahChooseViewModel.textState().collectAsState()
     var showPicker by remember { mutableStateOf(false) }
+    // Состояние видимости оверлея поиска
+    var searchVisible by remember { mutableStateOf(false) }
 
     LaunchedEffect(surahChooseViewModel) {
         Log.d("TAG", "LaunchedEffect(Unit) { getAllChaptersCloud() CALLED ")
@@ -66,7 +73,7 @@ fun SurahChooseScreen(
                 modifier = Modifier.fillMaxWidth(),
                 colors = colors,
                 onClickQuranLabel = { showPicker = true },
-                onClickSearch = { },
+                onClickSearch = { searchVisible = true },
                 onClickPlayer = { onClickPlayer() },
             )
         }, containerColor = colors.background
@@ -105,14 +112,31 @@ fun SurahChooseScreen(
                             launchSingleTop = true
                         }
                     })
-                Spacer(Modifier.height(6.dp))
+                if (index == textState.value.chapters().lastIndex) {
+                    Spacer(Modifier.height(60.dp))
+                } else {
+                    Spacer(Modifier.height(6.dp))
+                }
             }
         }
     }
 
+    AnimatedVisibility(
+        visible = searchVisible,
+        enter = expandVertically(
+            // разворачивается из 1px сверху
+            expandFrom = Alignment.Top, initialHeight = { 1 }) + fadeIn(animationSpec = tween(500)),
+        exit = shrinkVertically(
+            // сворачивается в 1px к верху
+            shrinkTowards = Alignment.Top,
+            targetHeight = { 1 }) + fadeOut(animationSpec = tween(500))
+    ) {
+        SearchOverlay(
+            colors = colors, onDismiss = { searchVisible = false })
+    }
+
     // Вот тут, вне TopBar, условно показываем Picker
     QuranPickerDialog(
-        contentPadding,
         isVisible = showPicker,
         colors = colors,
         onDismiss = { showPicker = false },

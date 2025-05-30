@@ -49,7 +49,7 @@ fun SurahChooseTopBarComponent(
                 .statusBarsPadding(),  // паддинг сверху под статус-бар
             title = {
                 Row(
-                    modifier = Modifier.clickable(onClick = onClickQuranLabel),
+                    modifier = Modifier.clickable(onClick = { onClickQuranLabel() }),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(
@@ -67,7 +67,7 @@ fun SurahChooseTopBarComponent(
                     )
                 }
             }, navigationIcon = {}, actions = {
-                IconButton(onClick = onClickSearch) {
+                IconButton(onClick = { onClickSearch() }) {
                     Icon(
                         modifier = iconModifier,
                         painter = painterResource(R.drawable.search),
@@ -75,7 +75,7 @@ fun SurahChooseTopBarComponent(
                         tint = colors.iconColorForTop
                     )
                 }
-                IconButton(onClick = onClickPlayer) {
+                IconButton(onClick = { onClickPlayer() }) {
                     Icon(
                         modifier = iconModifier,
                         painter = painterResource(R.drawable.headphone_line),

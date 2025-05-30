@@ -21,34 +21,64 @@ interface PlaylistManager {
 
     class Base(
         private val playlistBuilder: PlaylistBuilder,
-        private val surahDetailStateManager: SurahDetailStateManager, // Менеджер состояния плеера
+        private val surahDetailStateManager: SurahDetailStateManager,
+        private val onPlaylistChanged: (List<MediaItem>) -> Unit,
     ) : PlaylistManager {
+
         private var cacheMediaItems: List<MediaItem> = emptyList()
         private var cloudMediaItems: List<MediaItem> = emptyList()
-        private val state = surahDetailStateManager.surahDetailState()
+
+        private var lastReciterId: String? = null
+        private var lastPlaylist: List<MediaItem> = emptyList()
+        private var initialized = false
+
+        private val state get() = surahDetailStateManager.surahDetailState().value
 
         override suspend fun setAyahs(ayahs: List<Ayah.Base>) {
-            val list = RealAyahList(ayahs)
-            // строим cloud-плейлист сразу
-            cloudMediaItems = playlistBuilder.buildCloudPlaylistAsync(
-                list, state.value.audioPlayerState().currentSurahNumber()
-            )
+            val reciterId = state.reciterState().currentReciter()
+            // Если первый вызов или чтец сменился — пересобираем облачный плейлист
+            if (!initialized || reciterId != lastReciterId) {
+                val list = RealAyahList(ayahs)
+                cloudMediaItems = playlistBuilder.buildCloudPlaylistAsync(
+                    list, state.audioPlayerState().currentSurahNumber()
+                )
+                lastReciterId = reciterId
+                maybeEmitChangedPlaylist()
+                initialized = true
+            }
         }
 
         override suspend fun setCacheAudios(ayahs: List<CacheAudio.Base>) {
+            // Кэш всегда пересобираем
             cacheMediaItems = playlistBuilder.buildCachePlaylistAsync(
                 RealCacheAyahList(ayahs)
             )
+            maybeEmitChangedPlaylist()
+        }
+
+        private fun maybeEmitChangedPlaylist() {
+            val current = currentPlaylist()
+            if (!initialized) {
+                // На случай, если кто-то вызовет вручную до setAyahs
+                lastPlaylist = current
+                initialized = true
+                return
+            }
+            if (current != lastPlaylist) {
+                lastPlaylist = current
+                onPlaylistChanged(current)
+            }
         }
 
         override fun currentPlaylist(): List<MediaItem> =
-            if (/*state.value.audioPlayerState().isOfflineMode()*/true) cloudMediaItems else cacheMediaItems
+            if (state.audioPlayerState().isOfflineMode()) cacheMediaItems else cloudMediaItems
 
         override fun clear() {
-            cloudMediaItems = emptyList()
             cacheMediaItems = emptyList()
+            cloudMediaItems = emptyList()
+            lastPlaylist = emptyList()
+            lastReciterId = null
+            initialized = false
         }
     }
-
-
 }

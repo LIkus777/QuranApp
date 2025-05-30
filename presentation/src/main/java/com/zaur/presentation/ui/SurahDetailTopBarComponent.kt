@@ -30,6 +30,7 @@ fun SurahDetailTopBarComponent(
     modifier: Modifier = Modifier,
     colors: QuranColors,
     onMenuClick: () -> Unit,
+    onSearchClick: () -> Unit,
 ) {
     val iconModifier = Modifier.size(26.dp)
 
@@ -37,7 +38,7 @@ fun SurahDetailTopBarComponent(
         TopAppBar(
             modifier = modifier
                 .fillMaxWidth()
-                /*.statusBarsPadding()*/,
+                .statusBarsPadding(),
             title = { Text(surahName) },
             navigationIcon = {
                 IconButton(onClick = onMenuClick) {
@@ -50,7 +51,7 @@ fun SurahDetailTopBarComponent(
                 }
             },
             actions = {
-                IconButton(onClick = { /* например, поиск */ }) {
+                IconButton(onClick = { onSearchClick() }) {
                     Icon(
                         modifier = iconModifier,
                         painter = painterResource(R.drawable.search),

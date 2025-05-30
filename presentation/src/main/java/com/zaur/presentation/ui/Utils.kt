@@ -1,14 +1,22 @@
 package com.zaur.presentation.ui
 
+import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 
 /**
  * @author Zaur
@@ -51,4 +59,27 @@ fun getNavBarHeightInPx(context: Context): Int {
         0
     }
     return navBarHeightInPx
+}
+
+@SuppressLint("ContextCastToActivity")
+@Composable
+fun HideSystemUI(hide: Boolean) {
+    val activity = (LocalContext.current as? Activity) ?: return
+    val window = activity.window
+    val controller = remember(window) {
+        WindowInsetsControllerCompat(window, window.decorView)
+    }
+
+    SideEffect {
+        // управляем, подстраиваем ли мы контент под системные бары
+        WindowCompat.setDecorFitsSystemWindows(window, !hide)
+
+        if (hide) {
+            controller.systemBarsBehavior =
+                WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+            controller.hide(WindowInsetsCompat.Type.systemBars())
+        } else {
+            controller.show(WindowInsetsCompat.Type.systemBars())
+        }
+    }
 }

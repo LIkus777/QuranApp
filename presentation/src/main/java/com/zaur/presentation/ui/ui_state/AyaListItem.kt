@@ -105,7 +105,21 @@ interface AyaListItem {
                         if (index == 0 && chapterNumber != 9) aya.text().removeBasmala()
                         else aya.text()
 
+                    //todo сделать для page режима
+                    // определяем глобальный индекс текущего аята
+                    val firstGlobalIndex = ayats.indexOfFirst { it.number() == ayats.first().number() }
+                    val globalIndex      = firstGlobalIndex + index
+
+                    val prevAya = ayats.getOrNull(globalIndex - 1)
+
+                    val showJuzChange  = prevAya?.juz()         != aya.juz()
+                    val showHizbChange = prevAya?.hizbQuarter() != aya.hizbQuarter()
+
                     AyahItem(
+                        showJuzChange = showJuzChange,
+                        newJuz = aya.juz(),
+                        showHizbChange = showHizbChange,
+                        newHizbQuarter = aya.hizbQuarter(),
                         isDarkTheme = isDarkTheme,
                         ayahNumber = aya.number().toInt(),
                         currentAyahInSurah = aya.numberInSurah().toInt(),

@@ -2,7 +2,6 @@ package com.zaur.features.surah.screen.surah_choose
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -21,10 +20,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import com.zaur.data.al_quran_aqc.utils.surahNamesRu
 import com.zaur.features.surah.screen.surah_detail.CustomBottomSheet
 import com.zaur.presentation.ui.QuranColors
+import com.zaur.presentation.ui.getNavBarHeightInPx
 
 
 /**
@@ -34,7 +36,6 @@ import com.zaur.presentation.ui.QuranColors
 
 @Composable
 fun QuranPickerDialog(
-    contentPadding: PaddingValues = PaddingValues(),
     isVisible: Boolean,
     colors: QuranColors,
     onDismiss: () -> Unit,
@@ -42,6 +43,10 @@ fun QuranPickerDialog(
     onSurahSelected: (Int) -> Unit = {},
     onJuzSelected: (Int) -> Unit = {},
 ) {
+    val densityCurrent = LocalDensity.current.density
+    val context = LocalContext.current
+    val navBarHeightInDp = getNavBarHeightInPx(context) / densityCurrent
+
     var selectedTab by remember { mutableIntStateOf(1) }
     var selectedSurahIndex by remember { mutableIntStateOf(0) }
     var selectedAyahIndex by remember { mutableIntStateOf(0) }
@@ -59,7 +64,7 @@ fun QuranPickerDialog(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp, vertical = 8.dp)
-                .padding(bottom = contentPadding.calculateBottomPadding())
+                .padding(bottom = navBarHeightInDp.dp)
                 .background(colors.boxBackground)
         ) {
             TabRow(
@@ -103,8 +108,7 @@ fun QuranPickerDialog(
                     onRightSelected = { ayahIndex ->
                         selectedAyahIndex = ayahIndex
                         // ваш код обработки выбора аята
-                    }
-                )
+                    })
 
                 2 -> SingleWheelPickerView(
                     itemName = "Джуз", items = (1..30).toList(), onItemSelected = onJuzSelected

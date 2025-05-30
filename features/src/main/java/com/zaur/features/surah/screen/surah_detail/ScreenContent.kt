@@ -31,7 +31,7 @@ fun ScreenContent(
 ) {
     with(uiData) {
         with(deps) {
-            val isBarsVisible = remember { mutableStateOf(true) }
+            val isBarsVisible = remember { mutableStateOf(false) }
             val surahMode = screenContentViewModel().surahMode().collectAsState()
             val animatedMenu = screenContentViewModel().animatedMenu().collectAsState()
             val isLoading =

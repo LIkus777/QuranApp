@@ -14,23 +14,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
-import com.zaur.domain.al_quran_cloud.use_case.OfflineUseCase
-import com.zaur.domain.al_quran_cloud.use_case.QuranAudioUseCase
-import com.zaur.domain.al_quran_cloud.use_case.QuranTextUseCase
-import com.zaur.domain.al_quran_cloud.use_case.QuranTranslationUseCase
-import com.zaur.features.surah.fakes.FakeOfflineRepos
-import com.zaur.features.surah.fakes.FakeQAudioRCloud
-import com.zaur.features.surah.fakes.FakeQAudioRLocal
-import com.zaur.features.surah.fakes.FakeQTextRCloud
-import com.zaur.features.surah.fakes.FakeQTextRLocal
-import com.zaur.features.surah.fakes.FakeQTranslationRCloud
-import com.zaur.features.surah.fakes.FakeQTranslationRLocal
-import com.zaur.features.surah.fakes.FakeQuranStorage
-import com.zaur.features.surah.observables.SurahChooseObservable
-import com.zaur.presentation.ui.ui_state.aqc.QuranTextUIState
-import com.zaur.features.surah.viewmodel.OfflineViewModel
-import com.zaur.features.surah.viewmodel.SurahChooseViewModel
 import kotlinx.coroutines.launch
 
 /**
@@ -80,8 +63,7 @@ fun SurahDetailScreen(
 @Preview(showBackground = true)
 @Composable
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "ViewModelConstructorInComposable")
-fun SurahDetailScreenPreview() {
-    /*rememberNavController()
+fun SurahDetailScreenPreview() {/*rememberNavController()
     val textUseCaseAqc = QuranTextUseCase.Base(
         FakeQuranStorage(), FakeOfflineRepos(), FakeQTextRLocal(), FakeQTextRCloud()
     )

@@ -1,5 +1,6 @@
 package com.zaur.features.surah.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.zaur.core.BaseViewModel
 import com.zaur.core.HandleResult
@@ -69,8 +70,13 @@ interface SurahPlayerViewModel : SurahPlayerObservable.Read {
         private val quranAudioUseCase: QuranAudioUseCase,
     ) : BaseViewModel(), SurahPlayerViewModel {
 
-        private val resultHandler =
-            AudioResultHandler.Base(observable, stateManager, viewModelScope)
+        private val resultHandler = AudioResultHandler.Base(
+            surahPlayer = surahPlayer,
+            observable = observable,
+            stateManager = stateManager,
+            scope = viewModelScope,
+            reciterManager = reciterManager
+        )
 
         init {
             surahPlayer.setQuranAudioVmCallback(object : SurahPlayerVmCallback {
@@ -126,8 +132,8 @@ interface SurahPlayerViewModel : SurahPlayerObservable.Read {
                     quranAudioUseCase.getChapterAudioOfReciter(surahNumber, reciter)
                 }.handle(object : HandleResult<ChapterAudioFile> {
                     override fun handleSuccess(data: ChapterAudioFile) {
+                        Log.d("TAG", "getChaptersAudioOfReciter: data $data")
                         resultHandler.handleChapterAudio(data)
-                        setAyahs(observable.audioState().value.chaptersAudioFile().ayahs())
                     }
                 })
             }

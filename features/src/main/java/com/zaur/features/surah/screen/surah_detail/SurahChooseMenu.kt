@@ -1,5 +1,6 @@
 package com.zaur.features.surah.screen.surah_detail
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -30,6 +31,8 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.zaur.domain.al_quran_cloud.models.chapter.ChapterAqc
+import com.zaur.domain.al_quran_cloud.models.chapter.RevelationType
 import com.zaur.features.surah.viewmodel.SurahChooseViewModel
 import com.zaur.features.surah.viewmodel.ThemeViewModel
 import com.zaur.navigation.Screen
@@ -57,14 +60,19 @@ fun SurahChooseMenu(
             .width(LocalConfiguration.current.screenWidthDp.dp / 1.5f)
     ) {
         LaunchedEffect(Unit) {
-            surahChooseViewModel.getAllChapters()
+            Log.d("TAG", ">>> getAllChapters()")
+
         }
+
 
         val textState = surahChooseViewModel.textState().collectAsState()
         val chapters = textState.value.chapters()
 
         var selectedTabIndex by rememberSaveable { mutableIntStateOf(0) }
         val tabTitles = listOf("Суры", "Джузы")
+        LaunchedEffect(textState.value) {
+            Log.d("TAG", ">>> textState.value ${textState.value}")
+        }
 
         Column(
             modifier = Modifier
@@ -73,7 +81,7 @@ fun SurahChooseMenu(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            Spacer(modifier = Modifier.height(20.dp))
+            //Spacer(modifier = Modifier.height(20.dp))
 
             Row {
                 tabTitles.forEachIndexed { index, title ->

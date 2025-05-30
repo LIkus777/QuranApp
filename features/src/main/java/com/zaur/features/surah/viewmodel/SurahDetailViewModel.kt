@@ -1,6 +1,5 @@
 package com.zaur.features.surah.viewmodel
 
-import android.util.Log
 import com.zaur.core.BaseViewModel
 import com.zaur.features.surah.manager.SurahDetailStateManager
 import com.zaur.presentation.ui.ui_state.aqc.SurahDetailScreenState
@@ -45,11 +44,8 @@ interface SurahDetailViewModel {
             stateManager.updateState(state)
         }
 
-        override fun surahDetailState(): StateFlow<SurahDetailScreenState> {
-            val state = stateManager.surahDetailState()
-            Log.w("TAG", "SurahDetailViewModel: state $state")
-            return state
-        }
+        override fun surahDetailState(): StateFlow<SurahDetailScreenState> =
+            stateManager.surahDetailState()
 
         override fun setTextSurahName(name: String) {
             stateManager.setTextSurahName(name)

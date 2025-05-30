@@ -105,12 +105,14 @@ interface PlaybackController {
             callback(ayahNumber)
         }
 
+        // убираем кэширование списка в локальной переменной
         override fun handleTrackEnd(nextIndex: Int, atEnd: Boolean) {
             if (atEnd) {
                 audioPlayerStateUpdater.markWholeChapterPlaying(false, true)
-            } else {
-                audioPlayerStateUpdater.updateCurrentAyah(nextIndex)
+                return
             }
+            // вместо копипасты — просто запускаем playAtIndex:
+            playAtIndex(nextIndex)
         }
 
         override fun pause() {

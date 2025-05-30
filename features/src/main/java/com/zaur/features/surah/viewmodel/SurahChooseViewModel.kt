@@ -26,16 +26,20 @@ interface SurahChooseViewModel : SurahChooseObservable.Read {
         private val quranTextUseCase: QuranTextUseCase
     ) : BaseViewModel(), SurahChooseViewModel {
 
+        init {
+            getAllChapters()
+        }
+
         override fun textState(): StateFlow<QuranTextUIState.Base> = observable.textState()
 
         override fun getAllChapters() {
             Log.d("TAG", "getAllChaptersCloud() CALLED")
             viewModelScope.launch(Dispatchers.IO) {
-                val result = launchSafely<List<ChapterAqc>> { quranTextUseCase.getAllChapters() }
-                result.handle(object : HandleResult<List<ChapterAqc>> {
-                    override fun handleSuccess(data: List<ChapterAqc>) {
+                val result = launchSafely<List<ChapterAqc.Base>> { quranTextUseCase.getAllChapters() }
+                result.handle(object : HandleResult<List<ChapterAqc.Base>> {
+                    override fun handleSuccess(data: List<ChapterAqc.Base>) {
                         viewModelScope.launch(Dispatchers.Main) {
-                            Log.i("TAGGG", "handleSuccess: getAllChapters data $data")
+                            Log.i("TAGGG", "handleSuccess: getAllChapters data $data.")
                             observable.update(observable.textState().value.copy(chapters = data))
                         }
                     }

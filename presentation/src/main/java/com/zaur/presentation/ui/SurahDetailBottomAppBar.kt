@@ -44,7 +44,6 @@ import com.zaur.presentation.R
  * @since 2025-05-12
  */
 
-@SuppressLint("SuspiciousIndentation")
 @Preview(showBackground = true)
 @Composable
 fun SurahDetailBottomAppBar(
@@ -54,20 +53,19 @@ fun SurahDetailBottomAppBar(
     showSettings: () -> Unit = {},
     onClickPlayer: () -> Unit = {},
 ) {
-
-    val densityCurrent = LocalDensity.current.density
     val context = LocalContext.current
-    val navBarHeightInDp = getNavBarHeightInPx(context) / densityCurrent
+    val density = LocalDensity.current.density
+    val navBarHeightInDp = getNavBarHeightInPx(context) / density
 
-    /*Box(
+    Box(
         modifier = modifier
             .fillMaxWidth()
-            //.windowInsetsPadding(WindowInsets.navigationBars),
-    ) {*/
+            .height(navBarHeightInDp.dp),
+    ) {
         BottomAppBar(
             containerColor = colors.appBarColor,
             contentColor = colors.iconColorForBottom,
-            modifier = Modifier.height(navBarHeightInDp.dp) // заполнит родительский Box
+            modifier = Modifier.fillMaxSize() // заполнит родительский Box
         ) {
             val iconModifier = Modifier.size(26.dp)
 
@@ -113,7 +111,7 @@ fun SurahDetailBottomAppBar(
                 )
             }
         }
-    //}
+    }
 }
 
 @Composable

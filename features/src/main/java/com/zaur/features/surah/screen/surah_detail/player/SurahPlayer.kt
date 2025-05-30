@@ -50,7 +50,15 @@ interface SurahPlayer {
         private var surahPlayerVmCallback: SurahPlayerViewModel.SurahPlayerVmCallback? = null
 
         private val state = surahDetailStateManager.surahDetailState()
-        private val playlistManager = PlaylistManager.Base(playlistBuilder, surahDetailStateManager)
+        private val playlistManager =
+            PlaylistManager.Base(playlistBuilder, surahDetailStateManager) { newList ->
+                // этот код выполнится каждый раз, когда reciter/режим дадут новый список
+                val idx = state.value.audioPlayerState().currentAyah() - 1
+                if (idx in newList.indices) {
+                    audioPlayer.clearItems()
+                    audioPlayer.playFromIndex(newList, idx, positionMs = 0L)
+                }
+            }
         private val playbackController = PlaybackController.Base(
             audioPlayer,
             audioPlayerStateUpdater,

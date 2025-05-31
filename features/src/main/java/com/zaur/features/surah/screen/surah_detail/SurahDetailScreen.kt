@@ -2,19 +2,23 @@ package com.zaur.features.surah.screen.surah_detail
 
 import android.annotation.SuppressLint
 import android.util.Log
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.navigation.NavHostController
 import kotlinx.coroutines.launch
+import kotlinx.serialization.Serializable
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import java.net.HttpURLConnection
+import java.net.URL
+import kotlin.jvm.java
 
 /**
  * @author Zaur
@@ -23,8 +27,10 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun SurahDetailScreen(
+    pageNumber: Int = 0,
+    juzNumber: Int = 0,
     surahName: String,
-    chapterNumber: Int,
+    surahNumber: Int,
     deps: SurahDetailDependencies,
     controller: NavHostController,
 ) {
@@ -35,15 +41,15 @@ fun SurahDetailScreen(
     ModalNavigationDrawer(
         drawerState = drawerState, drawerContent = {
             SurahChooseMenu(
+                currentSurahNumber = surahNumber,
                 themeViewModel = deps.themeViewModel(),
                 surahChooseViewModel = deps.surahChooseViewModel(),
                 navController = deps.controller(),
-                modifier = Modifier.fillMaxSize(),
             )
         }, gesturesEnabled = drawerState.isOpen
     ) {
         SurahDetailScreenContent(
-            surahName, chapterNumber, deps, controller, onMenuClick = {
+            surahName, surahNumber, deps, controller, onMenuClick = {
                 scope.launch { drawerState.open() }
             })
     }

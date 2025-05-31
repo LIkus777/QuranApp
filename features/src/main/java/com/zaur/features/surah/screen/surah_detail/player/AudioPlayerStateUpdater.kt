@@ -1,7 +1,8 @@
 package com.zaur.features.surah.screen.surah_detail.player
 
 import com.zaur.features.surah.manager.SurahDetailStateManager
-import com.zaur.presentation.ui.ui_state.aqc.AudioPlayerState
+import com.zaur.features.surah.manager.SurahPlayerStateManager
+import com.zaur.presentation.ui.ui_state.SurahPlayerState
 import com.zaur.presentation.ui.ui_state.aqc.TextState
 
 /**
@@ -21,29 +22,32 @@ interface AudioPlayerStateUpdater {
 
     data class Base(
         private val surahDetailStateManager: SurahDetailStateManager,
+        private val surahPlayerStateManager: SurahPlayerStateManager,
     ) : AudioPlayerStateUpdater {
 
-        private val state get() = surahDetailStateManager.surahDetailState().value
+        private val detailState get() = surahDetailStateManager.surahDetailState().value
+        private val playerState get() = surahPlayerStateManager.surahPlayerState().value
 
-        internal inline fun updateAudioPlayerState(block: AudioPlayerState.Base.() -> AudioPlayerState.Base) {
-            val currentAudioState = state.audioPlayerState()
-            surahDetailStateManager.updateState(
-                state.copy(audioPlayerState = currentAudioState.block())
+        internal inline fun updateAudioPlayerState(block: SurahPlayerState.Base.() -> SurahPlayerState.Base) =
+            surahPlayerStateManager.updateState(
+                playerState.block()
             )
-        }
 
         internal inline fun updateTextAndAudioState(
             textBlock: TextState.Base.() -> TextState.Base,
-            audioBlock: AudioPlayerState.Base.() -> AudioPlayerState.Base,
+            audioBlock: SurahPlayerState.Base.() -> SurahPlayerState.Base,
         ) {
-            val currentTextState = state.textState()
-            val currentAudioState = state.audioPlayerState()
+            val currentTextState = detailState.textState()
+            val currentAudioState = playerState
 
             surahDetailStateManager.updateState(
-                state.copy(
+                detailState.copy(
                     textState = currentTextState.textBlock(),
-                    audioPlayerState = currentAudioState.audioBlock()
                 )
+            )
+
+            surahPlayerStateManager.updateState(
+                currentAudioState.audioBlock()
             )
         }
 

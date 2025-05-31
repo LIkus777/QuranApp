@@ -4,6 +4,7 @@ import androidx.media3.common.MediaItem
 import com.zaur.domain.al_quran_cloud.models.audiofile.Ayah
 import com.zaur.domain.al_quran_cloud.models.audiofile.CacheAudio
 import com.zaur.features.surah.manager.SurahDetailStateManager
+import com.zaur.features.surah.manager.SurahPlayerStateManager
 import com.zaur.features.surah.screen.surah_detail.player.AyahList.RealAyahList
 import com.zaur.features.surah.screen.surah_detail.player.CacheAyahList.RealCacheAyahList
 
@@ -22,6 +23,7 @@ interface PlaylistManager {
     class Base(
         private val playlistBuilder: PlaylistBuilder,
         private val surahDetailStateManager: SurahDetailStateManager,
+        private val surahPlayerStateManager: SurahPlayerStateManager,
         private val onPlaylistChanged: (List<MediaItem>) -> Unit,
     ) : PlaylistManager {
 
@@ -32,20 +34,27 @@ interface PlaylistManager {
         private var lastPlaylist: List<MediaItem> = emptyList()
         private var initialized = false
 
-        private val state get() = surahDetailStateManager.surahDetailState().value
+        private val detailState get() = surahDetailStateManager.surahDetailState().value
+        private val playerState get() = surahPlayerStateManager.surahPlayerState().value
 
         override suspend fun setAyahs(ayahs: List<Ayah.Base>) {
-            val reciterId = state.reciterState().currentReciter()
+            /*val reciterId = detailState.reciterState().currentReciter()
             // Если первый вызов или чтец сменился — пересобираем облачный плейлист
             if (!initialized || reciterId != lastReciterId) {
                 val list = RealAyahList(ayahs)
                 cloudMediaItems = playlistBuilder.buildCloudPlaylistAsync(
-                    list, state.audioPlayerState().currentSurahNumber()
+                    list, playerState.currentSurahNumber()
                 )
                 lastReciterId = reciterId
                 maybeEmitChangedPlaylist()
                 initialized = true
-            }
+            }*/
+
+            val list = RealAyahList(ayahs)
+            // строим cloud-плейлист сразу
+            cloudMediaItems = playlistBuilder.buildCloudPlaylistAsync(
+                list, playerState.currentSurahNumber()
+            )
         }
 
         override suspend fun setCacheAudios(ayahs: List<CacheAudio.Base>) {
@@ -71,7 +80,7 @@ interface PlaylistManager {
         }
 
         override fun currentPlaylist(): List<MediaItem> =
-            if (state.audioPlayerState().isOfflineMode()) cacheMediaItems else cloudMediaItems
+            if (playerState.isOfflineMode()) cacheMediaItems else cloudMediaItems
 
         override fun clear() {
             cacheMediaItems = emptyList()

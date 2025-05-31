@@ -16,8 +16,8 @@ interface SurahDetailViewModel {
     fun surahDetailState(): StateFlow<SurahDetailScreenState>
 
     fun setTextSurahName(name: String)
-    fun setAudioSurahName(name: String)
-    fun setAudioSurahNumber(surahNumber: Int)
+
+
     fun setTextSurahNumber(surahNumber: Int)
     fun showReciterDialog(show: Boolean)
     fun showPlayerBottomSheet(show: Boolean)
@@ -30,9 +30,8 @@ interface SurahDetailViewModel {
     fun fontSizeArabic(fontSize: Float)
     fun fontSizeRussian(fontSize: Float)
     fun selectedReciter(reciter: String, reciterName: String)
-    fun setAudioSurahAyah(ayahInSurah: Int)
+
     fun setAyahInText(ayah: Int)
-    fun setOfflineMode(isOffline: Boolean)
 
     fun clear()
 
@@ -49,14 +48,6 @@ interface SurahDetailViewModel {
 
         override fun setTextSurahName(name: String) {
             stateManager.setTextSurahName(name)
-        }
-
-        override fun setAudioSurahName(name: String) {
-            stateManager.setAudioSurahName(name)
-        }
-
-        override fun setAudioSurahNumber(surahNumber: Int) {
-            stateManager.setAudioSurahNumber(surahNumber)
         }
 
         override fun setTextSurahNumber(surahNumber: Int) {
@@ -109,17 +100,11 @@ interface SurahDetailViewModel {
             stateManager.selectedReciter(reciter, reciterName)
         }
 
-        override fun setAudioSurahAyah(ayahInSurah: Int) {
-            stateManager.setAudioSurahAyah(ayahInSurah)
-        }
 
         override fun setAyahInText(ayah: Int) {
             stateManager.setAyahInText(ayah)
         }
 
-        override fun setOfflineMode(isOffline: Boolean) {
-            stateManager.setOfflineMode(isOffline)
-        }
 
         override fun clear() {
             stateManager.clear()

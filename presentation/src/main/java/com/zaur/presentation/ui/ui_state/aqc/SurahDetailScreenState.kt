@@ -8,20 +8,17 @@ package com.zaur.presentation.ui.ui_state.aqc
 interface SurahDetailScreenState {
 
     fun textState(): TextState.Base
-    fun audioPlayerState(): AudioPlayerState.Base
     fun reciterState(): ReciterState.Base
     fun uiPreferencesState(): UiPreferencesState.Base
     fun bottomSheetState(): BottomSheetState.Base
 
     data class Base(
         private val textState: TextState.Base = TextState.Base(),
-        private val audioPlayerState: AudioPlayerState.Base = AudioPlayerState.Base(),
         private val reciterState: ReciterState.Base = ReciterState.Base("", ""),
         private val uiPreferencesState: UiPreferencesState.Base = UiPreferencesState.Base(),
         private val bottomSheetState: BottomSheetState.Base = BottomSheetState.Base(),
     ) : SurahDetailScreenState {
         override fun textState(): TextState.Base = textState
-        override fun audioPlayerState(): AudioPlayerState.Base = audioPlayerState //todo мб вынести в отдельный state
         override fun reciterState(): ReciterState.Base = reciterState
         override fun uiPreferencesState(): UiPreferencesState.Base = uiPreferencesState
         override fun bottomSheetState(): BottomSheetState.Base = bottomSheetState
@@ -29,7 +26,6 @@ interface SurahDetailScreenState {
 
     object Empty : SurahDetailScreenState {
         override fun textState(): TextState.Base = TextState.Empty
-        override fun audioPlayerState(): AudioPlayerState.Base = AudioPlayerState.Empty
         override fun reciterState(): ReciterState.Base = ReciterState.Empty
         override fun uiPreferencesState(): UiPreferencesState.Base = UiPreferencesState.Empty
         override fun bottomSheetState(): BottomSheetState.Base = BottomSheetState.Empty
@@ -50,45 +46,6 @@ interface TextState {
         override fun surahName(): String = surahName
         override fun currentAyah(): Int = currentAyah
         override fun currentSurahNumber() = currentSurahNumber
-    }
-
-    companion object {
-        val Empty = Base()
-    }
-}
-
-interface AudioPlayerState {
-
-    fun surahName(): String
-    fun currentAyah(): Int
-    fun currentSurahNumber(): Int
-    fun isAudioPlaying(): Boolean
-    fun playWholeChapter(): Boolean
-    fun restartAudio(): Boolean
-    fun isOfflineMode(): Boolean
-    fun position(): Long
-    fun duration(): Long
-
-    data class Base(
-        private val surahName: String = "",
-        private val currentAyah: Int = 0,
-        private val currentSurahNumber: Int = 0,
-        private val isAudioPlaying: Boolean = false,
-        private val playWholeChapter: Boolean = true,
-        private val restartAudio: Boolean = false,
-        private val isOfflineMode: Boolean = false,
-        private val position: Long = 0L,
-        private val duration: Long = 0L,
-    ) : AudioPlayerState {
-        override fun surahName(): String = surahName
-        override fun currentAyah() = currentAyah
-        override fun currentSurahNumber() = currentSurahNumber
-        override fun isAudioPlaying() = isAudioPlaying
-        override fun playWholeChapter() = playWholeChapter
-        override fun restartAudio() = restartAudio
-        override fun isOfflineMode() = isOfflineMode
-        override fun position(): Long = position
-        override fun duration(): Long = duration
     }
 
     companion object {

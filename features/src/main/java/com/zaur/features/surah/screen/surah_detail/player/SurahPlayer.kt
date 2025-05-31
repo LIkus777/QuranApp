@@ -7,6 +7,7 @@ import com.zaur.domain.al_quran_cloud.models.audiofile.VerseAudio
 import com.zaur.features.surah.base.AudioPlayer
 import com.zaur.features.surah.base.AudioPlayerCallback
 import com.zaur.features.surah.manager.SurahDetailStateManager
+import com.zaur.features.surah.manager.SurahPlayerStateManager
 import com.zaur.features.surah.screen.surah_detail.SurahNavigationCallback
 import com.zaur.features.surah.viewmodel.SurahPlayerViewModel
 
@@ -26,6 +27,7 @@ interface SurahPlayer {
     fun seekTo(position: Long)
     fun onPlayVerse(verse: VerseAudio)
     fun onPlayWholeClicked()
+    fun onPlayWholeClickedForNewSurah()
     fun onPlaySingleClicked(ayahNumber: Int, surahNumber: Int)
     fun onPauseClicked()
     fun onStopClicked()
@@ -44,41 +46,47 @@ interface SurahPlayer {
         private val audioPlayerStateUpdater: AudioPlayerStateUpdater,
         private val audioPlaybackHelper: AudioPlaybackHelper,
         private val audioPlayer: AudioPlayer,  // Интерфейс для работы с плеером
-        private val surahDetailStateManager: SurahDetailStateManager, // Менеджер состояния плеера
+        private val surahDetailStateManager: SurahDetailStateManager,
+        private val surahPlayerStateManager: SurahPlayerStateManager,
     ) : SurahPlayer {
 
         private var surahPlayerVmCallback: SurahPlayerViewModel.SurahPlayerVmCallback? = null
 
-        private val state = surahDetailStateManager.surahDetailState()
-        private val playlistManager =
-            PlaylistManager.Base(playlistBuilder, surahDetailStateManager) { newList ->
-                // этот код выполнится каждый раз, когда reciter/режим дадут новый список
-                val idx = state.value.audioPlayerState().currentAyah() - 1
-                if (idx in newList.indices) {
-                    audioPlayer.clearItems()
-                    audioPlayer.playFromIndex(newList, idx, positionMs = 0L)
-                }
+        private val playerState = surahPlayerStateManager.surahPlayerState()
+
+        private val playlistManager = PlaylistManager.Base(
+            playlistBuilder,
+            surahDetailStateManager,
+            surahPlayerStateManager
+        ) { newList ->
+            // этот код выполнится каждый раз, когда reciter/режим дадут новый список
+            val idx = playerState.value.currentAyah() - 1
+            if (idx in newList.indices) {
+                audioPlayer.clearItems()
+                audioPlayer.playFromIndex(newList, idx, positionMs = 0L)
             }
+        }
+
         private val playbackController = PlaybackController.Base(
             audioPlayer,
             audioPlayerStateUpdater,
             playlistManager,
             audioPlaybackHelper,
-            surahDetailStateManager
+            surahPlayerStateManager
         )
 
         init {
             audioPlayer.setAudioPlayerCallback(object : AudioPlayerCallback {
                 override fun audioEnded() {
                     // если режим — НЕ воспроизведение всей суры, сразу останавливаем
-                    if (!state.value.audioPlayerState().playWholeChapter()) {
+                    if (!playerState.value.playWholeChapter()) {
                         Log.i("TAG", "audioEnded: IF")
                         audioPlayerStateUpdater.stop()
                         return
                     }
 
                     // иначе — логика перехода к следующему аяту
-                    val next = state.value.audioPlayerState().currentAyah() + 1
+                    val next = playerState.value.currentAyah() + 1
                     val atEnd = next > playlistManager.currentPlaylist().lastIndex
 
                     playbackController.handleTrackEnd(next, atEnd)
@@ -99,7 +107,7 @@ interface SurahPlayer {
                 // pos — текущая позиция в мс
                 // dur — общая длительность (в мс), может быть ненадёжной (<=0)
                 val safeDur = if (dur <= 0L) 1L else dur
-                surahDetailStateManager.updatePlaybackPosition(pos, safeDur)
+                surahPlayerStateManager.updatePlaybackPosition(pos, safeDur)
             }
         }
 
@@ -115,11 +123,11 @@ interface SurahPlayer {
         override fun onPreviousAyahClicked() = playbackController.playRelativeAyah(-1)
 
         override fun onNextSurahClicked() = playbackController.switchSurah(
-            (state.value.audioPlayerState().currentSurahNumber() + 1).coerceAtLeast(1)
+            (playerState.value.currentSurahNumber() + 1).coerceAtLeast(1)
         )
 
         override fun onPreviousSurahClicked() = playbackController.switchSurah(
-            (state.value.audioPlayerState().currentSurahNumber() - 1).coerceAtLeast(1)
+            (playerState.value.currentSurahNumber() - 1).coerceAtLeast(1)
         )
 
         override fun seekTo(position: Long) {
@@ -133,6 +141,10 @@ interface SurahPlayer {
 
         override fun onPlayWholeClicked() {
             playbackController.toggleChapterPlayback()
+        }
+
+        override fun onPlayWholeClickedForNewSurah() {
+            playbackController.toggleChapterPlaybackForNewSurah()
         }
 
         override fun onPlaySingleClicked(ayahNumber: Int, surahNumber: Int) {

@@ -44,6 +44,7 @@ import com.zaur.domain.storage.theme.ThemeUseCase
 import com.zaur.features.surah.base.AudioPlayer
 import com.zaur.features.surah.manager.ReciterManager
 import com.zaur.features.surah.manager.SurahDetailStateManager
+import com.zaur.features.surah.manager.SurahPlayerStateManager
 import com.zaur.features.surah.screen.surah_detail.player.AudioPlaybackHelper
 import com.zaur.features.surah.screen.surah_detail.player.AudioPlayerStateUpdater
 import com.zaur.features.surah.screen.surah_detail.player.PlaylistBuilder
@@ -168,6 +169,10 @@ interface ProvideSurahDetailViewModel {
 
 interface ProvideSurahPlayer {
     fun provideSurahPlayer(): SurahPlayer
+}
+
+interface ProvideSurahPlayerStateManager {
+    fun provideSurahPlayerStateManager(): SurahPlayerStateManager
 }
 
 interface ProvideSurahDetailStateManager {

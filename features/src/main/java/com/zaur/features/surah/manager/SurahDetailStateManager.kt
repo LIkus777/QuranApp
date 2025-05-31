@@ -15,8 +15,8 @@ interface SurahDetailStateManager : SurahDetailStateObservable.Read {
     fun updateState(state: SurahDetailScreenState.Base)
 
     fun setTextSurahName(name: String)
-    fun setAudioSurahName(name: String)
-    fun setAudioSurahNumber(surahNumber: Int)
+
+
     fun setTextSurahNumber(surahNumber: Int)
     fun showReciterDialog(show: Boolean)
     fun showPlayerBottomSheet(show: Boolean)
@@ -29,10 +29,9 @@ interface SurahDetailStateManager : SurahDetailStateObservable.Read {
     fun fontSizeArabic(fontSize: Float)
     fun fontSizeRussian(fontSize: Float)
     fun selectedReciter(reciter: String, reciterName: String)
-    fun setAudioSurahAyah(ayah: Int)
+
     fun setAyahInText(ayah: Int)
-    fun setOfflineMode(isOffline: Boolean)
-    fun updatePlaybackPosition(position: Long, duration: Long)
+
     fun updateAyahAndSurah(ayah: Int, surah: Int)
 
     fun clear()
@@ -56,7 +55,6 @@ interface SurahDetailStateManager : SurahDetailStateObservable.Read {
             observable.update(
                 observable.surahDetailState().value.copy(
                     textState = textState(),
-                    audioPlayerState = audioPlayerState(),
                     reciterState = reciterState(),
                     uiPreferencesState = uiPreferencesState(),
                     bottomSheetState = bottomSheetState()
@@ -64,16 +62,8 @@ interface SurahDetailStateManager : SurahDetailStateObservable.Read {
             )
         }
 
-        override fun setAudioSurahNumber(surahNumber: Int) = update {
-            copy(audioPlayerState = audioPlayerState().copy(currentSurahNumber = surahNumber))
-        }
-
         override fun setTextSurahName(name: String) = update {
             copy(textState = textState().copy(surahName = name))
-        }
-
-        override fun setAudioSurahName(name: String) = update {
-            copy(audioPlayerState = audioPlayerState().copy(surahName = name))
         }
 
         override fun setTextSurahNumber(surahNumber: Int) = update {
@@ -120,41 +110,22 @@ interface SurahDetailStateManager : SurahDetailStateObservable.Read {
             )
         }
 
-        override fun setAudioSurahAyah(ayahInSurah: Int) = update {
-            copy(audioPlayerState = audioPlayerState().copy(currentAyah = ayahInSurah))
-        }
-
         override fun setAyahInText(ayah: Int) = update {
             copy(textState = textState().copy(currentAyah = ayah))
         }
 
-        override fun setOfflineMode(isOffline: Boolean) = update {
-            copy(audioPlayerState = audioPlayerState().copy(isOfflineMode = isOffline))
-        }
-
-        override fun updatePlaybackPosition(position: Long, duration: Long) = update {
-            copy(
-                audioPlayerState = audioPlayerState().copy(
-                    position = position, duration = duration
+        override fun updateAyahAndSurah(ayah: Int, surah: Int) =
+            update { //todo реализовать и для surahPlayerState
+                copy(
+                    textState = textState().copy(currentAyah = ayah, currentSurahNumber = surah),
                 )
-            )
-        }
-
-        override fun updateAyahAndSurah(ayah: Int, surah: Int) = update {
-            copy(
-                textState = textState().copy(currentAyah = ayah, currentSurahNumber = surah),
-                audioPlayerState = audioPlayerState().copy(
-                    currentAyah = ayah, currentSurahNumber = surah
-                )
-            )
-        }
+            }
 
         override fun clear() {
             val base = SurahDetailScreenState.Base()
             update {
                 copy(
                     textState = base.textState(),
-                    audioPlayerState = base.audioPlayerState(),
                     reciterState = base.reciterState(),
                     uiPreferencesState = base.uiPreferencesState(),
                     bottomSheetState = base.bottomSheetState()

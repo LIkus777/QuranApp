@@ -1,6 +1,5 @@
 package com.zaur.features.surah.screen.surah_detail
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -10,11 +9,13 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,6 +23,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -31,8 +33,6 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.zaur.domain.al_quran_cloud.models.chapter.ChapterAqc
-import com.zaur.domain.al_quran_cloud.models.chapter.RevelationType
 import com.zaur.features.surah.viewmodel.SurahChooseViewModel
 import com.zaur.features.surah.viewmodel.ThemeViewModel
 import com.zaur.navigation.Screen
@@ -40,39 +40,48 @@ import com.zaur.presentation.ui.DarkThemeColors
 import com.zaur.presentation.ui.LightThemeColors
 
 /**
-* @author Zaur
-* @since 2025-05-12
-*/
+ * @author Zaur
+ * @since 2025-05-12
+ */
 
 @Composable
 fun SurahChooseMenu(
+    currentSurahNumber: Int,
     themeViewModel: ThemeViewModel,
     surahChooseViewModel: SurahChooseViewModel,
     navController: NavController,
-    modifier: Modifier,
 ) {
+    // Проверяем, какая тема сейчас
     val isDarkTheme = themeViewModel.themeState().collectAsState().value.isDarkTheme
     val colors = if (isDarkTheme) DarkThemeColors else LightThemeColors
+
+    // Получаем текущее состояние текста (список глав)
+    val textState by surahChooseViewModel.textState().collectAsState()
+    val chapters = textState.chapters()
+
+    // Нахождение индекса текущей суры (целевой индекс для прокрутки)
+    val currentIndex = remember(chapters, currentSurahNumber) {
+        chapters.indexOfFirst { it.number().toInt() == currentSurahNumber }.takeIf { it >= 0 } ?: 0
+    }
+
+    val listState = rememberLazyListState()
+
+    // Как только список chapters изменился (стал непустым), прокручиваем к currentIndex
+    LaunchedEffect(chapters, currentIndex) {
+        // Ждём, пока список действительно наполнится
+        if (chapters.isNotEmpty()) {
+            listState.scrollToItem(index = currentIndex)
+        }
+    }
+
     Box(
-        Modifier
+        modifier = Modifier
             .background(colors.cardBackground)
             .fillMaxHeight()
             .width(LocalConfiguration.current.screenWidthDp.dp / 1.5f)
     ) {
-        LaunchedEffect(Unit) {
-            Log.d("TAG", ">>> getAllChapters()")
-
-        }
-
-
-        val textState = surahChooseViewModel.textState().collectAsState()
-        val chapters = textState.value.chapters()
-
         var selectedTabIndex by rememberSaveable { mutableIntStateOf(0) }
         val tabTitles = listOf("Суры", "Джузы")
-        LaunchedEffect(textState.value) {
-            Log.d("TAG", ">>> textState.value ${textState.value}")
-        }
 
         Column(
             modifier = Modifier
@@ -80,9 +89,6 @@ fun SurahChooseMenu(
                 .padding(4.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-
-            //Spacer(modifier = Modifier.height(20.dp))
-
             Row {
                 tabTitles.forEachIndexed { index, title ->
                     Tab(
@@ -100,34 +106,40 @@ fun SurahChooseMenu(
 
             Spacer(modifier = Modifier.height(8.dp))
 
+            // Сам LazyColumn
             LazyColumn(
+                state = listState,
                 modifier = Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.Top,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                if (selectedTabIndex == 0) itemsIndexed(chapters) { index, chapter ->
-                    SurahChooseItem(
-                        number = chapter.number(),
-                        englishName = chapter.englishName(),
-                        arabicName = chapter.name(),
-                        numberOfAyats = chapter.numberOfAyahs().toInt(),
-                        revelationType = chapter.revelationType(),
-                        colors = colors,
-                        modifier = Modifier.clickable {
-                            navController.navigate(
-                                Screen.SurahDetail.createRoute(
-                                    chapter.number().toInt(), chapter.englishName()
-                                )
-                            ) {
-                                // Удаляем предыдущий SurahDetail из стека, чтобы не возвращаться к нему
-                                popUpTo(Screen.SurahDetail.route) {
-                                    inclusive = true // полностью убрать предыдущий SurahDetail
-                                }
-                                launchSingleTop = true // чтобы не дублировать в стеке одинаковые экраны
-                            }
-                        })
-                }
-                else {
+                if (selectedTabIndex == 0) {
+                    itemsIndexed(chapters) { index, chapter ->
+                        val isCurrent = (chapter.number().toInt() == currentSurahNumber)
+
+                        SurahChooseItem(
+                            number = chapter.number(),
+                            englishName = chapter.englishName(),
+                            arabicName = chapter.name(),
+                            numberOfAyats = chapter.numberOfAyahs().toInt(),
+                            revelationType = chapter.revelationType(),
+                            colors = colors,
+                            isCurrent = isCurrent,
+                            modifier = Modifier
+                                .clickable {
+                                    navController.navigate(
+                                        Screen.SurahDetail.createRoute(
+                                            chapter.number().toInt(), chapter.englishName()
+                                        )
+                                    ) {
+                                        popUpTo(Screen.SurahDetail.route) {
+                                            inclusive = true
+                                        }
+                                        launchSingleTop = true
+                                    }
+                                })
+                    }
+                } else {
                     item {
                         Text("Здесь будут джузы", color = Color.Gray)
                     }

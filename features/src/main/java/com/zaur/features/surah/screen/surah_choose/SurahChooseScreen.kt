@@ -59,11 +59,9 @@ fun SurahChooseScreen(
 
     val textState = surahChooseViewModel.textState().collectAsState()
     var showPicker by remember { mutableStateOf(false) }
-    // Состояние видимости оверлея поиска
     var searchVisible by remember { mutableStateOf(false) }
 
-    LaunchedEffect(surahChooseViewModel) {
-        Log.d("TAG", "LaunchedEffect(Unit) { getAllChaptersCloud() CALLED ")
+    LaunchedEffect(Unit) {
         surahChooseViewModel.getAllChapters()
     }
 
@@ -76,13 +74,14 @@ fun SurahChooseScreen(
                 onClickSearch = { searchVisible = true },
                 onClickPlayer = { onClickPlayer() },
             )
-        }, containerColor = colors.background
+        },
+        containerColor = colors.background
     ) { paddingValues ->
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .padding(horizontal = 20.dp), // внутренние отступы от краёв
+                .padding(horizontal = 20.dp),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -103,16 +102,15 @@ fun SurahChooseScreen(
                     modifier = Modifier.clickable {
                         navController.navigate(
                             Screen.SurahDetail.createRoute(
-                                chapter.number().toInt(), chapter.englishName()
+                                chapter.number().toInt(),
+                                chapter.englishName()
                             )
                         ) {
-                            popUpTo(Screen.SurahDetail.route) {
-                                inclusive = true
-                            }
+                            popUpTo(Screen.SurahDetail.route) { inclusive = true }
                             launchSingleTop = true
                         }
                     })
-                if (index == textState.value.chapters().lastIndex) {
+                if (index == chapters.lastIndex) {
                     Spacer(Modifier.height(60.dp))
                 } else {
                     Spacer(Modifier.height(6.dp))
@@ -124,25 +122,45 @@ fun SurahChooseScreen(
     AnimatedVisibility(
         visible = searchVisible,
         enter = expandVertically(
-            // разворачивается из 1px сверху
-            expandFrom = Alignment.Top, initialHeight = { 1 }) + fadeIn(animationSpec = tween(500)),
+            expandFrom = Alignment.Top, initialHeight = { 1 }
+        ) + fadeIn(animationSpec = tween(500)),
         exit = shrinkVertically(
-            // сворачивается в 1px к верху
-            shrinkTowards = Alignment.Top,
-            targetHeight = { 1 }) + fadeOut(animationSpec = tween(500))
+            shrinkTowards = Alignment.Top, targetHeight = { 1 }
+        ) + fadeOut(animationSpec = tween(500))
     ) {
-        SearchOverlay(
-            colors = colors, onDismiss = { searchVisible = false })
+        SearchOverlay(colors = colors, onDismiss = { searchVisible = false })
     }
 
-    // Вот тут, вне TopBar, условно показываем Picker
     QuranPickerDialog(
         isVisible = showPicker,
         colors = colors,
         onDismiss = { showPicker = false },
-        onPageSelected = { page -> /* navController.navigateToPage(page) */ },
-        onSurahSelected = { surah -> /* navController.navigateToSurah(surah) */ },
-        onJuzSelected = { juz -> /* navController.navigateToJuz(juz) */ })
+        onPageSelected = { pageNumber ->
+            /*navController.navigate(Screen.PageDetail.createRoute(pageNumber)) {
+                popUpTo(Screen.PageDetail.route) { inclusive = true }
+                launchSingleTop = true
+            }*/
+        },
+        onSurahAndAyahSelected = { surahNumber, ayahNumber ->
+            /*val engName = surahChooseViewModel.getEnglishName(surahNumber)
+            navController.navigate(
+                Screen.SurahDetail.createRoute(
+                    surahNumber = surahNumber,
+                    surahName = engName,
+                    highlightAyah = ayahNumber
+                )
+            ) {
+                popUpTo(Screen.SurahDetail.route) { inclusive = true }
+                launchSingleTop = true
+            }*/
+        },
+        onJuzSelected = { juzNumber ->
+            /*navController.navigate(Screen.JuzDetail.createRoute(juzNumber)) {
+                popUpTo(Screen.JuzDetail.route) { inclusive = true }
+                launchSingleTop = true
+            }*/
+        }
+    )
 }
 
 @Preview(showBackground = true)

@@ -191,6 +191,10 @@ class FakeSurahPlayer() : SurahPlayer {
         TODO("Not yet implemented")
     }
 
+    override fun onPlayWholeClickedForNewSurah() {
+        TODO("Not yet implemented")
+    }
+
     override fun onPlaySingleClicked(ayahNumber: Int, surahNumber: Int) {
         TODO("Not yet implemented")
     }

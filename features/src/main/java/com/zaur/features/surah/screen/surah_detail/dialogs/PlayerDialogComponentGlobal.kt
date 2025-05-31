@@ -4,8 +4,10 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.navigation.NavHostController
 import com.zaur.features.surah.viewmodel.SurahDetailViewModel
 import com.zaur.features.surah.viewmodel.SurahPlayerViewModel
+import com.zaur.navigation.Screen
 import com.zaur.presentation.ui.QuranColors
 
 
@@ -16,6 +18,7 @@ import com.zaur.presentation.ui.QuranColors
 
 @Composable
 fun PlayerDialogComponentGlobal(
+    navController: NavHostController,
     surahDetailViewModel: SurahDetailViewModel,
     surahPlayerViewModel: SurahPlayerViewModel,
     colors: QuranColors,
@@ -23,7 +26,8 @@ fun PlayerDialogComponentGlobal(
 ) {
     // 1) Подписка на состояние
     val detailState = surahDetailViewModel.surahDetailState().collectAsState()
-    val audioState = detailState.value.audioPlayerState()
+    val playerState = surahPlayerViewModel.surahPlayerState().collectAsState()
+    val audioState = playerState.value
 
     // 2) При первом появлении диалога — восстанавливаем последний трек
     LaunchedEffect(detailState.value.bottomSheetState().showPlayerBottomSheet()) {
@@ -31,19 +35,22 @@ fun PlayerDialogComponentGlobal(
             val lastAyah = surahPlayerViewModel.getLastPlayedAyah().takeIf { it != 0 } ?: 1
             val lastSurah = surahPlayerViewModel.getLastPlayedSurah().takeIf { it != 0 } ?: 1
             val lastName =
-                surahPlayerViewModel.getAudioSurahName().takeIf(String::isNotEmpty) ?: "Al-Fatiha"
+                surahPlayerViewModel.getAudioSurahNameSharedPref().takeIf(String::isNotEmpty)
+                    ?: "Al-Fatiha"
 
             // Устанавливаем в DetailViewModel
             surahDetailViewModel.apply {
                 setTextSurahName(lastName)
                 setTextSurahNumber(lastSurah)
-                setAudioSurahName(lastName)
-                setAudioSurahNumber(lastSurah)
-                setAudioSurahAyah(lastAyah)
                 selectedReciter(
                     surahPlayerViewModel.getReciter().orEmpty(),
                     surahPlayerViewModel.getReciterName().orEmpty()
                 )
+            }
+            surahPlayerViewModel.apply {
+                setAudioSurahName(lastName)
+                setAudioSurahNumber(lastSurah)
+                setAudioSurahAyah(lastAyah)
             }
 
             // Загружаем аудио из SurahPlayerViewModel
@@ -73,6 +80,22 @@ fun PlayerDialogComponentGlobal(
             onPreviousSurahClicked = { surahPlayerViewModel.onPreviousSurahClicked() },
             onSeekRequested = { surahPlayerViewModel.seekTo(it) },
             onReciterClicked = { surahDetailViewModel.showReciterDialog(true) },
-            onDismiss = { surahDetailViewModel.showPlayerBottomSheet(false) })
+            onSurahAndAyahClicked = {
+                // Здесь делаем навигацию на экран SurahDetail,
+                // передавая текущую surahNumber и surahName
+                val number = audioState.currentSurahNumber()
+                val name   = audioState.surahName()
+                // Например, если ваш route = "surah_detail_screen/{surahNumber}/{surahName}"
+                navController.navigate(
+                    Screen.SurahDetail.createRoute(number, name)
+                ) {
+                    // Не возвращаться к старому экрану плеера,
+                    // а сразу перезаписать стек:
+                    popUpTo(Screen.MainScreen.route) { inclusive = false }
+                    launchSingleTop = true
+                }
+            },
+            onDismiss = { surahDetailViewModel.showPlayerBottomSheet(false) }
+        )
     }
 }

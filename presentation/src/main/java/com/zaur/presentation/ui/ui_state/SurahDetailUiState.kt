@@ -30,12 +30,14 @@ interface SurahDetailUiState {
         state: AyaListItem,
         chapterNumber: Int,
         surahDetailState: SurahDetailScreenState,
+        surahPlayerState: SurahPlayerState,
         ayats: List<Ayah.Base>,
         isDarkTheme: Boolean,
         colors: QuranColors,
         onAyahItemChanged: (Int) -> Unit,
         onPageItemChanged: (Int) -> Unit,
         onClickSound: (Int, Int) -> Unit,
+        onListenSurahClicked: () -> Unit,
         translations: List<com.zaur.domain.al_quran_cloud.models.translate.Ayah.Base>,
     ) = Unit
 
@@ -43,6 +45,7 @@ interface SurahDetailUiState {
     fun RenderPageMode(
         pageState: QuranPageUIState,
         surahDetailState: SurahDetailScreenState,
+        surahPlayerState: SurahPlayerState,
         isDarkTheme: Boolean,
         colors: QuranColors,
         onClickPreviousPage: () -> Unit,
@@ -56,24 +59,28 @@ interface SurahDetailUiState {
             state: AyaListItem,
             chapterNumber: Int,
             surahDetailState: SurahDetailScreenState,
+            surahPlayerState: SurahPlayerState,
             ayats: List<Ayah.Base>,
             isDarkTheme: Boolean,
             colors: QuranColors,
             onAyahItemChanged: (Int) -> Unit,
             onPageItemChanged: (Int) -> Unit,
             onClickSound: (Int, Int) -> Unit,
+            onListenSurahClicked: () -> Unit,
             translations: List<com.zaur.domain.al_quran_cloud.models.translate.Ayah.Base>
         ) {
             AyaColumn(
                 state = state,
                 chapterNumber = chapterNumber,
                 surahDetailState = surahDetailState,
+                surahPlayerState = surahPlayerState,
                 ayats = ayats,
                 isDarkTheme = isDarkTheme,
                 colors = colors,
                 onAyahItemChanged = onAyahItemChanged,
                 onPageItemChanged = onPageItemChanged,
                 onClickSound = onClickSound,
+                onListenSurahClicked = onListenSurahClicked,
                 translations = translations
             )
         }
@@ -84,6 +91,7 @@ interface SurahDetailUiState {
         override fun RenderPageMode(
             pageState: QuranPageUIState,
             surahDetailState: SurahDetailScreenState,
+            surahPlayerState: SurahPlayerState,
             isDarkTheme: Boolean,
             colors: QuranColors,
             onClickPreviousPage: () -> Unit,
@@ -92,7 +100,8 @@ interface SurahDetailUiState {
         ) {
             SurahPageScreen(
                 pageState = pageState,
-                surahDetailState,
+                surahDetailState = surahDetailState,
+                surahPlayerState = surahPlayerState,
                 isDarkTheme = isDarkTheme,
                 colors = colors,
                 onClickSound = onClickSound,

@@ -18,6 +18,7 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.zaur.presentation.ui.ui_state.SurahPlayerState
 import com.zaur.presentation.ui.ui_state.aqc.QuranPageUIState
 import com.zaur.presentation.ui.ui_state.aqc.SurahDetailScreenState
 
@@ -30,6 +31,7 @@ import com.zaur.presentation.ui.ui_state.aqc.SurahDetailScreenState
 fun SurahPageScreen(
     pageState: QuranPageUIState,
     surahDetailState: SurahDetailScreenState,
+    surahPlayerState: SurahPlayerState,
     isDarkTheme: Boolean,
     colors: QuranColors,
     onClickSound: (ayahNumber: Int, ayahInSurah: Int) -> Unit,
@@ -63,17 +65,29 @@ fun SurahPageScreen(
                 val translationText =
                     if (index < translations.value.ayahs().size) translations.value.ayahs()
                         .getOrNull(index)?.text() else "Перевод отсутствует"
-                val arabicText =
+                val arabicAyah =
                     if (index == 0 && aya.surah().number() != 9L) aya.text().removeBasmala()
                     else aya.text()
 
+                val ayats = arabicText.value.ayahs()
+                val firstGlobalIndex = ayats.indexOfFirst { it.number() == ayats.first().number() }
+                val globalIndex      = firstGlobalIndex + index
+
+                val prevAya = ayats.getOrNull(globalIndex - 1)
+
+                val showJuzChange  = prevAya?.juz()         != aya.juz()
+                val showHizbChange = prevAya?.hizbQuarter() != aya.hizbQuarter()
+
                 AyahItem(
+                    showJuzChange = showJuzChange,
+                    newJuz = aya.juz(),
+                    showHizbChange = showHizbChange,
+                    newHizbQuarter = aya.hizbQuarter(),
                     isDarkTheme = isDarkTheme,
                     ayahNumber = aya.number().toInt(),
                     currentAyahInSurah = aya.numberInSurah().toInt(),
-                    isCurrent = surahDetailState.audioPlayerState()
-                        .currentAyah() == aya.number().toInt(),
-                    arabicText = arabicText,
+                    isCurrent = surahPlayerState.currentAyah() == aya.number().toInt(),
+                    arabicAyah = arabicAyah,
                     translation = translationText.toString(),
                     colors = colors,
                     surahDetailState = surahDetailState,

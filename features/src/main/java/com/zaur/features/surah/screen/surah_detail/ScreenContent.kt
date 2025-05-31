@@ -56,6 +56,7 @@ fun ScreenContent(
                         isDarkTheme = isDarkTheme(),
                         chapterNumber = chapterNumber,
                         surahDetailState = surahDetailState(),
+                        surahPlayerState = surahPlayerState(),
                         translations = translateState().translations().translationAyahs(),
                         ayats = textState().currentArabicText().ayahs(),
                         onAyahItemChanged = { index ->
@@ -65,10 +66,20 @@ fun ScreenContent(
                             quranPageViewModel().saveLastReadPagePosition(page)
                         },
                         onClickSound = { ayahNumber, ayahNumberInSurah ->
-                            surahDetailViewModel().setAudioSurahAyah(ayahNumberInSurah)
+                            surahPlayerViewModel().setAudioSurahAyah(ayahNumberInSurah)
                             surahPlayerViewModel().onPlaySingleClicked(
                                 ayahNumberInSurah, chapterNumber
                             )
+                        },
+                        onListenSurahClicked = {
+                            surahPlayerViewModel().onStopClicked()
+                            surahPlayerViewModel().setAudioSurahAyah(1)
+                            surahPlayerViewModel().setLastPlayedAyah(1)
+                            surahPlayerViewModel().setAudioSurahName(surahName)
+                            surahPlayerViewModel().setAudioSurahNameSharedPref(surahName)
+                            surahPlayerViewModel().setAudioSurahNumber(chapterNumber)
+                            surahPlayerViewModel().setLastPlayedSurah(chapterNumber)
+                            surahPlayerViewModel().playNewSurah(chapterNumber, surahDetailState().reciterState().currentReciter())
                         })
 
                     is SurahDetailUiState.PageModeState -> {
@@ -82,10 +93,11 @@ fun ScreenContent(
                             isDarkTheme = isDarkTheme(),
                             pageState = pageState(),
                             surahDetailState = surahDetailState(),
+                            surahPlayerState = surahPlayerState(),
                             onClickPreviousPage = {},
                             onClickNextPage = {},
                             onClickSound = { ayahNumber, ayahNumberInSurah ->
-                                surahDetailViewModel().setAudioSurahAyah(ayahNumberInSurah)
+                                surahPlayerViewModel().setAudioSurahAyah(ayahNumberInSurah)
                                 surahPlayerViewModel().onPlaySingleClicked(
                                     ayahNumberInSurah, chapterNumber
                                 )

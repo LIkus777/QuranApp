@@ -91,7 +91,7 @@ interface SurahDetailEffectHandler {
         @Composable
         override fun HandlePlayVerse() {
             val verse = uiData.audioState().verseAudioFile()
-            val restart = uiData.surahDetailState().audioPlayerState().restartAudio()
+            val restart = uiData.surahPlayerState().restartAudio()
             LaunchedEffect(verse, restart) {
                 if (verse !is VerseAudio.Empty || restart == true) {
                     surahPlayerVm.onPlayVerse(verse)
@@ -112,9 +112,9 @@ interface SurahDetailEffectHandler {
 
         @Composable
         override fun HandleAyah() {
-            LaunchedEffect(uiData.surahDetailState().audioPlayerState().currentAyah()) {
+            LaunchedEffect(uiData.surahPlayerState().currentAyah()) {
                 surahPlayerVm.setLastPlayedAyah(
-                    uiData.surahDetailState().audioPlayerState().currentAyah()
+                    uiData.surahPlayerState().currentAyah()
                 )
             }
         }
@@ -129,7 +129,7 @@ interface SurahDetailEffectHandler {
                         //val currentSurahNumber = uiData.surahDetailState().textState().currentSurahNumber()
                         val surahName =
                             uiData.textState().chapters()[surahNumber - 1].englishName()
-                        surahPlayerVm.setAudioSurahName(surahName)
+                        surahPlayerVm.setAudioSurahNameSharedPref(surahName)
                         quranTextVm.setLastReadSurah(surahNumber)
                         surahPlayerVm.setLastPlayedSurah(surahNumber)
                         controller.navigate(

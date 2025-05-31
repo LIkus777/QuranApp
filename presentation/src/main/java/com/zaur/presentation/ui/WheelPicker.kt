@@ -26,8 +26,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
+import kotlin.math.abs
 
 /**
  * @author Zaur
@@ -44,34 +49,32 @@ fun <T> WheelPicker(
     itemContent: @Composable (item: T, isSelected: Boolean) -> Unit,
     onItemSelected: (index: Int) -> Unit,
 ) {
-    val half = visibleCount / 2
-    val wheelHeight = itemHeight * visibleCount
-    val listState = rememberLazyListState(initialFirstVisibleItemIndex = selectedIndex)
+    val density = LocalDensity.current
+    val itemHeightPx = with(density) { itemHeight.roundToPx() }
+    val contentPaddingPx = itemHeightPx * (visibleCount / 2)
+    val offsetToCenter = itemHeightPx / 2
 
-    val flingBehavior = rememberSnapFlingBehavior(
-        lazyListState = listState,
-        snapPosition = SnapPosition.Center
+    val listState = rememberLazyListState(
+        initialFirstVisibleItemIndex = selectedIndex,
+        initialFirstVisibleItemScrollOffset = offsetToCenter
     )
 
-    // Внутреннее состояние текущего выбранного индекса
     var currentIndex by remember { mutableStateOf(selectedIndex) }
 
-    // Если внешний selectedIndex изменился и отличается от внутреннего - прокрутить
     LaunchedEffect(selectedIndex) {
         if (selectedIndex != currentIndex) {
-            listState.animateScrollToItem(selectedIndex)
             currentIndex = selectedIndex
+            listState.scrollToItem(selectedIndex, offsetToCenter)
         }
     }
 
     Box(
         modifier
-            .height(wheelHeight)
+            .height(with(density) { (itemHeightPx * visibleCount).toDp() })
             .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
             .background(Color.White)
     ) {
-        // Центральная рамка и градиенты - как у вас были
         Box(
             Modifier
                 .fillMaxWidth()
@@ -83,31 +86,33 @@ fun <T> WheelPicker(
         Box(
             Modifier
                 .fillMaxWidth()
-                .height(itemHeight * half)
+                .height(itemHeight * (visibleCount / 2))
                 .align(Alignment.TopCenter)
                 .background(
                     Brush.verticalGradient(
-                        listOf(Color.White, Color.White.copy(alpha = 0f))
+                        colors = listOf(Color.White, Color.Transparent)
                     )
                 )
         )
         Box(
             Modifier
                 .fillMaxWidth()
-                .height(itemHeight * half)
+                .height(itemHeight * (visibleCount / 2))
                 .align(Alignment.BottomCenter)
                 .background(
                     Brush.verticalGradient(
-                        listOf(Color.White.copy(alpha = 0f), Color.White)
+                        colors = listOf(Color.Transparent, Color.White)
                     )
                 )
         )
 
         LazyColumn(
             state = listState,
-            flingBehavior = flingBehavior,
-            contentPadding = PaddingValues(vertical = itemHeight * half),
             modifier = Modifier.fillMaxSize(),
+            flingBehavior = rememberSnapFlingBehavior(
+                lazyListState = listState, snapPosition = SnapPosition.Center
+            ),
+            contentPadding = PaddingValues(vertical = itemHeight * (visibleCount / 2)),
             verticalArrangement = Arrangement.Top
         ) {
             itemsIndexed(items) { index, item ->
@@ -115,8 +120,7 @@ fun <T> WheelPicker(
                 Box(
                     Modifier
                         .fillMaxWidth()
-                        .height(itemHeight),
-                    contentAlignment = Alignment.Center
+                        .height(itemHeight), contentAlignment = Alignment.Center
                 ) {
                     itemContent(item, isSelected)
                 }
@@ -124,24 +128,21 @@ fun <T> WheelPicker(
         }
     }
 
-    // Следим за прокруткой, чтобы обновить currentIndex и вызвать onItemSelected
     LaunchedEffect(listState) {
         snapshotFlow { listState.layoutInfo.visibleItemsInfo }.collect { visibleItems ->
-            if (visibleItems.isEmpty()) return@collect
-
-            val center = (listState.layoutInfo.viewportStartOffset + listState.layoutInfo.viewportEndOffset) / 2
-
-            val closest = visibleItems.minByOrNull { item ->
-                val itemCenter = item.offset + item.size / 2
-                kotlin.math.abs(itemCenter - center)
-            }
-
-            closest?.index?.let { newIndex ->
-                if (newIndex != currentIndex) {
-                    currentIndex = newIndex
-                    onItemSelected(newIndex) // сообщаем родителю
+                if (visibleItems.isEmpty()) return@collect
+                val viewportCenter =
+                    (listState.layoutInfo.viewportStartOffset + listState.layoutInfo.viewportEndOffset) / 2
+                val closest = visibleItems.minByOrNull { info ->
+                    val itemCenter = info.offset + (info.size / 2)
+                    kotlin.math.abs(itemCenter - viewportCenter)
+                }?.index
+                closest?.let { newIndex ->
+                    if (newIndex != currentIndex) {
+                        currentIndex = newIndex
+                        onItemSelected(newIndex)
+                    }
                 }
             }
-        }
     }
 }

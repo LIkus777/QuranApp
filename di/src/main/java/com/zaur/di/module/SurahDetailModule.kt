@@ -95,6 +95,7 @@ interface SurahDetailModule : ProvideQuranPageRepositopryCloud, ProvideQuranPage
                 audioModule.provideSurahPlayer(),
                 provideReciterManager(),
                 surahDetailStateManagerModule.provideSurahDetailStateManager(),
+                surahPlayerStateManager = audioModule.provideSurahPlayerStateManager(),
                 quranAudioUseCase = provideQuranAudioUseCase()
             )
         }

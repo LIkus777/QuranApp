@@ -6,7 +6,9 @@ import com.zaur.di.provides.ProvideAudioPlayer
 import com.zaur.di.provides.ProvideAudioPlayerStateUpdater
 import com.zaur.di.provides.ProvidePlaylistBuilder
 import com.zaur.di.provides.ProvideSurahPlayer
+import com.zaur.di.provides.ProvideSurahPlayerStateManager
 import com.zaur.features.surah.base.AudioPlayer
+import com.zaur.features.surah.manager.SurahPlayerStateManager
 import com.zaur.features.surah.screen.surah_detail.player.AudioPlaybackHelper
 import com.zaur.features.surah.screen.surah_detail.player.AudioPlayerStateUpdater
 import com.zaur.features.surah.screen.surah_detail.player.PlaylistBuilder
@@ -18,7 +20,7 @@ import com.zaur.features.surah.screen.surah_detail.player.SurahPlayer
  * @since 24.05.2025
  */
 
-interface AudioModule : ProvideSurahPlayer, ProvidePlaylistBuilder, ProvideAudioPlayer,
+interface AudioModule : ProvideSurahPlayerStateManager, ProvideSurahPlayer, ProvidePlaylistBuilder, ProvideAudioPlayer,
     ProvideAudioPlayerStateUpdater, ProvideAudioPlaybackHelper {
 
     class Base(
@@ -31,12 +33,17 @@ interface AudioModule : ProvideSurahPlayer, ProvidePlaylistBuilder, ProvideAudio
             AudioPlayer.Base(context)
         }
 
+        private val surahPlayerStateManager by lazy {
+            SurahPlayerStateManager.Base()
+        }
+
         override fun provideSurahPlayer(): SurahPlayer = SurahPlayer.Base(
             providePlaylistBuilder(),
             provideAudioPlayerStateUpdater(),
             provideAudioPlaybackHelper(),
             provideAudioPlayer(),
-            surahDetailStateManagerModule.provideSurahDetailStateManager()
+            surahDetailStateManagerModule.provideSurahDetailStateManager(),
+            provideSurahPlayerStateManager()
         )
 
         override fun providePlaylistBuilder(): PlaylistBuilder = PlaylistBuilder.Base(
@@ -45,7 +52,7 @@ interface AudioModule : ProvideSurahPlayer, ProvidePlaylistBuilder, ProvideAudio
         )
 
         override fun provideAudioPlayerStateUpdater(): AudioPlayerStateUpdater =
-            AudioPlayerStateUpdater.Base(surahDetailStateManagerModule.provideSurahDetailStateManager()) //todo
+            AudioPlayerStateUpdater.Base(surahDetailStateManagerModule.provideSurahDetailStateManager(), surahPlayerStateManager) //todo
 
         override fun provideAudioPlaybackHelper(): AudioPlaybackHelper = AudioPlaybackHelper.Base(
             surahDetailStateManagerModule.provideSurahDetailStateManager().surahDetailState(),
@@ -54,6 +61,7 @@ interface AudioModule : ProvideSurahPlayer, ProvidePlaylistBuilder, ProvideAudio
         )
 
         override fun provideAudioPlayer(): AudioPlayer = audioPlayer
+        override fun provideSurahPlayerStateManager(): SurahPlayerStateManager = surahPlayerStateManager
     }
 
 }

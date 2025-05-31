@@ -24,6 +24,7 @@ fun rememberSurahDetailUiData(
     val audioState by deps.surahPlayerViewModel().audioState().collectAsState()
     val translateState by deps.quranTranslationViewModel().translationState().collectAsState()
     val detailState by deps.surahDetailViewModel().surahDetailState().collectAsState()
+    val playerState by deps.surahPlayerViewModel().surahPlayerState().collectAsState()
     val pageState by deps.quranPageViewModel().pageState().collectAsState()
     val isDarkTheme by deps.themeViewModel().themeState().collectAsState()
     val isSurahMode = detailState.uiPreferencesState().showSurahMode()
@@ -42,23 +43,29 @@ fun rememberSurahDetailUiData(
         // Инициализируем остальные поля в detailVm
         val textVm = deps.quranTextViewModel()
         val detailVm = deps.surahDetailViewModel()
+        val playerVm = deps.surahPlayerViewModel()
 
         val savedAyah =
-            playerVm.getLastPlayedAyah().takeIf { it != 0 } ?: detailState.audioPlayerState()
+            playerVm.getLastPlayedAyah().takeIf { it != 0 } ?: playerState
                 .currentAyah()
         val savedSurah = playerVm.getLastPlayedSurah().takeIf { it != 0 } ?: chapterNumber
-        val savedName = playerVm.getAudioSurahName().takeIf(String::isNotEmpty) ?: surahName
+        val savedName = playerVm.getAudioSurahNameSharedPref().takeIf(String::isNotEmpty) ?: surahName
 
         detailVm.apply {
             setTextSurahName(surahName)
             setTextSurahNumber(chapterNumber)
+
+            setAyahInText(textVm.getLastReadAyahPosition(chapterNumber))
+
+            fontSizeArabic(textVm.getFontSizeArabic())
+            fontSizeRussian(textVm.getFontSizeRussian())
+        }
+
+        playerVm.apply {
             setAudioSurahAyah(savedAyah)
             setAudioSurahNumber(savedSurah)
             setAudioSurahName(savedName)
-            setAyahInText(textVm.getLastReadAyahPosition(chapterNumber))
             setOfflineMode(offlineState.isOffline())
-            fontSizeArabic(textVm.getFontSizeArabic())
-            fontSizeRussian(textVm.getFontSizeRussian())
         }
     }
 
@@ -68,6 +75,7 @@ fun rememberSurahDetailUiData(
         audioState,
         translateState,
         detailState,
+        playerState,
         pageState,
         isDarkTheme.isDarkTheme,
         isSurahMode,

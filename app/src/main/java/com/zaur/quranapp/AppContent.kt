@@ -69,7 +69,8 @@ fun AppContent(
                         .fillMaxSize()
                         .systemBarsPadding()
                 ) {
-                    QuranNavGraph(navController = navController, mainScreen = { controller ->
+                    QuranNavGraph(
+                        navController = navController, mainScreen = { controller ->
                         val mainViewModel = remember {
                             MainViewModelFactory.Base(
                                 mainScreenModule.provideMainUseCase(),
@@ -91,7 +92,7 @@ fun AppContent(
                         BookmarksScreen()
                     }, settingsScreen = {
                         SettingsScreen()
-                    }, surahDetailScreen = { number, name, controller ->
+                    }, surahDetailScreen = { surahNumber, surahName, highlightAyah ->
                         val quranTextViewModel = remember {
                             surahDetailModule.provideQuranTextViewModelFactory().create()
                         }
@@ -119,13 +120,94 @@ fun AppContent(
                             controller = navController
                         )
 
-                        SurahDetailScreen(name, number, deps, navController)
-                    })
+                        SurahDetailScreen(
+                            surahName = surahName,
+                            surahNumber = surahNumber,
+                            deps = deps,
+                            controller = navController
+                        )
+                    },
+                        // PageDetailScreen
+                        pageDetailScreen = { pageNumber, surahNumber, surahName, highlightAyah ->
+                            val quranTextViewModel = remember {
+                                surahDetailModule.provideQuranTextViewModelFactory().create()
+                            }
+                            val quranTranslationViewModel = remember {
+                                surahDetailModule.provideQuranTranslationViewModelFactory().create()
+                            }
+                            val screenContentViewModel = remember {
+                                surahDetailModule.provideScreenContentViewModelFactory().create()
+                            }
+                            val quranPageViewModel = remember {
+                                surahDetailModule.provideQuranPageViewModelFactory().create()
+                            }
+
+                            val deps = SurahDetailDependencies.Base(
+                                themeViewModel = themeViewModel,
+                                offlineViewModel = offlineViewModel,
+                                surahChooseViewModel = surahDetailModule.provideSurahChooseViewModelFactory()
+                                    .create(),
+                                surahDetailViewModel = surahDetailViewModel,
+                                quranTextViewModel = quranTextViewModel,
+                                surahPlayerViewModel = surahPlayerViewModel,
+                                quranTranslationViewModel = quranTranslationViewModel,
+                                screenContentViewModel = screenContentViewModel,
+                                quranPageViewModel = quranPageViewModel,
+                                controller = navController
+                            )
+
+                            SurahDetailScreen(
+                                pageNumber = pageNumber,
+                                surahName = surahName,
+                                surahNumber = surahNumber,
+                                deps = deps,
+                                controller = navController
+                            )
+                        },
+
+                        // JuzDetailScreen
+                        juzDetailScreen = { juzNumber, surahNumber, surahName, highlightAyah ->
+                            val quranTextViewModel = remember {
+                                surahDetailModule.provideQuranTextViewModelFactory().create()
+                            }
+                            val quranTranslationViewModel = remember {
+                                surahDetailModule.provideQuranTranslationViewModelFactory().create()
+                            }
+                            val screenContentViewModel = remember {
+                                surahDetailModule.provideScreenContentViewModelFactory().create()
+                            }
+                            val quranPageViewModel = remember {
+                                surahDetailModule.provideQuranPageViewModelFactory().create()
+                            }
+
+                            val deps = SurahDetailDependencies.Base(
+                                themeViewModel = themeViewModel,
+                                offlineViewModel = offlineViewModel,
+                                surahChooseViewModel = surahDetailModule.provideSurahChooseViewModelFactory()
+                                    .create(),
+                                surahDetailViewModel = surahDetailViewModel,
+                                quranTextViewModel = quranTextViewModel,
+                                surahPlayerViewModel = surahPlayerViewModel,
+                                quranTranslationViewModel = quranTranslationViewModel,
+                                screenContentViewModel = screenContentViewModel,
+                                quranPageViewModel = quranPageViewModel,
+                                controller = navController
+                            )
+
+                            SurahDetailScreen(
+                                juzNumber = juzNumber,
+                                surahName = surahName,
+                                surahNumber = surahNumber,
+                                deps = deps,
+                                controller = navController
+                            )
+                        })
                 }
             }
 
             if (currentRoute != Screen.SurahDetail.route) {
                 MainBottomAppBar(
+                    currentRoute = currentRoute,
                     modifier = Modifier
                         .align(Alignment.BottomCenter)
                         .windowInsetsPadding(WindowInsets.navigationBars),
@@ -151,6 +233,7 @@ fun AppContent(
             }
 
             PlayerDialogComponentGlobal(
+                navController = navController,
                 surahDetailViewModel = surahDetailViewModel,
                 surahPlayerViewModel = surahPlayerViewModel,
                 colors = colors,

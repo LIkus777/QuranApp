@@ -3,6 +3,7 @@ package com.zaur.features.surah.screen.surah_detail.player
 import com.zaur.domain.al_quran_cloud.models.audiofile.VerseAudio
 import com.zaur.features.surah.base.AudioPlayer
 import com.zaur.features.surah.manager.SurahDetailStateManager
+import com.zaur.features.surah.manager.SurahPlayerStateManager
 import com.zaur.features.surah.screen.surah_detail.SurahNavigationCallback
 import com.zaur.features.surah.screen.surah_detail.player.PlayerCommand.PauseCommand
 import com.zaur.features.surah.screen.surah_detail.player.PlayerCommand.PlayWholeChapterCommand
@@ -19,6 +20,7 @@ interface PlaybackController {
     fun stop()
     fun pause()
     fun toggleChapterPlayback()
+    fun toggleChapterPlaybackForNewSurah()
     fun playAtIndex(index: Int)
     fun playVerse(verse: VerseAudio)
     fun handleTrackEnd(nextIndex: Int, atEnd: Boolean)
@@ -33,10 +35,10 @@ interface PlaybackController {
         private val audioPlayerStateUpdater: AudioPlayerStateUpdater,
         private val playlistManager: PlaylistManager,
         private val audioPlaybackHelper: AudioPlaybackHelper,
-        private val surahDetailStateManager: SurahDetailStateManager, // Менеджер состояния плеера
+        private val surahPlayerStateManager: SurahPlayerStateManager, // Менеджер состояния плеера
     ) : PlaybackController {
 
-        private val state = surahDetailStateManager.surahDetailState()
+        private val playerState = surahPlayerStateManager.surahPlayerState()
 
         private var surahNavigationCallback: SurahNavigationCallback? = null
 
@@ -50,7 +52,7 @@ interface PlaybackController {
         }
 
         override fun playRelativeAyah(offset: Int) {
-            val currentIndex = state.value.audioPlayerState().currentAyah() - 1
+            val currentIndex = playerState.value.currentAyah() - 1
             val targetIndex = currentIndex + offset
             if (targetIndex in playlistManager.currentPlaylist().indices) {
                 playAtIndex(targetIndex)
@@ -61,7 +63,7 @@ interface PlaybackController {
             val playlist = playlistManager.currentPlaylist()
             if (index in playlist.indices) {
                 audioPlayerStateUpdater.setCurrentAyahAndSurah(
-                    surah = state.value.audioPlayerState().currentSurahNumber(), ayah = index
+                    surah = playerState.value.currentSurahNumber(), ayah = index
                 )
                 audioPlayerStateUpdater.markWholeChapterPlaying(
                     isAudioPlaying = true, playWholeChapter = true
@@ -71,7 +73,7 @@ interface PlaybackController {
         }
 
         override fun playVerse(verse: VerseAudio) {
-            if (state.value.audioPlayerState().restartAudio()) {
+            if (playerState.value.restartAudio()) {
                 audioPlayer.restartAudio()
             } else {
                 audioPlaybackHelper.play(verse)
@@ -83,8 +85,7 @@ interface PlaybackController {
             val items = playlistManager.currentPlaylist()
             if (items.isEmpty()) return
 
-            val stateValue = state.value.audioPlayerState()
-            val currentIndex = stateValue.currentAyah() - 1
+            val currentIndex = playerState.value.currentAyah() - 1
 
             val cmd = when {
                 !audioPlayer.isPlaying() && !audioPlayer.isPaused() -> PlayWholeChapterCommand(
@@ -94,6 +95,16 @@ interface PlaybackController {
                 audioPlayer.isPlaying() -> PauseCommand(audioPlayer, audioPlayerStateUpdater)
                 else -> ResumeCommand(audioPlayer, audioPlayerStateUpdater)
             }
+            cmd.execute()
+        }
+
+        override fun toggleChapterPlaybackForNewSurah() {
+            val items = playlistManager.currentPlaylist()
+            if (items.isEmpty()) return
+
+            val cmd = PlayWholeChapterCommand(
+                audioPlayer, audioPlayerStateUpdater, items, startIndex = 0
+            )
             cmd.execute()
         }
 

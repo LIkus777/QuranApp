@@ -11,10 +11,12 @@ import com.zaur.domain.al_quran_cloud.models.audiofile.VerseAudio
 import com.zaur.domain.al_quran_cloud.use_case.QuranAudioUseCase
 import com.zaur.features.surah.manager.ReciterManager
 import com.zaur.features.surah.manager.SurahDetailStateManager
+import com.zaur.features.surah.manager.SurahPlayerStateManager
 import com.zaur.features.surah.observables.SurahPlayerObservable
 import com.zaur.features.surah.screen.surah_detail.SurahNavigationCallback
 import com.zaur.features.surah.screen.surah_detail.player.SurahPlayer
 import com.zaur.features.surah.viewmodel.handlers.AudioResultHandler
+import com.zaur.presentation.ui.ui_state.SurahPlayerState
 import com.zaur.presentation.ui.ui_state.aqc.SurahPlayerUIState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.StateFlow
@@ -26,6 +28,8 @@ import kotlinx.coroutines.launch
  */
 
 interface SurahPlayerViewModel : SurahPlayerObservable.Read {
+
+    fun surahPlayerState(): StateFlow<SurahPlayerState>
 
     fun getReciter(): String?
     fun saveReciter(identifier: String)
@@ -43,18 +47,25 @@ interface SurahPlayerViewModel : SurahPlayerObservable.Read {
     fun onPreviousAyahClicked()
     fun onPreviousSurahClicked()
     fun onPlayWholeClicked()
+    fun onStopClicked()
+    fun playNewSurah(surahNumber: Int, reciter: String)
     fun onPlayVerse(verse: VerseAudio)
     fun onPlaySingleClicked(ayahNumber: Int, surahNumber: Int)
     fun seekTo(position: Long)
 
     fun clear()
 
-    fun getAudioSurahName(): String
-    fun setAudioSurahName(surahName: String)
+    fun getAudioSurahNameSharedPref(): String
+    fun setAudioSurahNameSharedPref(surahName: String)
     fun getLastPlayedSurah(): Int
     fun setLastPlayedSurah(surahNumber: Int)
     fun getLastPlayedAyah(): Int
     fun setLastPlayedAyah(ayahNumber: Int)
+
+    fun setAudioSurahName(name: String)
+    fun setAudioSurahNumber(surahNumber: Int)
+    fun setAudioSurahAyah(ayahInSurah: Int)
+    fun setOfflineMode(isOffline: Boolean)
 
     fun setSurahNavigationCallback(callback: SurahNavigationCallback)
 
@@ -65,15 +76,18 @@ interface SurahPlayerViewModel : SurahPlayerObservable.Read {
     class Base(
         private val surahPlayer: SurahPlayer,
         private val reciterManager: ReciterManager,
-        private val stateManager: SurahDetailStateManager,
+        private val surahDetailStateManager: SurahDetailStateManager,
+        private val surahPlayerStateManager: SurahPlayerStateManager,
         private val observable: SurahPlayerObservable.Mutable,
         private val quranAudioUseCase: QuranAudioUseCase,
     ) : BaseViewModel(), SurahPlayerViewModel {
 
+        override fun surahPlayerState(): StateFlow<SurahPlayerState> = surahPlayerStateManager.surahPlayerState()
+
         private val resultHandler = AudioResultHandler.Base(
             surahPlayer = surahPlayer,
             observable = observable,
-            stateManager = stateManager,
+            surahPlayerStateManager = surahPlayerStateManager,
             scope = viewModelScope,
             reciterManager = reciterManager
         )
@@ -82,7 +96,7 @@ interface SurahPlayerViewModel : SurahPlayerObservable.Read {
             surahPlayer.setQuranAudioVmCallback(object : SurahPlayerVmCallback {
                 override fun callVerseAudioFile(ayah: Int) {
                     val surahNumber =
-                        stateManager.surahDetailState().value.textState().currentSurahNumber()
+                        surahDetailStateManager.surahDetailState().value.textState().currentSurahNumber()
                     getAyahAudioByKey("$surahNumber:$ayah", getReciter().orEmpty())
                 }
             })
@@ -95,7 +109,7 @@ interface SurahPlayerViewModel : SurahPlayerObservable.Read {
             quranAudioUseCase.setLastPlayedAyah(ayahNumber)
             quranAudioUseCase.setLastPlayedSurah(surahNumber)
             quranAudioUseCase.setAudioSurahName(
-                stateManager.surahDetailState().value.audioPlayerState().surahName()
+                surahPlayerStateManager.surahPlayerState().value.surahName()
             )
             setLastPlayedSurah(surahNumber)
         }
@@ -105,25 +119,42 @@ interface SurahPlayerViewModel : SurahPlayerObservable.Read {
             setLastPlayedAyah(verse.numberInSurah().toInt())
             setLastPlayedSurah(verse.surah().number().toInt())
             quranAudioUseCase.setAudioSurahName(
-                stateManager.surahDetailState().value.audioPlayerState().surahName()
+                surahPlayerStateManager.surahPlayerState().value.surahName()
             )
         }
 
         override fun onPlayWholeClicked() {
             surahPlayer.onPlayWholeClicked()
-            val state = stateManager.surahDetailState().value
-            if (state.audioPlayerState().surahName() != "" && state.audioPlayerState()
-                    .currentSurahNumber() != 0 && state.audioPlayerState().currentAyah() != 0
+            val playerState = surahPlayerStateManager.surahPlayerState().value
+            val detailState = surahDetailStateManager.surahDetailState().value
+            if (playerState.surahName() != "" && playerState
+                    .currentSurahNumber() != 0 && playerState.currentAyah() != 0
             ) {
-                setLastPlayedAyah(state.audioPlayerState().currentAyah())
-                setLastPlayedSurah(state.audioPlayerState().currentSurahNumber())
-                setAudioSurahName(state.audioPlayerState().surahName())
+                setLastPlayedAyah(playerState.currentAyah())
+                setLastPlayedSurah(playerState.currentSurahNumber())
+                setAudioSurahNameSharedPref(playerState.surahName())
             } else {
-                setLastPlayedAyah(state.textState().currentAyah())
-                setLastPlayedSurah(state.textState().currentSurahNumber())
-                setAudioSurahName(state.textState().surahName())
+                setLastPlayedAyah(detailState.textState().currentAyah())
+                setLastPlayedSurah(detailState.textState().currentSurahNumber())
+                setAudioSurahNameSharedPref(detailState.textState().surahName())
             }
+        }
 
+        override fun onStopClicked() {
+            surahPlayer.onStopClicked()
+        }
+
+        override fun playNewSurah(surahNumber: Int, reciter: String) {
+            viewModelScope.launch(Dispatchers.IO) {
+                launchSafely {
+                    quranAudioUseCase.getChapterAudioOfReciter(surahNumber, reciter)
+                }.handle(object : HandleResult<ChapterAudioFile> {
+                    override fun handleSuccess(data: ChapterAudioFile) {
+                        Log.d("TAG", "playNewSurah: data $data")
+                        resultHandler.handleNewSurah(data)
+                    }
+                })
+            }
         }
 
         override fun getChaptersAudioOfReciter(surahNumber: Int, reciter: String) {
@@ -167,8 +198,8 @@ interface SurahPlayerViewModel : SurahPlayerObservable.Read {
 
         override fun clear() = surahPlayer.clear()
 
-        override fun getAudioSurahName(): String = quranAudioUseCase.getAudioSurahName()
-        override fun setAudioSurahName(surahName: String) =
+        override fun getAudioSurahNameSharedPref(): String = quranAudioUseCase.getAudioSurahName()
+        override fun setAudioSurahNameSharedPref(surahName: String) =
             quranAudioUseCase.setAudioSurahName(surahName)
 
         override fun getLastPlayedSurah(): Int = quranAudioUseCase.getLastPlayedSurah()
@@ -178,6 +209,22 @@ interface SurahPlayerViewModel : SurahPlayerObservable.Read {
         override fun getLastPlayedAyah(): Int = quranAudioUseCase.getLastPlayedAyah()
         override fun setLastPlayedAyah(ayahNumber: Int) =
             quranAudioUseCase.setLastPlayedAyah(ayahNumber)
+
+        override fun setAudioSurahName(name: String) {
+            surahPlayerStateManager.setAudioSurahName(name)
+        }
+        
+        override fun setAudioSurahNumber(surahNumber: Int) {
+            surahPlayerStateManager.setAudioSurahNumber(surahNumber)
+        }
+
+        override fun setAudioSurahAyah(ayahInSurah: Int) {
+            surahPlayerStateManager.setAudioSurahAyah(ayahInSurah)
+        }
+
+        override fun setOfflineMode(isOffline: Boolean) {
+            surahPlayerStateManager.setOfflineMode(isOffline)
+        }
 
         override fun setSurahNavigationCallback(callback: SurahNavigationCallback) {
             surahPlayer.setSurahNavigationCallback(callback)

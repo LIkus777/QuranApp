@@ -10,10 +10,6 @@ import com.zaur.presentation.ui.QuranColors
  * @since 22.05.2025
  */
 
-interface SurahAndAyahClickListener {
-    fun onClick(surahNumber: Int, ayahNumber: Int)
-}
-
 @Composable
 fun PlayerDialogComponent(
     colors: QuranColors,
@@ -22,18 +18,19 @@ fun PlayerDialogComponent(
 ) {
     with(uiData) {
         with(deps) {
-            with(surahDetailState()) {
-                val surahNumber = audioPlayerState().currentSurahNumber()
+            with(surahPlayerState()) {
+                val surahNumber = currentSurahNumber()
                 PlayerDialog(
-                    soundDuration = audioPlayerState().duration(),
-                    soundPosition = audioPlayerState().position(),
+                    soundDuration = duration(),
+                    soundPosition = position(),
                     colors = colors,
-                    surahName = audioPlayerState().surahName(),
-                    ayahNumber = audioPlayerState().currentAyah(),
+                    surahName = surahName(),
+                    ayahNumber = currentAyah(),
                     surahNumber = surahNumber,
-                    reciterName = reciterState().currentReciterName(),
-                    showSheet = bottomSheetState().showPlayerBottomSheet(),
-                    isPlaying = audioPlayerState().isAudioPlaying(),
+                    reciterName = uiData.surahDetailState().reciterState().currentReciterName(),
+                    showSheet = uiData.surahDetailState().bottomSheetState()
+                        .showPlayerBottomSheet(),
+                    isPlaying = isAudioPlaying(),
                     onPlayClicked = {
                         surahPlayerViewModel().onPlayWholeClicked()
                     },
@@ -50,7 +47,6 @@ fun PlayerDialogComponent(
                         surahPlayerViewModel().onPreviousSurahClicked()
                     },
                     onSeekRequested = { newPosMs ->
-                        // здесь вызываем метод плеера, который вы в себе реализуете, например:
                         surahPlayerViewModel().seekTo(newPosMs)
                     },
                     onSurahAndAyahClicked = {

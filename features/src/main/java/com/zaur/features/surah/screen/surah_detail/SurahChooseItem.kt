@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -31,13 +30,12 @@ import androidx.compose.ui.unit.sp
 import com.zaur.domain.al_quran_cloud.models.chapter.RevelationType
 import com.zaur.presentation.R
 import com.zaur.presentation.ui.DarkThemeColors
-import com.zaur.presentation.ui.LightThemeColors
 import com.zaur.presentation.ui.QuranColors
 
 /**
-* @author Zaur
-* @since 2025-05-12
-*/
+ * @author Zaur
+ * @since 2025-05-12
+ */
 
 @Preview(showBackground = true)
 @Composable
@@ -48,17 +46,21 @@ fun SurahChooseItem(
     numberOfAyats: Int = 100,
     revelationType: RevelationType = RevelationType.Meccan,
     colors: QuranColors = DarkThemeColors,
+    isCurrent: Boolean = true,
     modifier: Modifier = Modifier,
 ) {
+    // Если это «текущая» сура, фон задаём светло-серым, иначе – стандартный colors.cardBackground
+    val backgroundColor = if (isCurrent) Color(0xFFE0E0E0) else colors.cardBackground
+
     Row(
         modifier = modifier
             .width(LocalConfiguration.current.screenWidthDp.dp / 1.5f)
             .height(IntrinsicSize.Min)
-            .background(colors.cardBackground),
+            .background(backgroundColor),   // <-- здесь меняем фон
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Absolute.Left
     ) {
-        // Прямоугольник с номером суры
+        // Существующий код отрисовки номера, названия и т.д.
         Box(
             modifier = Modifier
                 .size(45.dp)
@@ -79,19 +81,20 @@ fun SurahChooseItem(
 
         Spacer(modifier = Modifier.width(2.dp))
 
-        Column(modifier = Modifier
-            .padding(start = 10.dp, top = 6.dp, bottom = 6.dp)
-            .fillMaxHeight()) {
+        Column(
+            modifier = Modifier
+                .padding(start = 10.dp, top = 6.dp, bottom = 6.dp)
+                .fillMaxHeight()
+        ) {
             Text(
-                modifier = Modifier.height(20.dp),
-                text = englishName, style = TextStyle(
+                modifier = Modifier.height(20.dp), text = englishName, style = TextStyle(
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Thin,
                     fontFamily = FontFamily(
                         Font(R.font.noto_medium)
                     ),
                     letterSpacing = 0.5.sp,
-                    color = colors.textPrimary, // Синий цвет ссылки
+                    color = colors.textPrimary,
                 )
             )
             Text(

@@ -88,15 +88,16 @@ interface QuranTextViewModel : QuranTextObservable.Read {
 
         override fun getLastReadSurah(): Int = quranTextUseCase.getLastReadSurah()
 
-        override fun getLastReadAyahPosition(chapterNumber: Int): Int =
-            quranTextUseCase.getLastReadAyahPosition(chapterNumber)
-
         override fun saveLastReadAyahPosition(chapterNumber: Int, ayahNumber: Int) {
-            Log.d(
-                "TAG", "saveLastReadPosition: chapterNumber $chapterNumber, ayahNumber $ayahNumber"
-            )
+            Log.d("DEBUG_AYAH", "SAVE: chapter=$chapterNumber, ayah=$ayahNumber")
             quranTextUseCase.saveLastReadAyahPosition(chapterNumber, ayahNumber)
             stateManager.setAyahInText(ayahNumber)
+        }
+
+        override fun getLastReadAyahPosition(chapterNumber: Int): Int {
+            val result = quranTextUseCase.getLastReadAyahPosition(chapterNumber)
+            Log.d("DEBUG_AYAH", "LOAD: chapter=$chapterNumber, ayahLoaded=$result")
+            return result
         }
 
     }

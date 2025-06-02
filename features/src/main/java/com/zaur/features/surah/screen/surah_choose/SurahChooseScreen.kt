@@ -31,6 +31,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.zaur.data.al_quran_aqc.utils.getFirstAyaOfJuz
+import com.zaur.data.al_quran_aqc.utils.getSurahName
+import com.zaur.data.al_quran_aqc.utils.pageToSurahMap
 import com.zaur.features.surah.viewmodel.SurahChooseViewModel
 import com.zaur.features.surah.viewmodel.ThemeViewModel
 import com.zaur.navigation.Screen
@@ -136,29 +139,48 @@ fun SurahChooseScreen(
         colors = colors,
         onDismiss = { showPicker = false },
         onPageSelected = { pageNumber ->
-            /*navController.navigate(Screen.PageDetail.createRoute(pageNumber)) {
+            val (surahNum, surahNameRu) = pageToSurahMap[pageNumber]!!
+            navController.navigate(
+                Screen.PageDetail.createRoute(
+                    pageNumber = pageNumber,
+                    surahNumber = surahNum,
+                    surahName = surahNameRu,
+                    highlightAyah = 0
+                )
+            ) {
                 popUpTo(Screen.PageDetail.route) { inclusive = true }
                 launchSingleTop = true
-            }*/
+            }
         },
         onSurahAndAyahSelected = { surahNumber, ayahNumber ->
-            /*val engName = surahChooseViewModel.getEnglishName(surahNumber)
+            val surahName = getSurahName(surahNumber)
             navController.navigate(
                 Screen.SurahDetail.createRoute(
                     surahNumber = surahNumber,
-                    surahName = engName,
+                    surahName = surahName,
                     highlightAyah = ayahNumber
                 )
             ) {
                 popUpTo(Screen.SurahDetail.route) { inclusive = true }
                 launchSingleTop = true
-            }*/
+            }
         },
         onJuzSelected = { juzNumber ->
-            /*navController.navigate(Screen.JuzDetail.createRoute(juzNumber)) {
+            val firstAya = getFirstAyaOfJuz(juzNumber)
+            val surahNum = firstAya.surahNumber.toInt()
+            val surahName = getSurahName(surahNum)
+            val ayahNum = firstAya.numberInSurah.toInt()
+            navController.navigate(
+                Screen.JuzDetail.createRoute(
+                    juzNumber = juzNumber,
+                    surahNumber = surahNum,
+                    surahName = surahName,
+                    highlightAyah = ayahNum
+                )
+            ) {
                 popUpTo(Screen.JuzDetail.route) { inclusive = true }
                 launchSingleTop = true
-            }*/
+            }
         }
     )
 }

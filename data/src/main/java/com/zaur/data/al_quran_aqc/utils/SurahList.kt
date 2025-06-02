@@ -367,13 +367,57 @@ val surahNamesRuList = listOf(
 //    Тогда номер суры = surahIndex + 1, название = surahNamesRuList[surahIndex].
 val pageToSurahMap: Map<Int, Pair<Int, String>> = buildMap {
     for (page in 1..604) {
-        val surahIndex = surahStartPages.indexOfLast { it <= page }
-        val surahNumber = surahIndex + 1
-        val surahNameRu = surahNamesRuList[surahIndex]
+        val index = surahStartPages.indexOfLast { it <= page }
+        val surahNumber = index + 1
+        val surahNameRu = surahNamesRuList[index]
         put(page, surahNumber to surahNameRu)
     }
 }
 
+// 30 границ джузов: (surahNumber, ayahInSurah)
+val firstAyahOfJuz = listOf(
+    SimpleAyah(1, 1),    // Juz  1: Сура1 Айя1
+    SimpleAyah(2, 142),  // Juz  2: Сура2 Айя142
+    SimpleAyah(2, 253),  // Juz  3: Сура2 Айя253
+    SimpleAyah(3, 93),   // Juz  4: Сура3 Айя92
+    SimpleAyah(4, 24),   // Juz  5: Сура4 Айя24
+    SimpleAyah(4, 148),  // Juz  6: Сура4 Айя148
+    SimpleAyah(5, 82),   // Juz  7: Сура5 Айя82
+    SimpleAyah(6, 111),  // Juz  8: Сура6 Айя111
+    SimpleAyah(7, 88),   // Juz  9: Сура7 Айя88
+    SimpleAyah(8, 41),   // Juz 10: Сура8 Айя41
+    SimpleAyah(9, 93),   // Juz 11: Сура9 Айя93
+    SimpleAyah(11, 6),   // Juz 12: Сура11 Айя6
+    SimpleAyah(12, 53),  // Juz 13: Сура12 Айя53
+    SimpleAyah(15, 1),   // Juz 14: Сура15 Айя1
+    SimpleAyah(17, 1),  // Juz 15: Сура16 Айя75
+    SimpleAyah(18, 75),   // Juz 16: Сура18 Айя1
+    SimpleAyah(21, 1),   // Juz 17: Сура21 Айя1
+    SimpleAyah(23, 1),   // Juz 18: Сура23 Айя1
+    SimpleAyah(25, 21),  // Juz 19: Сура25 Айя21
+    SimpleAyah(27, 56),  // Juz 20: Сура27 Айя56
+    SimpleAyah(29, 46),  // Juz 21: Сура29 Айя46
+    SimpleAyah(33, 31),  // Juz 22: Сура33 Айя31
+    SimpleAyah(36, 28),  // Juz 23: Сура36 Айя28
+    SimpleAyah(39, 32),  // Juz 24: Сура39 Айя32
+    SimpleAyah(41, 47),  // Juz 25: Сура41 Айя47
+    SimpleAyah(46, 1),   // Juz 26: Сура46 Айя1
+    SimpleAyah(51, 31),  // Juz 27: Сура51 Айя31
+    SimpleAyah(58, 1),   // Juz 28: Сура58 Айя1
+    SimpleAyah(67, 1),   // Juz 29: Сура67 Айя1
+    SimpleAyah(78, 1)    // Juz 30: Сура78 Айя1
+)
+
+fun getSurahName(surahNumber: Int): String {
+    return surahNamesRuList.getOrNull(surahNumber - 1) ?: ""
+}
+
+fun getFirstAyaOfJuz(juzNumber: Int): SimpleAyah {
+    // juzNumber от 1 до 30
+    return firstAyahOfJuz.getOrElse(juzNumber - 1) { SimpleAyah(1, 1) }
+}
+
+data class SimpleAyah(val surahNumber: Long, val numberInSurah: Long)
 // --- Пример использования при навигации: ---
 /*
 fun goToPage(pageNumber: Int, navController: NavHostController) {

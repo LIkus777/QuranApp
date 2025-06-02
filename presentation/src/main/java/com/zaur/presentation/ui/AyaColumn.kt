@@ -2,6 +2,7 @@ package com.zaur.presentation.ui
 
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import com.zaur.domain.al_quran_cloud.models.arabic.Ayah
 import com.zaur.presentation.ui.ui_state.AyaListItem
@@ -34,14 +35,18 @@ fun AyaColumn(
     // 1) получаем начальный аят
     val currentTextAyah = surahPlayerState.currentAyah()
 
-    // 2) state для Ленивая колонка
+    // Вычисляем, сколько у нас хедеров перед аятами:
+    val headerCount = if (chapterNumber != 9) 1 else 0
+
+    // При создании состояния с учётом смещённого индекса:
     val listState = remember(ayats) {
-        LazyListState(currentTextAyah)
+        LazyListState(firstVisibleItemIndex = currentTextAyah + headerCount)
     }
 
     when (state) {
         is AyaListItem.Loading -> state.Render()
         is AyaListItem.AyahListItem -> state.Render(
+            headerCount = headerCount,
             isCurrentSurah = isCurrentSurah,
             chapterNumber = chapterNumber,
             surahDetailState = surahDetailState,

@@ -55,7 +55,8 @@ fun rememberSurahDetailUiData(
             setTextSurahName(surahName)
             setTextSurahNumber(chapterNumber)
 
-            setAyahInText(textVm.getLastReadAyahPosition(chapterNumber))
+            val savedTextAyah = textVm.getLastReadAyahPosition(chapterNumber)  // = 1
+            detailVm.setAyahInText(savedTextAyah)
 
             fontSizeArabic(textVm.getFontSizeArabic())
             fontSizeRussian(textVm.getFontSizeRussian())

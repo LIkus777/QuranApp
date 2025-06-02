@@ -1,5 +1,6 @@
 package com.zaur.presentation.ui.ui_state
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -35,6 +36,7 @@ import com.zaur.presentation.ui.QuranColors
 import com.zaur.presentation.ui.removeBasmala
 import com.zaur.presentation.ui.ui_state.aqc.SurahDetailScreenState
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlin.compareTo
 
 /**
  * @author Zaur
@@ -47,6 +49,7 @@ interface AyaListItem {
 
     @Composable
     fun Render(
+        headerCount: Int,
         isCurrentSurah: Boolean,
         chapterNumber: Int,
         surahDetailState: SurahDetailScreenState,
@@ -58,7 +61,7 @@ interface AyaListItem {
         onAyahItemChanged: (Int) -> Unit,
         onPageItemChanged: (Int) -> Unit,
         onClickSound: (Int, Int) -> Unit,
-        onListenSurahClicked: () -> Unit,                                        // ← новый колбэк
+        onListenSurahClicked: () -> Unit,
         translations: List<com.zaur.domain.al_quran_cloud.models.translate.Ayah.Base>,
     ): Unit = Unit
 
@@ -76,6 +79,7 @@ interface AyaListItem {
     object AyahListItem : AyaListItem {
         @Composable
         override fun Render(
+            headerCount: Int,
             isCurrentSurah: Boolean,
             chapterNumber: Int,
             surahDetailState: SurahDetailScreenState,
@@ -87,15 +91,17 @@ interface AyaListItem {
             onAyahItemChanged: (Int) -> Unit,
             onPageItemChanged: (Int) -> Unit,
             onClickSound: (Int, Int) -> Unit,
-            onListenSurahClicked: () -> Unit,                                        // ← получили колбэк
-            translations: List<com.zaur.domain.al_quran_cloud.models.translate.Ayah.Base>,
+            onListenSurahClicked: () -> Unit,
+            translations: List<com.zaur.domain.al_quran_cloud.models.translate.Ayah.Base>
         ) {
             val currentAudioAyah = surahPlayerState.currentAyah()
 
             // 1) Скролл при изменении текущего аята
             LaunchedEffect(currentAudioAyah) {
                 if (currentAudioAyah > 0 && isCurrentSurah) {
-                    listState.animateScrollToItem(currentAudioAyah)
+                    Log.i("TAG", "Render: IF CALLED $currentAudioAyah")
+                    // Тоже отдаем реальный индекс с учётом двух “хедеров”:
+                    listState.animateScrollToItem(currentAudioAyah + headerCount)
                 }
             }
 

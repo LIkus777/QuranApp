@@ -61,6 +61,12 @@ fun ScreenContent(
                         ayats = textState().currentArabicText().ayahs(),
                         onAyahItemChanged = { index ->
                             quranTextViewModel().saveLastReadAyahPosition(chapterNumber, index)
+                            /*surahPlayerViewModel().setLastPlayedAyah(
+                                index
+                            )
+                            surahPlayerViewModel().setLastPlayedSurah(
+                                chapterNumber
+                            )*/
                         },
                         onPageItemChanged = { page ->
                             quranPageViewModel().saveLastReadPagePosition(page)

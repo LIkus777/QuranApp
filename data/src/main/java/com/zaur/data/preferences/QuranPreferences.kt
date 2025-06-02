@@ -1,6 +1,7 @@
 package com.zaur.data.preferences
 
 import android.content.Context
+import android.util.Log
 import com.zaur.core.QuranSharedPrefKeys
 import com.zaur.domain.storage.QuranStorage
 
@@ -54,11 +55,13 @@ class QuranPreferences(context: Context) : QuranStorage {
 
     override fun getLastReadAyahPosition(chapterNumber: Int): Int {
         val key = "${QuranSharedPrefKeys.LAST_READ_AYAH}_$chapterNumber"
+        Log.i("TAG", "getLastReadAyahPosition: chapterNumber $chapterNumber ayahNumber ${sharedPreferences.getInt(key, 1)}")
         return sharedPreferences.getInt(key, 1)
     }
 
     override fun saveLastReadAyahPosition(chapterNumber: Int, ayahNumber: Int) {
         val key = "${QuranSharedPrefKeys.LAST_READ_AYAH}_$chapterNumber"
+        Log.i("TAG", "saveLastReadAyahPosition: chapterNumber $chapterNumber ayahNumber $ayahNumber")
         sharedPreferences.edit().putInt(key, ayahNumber).apply()
     }
 

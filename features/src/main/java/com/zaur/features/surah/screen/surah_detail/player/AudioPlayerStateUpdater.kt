@@ -79,6 +79,7 @@ interface AudioPlayerStateUpdater {
 
         override fun setCurrentAyahAndSurah(surah: Int, ayah: Int) {
             surahDetailStateManager.updateAyahAndSurah(ayah, surah)
+            surahPlayerStateManager.updateAyahAndSurah(ayah, surah)
         }
     }
 }

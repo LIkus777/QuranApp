@@ -23,6 +23,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.zaur.features.surah.screen.surah_detail.dialogs.ChooseReciterDialog
+import com.zaur.features.surah.screen.surah_detail.dialogs.ChooseTranslationDialog
 import com.zaur.features.surah.viewmodel.MainViewModel
 import com.zaur.features.surah.viewmodel.ThemeViewModel
 import com.zaur.navigation.Screen
@@ -39,40 +40,60 @@ fun MainScreen(
     mainViewModel: MainViewModel,
 ) {
     val mainState by mainViewModel.quranState().collectAsState()
-    var showReciterDialog by rememberSaveable { mutableStateOf(mainViewModel.getReciter() == null) }
-    var showTranslatorDialog by rememberSaveable { mutableStateOf(mainViewModel.getReciter() == null) }
+
+    val reciterExists = mainViewModel.getReciter() != null
+    val translatorExists = mainViewModel.getTranslator().toString().isNotBlank()
+
+    var showReciterDialog by rememberSaveable { mutableStateOf(!reciterExists) }
+    var showTranslatorDialog by rememberSaveable { mutableStateOf(reciterExists && !translatorExists) }
     var showLoader by rememberSaveable { mutableStateOf(false) }
-    themeViewModel.themeState().collectAsState().value.isDarkTheme
 
-    // Dialog to pick reciter once
-    if (showReciterDialog) {
-        ChooseReciterDialog(showDialog = true, onSelect = { id ->
-            mainViewModel.saveReciter(id)
-            showReciterDialog = false
+    LaunchedEffect(reciterExists, translatorExists, mainState) {
+        if (reciterExists && translatorExists && !(mainState.isChaptersLoaded && mainState.isChaptersArabicsLoaded && mainState.isChaptersTranslationsLoaded)) {
             showLoader = true
-            // start loading all data
-            mainViewModel.loadQuranData()
-            mainViewModel.loadChaptersArabic()
-            //mainViewModel.loadChaptersAudio(reciter = id)
-            mainViewModel.loadChaptersTranslate(translator = "ru.kuliev")
-        })
+            if (!mainState.isChaptersLoaded) {
+                mainViewModel.loadQuranData()
+            }
+            if (!mainState.isChaptersArabicsLoaded) {
+                mainViewModel.loadChaptersArabic()
+            }
+            if (!mainState.isChaptersTranslationsLoaded) {
+                mainViewModel.loadChaptersTranslate(translator = mainViewModel.getTranslator().toString())
+            }
+        }
     }
 
-    if (showTranslatorDialog) {
-
-    }
-
-    // Show loading until all parts are loaded
-    if (showLoader) {
-        QuranDataLoadingUI(mainState)
-        // Navigate when done
-    }
-
-    if (/*mainState.isChaptersLoaded && mainState.isChaptersArabicsLoaded && mainState.isChaptersTranslationsLoaded*/true) {
+    if (mainState.isChaptersLoaded && mainState.isChaptersArabicsLoaded && mainState.isChaptersTranslationsLoaded) {
         LaunchedEffect(Unit) {
             Log.i("MainScreen", "All data loaded, navigating...")
             navController.navigate(Screen.SurahChoose.route)
         }
+        return
+    }
+
+    if (showReciterDialog) {
+        ChooseReciterDialog(showDialog = true, onSelect = { id ->
+            if (!id.isNullOrEmpty()) {
+                mainViewModel.saveReciter(id)
+                showReciterDialog = false
+                if (mainViewModel.getTranslator().toString().isBlank()) {
+                    showTranslatorDialog = true
+                }
+            }
+        })
+    }
+
+    if (showTranslatorDialog && !showReciterDialog) {
+        ChooseTranslationDialog(showDialog = true, onSelect = { id ->
+            if (!id.isNullOrEmpty()) {
+                mainViewModel.saveTranslator(id)
+                showTranslatorDialog = false
+            }
+        })
+    }
+
+    if (showLoader) {
+        QuranDataLoadingUI(mainState)
     }
 }
 

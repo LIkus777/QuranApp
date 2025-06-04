@@ -5,33 +5,36 @@ import com.google.gson.annotations.SerializedName
 import com.zaur.domain.base.SajdaAdapter
 
 /**
-* @author Zaur
-* @since 2025-05-12
-*/
+ * @author Zaur
+ * @since 2025-05-12
+ */
 
 interface ArabicChaptersAqc {
 
-    fun arabicChapters(): ArabicChapter.Base
-
-    fun <T> map(mapper: Mapper<T>): T
+    fun arabicChapters(): DataWithSurahs.Base
 
     class Base(
         @SerializedName("code") private val code: Long,
         @SerializedName("status") private val status: String,
-        @SerializedName("data") private val arabicChapters: ArabicChapter.Base,
+        //@SerializedName("data") private val arabicChapters: ArabicChapter.Base,
+        @SerializedName("data") private val arabicChapters: DataWithSurahs.Base,
     ) : ArabicChaptersAqc {
-        override fun arabicChapters(): ArabicChapter.Base = arabicChapters
-
-        override fun <T> map(mapper: Mapper<T>): T = mapper.map(code, status, arabicChapters)
+        override fun arabicChapters(): DataWithSurahs.Base = arabicChapters
     }
+}
 
-    interface Mapper<T> {
+interface DataWithSurahs {
 
-        fun map(
-            code: Long,
-            status: String,
-            arabicChapters: ArabicChapter,
-        ): T
+    fun surahs(): List<ArabicChapter.Base>
+    fun edition(): EditionArabic.Base
+
+    class Base(
+        @SerializedName("surahs") private val surahs: List<ArabicChapter.Base>,
+
+        @SerializedName("edition") private val edition: EditionArabic.Base,
+    ) : DataWithSurahs {
+        override fun surahs(): List<ArabicChapter.Base> = surahs
+        override fun edition(): EditionArabic.Base = edition
     }
 }
 
@@ -42,9 +45,7 @@ interface ArabicChapter {
     fun englishName(): String
     fun englishNameTranslation(): String
     fun revelationType(): String
-    fun numberOfAyahs(): Long
     fun ayahs(): List<Ayah.Base>
-    fun edition(): EditionArabic
 
     fun <T> map(mapper: Mapper<T>): T
 
@@ -54,9 +55,7 @@ interface ArabicChapter {
         @SerializedName("englishName") private val englishName: String,
         @SerializedName("englishNameTranslation") private val englishNameTranslation: String,
         @SerializedName("revelationType") private val revelationType: String,
-        @SerializedName("numberOfAyahs") private val numberOfAyahs: Long,
         @SerializedName("ayahs") private val ayahs: List<Ayah.Base>,
-        @SerializedName("edition") private val edition: EditionArabic.Base,
     ) : ArabicChapter {
 
         override fun number() = number
@@ -64,19 +63,10 @@ interface ArabicChapter {
         override fun englishName() = englishName
         override fun englishNameTranslation() = englishNameTranslation
         override fun revelationType() = revelationType
-        override fun numberOfAyahs() = numberOfAyahs
         override fun ayahs() = ayahs
-        override fun edition() = edition
 
         override fun <T> map(mapper: Mapper<T>): T = mapper.map(
-            number,
-            name,
-            englishName,
-            englishNameTranslation,
-            revelationType,
-            numberOfAyahs,
-            ayahs,
-            edition
+            number, name, englishName, englishNameTranslation, revelationType, ayahs
         )
     }
 
@@ -87,9 +77,7 @@ interface ArabicChapter {
             englishName: String,
             englishNameTranslation: String,
             revelationType: String,
-            numberOfAyahs: Long,
             ayahs: List<Ayah>,
-            edition: EditionArabic,
         ): T
     }
 
@@ -99,12 +87,9 @@ interface ArabicChapter {
         override fun englishName(): String = ""
         override fun englishNameTranslation(): String = ""
         override fun revelationType(): String = ""
-        override fun numberOfAyahs(): Long = 0
         override fun ayahs(): List<Ayah.Base> = emptyList()
-        override fun edition(): EditionArabic = EditionArabic.Empty
         override fun <T> map(mapper: Mapper<T>): T = mapper.map(
-            number(), name(), englishName(), englishNameTranslation(),
-            revelationType(), numberOfAyahs(), ayahs(), edition()
+            number(), name(), englishName(), englishNameTranslation(), revelationType(), ayahs()
         )
     }
 }
@@ -123,7 +108,7 @@ interface Ayah {
 
     fun <T> map(mapper: Mapper<T>): T
 
-    class Base(
+    data class Base(
         @SerializedName("number") private val number: Long,
         @SerializedName("text") private val text: String,
         @SerializedName("numberInSurah") private val numberInSurah: Long,
@@ -162,6 +147,30 @@ interface Ayah {
             sajda: Boolean,
         ): T
     }
+
+    object Empty : Ayah {
+        override fun number(): Long = 0
+        override fun text(): String = ""
+        override fun numberInSurah(): Long = 0
+        override fun juz(): Long = 0
+        override fun manzil(): Long = 0
+        override fun page(): Long = 0
+        override fun ruku(): Long = 0
+        override fun hizbQuarter(): Long = 0
+        override fun sajda(): Boolean = false
+
+        override fun <T> map(mapper: Mapper<T>): T = mapper.map(
+            number(),
+            text(),
+            numberInSurah(),
+            juz(),
+            manzil(),
+            page(),
+            ruku(),
+            hizbQuarter(),
+            sajda()
+        )
+    }
 }
 
 interface EditionArabic {
@@ -172,30 +181,26 @@ interface EditionArabic {
     fun englishName(): String
     fun format(): String
     fun type(): String
-    fun direction(): String
 
     fun <T> map(mapper: Mapper<T>): T
 
-    class Base(
+    data class Base(
         @SerializedName("identifier") private val identifier: String,
         @SerializedName("language") private val language: String,
         @SerializedName("name") private val name: String,
         @SerializedName("englishName") private val englishName: String,
         @SerializedName("format") private val format: String,
         @SerializedName("type") private val type: String,
-        @SerializedName("direction") private val direction: String,
     ) : EditionArabic {
-
         override fun identifier() = identifier
         override fun language() = language
         override fun name() = name
         override fun englishName() = englishName
         override fun format() = format
         override fun type() = type
-        override fun direction() = direction
 
         override fun <T> map(mapper: Mapper<T>): T =
-            mapper.map(identifier, language, name, englishName, format, type, direction)
+            mapper.map(identifier, language, name, englishName, format, type)
     }
 
     interface Mapper<T> {
@@ -206,7 +211,6 @@ interface EditionArabic {
             englishName: String,
             format: String,
             type: String,
-            direction: String,
         ): T
     }
 
@@ -217,10 +221,9 @@ interface EditionArabic {
         override fun englishName(): String = ""
         override fun format(): String = ""
         override fun type(): String = ""
-        override fun direction(): String = ""
 
         override fun <T> map(mapper: Mapper<T>): T = mapper.map(
-            identifier(), language(), name(), englishName(), format(), type(), direction()
+            identifier(), language(), name(), englishName(), format(), type()
         )
     }
 }

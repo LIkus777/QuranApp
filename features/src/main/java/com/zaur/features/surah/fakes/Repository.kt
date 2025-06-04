@@ -126,6 +126,30 @@ class FakeQuranStorage() : QuranStorage {
     override fun isSurahScreenOpened(): Boolean {
         TODO("Not yet implemented")
     }
+
+    override fun isChaptersLoaded(): Boolean {
+        TODO("Not yet implemented")
+    }
+
+    override fun markChaptersLoaded() {
+        TODO("Not yet implemented")
+    }
+
+    override fun isArabicsLoaded(): Boolean {
+        TODO("Not yet implemented")
+    }
+
+    override fun markArabicsLoaded() {
+        TODO("Not yet implemented")
+    }
+
+    override fun isTranslationsLoaded(): Boolean {
+        TODO("Not yet implemented")
+    }
+
+    override fun markTranslationsLoaded() {
+        TODO("Not yet implemented")
+    }
 }
 
 class FakeQTextRLocal : QuranTextRepository.Local {

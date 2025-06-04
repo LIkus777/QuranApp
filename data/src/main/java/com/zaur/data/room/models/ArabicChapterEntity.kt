@@ -9,9 +9,9 @@ import com.zaur.data.room.converters.GenericConverters
 import com.zaur.domain.base.SajdaAdapter
 
 /**
-* @author Zaur
-* @since 2025-05-12
-*/
+ * @author Zaur
+ * @since 2025-05-12
+ */
 
 interface ArabicChapterEntity {
 
@@ -24,9 +24,7 @@ interface ArabicChapterEntity {
         @SerializedName("englishName") val englishName: String,
         @SerializedName("englishNameTranslation") val englishNameTranslation: String,
         @SerializedName("revelationType") val revelationType: String,
-        @SerializedName("numberOfAyahs") val numberOfAyahs: Long,
         @TypeConverters(GenericConverters::class) @SerializedName("ayahs") val ayahs: List<ArabicAyahEntity.Base>,
-        @TypeConverters(GenericConverters::class) @SerializedName("edition") val edition: EditionArabicEntity.Base,
     ) : ArabicChapterEntity {
 
         override fun <T> map(mapper: Mapper<T>): T = mapper.map(
@@ -35,9 +33,7 @@ interface ArabicChapterEntity {
             englishName,
             englishNameTranslation,
             revelationType,
-            numberOfAyahs,
             ayahs,
-            edition
         )
     }
 
@@ -48,9 +44,7 @@ interface ArabicChapterEntity {
             englishName: String,
             englishNameTranslation: String,
             revelationType: String,
-            numberOfAyahs: Long,
             ayahs: List<ArabicAyahEntity>,
-            edition: EditionArabicEntity,
         ): T
     }
 
@@ -120,7 +114,6 @@ interface EditionArabicEntity {
     fun englishName(): String
     fun format(): String
     fun type(): String
-    fun direction(): String
 
     fun <T> map(mapper: Mapper<T>): T
 
@@ -131,7 +124,6 @@ interface EditionArabicEntity {
         @SerializedName("englishName") val englishName: String,
         @SerializedName("format") val format: String,
         @SerializedName("type") val type: String,
-        @SerializedName("direction") val direction: String,
     ) : EditionArabicEntity {
 
         override fun identifier() = identifier
@@ -140,10 +132,9 @@ interface EditionArabicEntity {
         override fun englishName() = englishName
         override fun format() = format
         override fun type() = type
-        override fun direction() = direction
 
         override fun <T> map(mapper: Mapper<T>): T = mapper.map(
-            identifier, language, name, englishName, format, type, direction
+            identifier, language, name, englishName, format, type
         )
     }
 
@@ -155,7 +146,6 @@ interface EditionArabicEntity {
             englishName: String,
             format: String,
             type: String,
-            direction: String,
         ): T
     }
 }

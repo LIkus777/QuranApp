@@ -2,6 +2,7 @@ package com.zaur.data.preferences
 
 import android.content.Context
 import android.util.Log
+import com.zaur.core.DataPrefs
 import com.zaur.core.QuranSharedPrefKeys
 import com.zaur.domain.storage.QuranStorage
 
@@ -55,13 +56,21 @@ class QuranPreferences(context: Context) : QuranStorage {
 
     override fun getLastReadAyahPosition(chapterNumber: Int): Int {
         val key = "${QuranSharedPrefKeys.LAST_READ_AYAH}_$chapterNumber"
-        Log.i("TAG", "getLastReadAyahPosition: chapterNumber $chapterNumber ayahNumber ${sharedPreferences.getInt(key, 1)}")
+        Log.i(
+            "TAG", "getLastReadAyahPosition: chapterNumber $chapterNumber ayahNumber ${
+                sharedPreferences.getInt(
+                    key, 1
+                )
+            }"
+        )
         return sharedPreferences.getInt(key, 1)
     }
 
     override fun saveLastReadAyahPosition(chapterNumber: Int, ayahNumber: Int) {
         val key = "${QuranSharedPrefKeys.LAST_READ_AYAH}_$chapterNumber"
-        Log.i("TAG", "saveLastReadAyahPosition: chapterNumber $chapterNumber ayahNumber $ayahNumber")
+        Log.i(
+            "TAG", "saveLastReadAyahPosition: chapterNumber $chapterNumber ayahNumber $ayahNumber"
+        )
         sharedPreferences.edit().putInt(key, ayahNumber).apply()
     }
 
@@ -77,4 +86,22 @@ class QuranPreferences(context: Context) : QuranStorage {
 
     override fun isSurahScreenOpened(): Boolean =
         sharedPreferences.getBoolean(QuranSharedPrefKeys.SURAH_OPENED, false)
+
+    override fun isChaptersLoaded(): Boolean =
+        sharedPreferences.getBoolean(DataPrefs.KEY_CHAPTERS_LOADED, false)
+
+    override fun markChaptersLoaded() =
+        sharedPreferences.edit().putBoolean(DataPrefs.KEY_CHAPTERS_LOADED, true).apply()
+
+    override fun isArabicsLoaded(): Boolean =
+        sharedPreferences.getBoolean(DataPrefs.KEY_ARABICS_LOADED, false)
+
+    override fun markArabicsLoaded() =
+        sharedPreferences.edit().putBoolean(DataPrefs.KEY_ARABICS_LOADED, true).apply()
+
+    override fun isTranslationsLoaded(): Boolean =
+        sharedPreferences.getBoolean(DataPrefs.KEY_TRANSLATIONS_LOADED, false)
+
+    override fun markTranslationsLoaded() =
+        sharedPreferences.edit().putBoolean(DataPrefs.KEY_TRANSLATIONS_LOADED, true).apply()
 }

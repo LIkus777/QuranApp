@@ -1,6 +1,7 @@
 package com.zaur.data.al_quran_aqc.repository_impl.cloud
 
 import android.util.Log
+import com.zaur.data.al_quran_aqc.AssetsQuranLoader
 import com.zaur.data.al_quran_aqc.api.QuranApiAqc
 import com.zaur.data.network.retryWithBackoff
 import com.zaur.domain.al_quran_cloud.models.arabic.ArabicChapter
@@ -17,15 +18,14 @@ import com.zaur.domain.al_quran_cloud.repository.MainRepository
 
 class MainRepositoryCloudImpl(
     private val quranApiAqc: QuranApiAqc,
+    private val assetsQuranLoader: AssetsQuranLoader,
 ) : MainRepository.Cloud {
 
     override suspend fun loadChapters(): List<ChapterAqc.Base> =
         retryWithBackoff { quranApiAqc.getAllChapters().chapters() }
 
     override suspend fun loadChaptersArabic(chaptersNumbers: IntRange): List<ArabicChapter.Base> {
-        return chaptersNumbers.map { chapterNumber ->
-            retryWithBackoff { quranApiAqc.getArabicChapter(chapterNumber).arabicChapters() }
-        }
+        return assetsQuranLoader.getAllChapters()
     }
 
     override suspend fun loadVersesAudio(

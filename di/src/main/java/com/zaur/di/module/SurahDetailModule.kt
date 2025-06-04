@@ -145,7 +145,8 @@ interface SurahDetailModule : ProvideQuranPageRepositopryCloud, ProvideQuranPage
 
         private val textRepositoryCloud by lazy {
             QuranTextCloudRepositoryImpl(
-                dataModule.provideQuranApiAqc()
+                dataModule.provideQuranApiAqc(),
+                dataModule.provideAssetsQuranLoader()
             )
         }
 

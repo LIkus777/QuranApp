@@ -25,9 +25,7 @@ interface ArabicMapper {
                 arabicChapter.englishName(),
                 arabicChapter.englishNameTranslation(),
                 arabicChapter.revelationType(),
-                arabicChapter.numberOfAyahs(),
                 arabicChapter.ayahs().map { arabicAyahMapper.toData(it) },
-                editionArabicMapper.toData(arabicChapter.edition()),
             )
 
         override fun fromData(entity: ArabicChapterEntity.Base): ArabicChapter.Base =
@@ -37,9 +35,7 @@ interface ArabicMapper {
                 entity.englishName,
                 entity.englishNameTranslation,
                 entity.revelationType,
-                entity.numberOfAyahs,
                 entity.ayahs.map { arabicAyahMapper.fromData(it as ArabicAyahEntity.Base) },
-                editionArabicMapper.fromData(entity.edition),
             )
     }
 

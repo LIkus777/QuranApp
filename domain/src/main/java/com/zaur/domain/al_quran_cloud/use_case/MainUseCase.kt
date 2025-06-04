@@ -1,6 +1,7 @@
 package com.zaur.domain.al_quran_cloud.use_case
 
 import com.zaur.domain.al_quran_cloud.repository.MainRepository
+import com.zaur.domain.storage.QuranStorage
 
 /**
  * @author Zaur
@@ -8,6 +9,13 @@ import com.zaur.domain.al_quran_cloud.repository.MainRepository
  */
 
 interface MainUseCase {
+
+    fun isChaptersLoaded(): Boolean
+    fun markChaptersLoaded()
+    fun isArabicsLoaded(): Boolean
+    fun markArabicsLoaded()
+    fun isTranslationsLoaded(): Boolean
+    fun markTranslationsLoaded()
 
     suspend fun loadChapters()
     suspend fun loadChaptersArabic(chaptersNumbers: IntRange)
@@ -22,9 +30,21 @@ interface MainUseCase {
     )
 
     class Base(
+        private val quranStorage: QuranStorage,
         private val mainRepositoryCloud: MainRepository.Cloud,
         private val mainRepositoryLocal: MainRepository.Local,
     ) : MainUseCase {
+        override fun isChaptersLoaded(): Boolean = quranStorage.isChaptersLoaded()
+
+        override fun markChaptersLoaded() = quranStorage.markChaptersLoaded()
+
+        override fun isArabicsLoaded(): Boolean = quranStorage.isArabicsLoaded()
+
+        override fun markArabicsLoaded() = quranStorage.markArabicsLoaded()
+
+        override fun isTranslationsLoaded(): Boolean = quranStorage.isTranslationsLoaded()
+
+        override fun markTranslationsLoaded() = quranStorage.markTranslationsLoaded()
 
         override suspend fun loadChapters() {
             val result = mainRepositoryCloud.loadChapters()

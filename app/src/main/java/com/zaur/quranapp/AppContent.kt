@@ -74,7 +74,8 @@ fun AppContent(
                         val mainViewModel = remember {
                             MainViewModelFactory.Base(
                                 mainScreenModule.provideMainUseCase(),
-                                mainScreenModule.provideReciterManager()
+                                mainScreenModule.provideReciterManager(),
+                                mainScreenModule.provideTranslatorManager()
                             ).create()
                         }
                         MainScreen(

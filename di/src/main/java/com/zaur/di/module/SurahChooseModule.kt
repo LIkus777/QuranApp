@@ -46,7 +46,8 @@ interface SurahChooseModule : ProvideThemeUseCase, ProvideQuranTextUseCase,
 
         override fun provideQuranTextRepositoryCloud(): QuranTextRepository.Cloud =
             QuranTextCloudRepositoryImpl(
-                dataModule.provideQuranApiAqc()
+                dataModule.provideQuranApiAqc(),
+                dataModule.provideAssetsQuranLoader()
             )
     }
 

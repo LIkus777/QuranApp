@@ -23,6 +23,11 @@ object ReciterSharedPrefKeys {
     const val SELECTED_RECITER = "SELECTED_RECITER"
 }
 
+object TranslatorSharedPrefKeys {
+    const val TRANSLATOR_PREFS = "TRANSLATOR_PREFS"
+    const val SELECTED_TRANSLATOR = "SELECTED_TRANSLATOR"
+}
+
 object ThemeSharedPrefKeys {
     const val THEME_PREFS = "THEME_PREFS"
     const val IS_DARK_THEME = "IS_DARK_THEME"
@@ -31,4 +36,10 @@ object ThemeSharedPrefKeys {
 object OfflineSharedPrefKeys {
     const val OFFLINE_PREFS = "OFFLINE_PREFS"
     const val IS_OFFLINE = "IS_OFFLINE"
+}
+
+object DataPrefs {
+    const val KEY_CHAPTERS_LOADED       = "chapters_loaded"
+    const val KEY_ARABICS_LOADED        = "arabics_loaded"
+    const val KEY_TRANSLATIONS_LOADED   = "translations_loaded"
 }

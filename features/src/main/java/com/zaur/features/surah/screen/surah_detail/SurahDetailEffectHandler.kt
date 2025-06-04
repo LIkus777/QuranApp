@@ -160,10 +160,10 @@ interface SurahDetailEffectHandler {
                 // Запросы с безопасным фоновым выполнением
                 withContext(Dispatchers.IO) {
                     quranPageVm.getUthmaniPage(pageNumber)
-                    quranPageVm.getTranslatedPage(pageNumber, "ru.kuliev")
+                    quranPageVm.getTranslatedPage(pageNumber, )
                     quranTextVm.getAllChapters()
                     quranTextVm.getArabicChapter(chapterNumber)
-                    quranTranslationVm.getTranslationForChapter(chapterNumber, "ru.kuliev")/*quranAudio.downloadToCache(chapterNumber, reciter)
+                    quranTranslationVm.getTranslationForChapter(chapterNumber, )/*quranAudio.downloadToCache(chapterNumber, reciter)
                     quranAudio.getChaptersAudioOfReciter(chapterNumber, reciter)*/
                 }
             }

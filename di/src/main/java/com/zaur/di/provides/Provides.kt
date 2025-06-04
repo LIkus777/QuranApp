@@ -1,5 +1,6 @@
 package com.zaur.di.provides
 
+import com.zaur.data.al_quran_aqc.AssetsQuranLoader
 import com.zaur.data.al_quran_aqc.api.QuranApiAqc
 import com.zaur.data.downloader.AudioDownloader
 import com.zaur.data.room.dao.ArabicChapterDao
@@ -37,14 +38,17 @@ import com.zaur.domain.al_quran_cloud.use_case.QuranPageUseCase
 import com.zaur.domain.al_quran_cloud.use_case.QuranTextUseCase
 import com.zaur.domain.al_quran_cloud.use_case.QuranTranslationUseCase
 import com.zaur.domain.al_quran_cloud.use_case.ReciterUseCase
+import com.zaur.domain.al_quran_cloud.use_case.TranslatorUseCase
 import com.zaur.domain.storage.QuranStorage
 import com.zaur.domain.storage.ReciterStorage
+import com.zaur.domain.storage.TranslatorStorage
 import com.zaur.domain.storage.theme.ThemeStorage
 import com.zaur.domain.storage.theme.ThemeUseCase
 import com.zaur.features.surah.base.AudioPlayer
 import com.zaur.features.surah.manager.ReciterManager
 import com.zaur.features.surah.manager.SurahDetailStateManager
 import com.zaur.features.surah.manager.SurahPlayerStateManager
+import com.zaur.features.surah.manager.TranslatorManager
 import com.zaur.features.surah.screen.surah_detail.player.AudioPlaybackHelper
 import com.zaur.features.surah.screen.surah_detail.player.AudioPlayerStateUpdater
 import com.zaur.features.surah.screen.surah_detail.player.PlaylistBuilder
@@ -243,8 +247,16 @@ interface ProvideReciterStorage {
     fun provideReciterStorage(): ReciterStorage
 }
 
+interface ProvideTranslatorStorage {
+    fun provideTranslatorStorage(): TranslatorStorage
+}
+
 interface ProvideReciterManager {
     fun provideReciterManager(): ReciterManager
+}
+
+interface ProvideTranslatorManager {
+    fun provideTranslatorManager(): TranslatorManager
 }
 
 interface ProvideOfflineUseCase {
@@ -253,6 +265,10 @@ interface ProvideOfflineUseCase {
 
 interface ProvideReciterUseCase {
     fun provideReciterUseCase(): ReciterUseCase
+}
+
+interface ProvideTranslatorUseCase {
+    fun provideTranslatorUseCase(): TranslatorUseCase
 }
 
 interface ProvideThemeUseCase {
@@ -277,6 +293,10 @@ interface ProvideQuranTranslationUseCase {
 
 interface ProvideQuranApiAqc {
     fun provideQuranApiAqc(): QuranApiAqc
+}
+
+interface ProvideAssetsQuranLoader {
+    fun provideAssetsQuranLoader(): AssetsQuranLoader
 }
 
 interface ProvideEditionRepositoryCloud {

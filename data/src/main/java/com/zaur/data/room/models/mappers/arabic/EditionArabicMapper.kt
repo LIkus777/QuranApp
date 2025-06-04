@@ -22,7 +22,6 @@ interface EditionArabicMapper {
                 edition.englishName(),
                 edition.format(),
                 edition.type(),
-                edition.direction()
             )
 
         override fun fromData(entity: EditionArabicEntity.Base): EditionArabic.Base = EditionArabic.Base(
@@ -32,7 +31,6 @@ interface EditionArabicMapper {
             entity.englishName(),
             entity.format(),
             entity.type(),
-            entity.direction()
         )
     }
 

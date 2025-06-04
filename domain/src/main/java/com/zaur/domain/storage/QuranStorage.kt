@@ -24,4 +24,10 @@ interface QuranStorage {
     fun saveLastReadPagePosition(pageNumber: Int)
     fun setSurahScreenOpened()
     fun isSurahScreenOpened(): Boolean
+    fun isChaptersLoaded(): Boolean
+    fun markChaptersLoaded()
+    fun isArabicsLoaded(): Boolean
+    fun markArabicsLoaded()
+    fun isTranslationsLoaded(): Boolean
+    fun markTranslationsLoaded()
 }

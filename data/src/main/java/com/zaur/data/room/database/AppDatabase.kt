@@ -23,7 +23,7 @@ import com.zaur.data.room.models.VerseAudioEntity
 
 @Database(
     entities = [ArabicChapterEntity.Base::class, VerseAudioEntity.Base::class, ChapterAudioEntity.Base::class, ChapterEntity.Base::class, TranslationEntity.Base::class, SurahEntity.Base::class],
-    version = 3,
+    version = 4,
     exportSchema = false
 )
 @TypeConverters(GenericConverters::class)

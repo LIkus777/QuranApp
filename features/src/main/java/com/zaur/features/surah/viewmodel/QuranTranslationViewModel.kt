@@ -30,6 +30,8 @@ interface QuranTranslationViewModel : QuranTranslationObservable.Read {
 
         override fun getTranslationForChapter(chapterNumber: Int, translator: String) {
             viewModelScope.launch(Dispatchers.IO) {
+                Log.i("TAG", "getTranslationForChapter: chapterNumber $chapterNumber")
+                Log.i("TAG", "getTranslationForChapter: translator $translator")
                 val result = launchSafely {
                     quranTranslationUseCase.getTranslationForChapter(
                         chapterNumber, translator

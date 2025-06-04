@@ -13,7 +13,6 @@ class ReciterPreferences(context: Context) : ReciterStorage {
     private val sharedPreferences =
         context.getSharedPreferences(ReciterSharedPrefKeys.RECITER_PREFS, Context.MODE_PRIVATE)
 
-
     override fun saveSelectedReciter(identifier: String) {
         sharedPreferences.edit().putString(ReciterSharedPrefKeys.SELECTED_RECITER, identifier)
             .apply()

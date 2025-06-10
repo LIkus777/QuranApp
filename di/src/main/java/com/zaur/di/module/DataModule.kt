@@ -31,23 +31,28 @@ import com.zaur.di.provides.ProvideQuranStorage
 import com.zaur.di.provides.ProvideReciterStorage
 import com.zaur.di.provides.ProvideThemeStorage
 import com.zaur.di.provides.ProvideTranslationChapterDao
+import com.zaur.di.provides.ProvideTranslatorManager
 import com.zaur.di.provides.ProvideTranslatorStorage
+import com.zaur.di.provides.ProvideTranslatorUseCase
 import com.zaur.di.provides.ProvideVerseAudioDao
 import com.zaur.domain.al_quran_cloud.repository.OfflineRepository
 import com.zaur.domain.al_quran_cloud.use_case.OfflineUseCase
+import com.zaur.domain.al_quran_cloud.use_case.TranslatorUseCase
 import com.zaur.domain.storage.QuranStorage
 import com.zaur.domain.storage.ReciterStorage
 import com.zaur.domain.storage.TranslatorStorage
 import com.zaur.domain.storage.theme.ThemeStorage
+import com.zaur.features.surah.manager.TranslatorManager
 
 /**
-* @author Zaur
-* @since 2025-05-12
-*/
+ * @author Zaur
+ * @since 2025-05-12
+ */
 
-interface DataModule : ProvideAssetsQuranLoader, ProvideOfflineUseCase, ProvideQuranApiAqc, ProvideAudioDownloader,
-    ProvideAppDatabase, ProvideChapterDao, ProvideArabicChapterDao, ProvideVerseAudioDao,
-    ProvideChapterAudioDao, ProvideTranslationChapterDao, ProvideTranslatorStorage, ProvideReciterStorage,
+interface DataModule : ProvideTranslatorUseCase, ProvideTranslatorManager, ProvideAssetsQuranLoader,
+    ProvideOfflineUseCase, ProvideQuranApiAqc, ProvideAudioDownloader, ProvideAppDatabase,
+    ProvideChapterDao, ProvideArabicChapterDao, ProvideVerseAudioDao, ProvideChapterAudioDao,
+    ProvideTranslationChapterDao, ProvideTranslatorStorage, ProvideReciterStorage,
     ProvideQuranStorage, ProvideThemeStorage, ProvideOfflineRepository {
 
     class Base(private val context: Context) : DataModule {
@@ -91,5 +96,10 @@ interface DataModule : ProvideAssetsQuranLoader, ProvideOfflineUseCase, ProvideQ
         override fun provideTranslatorStorage(): TranslatorStorage = TranslatorPreferences(context)
 
         override fun provideAssetsQuranLoader(): AssetsQuranLoader = AssetsQuranLoader.Base(context)
+        override fun provideTranslatorManager(): TranslatorManager =
+            TranslatorManager.Base(provideTranslatorUseCase())
+
+        override fun provideTranslatorUseCase(): TranslatorUseCase =
+            TranslatorUseCase.Base(provideTranslatorStorage())
     }
 }

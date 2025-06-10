@@ -27,7 +27,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
-import com.zaur.data.al_quran_aqc.constans.ReciterList
 import com.zaur.presentation.ui.LightThemeColors
 import com.zaur.presentation.ui.QuranColors
 
@@ -40,16 +39,18 @@ import com.zaur.presentation.ui.QuranColors
 @Composable
 fun <T> ChooseItemDialog(
     showDialog: Boolean = true,
-    title: String = "Выберите чтеца",
+    title: String = "Выберите элемент",
     options: List<Pair<T, String>> = emptyList(),
     colors: QuranColors = LightThemeColors,
-    onSelect: (T) -> Unit = {},
+    onSelect: (T?) -> Unit = {},
 ) {
     if (!showDialog) return
 
     var selectedItem by remember { mutableStateOf<T?>(null) }
 
-    Dialog(onDismissRequest = { onSelect(null as T) }) {
+    Dialog(onDismissRequest = {
+        onSelect(null)
+    }) {
         Box(
             modifier = Modifier
                 .wrapContentSize()
@@ -83,16 +84,11 @@ fun <T> ChooseItemDialog(
                                 selectedItem = identifier
                                 onSelect(identifier)
                             }
-                            .background(
-                                if (isSelected) colors.buttonPrimary
-                                else colors.cardBackground
-                            )
-                            .padding(vertical = 12.dp, horizontal = 16.dp)
-                    ) {
+                            .background(if (isSelected) colors.buttonPrimary else colors.cardBackground)
+                            .padding(vertical = 12.dp, horizontal = 16.dp)) {
                         Text(
                             text = name,
-                            color = if (isSelected) colors.textOnButton
-                            else colors.textPrimary,
+                            color = if (isSelected) colors.textOnButton else colors.textPrimary,
                             fontWeight = FontWeight.Medium
                         )
                     }

@@ -24,6 +24,8 @@ fun ChooseReciterDialog(
         options = ReciterList.reciters.toList(),
         colors = colors
     ) { selectedId ->
-        onSelect(selectedId)
+        if (selectedId != null) {
+            onSelect(selectedId)
+        }
     }
 }

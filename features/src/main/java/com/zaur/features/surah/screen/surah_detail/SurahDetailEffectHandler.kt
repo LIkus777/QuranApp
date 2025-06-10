@@ -157,13 +157,15 @@ interface SurahDetailEffectHandler {
                     surahDetailVm.showReciterDialog(true)
                 }
 
+                val translator = deps.translatorManager().getTranslator().toString()
+
                 // Запросы с безопасным фоновым выполнением
                 withContext(Dispatchers.IO) {
                     quranPageVm.getUthmaniPage(pageNumber)
-                    quranPageVm.getTranslatedPage(pageNumber, )
+                    quranPageVm.getTranslatedPage(pageNumber, translator)
                     quranTextVm.getAllChapters()
                     quranTextVm.getArabicChapter(chapterNumber)
-                    quranTranslationVm.getTranslationForChapter(chapterNumber, )/*quranAudio.downloadToCache(chapterNumber, reciter)
+                    quranTranslationVm.getTranslationForChapter(chapterNumber, translator)/*quranAudio.downloadToCache(chapterNumber, reciter)
                     quranAudio.getChaptersAudioOfReciter(chapterNumber, reciter)*/
                 }
             }

@@ -25,6 +25,8 @@ fun ChooseTranslationDialog(
         options = TranslatorList.translators.toList(),
         colors = colors
     ) { selectedId ->
-        onSelect(selectedId)
+        if (selectedId != null) {
+            onSelect(selectedId)
+        }
     }
 }

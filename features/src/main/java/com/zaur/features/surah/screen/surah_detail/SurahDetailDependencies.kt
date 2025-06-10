@@ -1,6 +1,7 @@
 package com.zaur.features.surah.screen.surah_detail
 
 import androidx.navigation.NavHostController
+import com.zaur.features.surah.manager.TranslatorManager
 import com.zaur.features.surah.viewmodel.OfflineViewModel
 import com.zaur.features.surah.viewmodel.SurahPlayerViewModel
 import com.zaur.features.surah.viewmodel.QuranPageViewModel
@@ -17,6 +18,7 @@ import com.zaur.features.surah.viewmodel.ThemeViewModel
  */
 
 interface SurahDetailDependencies {
+    fun translatorManager(): TranslatorManager
     fun themeViewModel(): ThemeViewModel
     fun offlineViewModel(): OfflineViewModel
     fun surahChooseViewModel(): SurahChooseViewModel
@@ -29,6 +31,7 @@ interface SurahDetailDependencies {
     fun controller(): NavHostController
 
     data class Base(
+        private val translatorManager: TranslatorManager,
         private val themeViewModel: ThemeViewModel,
         private val offlineViewModel: OfflineViewModel,
         private val surahChooseViewModel: SurahChooseViewModel,
@@ -40,6 +43,7 @@ interface SurahDetailDependencies {
         private val quranPageViewModel: QuranPageViewModel,
         private val controller: NavHostController,
     ) : SurahDetailDependencies {
+        override fun translatorManager(): TranslatorManager = translatorManager
         override fun themeViewModel() = themeViewModel
         override fun offlineViewModel() = offlineViewModel
         override fun surahChooseViewModel() = surahChooseViewModel

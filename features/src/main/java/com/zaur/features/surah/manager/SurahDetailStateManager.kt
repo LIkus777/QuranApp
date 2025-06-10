@@ -18,6 +18,8 @@ interface SurahDetailStateManager : SurahDetailStateObservable.Read {
 
 
     fun setTextSurahNumber(surahNumber: Int)
+    fun showTranslatorDialog(show: Boolean)
+    fun showTranscriptionDialog(show: Boolean)
     fun showReciterDialog(show: Boolean)
     fun showPlayerBottomSheet(show: Boolean)
     fun showTextBottomSheet(show: Boolean)
@@ -25,6 +27,7 @@ interface SurahDetailStateManager : SurahDetailStateObservable.Read {
     fun showPageMode(show: Boolean)
     fun showSettingsBottomSheet(show: Boolean)
     fun showArabic(show: Boolean)
+    fun showTranscription(show: Boolean)
     fun showRussian(show: Boolean)
     fun fontSizeArabic(fontSize: Float)
     fun fontSizeRussian(fontSize: Float)
@@ -70,6 +73,14 @@ interface SurahDetailStateManager : SurahDetailStateObservable.Read {
             copy(textState = textState().copy(currentSurahNumber = surahNumber))
         }
 
+        override fun showTranslatorDialog(show: Boolean) = update {
+            copy(bottomSheetState = bottomSheetState().copy(showTranslatorDialog = show))
+        }
+
+        override fun showTranscriptionDialog(show: Boolean) = update {
+            copy(bottomSheetState = bottomSheetState().copy(showTranscriptionSheet = show))
+        }
+
         override fun showTextBottomSheet(show: Boolean) = update {
             copy(bottomSheetState = bottomSheetState().copy(showTextBottomSheet = show))
         }
@@ -88,6 +99,10 @@ interface SurahDetailStateManager : SurahDetailStateObservable.Read {
 
         override fun showArabic(show: Boolean) = update {
             copy(uiPreferencesState = uiPreferencesState().copy(showArabic = show))
+        }
+
+        override fun showTranscription(show: Boolean) = update {
+            copy(uiPreferencesState = uiPreferencesState().copy(showTranscription = show))
         }
 
         override fun showRussian(show: Boolean) = update {

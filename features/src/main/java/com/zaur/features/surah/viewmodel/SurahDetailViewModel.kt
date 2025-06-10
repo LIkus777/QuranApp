@@ -20,12 +20,15 @@ interface SurahDetailViewModel {
 
     fun setTextSurahNumber(surahNumber: Int)
     fun showReciterDialog(show: Boolean)
+    fun showTranslatorDialog(show: Boolean)
+    fun showTranscriptionDialog(show: Boolean)
     fun showPlayerBottomSheet(show: Boolean)
     fun showTextBottomSheet(show: Boolean)
     fun showSurahMode(show: Boolean)
     fun showPageMode(show: Boolean)
     fun showSettingsBottomSheet(show: Boolean)
     fun showArabic(show: Boolean)
+    fun showTranscription(show: Boolean)
     fun showRussian(show: Boolean)
     fun fontSizeArabic(fontSize: Float)
     fun fontSizeRussian(fontSize: Float)
@@ -58,6 +61,14 @@ interface SurahDetailViewModel {
             stateManager.showReciterDialog(show)
         }
 
+        override fun showTranslatorDialog(show: Boolean) {
+            stateManager.showTranslatorDialog(show)
+        }
+
+        override fun showTranscriptionDialog(show: Boolean) {
+            stateManager.showTranscriptionDialog(show)
+        }
+
         override fun showPlayerBottomSheet(show: Boolean) {
             stateManager.showPlayerBottomSheet(show)
         }
@@ -82,6 +93,10 @@ interface SurahDetailViewModel {
 
         override fun showArabic(show: Boolean) {
             stateManager.showArabic(show)
+        }
+
+        override fun showTranscription(show: Boolean) {
+            stateManager.showTranscription(show)
         }
 
         override fun showRussian(show: Boolean) {

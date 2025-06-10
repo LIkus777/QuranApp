@@ -54,12 +54,14 @@ fun ScreenContent(
         textState.currentArabicText() == ArabicChapter.Empty || translateState.translations() == Translation.Empty
     }
 
+    val translator = deps.translatorManager().getTranslator().toString()
+
     // Загрузка страниц только когда в PageMode
     LaunchedEffect(surahModeState.value, chapterNumber) {
         if (surahModeState.value is SurahDetailUiState.PageModeState) {
             val lastPage = quranPageViewModel.getLastReadPagePosition()
             quranPageViewModel.getUthmaniPage(lastPage)
-            quranPageViewModel.getTranslatedPage(lastPage, )
+            quranPageViewModel.getTranslatedPage(lastPage, translator)
         }
     }
 

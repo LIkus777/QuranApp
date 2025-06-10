@@ -48,6 +48,8 @@ fun AppContent(
     val navController = rememberNavController()
     val isDarkTheme = themeViewModel.themeState().collectAsState()
 
+    val dataModule = remember { di.provideDataModule() }
+    val translatorManager = remember { dataModule.provideTranslatorManager() }
     val surahDetailModule = remember { di.provideSurahDetailModule() }
     val surahDetailViewModel = remember { surahDetailModule.provideSurahDetailViewModel() }
     val surahPlayerViewModel =
@@ -108,6 +110,7 @@ fun AppContent(
                         }
 
                         val deps = SurahDetailDependencies.Base(
+                            translatorManager = translatorManager,
                             themeViewModel = themeViewModel,
                             offlineViewModel = offlineViewModel,
                             surahChooseViewModel = surahDetailModule.provideSurahChooseViewModelFactory()
@@ -144,6 +147,7 @@ fun AppContent(
                             }
 
                             val deps = SurahDetailDependencies.Base(
+                                translatorManager = translatorManager,
                                 themeViewModel = themeViewModel,
                                 offlineViewModel = offlineViewModel,
                                 surahChooseViewModel = surahDetailModule.provideSurahChooseViewModelFactory()
@@ -182,6 +186,7 @@ fun AppContent(
                             }
 
                             val deps = SurahDetailDependencies.Base(
+                                translatorManager = translatorManager,
                                 themeViewModel = themeViewModel,
                                 offlineViewModel = offlineViewModel,
                                 surahChooseViewModel = surahDetailModule.provideSurahChooseViewModelFactory()

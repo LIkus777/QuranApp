@@ -19,7 +19,7 @@ fun ChooseReciterDialogComponent(
     audioViewModel: SurahPlayerViewModel,
 ) {
     ChooseReciterDialog(
-        showDialog = state.reciterState().showReciterDialog(), colors = colors
+        showDialog = state.bottomSheetState().showReciterDialog(), colors = colors
     ) { identifier ->
         viewModel.showReciterDialog(false)
         if (!identifier.isNullOrEmpty()) audioViewModel.saveReciter(identifier)

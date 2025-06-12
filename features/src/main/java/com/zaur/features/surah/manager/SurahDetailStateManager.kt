@@ -20,6 +20,7 @@ interface SurahDetailStateManager : SurahDetailStateObservable.Read {
     fun setTextSurahNumber(surahNumber: Int)
     fun showTranslatorDialog(show: Boolean)
     fun showTranscriptionDialog(show: Boolean)
+    fun showRepeatDialog(show: Boolean)
     fun showReciterDialog(show: Boolean)
     fun showPlayerBottomSheet(show: Boolean)
     fun showTextBottomSheet(show: Boolean)
@@ -32,6 +33,7 @@ interface SurahDetailStateManager : SurahDetailStateObservable.Read {
     fun fontSizeArabic(fontSize: Float)
     fun fontSizeRussian(fontSize: Float)
     fun selectedReciter(reciter: String, reciterName: String)
+    fun selectedTranslator(translator: String, translatorName: String)
 
     fun setAyahInText(ayah: Int)
 
@@ -81,6 +83,10 @@ interface SurahDetailStateManager : SurahDetailStateObservable.Read {
             copy(bottomSheetState = bottomSheetState().copy(showTranscriptionSheet = show))
         }
 
+        override fun showRepeatDialog(show: Boolean) = update {
+            copy(bottomSheetState = bottomSheetState().copy(showRepeatDialog = show))
+        }
+
         override fun showTextBottomSheet(show: Boolean) = update {
             copy(bottomSheetState = bottomSheetState().copy(showTextBottomSheet = show))
         }
@@ -125,6 +131,14 @@ interface SurahDetailStateManager : SurahDetailStateObservable.Read {
             )
         }
 
+        override fun selectedTranslator(translator: String, translatorName: String) = update {
+            copy(
+                translatorState = translatorState().copy(
+                    translator = translator, translatorName = translatorName
+                )
+            )
+        }
+
         override fun setAyahInText(ayah: Int) = update {
             copy(textState = textState().copy(currentAyah = ayah))
         }
@@ -149,7 +163,7 @@ interface SurahDetailStateManager : SurahDetailStateObservable.Read {
         }
 
         override fun showReciterDialog(show: Boolean) = update {
-            copy(reciterState = reciterState().copy(showReciterDialog = show))
+            copy(bottomSheetState = bottomSheetState().copy(showReciterDialog = show))
         }
 
         override fun showPlayerBottomSheet(show: Boolean) = update {

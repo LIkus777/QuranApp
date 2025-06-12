@@ -19,6 +19,7 @@ interface SurahDetailViewModel {
 
 
     fun setTextSurahNumber(surahNumber: Int)
+    fun showRepeatDialog(show: Boolean)
     fun showReciterDialog(show: Boolean)
     fun showTranslatorDialog(show: Boolean)
     fun showTranscriptionDialog(show: Boolean)
@@ -33,6 +34,7 @@ interface SurahDetailViewModel {
     fun fontSizeArabic(fontSize: Float)
     fun fontSizeRussian(fontSize: Float)
     fun selectedReciter(reciter: String, reciterName: String)
+    fun selectedTranslator(translator: String, translatorName: String)
 
     fun setAyahInText(ayah: Int)
 
@@ -55,6 +57,10 @@ interface SurahDetailViewModel {
 
         override fun setTextSurahNumber(surahNumber: Int) {
             stateManager.setTextSurahNumber(surahNumber)
+        }
+
+        override fun showRepeatDialog(show: Boolean) {
+            stateManager.showRepeatDialog(show)
         }
 
         override fun showReciterDialog(show: Boolean) {
@@ -115,6 +121,9 @@ interface SurahDetailViewModel {
             stateManager.selectedReciter(reciter, reciterName)
         }
 
+        override fun selectedTranslator(translator: String, translatorName: String) {
+            stateManager.selectedTranslator(translator, translatorName)
+        }
 
         override fun setAyahInText(ayah: Int) {
             stateManager.setAyahInText(ayah)

@@ -24,10 +24,10 @@ fun SettingsDialogComponent(
             selectedReciter = state.reciterState().currentReciterName(),
             showReciterDialog = { viewModel.showReciterDialog(it) },
 
-            selectedTranslator = state.translatorState().currentTranslatorName(),
+            selectedTranslator = state.translatorState().translatorName(),
             showTranslatorDialog = { viewModel.showTranslatorDialog(it) },
 
-            selectedTranscription = state.translatorState().currentTranscriptionName(),
+            selectedTranscription = state.translatorState().transcriptionName(),
             showTranscriptionDialog = { viewModel.showTranscriptionDialog(it) },
 
             showArabic = state.uiPreferencesState().showArabic(),

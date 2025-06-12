@@ -49,6 +49,8 @@ fun PlayerDialog(
     onNextAyahClicked: () -> Unit = {},
     onPreviousAyahClicked: () -> Unit = {},
     onNextSurahClicked: () -> Unit = {},
+    onRepeatClicked: () -> Unit = {},
+    onSpeedClicked: () -> Unit = {},
     onPreviousSurahClicked: () -> Unit = {},
     onSeekRequested: (newPositionMs: Long) -> Unit = {},
     onSurahAndAyahClicked: () -> Unit = {},
@@ -207,7 +209,7 @@ fun PlayerDialog(
                         contentDescription = "Repeat",
                         modifier = Modifier
                             .size(20.dp)
-                            .rippleClickable(onClick = {}),
+                            .rippleClickable(onClick = { onRepeatClicked() }),
                         tint = colors.iconColorForTop
                     )
                     Text(
@@ -216,7 +218,7 @@ fun PlayerDialog(
                         fontSize = 14.sp,
                         modifier = Modifier
                             .padding(start = 6.dp)
-                            .rippleClickable(onClick = {})
+                            .rippleClickable(onClick = { onSpeedClicked() })
                     )
                 }
             }

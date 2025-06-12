@@ -153,7 +153,7 @@ interface Ayah {
 
     fun <T> map(mapper: Mapper<T>): T
 
-    class Base(
+    data class Base(
         @SerializedName("number") private val number: Long,
         @SerializedName("text") private val text: String,
         @SerializedName("numberInSurah") private val numberInSurah: Long,
@@ -207,7 +207,7 @@ interface EditionTranslation {
 
     fun <T> map(mapper: Mapper<T>): T
 
-    class Base(
+    data class Base(
         @SerializedName("identifier") private val identifier: String,
         @SerializedName("language") private val language: String,
         @SerializedName("name") private val name: String,

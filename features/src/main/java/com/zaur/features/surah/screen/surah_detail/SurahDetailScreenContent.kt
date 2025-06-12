@@ -3,7 +3,8 @@ package com.zaur.features.surah.screen.surah_detail
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import com.zaur.features.surah.screen.surah_detail.dialogs.ChooseReciterDialogComponent
-import com.zaur.features.surah.screen.surah_detail.dialogs.ChooseTextDialogComponent
+import com.zaur.features.surah.screen.surah_detail.dialogs.TextSettingsDialogComponent
+import com.zaur.features.surah.screen.surah_detail.dialogs.ChooseTranslationDialogComponent
 import com.zaur.features.surah.screen.surah_detail.dialogs.SettingsDialogComponent
 import com.zaur.features.surah.screen.surah_detail.dialogs.rememberSurahDetailUiData
 import com.zaur.presentation.ui.DarkThemeColors
@@ -42,7 +43,10 @@ fun SurahDetailScreenContent(
 
     // Диалоги
     SettingsDialogComponent(uiData.surahDetailState(), colors, deps.surahDetailViewModel())
-    ChooseTextDialogComponent(colors, uiData, deps)
+    TextSettingsDialogComponent(colors, uiData, deps)
+    ChooseTranslationDialogComponent(
+        uiData.surahDetailState(), colors, deps.surahDetailViewModel(), deps.translatorManager()
+    )
     ChooseReciterDialogComponent(
         uiData.surahDetailState(), colors, deps.surahDetailViewModel(), deps.surahPlayerViewModel()
     )

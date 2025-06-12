@@ -4,10 +4,10 @@
     <selectionStates>
       <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2025-06-01T21:12:41.725478300Z">
+        <DropdownSelection timestamp="2025-06-11T19:57:07.782361300Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\zm393\.android\avd\Pixel_2_API_24.avd" />
+              <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\zm393\.android\avd\Pixel_5.avd" />
             </handle>
           </Target>
         </DropdownSelection>
@@ -29,6 +29,9 @@
           </Target>
         </DropdownSelection>
         <DialogSelection />
+      </SelectionState>
+      <SelectionState runConfigName="RepeatDialog">
+        <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>
   </component>

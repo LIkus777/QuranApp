@@ -37,7 +37,7 @@ import com.zaur.presentation.ui.QuranColors
 
 @Preview(showBackground = true)
 @Composable
-fun ChooseTextDialog(
+fun TextSettingsDialog(
     colors: QuranColors = LightThemeColors,
     showTextDialog: Boolean = true,
     isDarkTheme: Boolean = false,

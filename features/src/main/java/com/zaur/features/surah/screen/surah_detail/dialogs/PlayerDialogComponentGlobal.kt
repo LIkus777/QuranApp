@@ -80,6 +80,8 @@ fun PlayerDialogComponentGlobal(
             onPreviousSurahClicked = { surahPlayerViewModel.onPreviousSurahClicked() },
             onSeekRequested = { surahPlayerViewModel.seekTo(it) },
             onReciterClicked = { surahDetailViewModel.showReciterDialog(true) },
+            onRepeatClicked = { surahDetailViewModel.showRepeatDialog(true) },
+            onSpeedClicked = {  }, // todo
             onSurahAndAyahClicked = {
                 // Здесь делаем навигацию на экран SurahDetail,
                 // передавая текущую surahNumber и surahName
@@ -96,6 +98,12 @@ fun PlayerDialogComponentGlobal(
                 }
             },
             onDismiss = { surahDetailViewModel.showPlayerBottomSheet(false) }
+        )
+    }
+
+    if (detailState.value.bottomSheetState().showRepeatDialog()) {
+        RepeatDialog(
+            onDismiss = { surahDetailViewModel.showRepeatDialog(false) }
         )
     }
 }

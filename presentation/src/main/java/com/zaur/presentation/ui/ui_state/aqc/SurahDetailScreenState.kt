@@ -92,16 +92,14 @@ interface UiPreferencesState {
 interface ReciterState {
     fun currentReciter(): String
     fun currentReciterName(): String
-    fun showReciterDialog(): Boolean //todo перенести
 
     data class Base(
         private val currentReciter: String,
         private val currentReciterName: String,
-        private val showReciterDialog: Boolean = false,
-    ) : ReciterState {
+
+        ) : ReciterState {
         override fun currentReciter(): String = currentReciter
         override fun currentReciterName() = currentReciterName
-        override fun showReciterDialog() = showReciterDialog
     }
 
     companion object {
@@ -111,18 +109,18 @@ interface ReciterState {
 
 interface TranslatorState {
 
-    fun currentTranslator(): String
-    fun currentTranslatorName(): String
-    fun currentTranscriptionName(): String
+    fun translator(): String
+    fun translatorName(): String
+    fun transcriptionName(): String
 
     data class Base(
-        private val currentTranslator: String,
-        private val currentTranslatorName: String,
-        private val currentTranscriptionName: String
+        private val translator: String,
+        private val translatorName: String,
+        private val transcriptionName: String,
     ) : TranslatorState {
-        override fun currentTranslator(): String  = currentTranslator
-        override fun currentTranslatorName(): String = currentTranslatorName
-        override fun currentTranscriptionName(): String = currentTranscriptionName
+        override fun translator(): String = translator
+        override fun translatorName(): String = translatorName
+        override fun transcriptionName(): String = transcriptionName
     }
 
     companion object {
@@ -132,24 +130,30 @@ interface TranslatorState {
 }
 
 interface BottomSheetState {
+    fun showRepeatDialog(): Boolean
     fun showTranslatorDialog(): Boolean
     fun showTranscriptionSheet(): Boolean
     fun showTextBottomSheet(): Boolean
     fun showPlayerBottomSheet(): Boolean
     fun showSettingsBottomSheet(): Boolean
+    fun showReciterDialog(): Boolean
 
     data class Base(
         private val showTranslatorDialog: Boolean = false,
         private val showTranscriptionSheet: Boolean = false,
         private val showTextBottomSheet: Boolean = false,
+        private val showRepeatDialog: Boolean = false,
         private val showSettingsBottomSheet: Boolean = false,
         private val showPlayerBottomSheet: Boolean = false,
+        private val showReciterDialog: Boolean = false,
     ) : BottomSheetState {
+        override fun showRepeatDialog() = showRepeatDialog
         override fun showTranslatorDialog() = showTranslatorDialog
         override fun showTranscriptionSheet() = showTranscriptionSheet
         override fun showTextBottomSheet() = showTextBottomSheet
         override fun showPlayerBottomSheet() = showPlayerBottomSheet
         override fun showSettingsBottomSheet() = showSettingsBottomSheet
+        override fun showReciterDialog() = showReciterDialog
     }
 
     companion object {

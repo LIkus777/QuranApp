@@ -11,14 +11,14 @@ import com.zaur.presentation.ui.QuranColors
  */
 
 @Composable
-fun ChooseTextDialogComponent(
+fun TextSettingsDialogComponent(
     colors: QuranColors,
     uiData: SurahDetailUiData,
     deps: SurahDetailDependencies,
 ) {
     with(uiData) {
         with(deps) {
-            ChooseTextDialog(
+            TextSettingsDialog(
                 colors = colors,
                 showTextDialog = surahDetailState().bottomSheetState().showTextBottomSheet(),
                 isDarkTheme = isDarkTheme(),

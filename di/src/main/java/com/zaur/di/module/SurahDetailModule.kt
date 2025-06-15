@@ -42,7 +42,7 @@ import com.zaur.domain.al_quran_cloud.repository.QuranPageRepository
 import com.zaur.domain.al_quran_cloud.repository.QuranTextRepository
 import com.zaur.domain.al_quran_cloud.repository.QuranTranslationRepository
 import com.zaur.domain.al_quran_cloud.use_case.EditionUseCase
-import com.zaur.domain.al_quran_cloud.use_case.QuranAudioUseCase
+import com.zaur.domain.al_quran_cloud.use_case.SurahPlayerUseCase
 import com.zaur.domain.al_quran_cloud.use_case.QuranPageUseCase
 import com.zaur.domain.al_quran_cloud.use_case.QuranTextUseCase
 import com.zaur.domain.al_quran_cloud.use_case.QuranTranslationUseCase
@@ -96,7 +96,8 @@ interface SurahDetailModule : ProvideQuranPageRepositopryCloud, ProvideQuranPage
                 provideReciterManager(),
                 surahDetailStateManagerModule.provideSurahDetailStateManager(),
                 surahPlayerStateManager = audioModule.provideSurahPlayerStateManager(),
-                quranAudioUseCase = provideQuranAudioUseCase()
+                surahPlayerUseCase = provideQuranAudioUseCase(),
+                assetsQuranLoader = dataModule.provideAssetsQuranLoader()
             )
         }
 
@@ -111,8 +112,8 @@ interface SurahDetailModule : ProvideQuranPageRepositopryCloud, ProvideQuranPage
             EditionViewModelFactory.Base(editionUseCase = provideEditionUseCase())
         }
 
-        private val quranAudioUseCase by lazy {
-            QuranAudioUseCase.Base(
+        private val surahPlayerUseCase by lazy {
+            SurahPlayerUseCase.Base(
                 dataModule.provideQuranStorage(),
                 dataModule.provideOfflineRepository(),
                 provideQuranAudioRepositoryLocal(),
@@ -171,7 +172,7 @@ interface SurahDetailModule : ProvideQuranPageRepositopryCloud, ProvideQuranPage
                 mapperModule.provideVerseAudioMapper()
             )
 
-        override fun provideQuranAudioUseCase(): QuranAudioUseCase = quranAudioUseCase
+        override fun provideQuranAudioUseCase(): SurahPlayerUseCase = surahPlayerUseCase
 
         override fun provideQuranTextUseCase(): QuranTextUseCase = quranTextUseCase
 

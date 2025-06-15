@@ -1,6 +1,7 @@
 package com.zaur.features.surah.viewmodel.factory
 
-import com.zaur.domain.al_quran_cloud.use_case.QuranAudioUseCase
+import com.zaur.domain.al_quran_cloud.repository.AssetsQuranLoader
+import com.zaur.domain.al_quran_cloud.use_case.SurahPlayerUseCase
 import com.zaur.features.surah.manager.ReciterManager
 import com.zaur.features.surah.manager.SurahDetailStateManager
 import com.zaur.features.surah.manager.SurahPlayerStateManager
@@ -23,13 +24,20 @@ interface SurahPlayerViewModelFactory {
         private val reciterManager: ReciterManager? = null,
         private val surahDetailStateManager: SurahDetailStateManager,
         private val surahPlayerStateManager: SurahPlayerStateManager,
+        private val assetsQuranLoader: AssetsQuranLoader,
         private val observable: SurahPlayerObservable.Mutable = SurahPlayerObservable.Base(
             SurahPlayerUIState.Base()
         ),
-        private val quranAudioUseCase: QuranAudioUseCase,
+        private val surahPlayerUseCase: SurahPlayerUseCase,
     ) : SurahPlayerViewModelFactory {
         override fun create() = SurahPlayerViewModel.Base(
-            surahPlayer!!, reciterManager!!, surahDetailStateManager, surahPlayerStateManager, observable, quranAudioUseCase
+            surahPlayer!!,
+            reciterManager!!,
+            surahDetailStateManager,
+            surahPlayerStateManager,
+            observable,
+            surahPlayerUseCase,
+            assetsQuranLoader
         )
     }
 }

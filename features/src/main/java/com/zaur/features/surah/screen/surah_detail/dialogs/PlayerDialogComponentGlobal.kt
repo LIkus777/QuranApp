@@ -54,7 +54,7 @@ fun PlayerDialogComponentGlobal(
             }
 
             // Загружаем аудио из SurahPlayerViewModel
-            surahPlayerViewModel.getChaptersAudioOfReciter(
+            surahPlayerViewModel.getSurahAudioByNumberAndReciter(
                 lastSurah, surahPlayerViewModel.getReciter().orEmpty()
             )
         }
@@ -103,7 +103,7 @@ fun PlayerDialogComponentGlobal(
 
     if (detailState.value.bottomSheetState().showRepeatDialog()) {
         RepeatDialog(
-            onDismiss = { surahDetailViewModel.showRepeatDialog(false) }
+            showSheet = true, onDismiss = { surahDetailViewModel.showRepeatDialog(false) }
         )
     }
 }

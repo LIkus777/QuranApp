@@ -2,6 +2,7 @@ package com.zaur.domain.al_quran_cloud.use_case
 
 import com.zaur.domain.al_quran_cloud.models.arabic.ArabicChapter
 import com.zaur.domain.al_quran_cloud.models.chapter.ChapterAqc
+import com.zaur.domain.al_quran_cloud.repository.AssetsQuranLoader
 import com.zaur.domain.al_quran_cloud.repository.OfflineRepository
 import com.zaur.domain.al_quran_cloud.repository.QuranTextRepository
 import com.zaur.domain.storage.QuranStorage
@@ -12,6 +13,9 @@ import com.zaur.domain.storage.QuranStorage
  */
 
 interface QuranTextUseCase {
+
+    fun onNextPage(currentPage: Int)
+    fun onPreviousPage(currentPage: Int)
 
     suspend fun getAllChapters(): List<ChapterAqc.Base>
     suspend fun getArabicChapter(chapterNumber: Int): ArabicChapter.Base
@@ -30,9 +34,17 @@ interface QuranTextUseCase {
     fun isSurahScreenPreviouslyOpened(): Boolean
 
     class Base(
+        private val assetsQuranLoader: AssetsQuranLoader,
         private val quranStorage: QuranStorage,
         private val quranTextRepositoryLocal: QuranTextRepository.Local,
     ) : QuranTextUseCase {
+        override fun onNextPage(currentPage: Int) {
+            assetsQuranLoader.onNextPage(currentPage)
+        }
+
+        override fun onPreviousPage(currentPage: Int) {
+            assetsQuranLoader.onPreviousPage(currentPage)
+        }
 
         override suspend fun getAllChapters(): List<ChapterAqc.Base> {
             return quranTextRepositoryLocal.getAllChaptersLocal()

@@ -8,11 +8,11 @@ import com.zaur.domain.al_quran_cloud.repository.QuranAudioRepository
 import com.zaur.domain.storage.QuranStorage
 
 /**
-* @author Zaur
-* @since 2025-05-12
-*/
+ * @author Zaur
+ * @since 2025-05-12
+ */
 
-interface QuranAudioUseCase {
+interface SurahPlayerUseCase {
 
     suspend fun downloadToCache(chapterNumber: Int, reciter: String): List<CacheAudio.Base>
 
@@ -35,9 +35,11 @@ interface QuranAudioUseCase {
         private val offlineRepository: OfflineRepository,
         private val quranAudioRepositoryLocal: QuranAudioRepository.Local,
         private val quranAudioRepositoryCloud: QuranAudioRepository.Cloud,
-    ) : QuranAudioUseCase {
-        override suspend fun downloadToCache(chapterNumber: Int, reciter: String): List<CacheAudio.Base> =
-            quranAudioRepositoryCloud.downloadToCache(chapterNumber, reciter)
+    ) : SurahPlayerUseCase {
+        override suspend fun downloadToCache(
+            chapterNumber: Int,
+            reciter: String
+        ): List<CacheAudio.Base> = quranAudioRepositoryCloud.downloadToCache(chapterNumber, reciter)
 
         override suspend fun getChapterAudioOfReciter(
             chapterNumber: Int,
@@ -60,11 +62,13 @@ interface QuranAudioUseCase {
 
         override fun getAudioSurahName(): String = quranStorage.getAudioSurahName()
 
-        override fun setAudioSurahName(surahName: String) = quranStorage.setAudioSurahName(surahName)
+        override fun setAudioSurahName(surahName: String) =
+            quranStorage.setAudioSurahName(surahName)
 
         override fun getLastPlayedSurah(): Int = quranStorage.getLastPlayedSurah()
 
-        override fun setLastPlayedSurah(surahNumber: Int) = quranStorage.setLastPlayedSurah(surahNumber)
+        override fun setLastPlayedSurah(surahNumber: Int) =
+            quranStorage.setLastPlayedSurah(surahNumber)
 
         override fun getLastPlayedAyah(): Int = quranStorage.getLastPlayedAyah()
 

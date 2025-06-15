@@ -66,16 +66,16 @@ fun SurahPageScreen(
                     if (index < translations.value.ayahs().size) translations.value.ayahs()
                         .getOrNull(index)?.text() else "Перевод отсутствует"
                 val arabicAyah =
-                    if (index == 0 && aya.surah().number() != 9L) aya.text().removeBasmala()
+                    if (index == 0 && aya.surah().number() != 9L &&  aya.surah().number() != 1L) aya.text().removeBasmala()
                     else aya.text()
 
                 val ayats = arabicText.value.ayahs()
                 val firstGlobalIndex = ayats.indexOfFirst { it.number() == ayats.first().number() }
-                val globalIndex      = firstGlobalIndex + index
+                val globalIndex = firstGlobalIndex + index
 
                 val prevAya = ayats.getOrNull(globalIndex - 1)
 
-                val showJuzChange  = prevAya?.juz()         != aya.juz()
+                val showJuzChange = prevAya?.juz() != aya.juz()
                 val showHizbChange = prevAya?.hizbQuarter() != aya.hizbQuarter()
 
                 AyahItem(

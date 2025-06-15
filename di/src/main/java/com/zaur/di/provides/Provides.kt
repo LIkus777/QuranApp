@@ -33,7 +33,7 @@ import com.zaur.domain.al_quran_cloud.repository.QuranTranslationRepository
 import com.zaur.domain.al_quran_cloud.use_case.EditionUseCase
 import com.zaur.domain.al_quran_cloud.use_case.MainUseCase
 import com.zaur.domain.al_quran_cloud.use_case.OfflineUseCase
-import com.zaur.domain.al_quran_cloud.use_case.QuranAudioUseCase
+import com.zaur.domain.al_quran_cloud.use_case.SurahPlayerUseCase
 import com.zaur.domain.al_quran_cloud.use_case.QuranPageUseCase
 import com.zaur.domain.al_quran_cloud.use_case.QuranTextUseCase
 import com.zaur.domain.al_quran_cloud.use_case.QuranTranslationUseCase
@@ -280,7 +280,7 @@ interface ProvideMainUseCase {
 }
 
 interface ProvideQuranAudioUseCase {
-    fun provideQuranAudioUseCase(): QuranAudioUseCase
+    fun provideQuranAudioUseCase(): SurahPlayerUseCase
 }
 
 interface ProvideQuranTextUseCase {

@@ -41,15 +41,18 @@ interface TextState {
     fun surahName(): String
     fun currentAyah(): Int
     fun currentSurahNumber(): Int
+    fun currentPageNumber(): Int
 
     data class Base(
         private val surahName: String = "",
         private val currentAyah: Int = 0,
         private val currentSurahNumber: Int = 0,
+        private val currentPageNumber: Int = 0
     ) : TextState {
         override fun surahName(): String = surahName
         override fun currentAyah(): Int = currentAyah
         override fun currentSurahNumber() = currentSurahNumber
+        override fun currentPageNumber(): Int = currentPageNumber
     }
 
     companion object {

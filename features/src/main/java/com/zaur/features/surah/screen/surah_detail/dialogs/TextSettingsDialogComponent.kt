@@ -35,6 +35,8 @@ fun TextSettingsDialogComponent(
                     quranTextViewModel().saveFontSizeRussian(it)
                 },
                 onPageModeClicked = {
+                    val page = quranTextViewModel().
+                    surahDetailViewModel().setPageNumber()
                     surahDetailViewModel().showPageMode(true)
                     screenContentViewModel().fetchSurahMode()
                 },

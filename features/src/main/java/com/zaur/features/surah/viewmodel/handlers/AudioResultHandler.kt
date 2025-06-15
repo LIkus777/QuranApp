@@ -23,7 +23,8 @@ interface AudioResultHandler {
 
     fun handleVerseAudio(data: VerseAudio)
     fun handleChapterAudio(data: ChapterAudioFile)
-    fun handleNewSurah(data: ChapterAudioFile)
+    fun handleSurahAudioFromLastAyah(data: ChapterAudioFile)
+    fun handleSurahAudioFromStart(data: ChapterAudioFile)
     fun handleCacheAudio(data: List<CacheAudio.Base>)
 
     class Base(
@@ -85,7 +86,38 @@ interface AudioResultHandler {
             }
         }
 
-        override fun handleNewSurah(data: ChapterAudioFile) {
+        override fun handleSurahAudioFromLastAyah(data: ChapterAudioFile) {
+            scope.launch {
+                observable.update(observable.audioState().value.copy(chaptersAudioFile = data))
+
+                // сразу ставим новый плейлист из data, а не из observable
+                // получаем текущего reciter из useCase или ViewModel
+                val reciterId = reciterManager.getReciter() ?: ""
+
+                // маппинг — гарантируем, что reciter не будет null
+                val ayahs = data.ayahs().map { ay ->
+                    Ayah.Base(
+                        reciterId,                      // вместо ay.reciter()
+                        ay.verseNumber(),
+                        ay.audio(),
+                        ay.audioSecondary(),
+                        ay.text(),
+                        ay.numberInSurah(),
+                        ay.juz(),
+                        ay.manzil(),
+                        ay.page(),
+                        ay.ruku(),
+                        ay.hizbQuarter(),
+                        ay.sajda()
+                    )
+                }
+
+                surahPlayer.setAyahs(ayahs)
+                surahPlayer.onPlayWholeClicked()
+            }
+        }
+
+        override fun handleSurahAudioFromStart(data: ChapterAudioFile) {
             scope.launch {
                 observable.update(observable.audioState().value.copy(chaptersAudioFile = data))
 

@@ -113,8 +113,8 @@ fun ScreenContent(
                     surahPlayerState = surahPlayerState,
                     isDarkTheme = isDarkTheme,
                     colors = colors,
-                    onClickPreviousPage = { /* то, что нужно при перелистывании */ },
-                    onClickNextPage = { /* … */ },
+                    onClickPreviousPage = { quranTextViewModel.onPreviousPage() },
+                    onClickNextPage = { quranTextViewModel.onNextPage() },
                     onClickSound = { ay, inSurah ->
                         surahPlayerViewModel.setAudioSurahAyah(inSurah)
                         surahPlayerViewModel.onPlaySingleClicked(inSurah, chapterNumber)
@@ -157,5 +157,5 @@ fun startSurahPlayback(
     surahPlayerViewModel.setAudioSurahNumber(chapterNumber)
     surahPlayerViewModel.setLastPlayedSurah(chapterNumber)
     // Запустить новую суру
-    surahPlayerViewModel.playNewSurah(chapterNumber, reciter)
+    surahPlayerViewModel.playFromStartSurahAudio(chapterNumber, reciter)
 }

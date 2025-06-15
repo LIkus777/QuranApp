@@ -2,12 +2,12 @@ package com.zaur.features.surah.screen.surah_detail.player
 
 import com.zaur.domain.al_quran_cloud.models.audiofile.VerseAudio
 import com.zaur.features.surah.base.AudioPlayer
-import com.zaur.features.surah.manager.SurahDetailStateManager
 import com.zaur.features.surah.manager.SurahPlayerStateManager
 import com.zaur.features.surah.screen.surah_detail.SurahNavigationCallback
 import com.zaur.features.surah.screen.surah_detail.player.PlayerCommand.PauseCommand
 import com.zaur.features.surah.screen.surah_detail.player.PlayerCommand.PlayWholeChapterCommand
 import com.zaur.features.surah.screen.surah_detail.player.PlayerCommand.ResumeCommand
+import com.zaur.features.surah.viewmodel.SurahPlayerViewModel
 
 
 /**
@@ -29,6 +29,7 @@ interface PlaybackController {
     fun playRelativeAyah(offset: Int)
 
     fun setSurahNavigationCallback(callback: SurahNavigationCallback)
+    fun setQuranAudioVmCallback(callback: SurahPlayerViewModel.SurahPlayerVmCallback)
 
     class Base(
         private val audioPlayer: AudioPlayer,
@@ -41,6 +42,7 @@ interface PlaybackController {
         private val playerState = surahPlayerStateManager.surahPlayerState()
 
         private var surahNavigationCallback: SurahNavigationCallback? = null
+        private var surahPlayerVmCallback: SurahPlayerViewModel.SurahPlayerVmCallback? = null
 
         override fun switchSurah(newSurahNumber: Int) {
             audioPlayer.clearItems()
@@ -48,6 +50,7 @@ interface PlaybackController {
             audioPlayerStateUpdater.setPlayWholeChapter(false)
             audioPlayerStateUpdater.setPlaying(false)
             audioPlayerStateUpdater.setCurrentAyahAndSurah(newSurahNumber, 1)
+            surahPlayerVmCallback?.setSurahNameByNumber(newSurahNumber)
             surahNavigationCallback?.navigate(newSurahNumber)
         }
 
@@ -83,8 +86,10 @@ interface PlaybackController {
 
         override fun toggleChapterPlayback() {
             val items = playlistManager.currentPlaylist()
-            if (items.isEmpty()) return
-
+            if (items.isEmpty()) {
+                surahPlayerVmCallback?.callSurahAudio()
+                return
+            }
             val currentIndex = playerState.value.currentAyah() - 1
 
             val cmd = when {
@@ -138,6 +143,10 @@ interface PlaybackController {
 
         override fun setSurahNavigationCallback(callback: SurahNavigationCallback) {
             this.surahNavigationCallback = callback
+        }
+
+        override fun setQuranAudioVmCallback(callback: SurahPlayerViewModel.SurahPlayerVmCallback) {
+            this.surahPlayerVmCallback = callback
         }
     }
 

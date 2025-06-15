@@ -2,7 +2,7 @@ package com.zaur.di.module
 
 import android.content.Context
 import androidx.room.Room
-import com.zaur.data.al_quran_aqc.AssetsQuranLoader
+import com.zaur.data.al_quran_aqc.AssetsQuranLoaderImpl
 import com.zaur.data.al_quran_aqc.api.QuranApiAqc
 import com.zaur.data.downloader.AudioDownloader
 import com.zaur.data.network.ApiFactory
@@ -35,6 +35,7 @@ import com.zaur.di.provides.ProvideTranslatorManager
 import com.zaur.di.provides.ProvideTranslatorStorage
 import com.zaur.di.provides.ProvideTranslatorUseCase
 import com.zaur.di.provides.ProvideVerseAudioDao
+import com.zaur.domain.al_quran_cloud.repository.AssetsQuranLoader
 import com.zaur.domain.al_quran_cloud.repository.OfflineRepository
 import com.zaur.domain.al_quran_cloud.use_case.OfflineUseCase
 import com.zaur.domain.al_quran_cloud.use_case.TranslatorUseCase
@@ -59,8 +60,8 @@ interface DataModule : ProvideTranslatorUseCase, ProvideTranslatorManager, Provi
 
         private val database by lazy {
             Room.databaseBuilder(
-                context, AppDatabase::class.java, DATABASE_NAME
-            ).fallbackToDestructiveMigration() // TODO: Убрать в проде
+                        context, AppDatabase::class.java, DATABASE_NAME
+                    ).fallbackToDestructiveMigration(false) // TODO: Убрать в проде
                 .build()
         }
 
@@ -95,7 +96,7 @@ interface DataModule : ProvideTranslatorUseCase, ProvideTranslatorManager, Provi
 
         override fun provideTranslatorStorage(): TranslatorStorage = TranslatorPreferences(context)
 
-        override fun provideAssetsQuranLoader(): AssetsQuranLoader = AssetsQuranLoader.Base(context)
+        override fun provideAssetsQuranLoader(): AssetsQuranLoader = AssetsQuranLoaderImpl(context)
         override fun provideTranslatorManager(): TranslatorManager =
             TranslatorManager.Base(provideTranslatorUseCase())
 

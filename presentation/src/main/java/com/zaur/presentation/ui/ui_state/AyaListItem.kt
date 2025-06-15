@@ -36,7 +36,6 @@ import com.zaur.presentation.ui.QuranColors
 import com.zaur.presentation.ui.removeBasmala
 import com.zaur.presentation.ui.ui_state.aqc.SurahDetailScreenState
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlin.compareTo
 
 /**
  * @author Zaur
@@ -193,7 +192,7 @@ interface AyaListItem {
                         isDarkTheme = isDarkTheme,
                         ayahNumber = aya.number().toInt(),
                         currentAyahInSurah = aya.numberInSurah().toInt(),
-                        isCurrent = currentAudioAyah == aya.numberInSurah().toInt(),
+                        isCurrent = currentAudioAyah == aya.numberInSurah().toInt() && isCurrentSurah,
                         arabicAyah = arabicText,
                         translation = translationText,
                         colors = colors,

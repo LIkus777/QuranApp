@@ -38,7 +38,7 @@ fun rememberSurahDetailUiData(
         deps.surahDetailViewModel().selectedReciter(reciterId, playerVm.getReciterName().orEmpty())
 
         // Каждый раз грузим новый аудио-набор
-        playerVm.getChaptersAudioOfReciter(chapterNumber, reciterId)
+        playerVm.getSurahAudioByNumberAndReciter(chapterNumber, reciterId)
 
         // Инициализируем остальные поля в detailVm
         val textVm = deps.quranTextViewModel()

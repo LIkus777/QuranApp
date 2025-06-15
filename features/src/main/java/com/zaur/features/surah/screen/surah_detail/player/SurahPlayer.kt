@@ -55,9 +55,7 @@ interface SurahPlayer {
         private val playerState = surahPlayerStateManager.surahPlayerState()
 
         private val playlistManager = PlaylistManager.Base(
-            playlistBuilder,
-            surahDetailStateManager,
-            surahPlayerStateManager
+            playlistBuilder, surahDetailStateManager, surahPlayerStateManager
         ) { newList ->
             // этот код выполнится каждый раз, когда reciter/режим дадут новый список
             val idx = playerState.value.currentAyah() - 1
@@ -72,7 +70,7 @@ interface SurahPlayer {
             audioPlayerStateUpdater,
             playlistManager,
             audioPlaybackHelper,
-            surahPlayerStateManager
+            surahPlayerStateManager,
         )
 
         init {
@@ -98,6 +96,7 @@ interface SurahPlayer {
 
                 override fun onAyahChanged(mediaId: String?) {
                     mediaId?.toIntOrNull()?.let { num ->
+                        surahPlayerVmCallback?.saveLastPlayedAyah(num)
                         audioPlayerStateUpdater.updateCurrentAyah(num)
                     }
                 }
@@ -169,6 +168,7 @@ interface SurahPlayer {
 
         override fun setQuranAudioVmCallback(callback: SurahPlayerViewModel.SurahPlayerVmCallback) {
             this.surahPlayerVmCallback = callback
+            playbackController.setQuranAudioVmCallback(this.surahPlayerVmCallback!!)
         }
 
         override fun setSurahNavigationCallback(callback: SurahNavigationCallback) {

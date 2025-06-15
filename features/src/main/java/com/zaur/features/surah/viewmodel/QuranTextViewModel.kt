@@ -21,6 +21,9 @@ import kotlinx.coroutines.launch
 
 interface QuranTextViewModel : QuranTextObservable.Read {
 
+    fun onNextPage()
+    fun onPreviousPage()
+
     fun getFontSizeArabic(): Float
     fun getFontSizeRussian(): Float
     fun saveFontSizeArabic(size: Float)
@@ -41,6 +44,26 @@ interface QuranTextViewModel : QuranTextObservable.Read {
     ) : BaseViewModel(), QuranTextViewModel {
 
         override fun textState(): StateFlow<QuranTextUIState.Base> = observable.textState()
+
+        override fun onNextPage() {
+            viewModelScope.launch {
+                launchSafely {
+                    quranTextUseCase.onNextPage(
+                        stateManager.state().value.textState().currentPageNumber()
+                    )
+                }
+            }
+        }
+
+        override fun onPreviousPage() {
+            viewModelScope.launch {
+                launchSafely {
+                    quranTextUseCase.onPreviousPage(
+                        stateManager.state().value.textState().currentPageNumber()
+                    )
+                }
+            }
+        }
 
         override fun getFontSizeArabic() = quranTextUseCase.getFontSizeArabic()
 
